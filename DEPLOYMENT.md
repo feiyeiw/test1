@@ -2,6 +2,13 @@
 
 本指南将帮助您将网站博客数据从本地存储（localStorage）迁移到 Cloudflare Workers KV，实现跨设备、跨用户共享博客内容。
 
+## 🔄 更新日志（2026-03-14）
+- ✅ 已修复：删除 `wrangler.jsonc` 文件，避免 Cloudflare Pages 部署错误
+- ✅ 已修复：添加 `package.json` 的 `build` 脚本，防止构建失败
+- ✅ 已启用：默认启用 Cloudflare Functions API (`enabled: true`)
+- ✅ 已配置：前端自动尝试 API 连接，失败时回退到 localStorage
+- ✅ 已更新：`_routes.json` 正确配置 Functions 路由 (`/api/*`)
+
 ## 📋 前提条件
 
 1. **Cloudflare 账户** - 已有或新注册

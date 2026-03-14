@@ -4,6 +4,6 @@
   "description": "Static website with Cloudflare Pages Functions",
   "private": true,
   "scripts": {
-    "build": "echo 'No build step required for static site'"
+    "build": "node build.js"
   }
 }
