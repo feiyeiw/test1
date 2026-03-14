@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - 1³ Machine</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-container {
+            padding: 40px 0;
+        }
+        
+        .admin-container .container {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 30px;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .admin-header h1 {
+            color: #333;
+        }
+        
+        .logout-btn {
+            padding: 8px 20px;
+            background-color: #e60000;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: #c40000;
+        }
+        
+        .admin-section {
+            width: 100%;
+            background-color: #f8f8f8;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .admin-section h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .service-forms {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .save-btn {
+            padding: 12px 30px;
+            background-color: #e60000;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .save-btn:hover {
+            background-color: #c40000;
+        }
+
+        /* Rich Text Editor Styles */
+        .editor-toolbar {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .editor-btn {
+            padding: 8px 12px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            min-width: 36px;
+            text-align: center;
+        }
+
+        .editor-btn:hover {
+            background-color: #f5f5f5;
+            border-color: #999;
+        }
+
+        .editor-content {
+            width: 100%;
+            min-height: 300px;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            background-color: #fff;
+            font-size: 16px;
+            line-height: 1.6;
+            overflow-y: auto;
+        }
+
+        .editor-content:focus {
+            outline: none;
+            border-color: #e60000;
+        }
+
+        .editor-content h1, .editor-content h2, .editor-content h3 {
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+            color: #333;
+        }
+
+        .editor-content ul, .editor-content ol {
+            margin-left: 20px;
+            margin-bottom: 1em;
+        }
+
+        .editor-content a {
+            color: #e60000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="container">
+                <div class="header-top-right">
+                    <a href="index.html" data-i18n="home">Home</a>
+                    <div class="language-selector" onclick="toggleLanguage()">
+                        <span id="languageText">English</span>
+                        <span style="margin-left: 5px;">| 中文</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-main">
+            <div class="container">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20industrial%20logo%20for%2013machine%20with%20gear%20icon&image_size=square" alt="13machine">
+                        <span>1³ MACHINE</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main id="adminDashboard">
+        <div class="admin-container">
+            <div class="container">
+                <div class="admin-header">
+                    <h1 data-i18n="adminDashboard">Admin Dashboard</h1>
+                    <button class="logout-btn" onclick="logout()" data-i18n="logout">Logout</button>
+                </div>
+
+                <div class="admin-section">
+                    <h2 data-i18n="accountSettings">Account Settings</h2>
+                    <div class="form-group">
+                        <label for="currentPassword" data-i18n="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" name="currentPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword" data-i18n="newPassword">New Password</label>
+                        <input type="password" id="newPassword" name="newPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword" data-i18n="confirmPassword">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword">
+                    </div>
+                    <button id="changePassword" class="save-btn" style="background-color: #333;" data-i18n="changePassword">Change Password</button>
+                </div>
+
+                <div class="admin-section">
+                    <h2 data-i18n="heroSection">Hero Section</h2>
+                    <div class="form-group">
+                        <label for="heroTitle" data-i18n="title">Title</label>
+                        <input type="text" id="heroTitle" name="heroTitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="heroDescription" data-i18n="description">Description</label>
+                        <textarea id="heroDescription" name="heroDescription"></textarea>
+                    </div>
+                </div>
+                
+                <div class="admin-section">
+                    <h2 data-i18n="servicesSection">Services Section</h2>
+                    <div class="service-forms">
+                        <div class="form-group">
+                            <label for="service1Title" data-i18n="service1Title">Service 1 Title</label>
+                            <input type="text" id="service1Title" name="service1Title">
+                            <label for="service1Description" data-i18n="service1Description">Service 1 Description</label>
+                            <textarea id="service1Description" name="service1Description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="service2Title" data-i18n="service2Title">Service 2 Title</label>
+                            <input type="text" id="service2Title" name="service2Title">
+                            <label for="service2Description" data-i18n="service2Description">Service 2 Description</label>
+                            <textarea id="service2Description" name="service2Description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="service3Title" data-i18n="service3Title">Service 3 Title</label>
+                            <input type="text" id="service3Title" name="service3Title">
+                            <label for="service3Description" data-i18n="service3Description">Service 3 Description</label>
+                            <textarea id="service3Description" name="service3Description"></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="saveContent" class="save-btn" data-i18n="saveContent">Save Content</button>
+
+                <div class="admin-section">
+                    <h2 data-i18n="otherPagesManagement">Other Pages Management</h2>
+                    <div class="service-forms">
+                        <div class="form-group">
+                            <h3 data-i18n="servicesPage">Services Page</h3>
+                            <label for="servicesTitle" data-i18n="pageTitle">Page Title</label>
+                            <input type="text" id="servicesTitle" name="servicesTitle">
+                            <label for="servicesDescription" data-i18n="pageDescription">Page Description</label>
+                            <textarea id="servicesDescription" name="servicesDescription"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <h3 data-i18n="solutionsPage">Solutions Page</h3>
+                            <label for="solutionsTitle">Page Title</label>
+                            <input type="text" id="solutionsTitle" name="solutionsTitle">
+                            <label for="solutionsDescription">Page Description</label>
+                            <textarea id="solutionsDescription" name="solutionsDescription"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <h3 data-i18n="aboutPage">About Page</h3>
+                            <label for="aboutTitle">Page Title</label>
+                            <input type="text" id="aboutTitle" name="aboutTitle">
+                            <label for="aboutDescription">Page Description</label>
+                            <textarea id="aboutDescription" name="aboutDescription"></textarea>
+                        </div>
+                    </div>
+                    <button id="savePages" class="save-btn" data-i18n="savePagesContent">Save Pages Content</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h2 data-i18n="blogManagement">Blog Management</h2>
+            <div class="form-group">
+                <label for="blogTitle" data-i18n="blogTitle">Blog Title</label>
+                <input type="text" id="blogTitle" name="blogTitle">
+            </div>
+            <div class="form-group">
+                <label for="blogDate" data-i18n="date">Date</label>
+                <input type="date" id="blogDate" name="blogDate">
+            </div>
+
+            <div class="form-group">
+                <label data-i18n="blogContent">Blog Content (Rich Text Editor)</label>
+                <div class="editor-toolbar">
+                    <button type="button" class="editor-btn" onclick="formatText('bold')" title="Bold" data-i18n-title="bold"><b>B</b></button>
+                    <button type="button" class="editor-btn" onclick="formatText('italic')" title="Italic" data-i18n-title="italic"><i>I</i></button>
+                    <button type="button" class="editor-btn" onclick="formatText('underline')" title="Underline" data-i18n-title="underline"><u>U</u></button>
+                    <button type="button" class="editor-btn" onclick="formatText('heading')" title="Heading" data-i18n-title="heading">H</button>
+                    <button type="button" class="editor-btn" onclick="formatText('unorderedlist')" title="Bullet List" data-i18n-title="bulletList">•</button>
+                    <button type="button" class="editor-btn" onclick="formatText('orderedlist')" title="Numbered List" data-i18n-title="numberedList">1.</button>
+                    <button type="button" class="editor-btn" onclick="formatText('link')" title="Insert Link" data-i18n-title="insertLink">🔗</button>
+                    <button type="button" class="editor-btn" onclick="formatText('image')" title="Insert Image" data-i18n-title="insertImage">🖼️</button>
+                </div>
+                <div id="blogContent" class="editor-content" contenteditable="true"></div>
+                <textarea id="blogContentPlain" style="display:none;"></textarea>
+            </div>
+
+            <button id="addBlog" class="save-btn" data-i18n="addBlog">Add Blog</button>
+
+            <div id="blogList" style="margin-top: 30px;">
+                <h3 data-i18n="blogList">Blog List</h3>
+                <div id="blogsContainer"></div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="script.js"></script>
+</body>
+</html>
