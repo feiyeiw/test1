@@ -13,10 +13,10 @@ const BLOG_API_CONFIG_KEY = 'blogApiConfig';
 
 // Default API configuration (can be overridden via localStorage)
 let blogApiConfig = {
-    enabled: false,
+    enabled: true, // Enable Cloudflare Pages Functions API by default
     endpoint: '/api/blogs', // Relative to current domain
-    apiKey: '',
-    useLocalStorageFallback: true
+    apiKey: '', // Will be set via environment variable on server
+    useLocalStorageFallback: true // Fallback to localStorage if API fails
 };
 
 // Load API configuration from localStorage

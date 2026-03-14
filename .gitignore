@@ -40,3 +40,6 @@ Thumbs.db
 # Temp files
 tmp/
 temp/
+
+# Claude Code memory files
+.claude/
