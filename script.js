@@ -13,7 +13,7 @@ const BLOG_API_CONFIG_KEY = 'blogApiConfig';
 
 // Default API configuration (can be overridden via localStorage)
 let blogApiConfig = {
-    enabled: true, // Enable Cloudflare Pages Functions API by default
+    enabled: false, // Disable Cloudflare Pages Functions API by default (enable via admin panel)
     endpoint: '/api/blogs', // Relative to current domain
     apiKey: '', // API key loaded from localStorage or environment (use setApiKey() to configure)
     useLocalStorageFallback: true // Fallback to localStorage if API fails
@@ -172,7 +172,18 @@ const blogApi = {
             console.warn('Failed to create blog via API, falling back to localStorage:', error);
 
             if (config.useLocalStorageFallback) {
-                return this.createBlog(blogData); // This will use localStorage fallback
+                // Fallback to localStorage
+                const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+                const newBlog = {
+                    id: Date.now(),
+                    title: blogData.title,
+                    content: blogData.content,
+                    plainText: blogData.plainText || blogData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(),
+                    date: blogData.date || new Date().toISOString().split('T')[0]
+                };
+                blogs.push(newBlog);
+                localStorage.setItem('blogs', JSON.stringify(blogs));
+                return newBlog;
             }
 
             throw error;
@@ -246,7 +257,19 @@ const blogApi = {
             console.warn(`Failed to update blog ${id} via API, falling back to localStorage:`, error);
 
             if (config.useLocalStorageFallback) {
-                return this.updateBlog(id, blogData); // This will use localStorage fallback
+                // Fallback to localStorage
+                const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+                const index = blogs.findIndex(blog => blog.id == id);
+                if (index === -1) {
+                    throw new Error('Blog not found');
+                }
+                blogs[index] = {
+                    ...blogs[index],
+                    ...blogData,
+                    id: id // Ensure ID doesn't change
+                };
+                localStorage.setItem('blogs', JSON.stringify(blogs));
+                return blogs[index];
             }
 
             throw error;
@@ -311,7 +334,15 @@ const blogApi = {
             console.warn(`Failed to delete blog ${id} via API, falling back to localStorage:`, error);
 
             if (config.useLocalStorageFallback) {
-                return this.deleteBlog(id); // This will use localStorage fallback
+                // Fallback to localStorage
+                const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+                const index = blogs.findIndex(blog => blog.id == id);
+                if (index === -1) {
+                    throw new Error('Blog not found');
+                }
+                blogs.splice(index, 1);
+                localStorage.setItem('blogs', JSON.stringify(blogs));
+                return true;
             }
 
             throw error;
