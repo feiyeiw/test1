@@ -361,6 +361,16 @@ loadBlogApiConfig();
 const ADMIN_STORAGE_KEY = 'adminCredentials';
 const ADMIN_SESSION_KEY = 'adminSession';
 
+// Reset admin credentials (for debugging/deployment issues)
+window.resetAdminCredentials = async function() {
+    localStorage.removeItem(ADMIN_STORAGE_KEY);
+    localStorage.removeItem('adminLoggedIn');
+    sessionStorage.removeItem(ADMIN_SESSION_KEY);
+    console.log('Admin credentials reset. Reinitializing...');
+    await initializeAdminCredentials();
+    alert('Admin credentials have been reset to default:\nUsername: admin\nPassword: admin123');
+};
+
 // Initialize admin credentials if not exists
 async function initializeAdminCredentials() {
     const savedCredentials = localStorage.getItem(ADMIN_STORAGE_KEY);
