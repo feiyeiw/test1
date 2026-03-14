@@ -1,0 +1,22 @@
+name = "wangzhan-api"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+[env.production]
+name = "wangzhan-api-production"
+
+# Pages Functions configuration
+# This file is for local development with wrangler
+# For production, configure KV bindings in Cloudflare Dashboard
+
+[[kv_namespaces]]
+binding = "BLOG_DATA"
+id = "your-kv-namespace-id"  # Replace with your KV namespace ID
+preview_id = "your-preview-kv-namespace-id"
+
+# Environment variables
+[vars]
+API_KEY = "your-secret-api-key-here"  # Change this to a secure random string
+
+# For Pages Functions, routes are configured in Cloudflare Dashboard
+# The functions/ directory will be automatically picked up

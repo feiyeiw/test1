@@ -8,6 +8,355 @@ async function sha256Hash(text) {
     return hashHex;
 }
 
+// Cloudflare KV API Service
+const BLOG_API_CONFIG_KEY = 'blogApiConfig';
+
+// Default API configuration (can be overridden via localStorage)
+let blogApiConfig = {
+    enabled: false,
+    endpoint: '/api/blogs', // Relative to current domain
+    apiKey: '',
+    useLocalStorageFallback: true
+};
+
+// Load API configuration from localStorage
+function loadBlogApiConfig() {
+    const savedConfig = localStorage.getItem(BLOG_API_CONFIG_KEY);
+    if (savedConfig) {
+        blogApiConfig = { ...blogApiConfig, ...JSON.parse(savedConfig) };
+    }
+    return blogApiConfig;
+}
+
+// Save API configuration to localStorage
+function saveBlogApiConfig(config) {
+    blogApiConfig = { ...blogApiConfig, ...config };
+    localStorage.setItem(BLOG_API_CONFIG_KEY, JSON.stringify(blogApiConfig));
+}
+
+// API Service functions
+const blogApi = {
+    // Get all blogs
+    async getAllBlogs() {
+        const config = loadBlogApiConfig();
+
+        if (!config.enabled) {
+            // Fallback to localStorage
+            return JSON.parse(localStorage.getItem('blogs')) || [];
+        }
+
+        try {
+            const response = await fetch(config.endpoint, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+
+            const blogs = await response.json();
+
+            // Update localStorage cache for offline use
+            if (config.useLocalStorageFallback) {
+                localStorage.setItem('blogs', JSON.stringify(blogs));
+            }
+
+            return blogs;
+        } catch (error) {
+            console.warn('Failed to fetch blogs from API, falling back to localStorage:', error);
+
+            if (config.useLocalStorageFallback) {
+                return JSON.parse(localStorage.getItem('blogs')) || [];
+            }
+
+            return [];
+        }
+    },
+
+    // Get single blog by ID
+    async getBlogById(id) {
+        const config = loadBlogApiConfig();
+
+        if (!config.enabled) {
+            // Fallback to localStorage
+            const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+            return blogs.find(blog => blog.id == id) || null;
+        }
+
+        try {
+            const response = await fetch(`${config.endpoint}/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    return null;
+                }
+                throw new Error(`API error: ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.warn(`Failed to fetch blog ${id} from API:`, error);
+
+            if (config.useLocalStorageFallback) {
+                const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+                return blogs.find(blog => blog.id == id) || null;
+            }
+
+            return null;
+        }
+    },
+
+    // Create new blog (requires authentication)
+    async createBlog(blogData) {
+        const config = loadBlogApiConfig();
+
+        if (!config.enabled) {
+            // Fallback to localStorage
+            const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+            const newBlog = {
+                id: Date.now(),
+                title: blogData.title,
+                content: blogData.content,
+                plainText: blogData.plainText || blogData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(),
+                date: blogData.date || new Date().toISOString().split('T')[0]
+            };
+
+            blogs.push(newBlog);
+            localStorage.setItem('blogs', JSON.stringify(blogs));
+            return newBlog;
+        }
+
+        try {
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            };
+
+            // Add API key if configured
+            if (config.apiKey) {
+                headers['X-API-Key'] = config.apiKey;
+            }
+
+            const response = await fetch(config.endpoint, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(blogData)
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error('Unauthorized: Invalid API key');
+                }
+                throw new Error(`API error: ${response.status}`);
+            }
+
+            const newBlog = await response.json();
+
+            // Update localStorage cache
+            if (config.useLocalStorageFallback) {
+                const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+                blogs.push(newBlog);
+                localStorage.setItem('blogs', JSON.stringify(blogs));
+            }
+
+            return newBlog;
+        } catch (error) {
+            console.warn('Failed to create blog via API, falling back to localStorage:', error);
+
+            if (config.useLocalStorageFallback) {
+                return this.createBlog(blogData); // This will use localStorage fallback
+            }
+
+            throw error;
+        }
+    },
+
+    // Update existing blog (requires authentication)
+    async updateBlog(id, blogData) {
+        const config = loadBlogApiConfig();
+
+        if (!config.enabled) {
+            // Fallback to localStorage
+            const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+            const index = blogs.findIndex(blog => blog.id == id);
+
+            if (index === -1) {
+                throw new Error('Blog not found');
+            }
+
+            blogs[index] = {
+                ...blogs[index],
+                ...blogData,
+                id: id // Ensure ID doesn't change
+            };
+
+            localStorage.setItem('blogs', JSON.stringify(blogs));
+            return blogs[index];
+        }
+
+        try {
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            };
+
+            // Add API key if configured
+            if (config.apiKey) {
+                headers['X-API-Key'] = config.apiKey;
+            }
+
+            const response = await fetch(`${config.endpoint}/${id}`, {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify(blogData)
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error('Unauthorized: Invalid API key');
+                }
+                if (response.status === 404) {
+                    throw new Error('Blog not found');
+                }
+                throw new Error(`API error: ${response.status}`);
+            }
+
+            const updatedBlog = await response.json();
+
+            // Update localStorage cache
+            if (config.useLocalStorageFallback) {
+                const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+                const index = blogs.findIndex(blog => blog.id == id);
+                if (index !== -1) {
+                    blogs[index] = updatedBlog;
+                    localStorage.setItem('blogs', JSON.stringify(blogs));
+                }
+            }
+
+            return updatedBlog;
+        } catch (error) {
+            console.warn(`Failed to update blog ${id} via API, falling back to localStorage:`, error);
+
+            if (config.useLocalStorageFallback) {
+                return this.updateBlog(id, blogData); // This will use localStorage fallback
+            }
+
+            throw error;
+        }
+    },
+
+    // Delete blog (requires authentication)
+    async deleteBlog(id) {
+        const config = loadBlogApiConfig();
+
+        if (!config.enabled) {
+            // Fallback to localStorage
+            const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+            const index = blogs.findIndex(blog => blog.id == id);
+
+            if (index === -1) {
+                throw new Error('Blog not found');
+            }
+
+            blogs.splice(index, 1);
+            localStorage.setItem('blogs', JSON.stringify(blogs));
+            return true;
+        }
+
+        try {
+            const headers = {
+                'Accept': 'application/json'
+            };
+
+            // Add API key if configured
+            if (config.apiKey) {
+                headers['X-API-Key'] = config.apiKey;
+            }
+
+            const response = await fetch(`${config.endpoint}/${id}`, {
+                method: 'DELETE',
+                headers: headers
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error('Unauthorized: Invalid API key');
+                }
+                if (response.status === 404) {
+                    throw new Error('Blog not found');
+                }
+                throw new Error(`API error: ${response.status}`);
+            }
+
+            // Update localStorage cache
+            if (config.useLocalStorageFallback) {
+                const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+                const index = blogs.findIndex(blog => blog.id == id);
+                if (index !== -1) {
+                    blogs.splice(index, 1);
+                    localStorage.setItem('blogs', JSON.stringify(blogs));
+                }
+            }
+
+            return true;
+        } catch (error) {
+            console.warn(`Failed to delete blog ${id} via API, falling back to localStorage:`, error);
+
+            if (config.useLocalStorageFallback) {
+                return this.deleteBlog(id); // This will use localStorage fallback
+            }
+
+            throw error;
+        }
+    },
+
+    // Test API connection
+    async testConnection() {
+        const config = loadBlogApiConfig();
+
+        if (!config.enabled) {
+            return { success: true, message: 'API disabled, using localStorage' };
+        }
+
+        try {
+            const response = await fetch(config.endpoint, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                return {
+                    success: false,
+                    message: `API returned ${response.status}`
+                };
+            }
+
+            return {
+                success: true,
+                message: 'API connection successful'
+            };
+        } catch (error) {
+            return {
+                success: false,
+                message: `Connection failed: ${error.message}`
+            };
+        }
+    }
+};
+
+// Initialize API config on load
+loadBlogApiConfig();
+
 // Admin credentials management
 const ADMIN_STORAGE_KEY = 'adminCredentials';
 const ADMIN_SESSION_KEY = 'adminSession';
@@ -37,13 +386,97 @@ async function initializeAdminCredentials() {
     }
 }
 
+// Initialize default blog data
+function initializeDefaultBlogs() {
+    const savedBlogs = localStorage.getItem('blogs');
+    if (!savedBlogs) {
+        const defaultBlogs = [
+            {
+                id: 1,
+                title: 'Welcome to 1³ Machine Blog',
+                content: '<h3>Welcome to Our New Blog Section</h3><p>We are excited to launch our new blog section where we will share insights about automated production, smart warehouse solutions, and industry trends.</p><p>Stay tuned for more updates!</p>',
+                plainText: 'We are excited to launch our new blog section where we will share insights about automated production, smart warehouse solutions, and industry trends. Stay tuned for more updates!',
+                date: new Date().toISOString().split('T')[0]
+            },
+            {
+                id: 2,
+                title: 'Benefits of Automated Production Lines',
+                content: '<h3>Increasing Efficiency with Automation</h3><p>Automated production lines can significantly increase manufacturing efficiency by reducing manual labor, minimizing errors, and enabling 24/7 operation.</p><p>Key benefits include:</p><ul><li>Higher production output</li><li>Consistent product quality</li><li>Reduced labor costs</li><li>Improved workplace safety</li></ul>',
+                plainText: 'Automated production lines can significantly increase manufacturing efficiency by reducing manual labor, minimizing errors, and enabling 24/7 operation. Key benefits include higher production output, consistent product quality, reduced labor costs, and improved workplace safety.',
+                date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 7 days ago
+            },
+            {
+                id: 3,
+                title: 'Smart Warehouse Systems Overview',
+                content: '<h3>Modern Warehouse Automation</h3><p>Smart warehouse systems utilize technologies like stacker cranes, shuttle systems, and AGVs to optimize storage and retrieval processes.</p><p>These systems help businesses:</p><ul><li>Maximize storage density</li><li>Reduce order fulfillment time</li><li>Improve inventory accuracy</li><li>Lower operational costs</li></ul>',
+                plainText: 'Smart warehouse systems utilize technologies like stacker cranes, shuttle systems, and AGVs to optimize storage and retrieval processes. These systems help businesses maximize storage density, reduce order fulfillment time, improve inventory accuracy, and lower operational costs.',
+                date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 14 days ago
+            }
+        ];
+        localStorage.setItem('blogs', JSON.stringify(defaultBlogs));
+        console.log('Default blog data created with 3 sample blogs.');
+    }
+}
+
+// Initialize default site content
+function initializeDefaultSiteContent() {
+    const savedContent = localStorage.getItem('siteContent');
+    if (!savedContent) {
+        const defaultSiteContent = {
+            hero: {
+                title: 'Automated Production & Smart Warehouse Solutions',
+                description: 'We help manufacturers plan and implement automated production lines, packaging systems, and smart warehouse solutions using China-made equipment.'
+            },
+            services: [
+                {
+                    title: 'Production Line Planning',
+                    description: 'Packaging, food, pharma, and chemical production lines'
+                },
+                {
+                    title: 'Automated Warehouse Systems',
+                    description: 'Stacker cranes, shuttle systems, and AGV logistics'
+                },
+                {
+                    title: 'Multi-machine Integration',
+                    description: 'Process matching and system coordination'
+                }
+            ],
+            pages: {
+                services: {
+                    title: 'Our Services',
+                    description: 'Comprehensive solutions for automated production and smart warehouse systems'
+                },
+                solutions: {
+                    title: 'Our Solutions',
+                    description: 'Tailored automated solutions for your specific manufacturing needs'
+                },
+                about: {
+                    title: 'About 1³ Machine',
+                    description: 'Your trusted partner for automated production and smart warehouse solutions'
+                }
+            }
+        };
+        localStorage.setItem('siteContent', JSON.stringify(defaultSiteContent));
+        console.log('Default site content created.');
+    }
+}
+
+// Initialize all default data
+async function initializeAllData() {
+    await initializeAdminCredentials();
+    initializeDefaultBlogs();
+    initializeDefaultSiteContent();
+}
+
 // Admin login functionality
 const loginForm = document.getElementById('loginForm');
 const errorMessage = document.getElementById('errorMessage');
 
 if (loginForm) {
     // Initialize credentials on login page load
-    initializeAdminCredentials();
+    (async function() {
+        await initializeAllData();
+    })();
 
     loginForm.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -125,9 +558,12 @@ if (document.getElementById('adminDashboard')) {
     (async function() {
         const isLoggedIn = await checkAdminLogin();
         if (!isLoggedIn) return;
-    
-    // Sample data for management
-    let siteContent = {
+
+        // Initialize default data if not exists
+        await initializeAllData();
+
+    // Load data from localStorage
+    let siteContent = JSON.parse(localStorage.getItem('siteContent')) || {
         hero: {
             title: 'Automated Production & Smart Warehouse Solutions',
             description: 'We help manufacturers plan and implement automated production lines, packaging systems, and smart warehouse solutions using China-made equipment.'
@@ -323,46 +759,54 @@ if (document.getElementById('adminDashboard')) {
     };
 
     // Blog management
-    let blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-    
-    // Load blogs
-    function loadBlogs() {
+
+    // Load blogs from API/localStorage
+    async function loadBlogs() {
         const blogsContainer = document.getElementById('blogsContainer');
-        blogsContainer.innerHTML = '';
-        
-        if (blogs.length === 0) {
-            blogsContainer.innerHTML = '<p>No blogs yet. Add your first blog!</p>';
-            return;
+        blogsContainer.innerHTML = '<p style="color: #666; text-align: center;">Loading blogs...</p>';
+
+        try {
+            const blogs = await blogApi.getAllBlogs();
+
+            blogsContainer.innerHTML = '';
+
+            if (blogs.length === 0) {
+                blogsContainer.innerHTML = '<p>No blogs yet. Add your first blog!</p>';
+                return;
+            }
+
+            blogs.forEach((blog) => {
+                const blogItem = document.createElement('div');
+                blogItem.style.padding = '15px';
+                blogItem.style.border = '1px solid #e0e0e0';
+                blogItem.style.borderRadius = '4px';
+                blogItem.style.marginBottom = '10px';
+                blogItem.style.backgroundColor = '#f8f8f8';
+
+                // Create plain text preview by stripping HTML tags
+                const previewText = blog.plainText ||
+                    blog.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+
+                blogItem.innerHTML = `
+                    <h4>${blog.title}</h4>
+                    <p style="font-size: 14px; color: #666;">${blog.date}</p>
+                    <div style="margin: 10px 0; color: #666; line-height: 1.4;">
+                        ${previewText.substring(0, 100)}${previewText.length > 100 ? '...' : ''}
+                    </div>
+                    <button onclick="editBlog('${blog.id}')" style="margin-right: 10px; padding: 5px 10px; background-color: #e60000; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Edit</button>
+                    <button onclick="deleteBlog('${blog.id}')" style="padding: 5px 10px; background-color: #666; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Delete</button>
+                `;
+
+                blogsContainer.appendChild(blogItem);
+            });
+        } catch (error) {
+            console.error('Error loading blogs:', error);
+            blogsContainer.innerHTML = '<p style="color: #e60000;">Error loading blogs. Please try again.</p>';
         }
-        
-        blogs.forEach((blog, index) => {
-            const blogItem = document.createElement('div');
-            blogItem.style.padding = '15px';
-            blogItem.style.border = '1px solid #e0e0e0';
-            blogItem.style.borderRadius = '4px';
-            blogItem.style.marginBottom = '10px';
-            blogItem.style.backgroundColor = '#f8f8f8';
-
-            // Create plain text preview by stripping HTML tags
-            const previewText = blog.plainText ||
-                blog.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-
-            blogItem.innerHTML = `
-                <h4>${blog.title}</h4>
-                <p style="font-size: 14px; color: #666;">${blog.date}</p>
-                <div style="margin: 10px 0; color: #666; line-height: 1.4;">
-                    ${previewText.substring(0, 100)}${previewText.length > 100 ? '...' : ''}
-                </div>
-                <button onclick="editBlog(${index})" style="margin-right: 10px; padding: 5px 10px; background-color: #e60000; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Edit</button>
-                <button onclick="deleteBlog(${index})" style="padding: 5px 10px; background-color: #666; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Delete</button>
-            `;
-
-            blogsContainer.appendChild(blogItem);
-        });
     }
-    
+
     // Add blog
-    document.getElementById('addBlog').addEventListener('click', function() {
+    document.getElementById('addBlog').addEventListener('click', async function() {
         const title = document.getElementById('blogTitle').value;
         const editorContent = document.getElementById('blogContent');
         const content = editorContent ? editorContent.innerHTML : '';
@@ -374,55 +818,82 @@ if (document.getElementById('adminDashboard')) {
         }
 
         const newBlog = {
-            id: Date.now(),
             title: title,
-            content: content, // Store HTML content
-            plainText: editorContent ? editorContent.textContent : '', // Also store plain text for preview
+            content: content,
+            plainText: editorContent ? editorContent.textContent : '',
             date: date
         };
 
-        blogs.push(newBlog);
-        localStorage.setItem('blogs', JSON.stringify(blogs));
+        try {
+            await blogApi.createBlog(newBlog);
 
-        // Clear form
-        document.getElementById('blogTitle').value = '';
-        if (editorContent) editorContent.innerHTML = '';
-        document.getElementById('blogDate').value = '';
+            // Clear form
+            document.getElementById('blogTitle').value = '';
+            if (editorContent) editorContent.innerHTML = '';
+            document.getElementById('blogDate').value = '';
 
-        loadBlogs();
-        alert('Blog added successfully!');
+            await loadBlogs();
+            alert('Blog added successfully!');
+        } catch (error) {
+            console.error('Error adding blog:', error);
+            alert(`Error adding blog: ${error.message}`);
+        }
     });
-    
-    // Edit blog
-    window.editBlog = function(index) {
-        const blog = blogs[index];
-        document.getElementById('blogTitle').value = blog.title;
-        const editorContent = document.getElementById('blogContent');
-        if (editorContent) editorContent.innerHTML = blog.content;
-        document.getElementById('blogDate').value = blog.date;
 
-        // Remove the blog and load the form
-        blogs.splice(index, 1);
-        localStorage.setItem('blogs', JSON.stringify(blogs));
-        loadBlogs();
-    };
-    
-    // Delete blog
-    window.deleteBlog = function(index) {
-        if (confirm('Are you sure you want to delete this blog?')) {
-            blogs.splice(index, 1);
-            localStorage.setItem('blogs', JSON.stringify(blogs));
-            loadBlogs();
+    // Edit blog
+    window.editBlog = async function(id) {
+        try {
+            const blog = await blogApi.getBlogById(id);
+            if (!blog) {
+                alert('Blog not found');
+                return;
+            }
+
+            document.getElementById('blogTitle').value = blog.title;
+            const editorContent = document.getElementById('blogContent');
+            if (editorContent) editorContent.innerHTML = blog.content;
+            document.getElementById('blogDate').value = blog.date;
+
+            // Delete the blog after loading into form
+            try {
+                await blogApi.deleteBlog(id);
+                await loadBlogs();
+            } catch (error) {
+                console.error('Error deleting blog for edit:', error);
+                alert('Error loading blog for editing');
+            }
+        } catch (error) {
+            console.error('Error fetching blog for edit:', error);
+            alert('Error loading blog for editing');
         }
     };
-    
+
+    // Delete blog
+    window.deleteBlog = async function(id) {
+        if (!confirm('Are you sure you want to delete this blog?')) {
+            return;
+        }
+
+        try {
+            await blogApi.deleteBlog(id);
+            await loadBlogs();
+            alert('Blog deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting blog:', error);
+            alert(`Error deleting blog: ${error.message}`);
+        }
+    };
+
     // Load blogs on page load
     loadBlogs();
     })(); // End of async IIFE
 }
 
 // Update main page with admin content
-function updateMainPage() {
+async function updateMainPage() {
+    // Initialize default data if not exists
+    await initializeAllData();
+
     const savedContent = localStorage.getItem('siteContent');
     if (savedContent) {
         const content = JSON.parse(savedContent);
@@ -454,47 +925,55 @@ function updateMainPage() {
 }
 
 // Load blogs on home page
-function loadBlogsOnHome() {
+async function loadBlogsOnHome() {
     const blogsSection = document.getElementById('blogsSection');
     if (!blogsSection) return;
 
-    const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+    try {
+        const blogs = await blogApi.getAllBlogs();
 
-    if (blogs.length === 0) {
-        blogsSection.innerHTML = '<div class="service-item"><h3>No blogs yet</h3><p>Check back soon for our latest insights and updates.</p></div>';
-        return;
+        if (blogs.length === 0) {
+            blogsSection.innerHTML = '<div class="service-item"><h3>No blogs yet</h3><p>Check back soon for our latest insights and updates.</p></div>';
+            return;
+        }
+
+        // Sort blogs by date (newest first)
+        const sortedBlogs = [...blogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // Show only the latest 3 blogs
+        const latestBlogs = sortedBlogs.slice(0, 3);
+
+        blogsSection.innerHTML = '';
+
+        latestBlogs.forEach(blog => {
+            const blogLink = document.createElement('a');
+            blogLink.href = `blog-detail.html?id=${blog.id}`;
+            blogLink.className = 'service-item blog-link';
+
+            // Create plain text preview by stripping HTML tags
+            const previewText = blog.plainText ||
+                blog.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+
+            blogLink.innerHTML = `
+                <h3>${blog.title}</h3>
+                <p style="font-size: 14px; color: #666; margin-bottom: 10px;">${blog.date}</p>
+                <p style="line-height: 1.6;">${previewText.substring(0, 150)}${previewText.length > 150 ? '...' : ''}</p>
+                <div style="margin-top: 15px; color: #e60000; font-weight: bold; font-size: 14px;">Read More →</div>
+            `;
+
+            blogsSection.appendChild(blogLink);
+        });
+    } catch (error) {
+        console.error('Error loading blogs for home page:', error);
+        blogsSection.innerHTML = '<div class="service-item"><h3>Error loading blogs</h3><p>Please try again later.</p></div>';
     }
-
-    // Sort blogs by date (newest first)
-    const sortedBlogs = [...blogs].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    // Show only the latest 3 blogs
-    const latestBlogs = sortedBlogs.slice(0, 3);
-
-    blogsSection.innerHTML = '';
-
-    latestBlogs.forEach(blog => {
-        const blogLink = document.createElement('a');
-        blogLink.href = `blog-detail.html?id=${blog.id}`;
-        blogLink.className = 'service-item blog-link';
-
-        // Create plain text preview by stripping HTML tags
-        const previewText = blog.plainText ||
-            blog.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-
-        blogLink.innerHTML = `
-            <h3>${blog.title}</h3>
-            <p style="font-size: 14px; color: #666; margin-bottom: 10px;">${blog.date}</p>
-            <p style="line-height: 1.6;">${previewText.substring(0, 150)}${previewText.length > 150 ? '...' : ''}</p>
-            <div style="margin-top: 15px; color: #e60000; font-weight: bold; font-size: 14px;">Read More →</div>
-        `;
-
-        blogsSection.appendChild(blogLink);
-    });
 }
 
 // Update page content for all pages
-function updatePageContent() {
+async function updatePageContent() {
+    // Initialize default data if not exists
+    await initializeAllData();
+
     const savedContent = localStorage.getItem('siteContent');
     if (!savedContent) return;
 
@@ -525,14 +1004,18 @@ function updatePageContent() {
 
 // Update main page if on index.html
 if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-    updateMainPage();
+    (async function() {
+        await updateMainPage();
+    })();
 }
 
 // Update other pages content
 if (window.location.pathname.includes('services.html') ||
     window.location.pathname.includes('solutions.html') ||
     window.location.pathname.includes('about.html')) {
-    updatePageContent();
+    (async function() {
+        await updatePageContent();
+    })();
 }
 
 // Contact form functionality
@@ -554,7 +1037,7 @@ function getUrlParameter(name) {
 }
 
 // Load blog detail page
-function loadBlogDetail() {
+async function loadBlogDetail() {
     const blogId = getUrlParameter('id');
     if (!blogId) {
         // No blog ID specified, show error or redirect
@@ -563,106 +1046,128 @@ function loadBlogDetail() {
         return;
     }
 
-    const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-    const blog = blogs.find(b => b.id == blogId); // Use == to match string or number
+    try {
+        const blog = await blogApi.getBlogById(blogId);
 
-    if (!blog) {
-        document.getElementById('blogTitle').textContent = 'Blog Not Found';
-        document.getElementById('blogContent').innerHTML = '<p>The blog you are looking for does not exist or has been removed.</p>';
-        return;
+        if (!blog) {
+            document.getElementById('blogTitle').textContent = 'Blog Not Found';
+            document.getElementById('blogContent').innerHTML = '<p>The blog you are looking for does not exist or has been removed.</p>';
+            return;
+        }
+
+        // Set blog data
+        document.getElementById('blogTitle').textContent = blog.title;
+        document.getElementById('blogDate').textContent = blog.date;
+        document.getElementById('blogContent').innerHTML = blog.content;
+
+        // Setup blog navigation (previous/next)
+        await setupBlogNavigation(blog);
+
+        // Load related blogs
+        await loadRelatedBlogs(blog);
+    } catch (error) {
+        console.error('Error loading blog detail:', error);
+        document.getElementById('blogTitle').textContent = 'Error Loading Blog';
+        document.getElementById('blogContent').innerHTML = '<p>An error occurred while loading the blog. Please try again later.</p>';
     }
-
-    // Set blog data
-    document.getElementById('blogTitle').textContent = blog.title;
-    document.getElementById('blogDate').textContent = blog.date;
-    document.getElementById('blogContent').innerHTML = blog.content;
-
-    // Setup blog navigation (previous/next)
-    setupBlogNavigation(blogs, blog);
-
-    // Load related blogs
-    loadRelatedBlogs(blogs, blog);
 }
 
 // Setup blog navigation links
-function setupBlogNavigation(blogs, currentBlog) {
-    // Sort blogs by date (newest first)
-    const sortedBlogs = [...blogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+async function setupBlogNavigation(currentBlog) {
+    try {
+        const blogs = await blogApi.getAllBlogs();
 
-    // Find current blog index in sorted list
-    const currentIndex = sortedBlogs.findIndex(b => b.id == currentBlog.id);
+        // Sort blogs by date (newest first)
+        const sortedBlogs = [...blogs].sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    const prevBlogLink = document.getElementById('prevBlog');
-    const nextBlogLink = document.getElementById('nextBlog');
+        // Find current blog index in sorted list
+        const currentIndex = sortedBlogs.findIndex(b => b.id == currentBlog.id);
 
-    // Previous blog (newer blog if sorted newest first)
-    if (currentIndex > 0) {
-        const prevBlog = sortedBlogs[currentIndex - 1];
-        prevBlogLink.href = `blog-detail.html?id=${prevBlog.id}`;
-        prevBlogLink.textContent = `← Newer: ${prevBlog.title.substring(0, 30)}${prevBlog.title.length > 30 ? '...' : ''}`;
-        prevBlogLink.classList.remove('disabled');
-    } else {
-        prevBlogLink.href = '#';
-        prevBlogLink.textContent = '← No newer posts';
-        prevBlogLink.classList.add('disabled');
-    }
+        const prevBlogLink = document.getElementById('prevBlog');
+        const nextBlogLink = document.getElementById('nextBlog');
 
-    // Next blog (older blog if sorted newest first)
-    if (currentIndex < sortedBlogs.length - 1) {
-        const nextBlog = sortedBlogs[currentIndex + 1];
-        nextBlogLink.href = `blog-detail.html?id=${nextBlog.id}`;
-        nextBlogLink.textContent = `Older: ${nextBlog.title.substring(0, 30)}${nextBlog.title.length > 30 ? '...' : ''} →`;
-        nextBlogLink.classList.remove('disabled');
-    } else {
-        nextBlogLink.href = '#';
-        nextBlogLink.textContent = 'No older posts →';
-        nextBlogLink.classList.add('disabled');
+        if (!prevBlogLink || !nextBlogLink) return;
+
+        // Previous blog (newer blog if sorted newest first)
+        if (currentIndex > 0) {
+            const prevBlog = sortedBlogs[currentIndex - 1];
+            prevBlogLink.href = `blog-detail.html?id=${prevBlog.id}`;
+            prevBlogLink.textContent = `← Newer: ${prevBlog.title.substring(0, 30)}${prevBlog.title.length > 30 ? '...' : ''}`;
+            prevBlogLink.classList.remove('disabled');
+        } else {
+            prevBlogLink.href = '#';
+            prevBlogLink.textContent = '← No newer posts';
+            prevBlogLink.classList.add('disabled');
+        }
+
+        // Next blog (older blog if sorted newest first)
+        if (currentIndex < sortedBlogs.length - 1) {
+            const nextBlog = sortedBlogs[currentIndex + 1];
+            nextBlogLink.href = `blog-detail.html?id=${nextBlog.id}`;
+            nextBlogLink.textContent = `Older: ${nextBlog.title.substring(0, 30)}${nextBlog.title.length > 30 ? '...' : ''} →`;
+            nextBlogLink.classList.remove('disabled');
+        } else {
+            nextBlogLink.href = '#';
+            nextBlogLink.textContent = 'No older posts →';
+            nextBlogLink.classList.add('disabled');
+        }
+    } catch (error) {
+        console.error('Error setting up blog navigation:', error);
     }
 }
 
 // Load related blogs (exclude current blog)
-function loadRelatedBlogs(blogs, currentBlog) {
+async function loadRelatedBlogs(currentBlog) {
     const container = document.getElementById('relatedBlogsContainer');
     if (!container) return;
 
-    // Clear container
-    container.innerHTML = '';
+    try {
+        const blogs = await blogApi.getAllBlogs();
 
-    // Sort blogs by date (newest first)
-    const sortedBlogs = [...blogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+        // Clear container
+        container.innerHTML = '';
 
-    // Filter out current blog and take up to 3 related blogs
-    const relatedBlogs = sortedBlogs
-        .filter(blog => blog.id != currentBlog.id)
-        .slice(0, 3);
+        // Sort blogs by date (newest first)
+        const sortedBlogs = [...blogs].sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    if (relatedBlogs.length === 0) {
-        container.innerHTML = '<p style="color: #666; text-align: center;">No other blogs available.</p>';
-        return;
+        // Filter out current blog and take up to 3 related blogs
+        const relatedBlogs = sortedBlogs
+            .filter(blog => blog.id != currentBlog.id)
+            .slice(0, 3);
+
+        if (relatedBlogs.length === 0) {
+            container.innerHTML = '<p style="color: #666; text-align: center;">No other blogs available.</p>';
+            return;
+        }
+
+        relatedBlogs.forEach(blog => {
+            const blogItem = document.createElement('div');
+            blogItem.className = 'related-blog-item';
+
+            // Create plain text preview by stripping HTML tags
+            const previewText = blog.plainText ||
+                blog.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+
+            blogItem.innerHTML = `
+                <h4>${blog.title}</h4>
+                <p style="font-size: 14px; color: #666; margin-bottom: 10px;">${blog.date}</p>
+                <p>${previewText.substring(0, 100)}${previewText.length > 100 ? '...' : ''}</p>
+                <a href="blog-detail.html?id=${blog.id}" class="related-blog-link">Read More →</a>
+            `;
+
+            container.appendChild(blogItem);
+        });
+    } catch (error) {
+        console.error('Error loading related blogs:', error);
+        container.innerHTML = '<p style="color: #666; text-align: center;">Error loading related blogs.</p>';
     }
-
-    relatedBlogs.forEach(blog => {
-        const blogItem = document.createElement('div');
-        blogItem.className = 'related-blog-item';
-
-        // Create plain text preview by stripping HTML tags
-        const previewText = blog.plainText ||
-            blog.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-
-        blogItem.innerHTML = `
-            <h4>${blog.title}</h4>
-            <p style="font-size: 14px; color: #666; margin-bottom: 10px;">${blog.date}</p>
-            <p>${previewText.substring(0, 100)}${previewText.length > 100 ? '...' : ''}</p>
-            <a href="blog-detail.html?id=${blog.id}" class="related-blog-link">Read More →</a>
-        `;
-
-        container.appendChild(blogItem);
-    });
 }
 
 // Check if we're on the blog detail page
 if (window.location.pathname.includes('blog-detail.html')) {
-    loadBlogDetail();
+    (async function() {
+        await loadBlogDetail();
+    })();
 }
 
 // Language switching functionality for admin page
