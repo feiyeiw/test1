@@ -1,0 +1,6 @@
+{
+  "name": "wangzhan",
+  "version": "1.0.0",
+  "description": "Static website with Cloudflare Pages Functions",
+  "private": true
+}
