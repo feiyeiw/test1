@@ -392,6 +392,7 @@ loadBlogApiConfig();
 const ADMIN_STORAGE_KEY = 'adminCredentials';
 const ADMIN_SESSION_KEY = 'adminSession';
 
+<<<<<<< HEAD
 // Reset admin credentials (for debugging/deployment issues)
 window.resetAdminCredentials = async function() {
     localStorage.removeItem(ADMIN_STORAGE_KEY);
@@ -417,6 +418,8 @@ window.setApiKey = function(apiKey) {
     return true;
 };
 
+=======
+>>>>>>> parent of cde1c71 (修复：添加管理员凭据重置函数)
 // Initialize admin credentials if not exists
 async function initializeAdminCredentials() {
     const savedCredentials = localStorage.getItem(ADMIN_STORAGE_KEY);
