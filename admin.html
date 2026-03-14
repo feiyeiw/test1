@@ -217,6 +217,19 @@
                 </div>
 
                 <div class="admin-section">
+                    <h2 data-i18n="apiConfiguration">API Configuration</h2>
+                    <div class="form-group">
+                        <label for="apiKey" data-i18n="cloudflareApiKey">Cloudflare API Key</label>
+                        <input type="password" id="apiKey" name="apiKey" placeholder="Enter your Cloudflare Functions API key">
+                        <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">
+                            This key is used to authenticate with Cloudflare Pages Functions for blog storage.
+                            Get it from Cloudflare Dashboard → Pages → Settings → Environment variables.
+                        </small>
+                    </div>
+                    <button id="saveApiKey" class="save-btn" style="background-color: #0066cc;" data-i18n="saveApiKey">Save API Key</button>
+                </div>
+
+                <div class="admin-section">
                     <h2 data-i18n="heroSection">Hero Section</h2>
                     <div class="form-group">
                         <label for="heroTitle" data-i18n="title">Title</label>

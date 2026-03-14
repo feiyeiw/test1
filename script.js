@@ -15,7 +15,7 @@ const BLOG_API_CONFIG_KEY = 'blogApiConfig';
 let blogApiConfig = {
     enabled: true, // Enable Cloudflare Pages Functions API by default
     endpoint: '/api/blogs', // Relative to current domain
-    apiKey: '1edxgvmixni5wgvkjk998oorjk302slc', // API key for Cloudflare Functions (⚠️ In production, set via environment variable)
+    apiKey: '', // API key loaded from localStorage or environment (use setApiKey() to configure)
     useLocalStorageFallback: true // Fallback to localStorage if API fails
 };
 
@@ -371,6 +371,21 @@ window.resetAdminCredentials = async function() {
     alert('Admin credentials have been reset to default:\nUsername: admin\nPassword: admin123');
 };
 
+// Set API key globally (for quick configuration)
+window.setApiKey = function(apiKey) {
+    if (!apiKey || typeof apiKey !== 'string') {
+        console.error('Invalid API key. Please provide a valid string.');
+        return false;
+    }
+
+    // Save API key to configuration
+    saveBlogApiConfig({ apiKey: apiKey.trim() });
+
+    console.log('API key has been set successfully.');
+    console.log('Test API connection with: fetch("/api/health")');
+    return true;
+};
+
 // Initialize admin credentials if not exists
 async function initializeAdminCredentials() {
     const savedCredentials = localStorage.getItem(ADMIN_STORAGE_KEY);
@@ -629,6 +644,13 @@ if (document.getElementById('adminDashboard')) {
             document.getElementById('aboutTitle').value = siteContent.pages.about.title;
             document.getElementById('aboutDescription').value = siteContent.pages.about.description;
         }
+
+        // Load API key if input exists
+        const apiKeyInput = document.getElementById('apiKey');
+        if (apiKeyInput) {
+            const config = loadBlogApiConfig();
+            apiKeyInput.value = config.apiKey || '';
+        }
     }
     
     // Save content
@@ -707,6 +729,29 @@ if (document.getElementById('adminDashboard')) {
 
         alert('Password changed successfully!');
     });
+
+    // Save API key
+    const saveApiKeyBtn = document.getElementById('saveApiKey');
+    if (saveApiKeyBtn) {
+        saveApiKeyBtn.addEventListener('click', function() {
+            const apiKeyInput = document.getElementById('apiKey');
+            if (!apiKeyInput) return;
+
+            const apiKey = apiKeyInput.value.trim();
+            if (!apiKey) {
+                alert('Please enter an API key');
+                return;
+            }
+
+            // Save API key to configuration
+            saveBlogApiConfig({ apiKey: apiKey });
+
+            // Clear input for security (optional)
+            // apiKeyInput.value = '';
+
+            alert('API key saved successfully! It will be used for all future API requests.');
+        });
+    }
 
     // Save pages content
     document.getElementById('savePages').addEventListener('click', function() {
@@ -1213,6 +1258,9 @@ const TRANSLATIONS = {
         'solutionsPage': 'Solutions Page',
         'aboutPage': 'About Page',
         'savePagesContent': 'Save Pages Content',
+        'apiConfiguration': 'API Configuration',
+        'cloudflareApiKey': 'Cloudflare API Key',
+        'saveApiKey': 'Save API Key',
         'blogManagement': 'Blog Management',
         'blogTitle': 'Blog Title',
         'date': 'Date',
@@ -1261,6 +1309,9 @@ const TRANSLATIONS = {
         'solutionsPage': '解决方案页面',
         'aboutPage': '关于页面',
         'savePagesContent': '保存页面内容',
+        'apiConfiguration': 'API配置',
+        'cloudflareApiKey': 'Cloudflare API密钥',
+        'saveApiKey': '保存API密钥',
         'blogManagement': '博客管理',
         'blogTitle': '博客标题',
         'date': '日期',
