@@ -15,7 +15,7 @@ const BLOG_API_CONFIG_KEY = 'blogApiConfig';
 let blogApiConfig = {
     enabled: true, // Enable Cloudflare Pages Functions API by default
     endpoint: '/api/blogs', // Relative to current domain
-    apiKey: '', // Will be set via environment variable on server
+    apiKey: '1edxgvmixni5wgvkjk998oorjk302slc', // API key for Cloudflare Functions (⚠️ In production, set via environment variable)
     useLocalStorageFallback: true // Fallback to localStorage if API fails
 };
 
