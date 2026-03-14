@@ -121,6 +121,7 @@ async function handleGetBlogs(env) {
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'public, max-age=300', // Cache for 5 minutes
+        ...corsHeaders,
       },
     });
   } catch (error) {
@@ -138,7 +139,10 @@ async function handleGetBlog(id, env) {
     if (!blogStr) {
       return new Response(JSON.stringify({ error: 'Blog not found' }), {
         status: 404,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders,
+        },
       });
     }
 
@@ -147,6 +151,7 @@ async function handleGetBlog(id, env) {
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'public, max-age=300',
+        ...corsHeaders,
       },
     });
   } catch (error) {
@@ -162,7 +167,10 @@ async function handleCreateBlog(request, env) {
   if (!isValid) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...corsHeaders,
+      },
     });
   }
 
@@ -174,7 +182,10 @@ async function handleCreateBlog(request, env) {
     if (!data.title || !data.content) {
       return new Response(JSON.stringify({ error: 'Missing required fields: title and content are required' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders,
+        },
       });
     }
 
@@ -207,7 +218,10 @@ async function handleCreateBlog(request, env) {
 
     return new Response(JSON.stringify(blog), {
       status: 201,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...corsHeaders,
+      },
     });
   } catch (error) {
     console.error('Error creating blog:', error);
@@ -222,7 +236,10 @@ async function handleUpdateBlog(id, request, env) {
   if (!isValid) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...corsHeaders,
+      },
     });
   }
 
@@ -235,7 +252,10 @@ async function handleUpdateBlog(id, request, env) {
     if (!existingBlogStr) {
       return new Response(JSON.stringify({ error: 'Blog not found' }), {
         status: 404,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders,
+        },
       });
     }
 
@@ -257,7 +277,10 @@ async function handleUpdateBlog(id, request, env) {
 
     return new Response(JSON.stringify(updatedBlog), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...corsHeaders,
+      },
     });
   } catch (error) {
     console.error(`Error updating blog ${id}:`, error);
@@ -272,7 +295,10 @@ async function handleDeleteBlog(id, request, env) {
   if (!isValid) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...corsHeaders,
+      },
     });
   }
 
@@ -292,7 +318,10 @@ async function handleDeleteBlog(id, request, env) {
 
     return new Response(JSON.stringify({ success: true, message: 'Blog deleted' }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...corsHeaders,
+      },
     });
   } catch (error) {
     console.error(`Error deleting blog ${id}:`, error);
