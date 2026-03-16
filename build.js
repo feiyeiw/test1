@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 console.log('Starting build process...');
 
@@ -45,9 +46,16 @@ const excludeFiles = [
 // Directories to exclude
 const excludeDirs = ['.git', 'node_modules', '.claude', 'dist'];
 
-// Function to copy files matching patterns
+// Function to generate hash from file content
+function generateFileHash(filePath) {
+  const content = fs.readFileSync(filePath);
+  return crypto.createHash('md5').update(content).digest('hex').substring(0, 8);
+}
+
+// Function to copy files matching patterns with hash naming
 function copyFiles(srcDir, destDir) {
   const entries = fs.readdirSync(srcDir, { withFileTypes: true });
+  const fileMap = {};
 
   for (const entry of entries) {
     if (excludeDirs.includes(entry.name)) {
@@ -78,11 +86,33 @@ function copyFiles(srcDir, destDir) {
       }
 
       if (shouldCopy && !excludeFiles.includes(entry.name)) {
-        console.log(`Copying file: ${entry.name}`);
-        fs.copyFileSync(srcPath, destPath);
+        const parsedPath = path.parse(entry.name);
+
+        // Determine if file should be hashed
+        let finalFileName, finalDestPath;
+
+        if (parsedPath.ext === '.html') {
+          // HTML files keep original names for better URLs
+          finalFileName = entry.name;
+          finalDestPath = path.join(destDir, finalFileName);
+          console.log(`Copying HTML file: ${entry.name}`);
+        } else {
+          // Generate hash for other files
+          const hash = generateFileHash(srcPath);
+          finalFileName = `${parsedPath.name}.${hash}${parsedPath.ext}`;
+          finalDestPath = path.join(destDir, finalFileName);
+          console.log(`Copying file: ${entry.name} -> ${finalFileName}`);
+        }
+
+        fs.copyFileSync(srcPath, finalDestPath);
+
+        // Store mapping for reference updates
+        fileMap[entry.name] = finalFileName;
       }
     }
   }
+
+  return fileMap;
 }
 
 // Function to copy directory recursively
@@ -104,9 +134,53 @@ function copyDir(src, dest) {
   }
 }
 
+// Function to escape regex special characters
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Function to update HTML and CSS files with hashed file names
+function updateHtmlFiles(distDir, fileMap) {
+  const extensions = ['.html', '.css'];
+
+  for (const ext of extensions) {
+    const files = fs.readdirSync(distDir).filter(file => file.endsWith(ext));
+
+    for (const file of files) {
+      const filePath = path.join(distDir, file);
+      let content = fs.readFileSync(filePath, 'utf8');
+      let updated = false;
+
+      // Replace all references to hashed files
+      for (const [originalName, hashedName] of Object.entries(fileMap)) {
+        // Create regex to match references to original file name
+        // This matches src="originalName", href="originalName", url("originalName") etc.
+        const escapedName = escapeRegExp(originalName);
+        // Match patterns like: href="file", src="file", url("file"), url('file')
+        const regex = new RegExp(`(["'\\(])\\s*${escapedName}\\s*(["'\\s>])`, 'g');
+        const newContent = content.replace(regex, `$1${hashedName}$2`);
+
+        if (newContent !== content) {
+          content = newContent;
+          updated = true;
+        }
+      }
+
+      if (updated) {
+        fs.writeFileSync(filePath, content, 'utf8');
+        console.log(`Updated references in ${file}`);
+      }
+    }
+  }
+}
+
 // Copy files from current directory to dist
 console.log('Copying static files...');
-copyFiles('.', distDir);
+const fileMap = copyFiles('.', distDir);
+
+// Update HTML files with hashed file names
+console.log('Updating HTML files with hashed file names...');
+updateHtmlFiles(distDir, fileMap);
 
 console.log('Build completed successfully!');
 console.log(`Files in ${distDir}:`, fs.readdirSync(distDir));
