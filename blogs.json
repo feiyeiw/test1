@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "title": "Welcome to 1³ Machine Blog",
+    "content": "<h3>Welcome to Our New Blog Section</h3><p>We are excited to launch our new blog section where we will share insights about automated production, smart warehouse solutions, and industry trends.</p><p>Stay tuned for more updates!</p>",
+    "plainText": "We are excited to launch our new blog section where we will share insights about automated production, smart warehouse solutions, and industry trends. Stay tuned for more updates!",
+    "date": "2026-03-01",
+    "createdAt": "2026-03-01T00:00:00.000Z",
+    "updatedAt": "2026-03-01T00:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "title": "The Future of Automated Production Lines",
+    "content": "<h3>The Future of Automated Production Lines</h3><p>Automation is transforming manufacturing by increasing efficiency, reducing errors, and enabling 24/7 production capabilities.</p><p>Key trends include:</p><ul><li>Integration of IoT sensors</li><li>AI-powered quality control</li><li>Collaborative robots (cobots)</li><li>Predictive maintenance systems</li></ul>",
+    "plainText": "Automation is transforming manufacturing by increasing efficiency, reducing errors, and enabling 24/7 production capabilities. Key trends include integration of IoT sensors, AI-powered quality control, collaborative robots (cobots), and predictive maintenance systems.",
+    "date": "2026-02-15",
+    "createdAt": "2026-02-15T00:00:00.000Z",
+    "updatedAt": "2026-02-15T00:00:00.000Z"
+  },
+  {
+    "id": 3,
+    "title": "Smart Warehouse Solutions for Modern Businesses",
+    "content": "<h3>Modern Warehouse Automation</h3><p>Smart warehouse systems utilize technologies like stacker cranes, shuttle systems, and AGVs to optimize storage and retrieval processes.</p><p>These systems help businesses:</p><ul><li>Maximize storage density</li><li>Reduce order fulfillment time</li><li>Improve inventory accuracy</li><li>Lower operational costs</li></ul>",
+    "plainText": "Smart warehouse systems utilize technologies like stacker cranes, shuttle systems, and AGVs to optimize storage and retrieval processes. These systems help businesses maximize storage density, reduce order fulfillment time, improve inventory accuracy, and lower operational costs.",
+    "date": "2026-02-01",
+    "createdAt": "2026-02-01T00:00:00.000Z",
+    "updatedAt": "2026-02-01T00:00:00.000Z"
+  }
+]

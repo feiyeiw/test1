@@ -313,6 +313,12 @@
 
             <button id="addBlog" class="save-btn" data-i18n="addBlog">Add Blog</button>
 
+            <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button id="exportBlogs" class="save-btn" style="background-color: #28a745;" data-i18n="exportBlogs">Export Blogs JSON</button>
+                <button id="importBlogs" class="save-btn" style="background-color: #17a2b8;" data-i18n="importBlogs">Import Blogs JSON</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+            </div>
+
             <div id="blogList" style="margin-top: 30px;">
                 <h3 data-i18n="blogList">Blog List</h3>
                 <div id="blogsContainer"></div>

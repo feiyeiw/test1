@@ -8,391 +8,144 @@ async function sha256Hash(text) {
     return hashHex;
 }
 
-// Cloudflare KV API Service
-const BLOG_API_CONFIG_KEY = 'blogApiConfig';
-
-// Default API configuration (can be overridden via localStorage)
-let blogApiConfig = {
-    enabled: false, // Disable Cloudflare Pages Functions API by default (enable via admin panel)
-    endpoint: '/api/blogs', // Relative to current domain
-    apiKey: '', // API key loaded from localStorage or environment (use setApiKey() to configure)
-    useLocalStorageFallback: true // Fallback to localStorage if API fails
-};
-
-// Load API configuration from localStorage
-function loadBlogApiConfig() {
-    const savedConfig = localStorage.getItem(BLOG_API_CONFIG_KEY);
-    if (savedConfig) {
-        blogApiConfig = { ...blogApiConfig, ...JSON.parse(savedConfig) };
-    }
-    return blogApiConfig;
-}
-
-// Save API configuration to localStorage
-function saveBlogApiConfig(config) {
-    blogApiConfig = { ...blogApiConfig, ...config };
-    localStorage.setItem(BLOG_API_CONFIG_KEY, JSON.stringify(blogApiConfig));
-}
+// Local blog storage service
 
 // API Service functions
 const blogApi = {
-    // Get all blogs
+    // Get all blogs - try from JSON file first, then localStorage
     async getAllBlogs() {
-        const config = loadBlogApiConfig();
-
-        if (!config.enabled) {
-            // Fallback to localStorage
-            return JSON.parse(localStorage.getItem('blogs')) || [];
-        }
-
         try {
-            const response = await fetch(config.endpoint, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                }
-            });
+            // Try to fetch from blogs.json
+            const response = await fetch('blogs.json');
+            if (response.ok) {
+                const blogs = await response.json();
 
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
-            }
-
-            const blogs = await response.json();
-
-            // Update localStorage cache for offline use
-            if (config.useLocalStorageFallback) {
+                // Cache in localStorage for offline use and admin editing
                 localStorage.setItem('blogs', JSON.stringify(blogs));
-            }
 
-            return blogs;
+                return blogs;
+            }
         } catch (error) {
-            console.warn('Failed to fetch blogs from API, falling back to localStorage:', error);
-
-            if (config.useLocalStorageFallback) {
-                return JSON.parse(localStorage.getItem('blogs')) || [];
-            }
-
-            return [];
+            console.warn('Failed to fetch blogs.json, falling back to localStorage:', error);
         }
+
+        // Fallback to localStorage
+        return JSON.parse(localStorage.getItem('blogs')) || [];
     },
 
-    // Get single blog by ID
+    // Get single blog by ID - try from JSON file first, then localStorage
     async getBlogById(id) {
-        const config = loadBlogApiConfig();
-
-        if (!config.enabled) {
-            // Fallback to localStorage
+        try {
+            const blogs = await this.getAllBlogs();
+            return blogs.find(blog => blog.id == id) || null;
+        } catch (error) {
+            console.warn(`Error getting blog ${id}:`, error);
             const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
             return blogs.find(blog => blog.id == id) || null;
         }
-
-        try {
-            const response = await fetch(`${config.endpoint}/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                }
-            });
-
-            if (!response.ok) {
-                if (response.status === 404) {
-                    return null;
-                }
-                throw new Error(`API error: ${response.status}`);
-            }
-
-            return await response.json();
-        } catch (error) {
-            console.warn(`Failed to fetch blog ${id} from API:`, error);
-
-            if (config.useLocalStorageFallback) {
-                const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-                return blogs.find(blog => blog.id == id) || null;
-            }
-
-            return null;
-        }
     },
 
-    // Create new blog (requires authentication)
+    // Create new blog in localStorage (admin only)
     async createBlog(blogData) {
-        const config = loadBlogApiConfig();
+        const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+        const newBlog = {
+            id: Date.now(),
+            title: blogData.title,
+            content: blogData.content,
+            plainText: blogData.plainText || blogData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(),
+            date: blogData.date || new Date().toISOString().split('T')[0],
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
 
-        if (!config.enabled) {
-            // Fallback to localStorage
-            const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-            const newBlog = {
-                id: Date.now(),
-                title: blogData.title,
-                content: blogData.content,
-                plainText: blogData.plainText || blogData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(),
-                date: blogData.date || new Date().toISOString().split('T')[0]
-            };
-
-            blogs.push(newBlog);
-            localStorage.setItem('blogs', JSON.stringify(blogs));
-            return newBlog;
-        }
-
-        try {
-            const headers = {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            };
-
-            // Add API key if configured
-            if (config.apiKey) {
-                headers['X-API-Key'] = config.apiKey;
-            }
-
-            const response = await fetch(config.endpoint, {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify(blogData)
-            });
-
-            if (!response.ok) {
-                if (response.status === 401) {
-                    throw new Error('Unauthorized: Invalid API key');
-                }
-                throw new Error(`API error: ${response.status}`);
-            }
-
-            const newBlog = await response.json();
-
-            // Update localStorage cache
-            if (config.useLocalStorageFallback) {
-                const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-                blogs.push(newBlog);
-                localStorage.setItem('blogs', JSON.stringify(blogs));
-            }
-
-            return newBlog;
-        } catch (error) {
-            console.warn('Failed to create blog via API, falling back to localStorage:', error);
-
-            if (config.useLocalStorageFallback) {
-                // Fallback to localStorage
-                const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-                const newBlog = {
-                    id: Date.now(),
-                    title: blogData.title,
-                    content: blogData.content,
-                    plainText: blogData.plainText || blogData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(),
-                    date: blogData.date || new Date().toISOString().split('T')[0]
-                };
-                blogs.push(newBlog);
-                localStorage.setItem('blogs', JSON.stringify(blogs));
-                return newBlog;
-            }
-
-            throw error;
-        }
+        blogs.push(newBlog);
+        localStorage.setItem('blogs', JSON.stringify(blogs));
+        return newBlog;
     },
 
-    // Update existing blog (requires authentication)
+    // Update existing blog in localStorage (admin only)
     async updateBlog(id, blogData) {
-        const config = loadBlogApiConfig();
+        const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+        const index = blogs.findIndex(blog => blog.id == id);
 
-        if (!config.enabled) {
-            // Fallback to localStorage
-            const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-            const index = blogs.findIndex(blog => blog.id == id);
-
-            if (index === -1) {
-                throw new Error('Blog not found');
-            }
-
-            blogs[index] = {
-                ...blogs[index],
-                ...blogData,
-                id: id // Ensure ID doesn't change
-            };
-
-            localStorage.setItem('blogs', JSON.stringify(blogs));
-            return blogs[index];
+        if (index === -1) {
+            throw new Error('Blog not found');
         }
 
-        try {
-            const headers = {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            };
+        const updatedBlog = {
+            ...blogs[index],
+            ...blogData,
+            id: id, // Ensure ID doesn't change
+            updatedAt: new Date().toISOString()
+        };
 
-            // Add API key if configured
-            if (config.apiKey) {
-                headers['X-API-Key'] = config.apiKey;
-            }
-
-            const response = await fetch(`${config.endpoint}/${id}`, {
-                method: 'PUT',
-                headers: headers,
-                body: JSON.stringify(blogData)
-            });
-
-            if (!response.ok) {
-                if (response.status === 401) {
-                    throw new Error('Unauthorized: Invalid API key');
-                }
-                if (response.status === 404) {
-                    throw new Error('Blog not found');
-                }
-                throw new Error(`API error: ${response.status}`);
-            }
-
-            const updatedBlog = await response.json();
-
-            // Update localStorage cache
-            if (config.useLocalStorageFallback) {
-                const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-                const index = blogs.findIndex(blog => blog.id == id);
-                if (index !== -1) {
-                    blogs[index] = updatedBlog;
-                    localStorage.setItem('blogs', JSON.stringify(blogs));
-                }
-            }
-
-            return updatedBlog;
-        } catch (error) {
-            console.warn(`Failed to update blog ${id} via API, falling back to localStorage:`, error);
-
-            if (config.useLocalStorageFallback) {
-                // Fallback to localStorage
-                const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-                const index = blogs.findIndex(blog => blog.id == id);
-                if (index === -1) {
-                    throw new Error('Blog not found');
-                }
-                blogs[index] = {
-                    ...blogs[index],
-                    ...blogData,
-                    id: id // Ensure ID doesn't change
-                };
-                localStorage.setItem('blogs', JSON.stringify(blogs));
-                return blogs[index];
-            }
-
-            throw error;
+        // Regenerate plainText if content changed
+        if (blogData.content !== undefined) {
+            updatedBlog.plainText = blogData.plainText || blogData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
         }
+
+        blogs[index] = updatedBlog;
+        localStorage.setItem('blogs', JSON.stringify(blogs));
+        return updatedBlog;
     },
 
-    // Delete blog (requires authentication)
+    // Delete blog from localStorage (admin only)
     async deleteBlog(id) {
-        const config = loadBlogApiConfig();
+        const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+        const index = blogs.findIndex(blog => blog.id == id);
 
-        if (!config.enabled) {
-            // Fallback to localStorage
-            const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-            const index = blogs.findIndex(blog => blog.id == id);
-
-            if (index === -1) {
-                throw new Error('Blog not found');
-            }
-
-            blogs.splice(index, 1);
-            localStorage.setItem('blogs', JSON.stringify(blogs));
-            return true;
+        if (index === -1) {
+            throw new Error('Blog not found');
         }
 
-        try {
-            const headers = {
-                'Accept': 'application/json'
-            };
-
-            // Add API key if configured
-            if (config.apiKey) {
-                headers['X-API-Key'] = config.apiKey;
-            }
-
-            const response = await fetch(`${config.endpoint}/${id}`, {
-                method: 'DELETE',
-                headers: headers
-            });
-
-            if (!response.ok) {
-                if (response.status === 401) {
-                    throw new Error('Unauthorized: Invalid API key');
-                }
-                if (response.status === 404) {
-                    throw new Error('Blog not found');
-                }
-                throw new Error(`API error: ${response.status}`);
-            }
-
-            // Update localStorage cache
-            if (config.useLocalStorageFallback) {
-                const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-                const index = blogs.findIndex(blog => blog.id == id);
-                if (index !== -1) {
-                    blogs.splice(index, 1);
-                    localStorage.setItem('blogs', JSON.stringify(blogs));
-                }
-            }
-
-            return true;
-        } catch (error) {
-            console.warn(`Failed to delete blog ${id} via API, falling back to localStorage:`, error);
-
-            if (config.useLocalStorageFallback) {
-                // Fallback to localStorage
-                const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-                const index = blogs.findIndex(blog => blog.id == id);
-                if (index === -1) {
-                    throw new Error('Blog not found');
-                }
-                blogs.splice(index, 1);
-                localStorage.setItem('blogs', JSON.stringify(blogs));
-                return true;
-            }
-
-            throw error;
-        }
+        blogs.splice(index, 1);
+        localStorage.setItem('blogs', JSON.stringify(blogs));
+        return true;
     },
 
-    // Test API connection
-    async testConnection() {
-        const config = loadBlogApiConfig();
+    // Export blogs to JSON file (admin only)
+    async exportBlogs() {
+        const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+        const jsonStr = JSON.stringify(blogs, null, 2);
 
-        if (!config.enabled) {
-            return { success: true, message: 'API disabled, using localStorage' };
-        }
+        // Create a blob and download link
+        const blob = new Blob([jsonStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'blogs.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
 
-        try {
-            const response = await fetch(config.endpoint, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
+        return blogs;
+    },
+
+    // Import blogs from JSON file (admin only)
+    async importBlogs(jsonFile) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const blogs = JSON.parse(e.target.result);
+                    localStorage.setItem('blogs', JSON.stringify(blogs));
+                    resolve(blogs);
+                } catch (error) {
+                    reject(new Error('Invalid JSON file'));
                 }
-            });
-
-            if (!response.ok) {
-                return {
-                    success: false,
-                    message: `API returned ${response.status}`
-                };
-            }
-
-            return {
-                success: true,
-                message: 'API connection successful'
             };
-        } catch (error) {
-            return {
-                success: false,
-                message: `Connection failed: ${error.message}`
-            };
-        }
+            reader.onerror = () => reject(new Error('Failed to read file'));
+            reader.readAsText(jsonFile);
+        });
     }
 };
 
-// Initialize API config on load
-loadBlogApiConfig();
 
 // Admin credentials management
 const ADMIN_STORAGE_KEY = 'adminCredentials';
 const ADMIN_SESSION_KEY = 'adminSession';
 
-<<<<<<< HEAD
 // Reset admin credentials (for debugging/deployment issues)
 window.resetAdminCredentials = async function() {
     localStorage.removeItem(ADMIN_STORAGE_KEY);
@@ -402,24 +155,6 @@ window.resetAdminCredentials = async function() {
     await initializeAdminCredentials();
     alert('Admin credentials have been reset to default:\nUsername: admin\nPassword: admin123');
 };
-
-// Set API key globally (for quick configuration)
-window.setApiKey = function(apiKey) {
-    if (!apiKey || typeof apiKey !== 'string') {
-        console.error('Invalid API key. Please provide a valid string.');
-        return false;
-    }
-
-    // Save API key to configuration
-    saveBlogApiConfig({ apiKey: apiKey.trim() });
-
-    console.log('API key has been set successfully.');
-    console.log('Test API connection with: fetch("/api/health")');
-    return true;
-};
-
-=======
->>>>>>> parent of cde1c71 (修复：添加管理员凭据重置函数)
 // Initialize admin credentials if not exists
 async function initializeAdminCredentials() {
     const savedCredentials = localStorage.getItem(ADMIN_STORAGE_KEY);
@@ -445,31 +180,51 @@ async function initializeAdminCredentials() {
     }
 }
 
-// Initialize default blog data
-function initializeDefaultBlogs() {
+// Initialize default blog data - try to load from blogs.json, fallback to default
+async function initializeDefaultBlogs() {
     const savedBlogs = localStorage.getItem('blogs');
     if (!savedBlogs) {
+        try {
+            // Try to load from blogs.json
+            const response = await fetch('blogs.json');
+            if (response.ok) {
+                const blogs = await response.json();
+                localStorage.setItem('blogs', JSON.stringify(blogs));
+                console.log('Blog data loaded from blogs.json');
+                return;
+            }
+        } catch (error) {
+            console.warn('Failed to load blogs.json, using default data:', error);
+        }
+
+        // Fallback to default blogs
         const defaultBlogs = [
             {
                 id: 1,
                 title: 'Welcome to 1³ Machine Blog',
                 content: '<h3>Welcome to Our New Blog Section</h3><p>We are excited to launch our new blog section where we will share insights about automated production, smart warehouse solutions, and industry trends.</p><p>Stay tuned for more updates!</p>',
                 plainText: 'We are excited to launch our new blog section where we will share insights about automated production, smart warehouse solutions, and industry trends. Stay tuned for more updates!',
-                date: new Date().toISOString().split('T')[0]
+                date: new Date().toISOString().split('T')[0],
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
             },
             {
                 id: 2,
                 title: 'Benefits of Automated Production Lines',
                 content: '<h3>Increasing Efficiency with Automation</h3><p>Automated production lines can significantly increase manufacturing efficiency by reducing manual labor, minimizing errors, and enabling 24/7 operation.</p><p>Key benefits include:</p><ul><li>Higher production output</li><li>Consistent product quality</li><li>Reduced labor costs</li><li>Improved workplace safety</li></ul>',
                 plainText: 'Automated production lines can significantly increase manufacturing efficiency by reducing manual labor, minimizing errors, and enabling 24/7 operation. Key benefits include higher production output, consistent product quality, reduced labor costs, and improved workplace safety.',
-                date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 7 days ago
+                date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days ago
+                createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+                updatedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
             },
             {
                 id: 3,
                 title: 'Smart Warehouse Systems Overview',
                 content: '<h3>Modern Warehouse Automation</h3><p>Smart warehouse systems utilize technologies like stacker cranes, shuttle systems, and AGVs to optimize storage and retrieval processes.</p><p>These systems help businesses:</p><ul><li>Maximize storage density</li><li>Reduce order fulfillment time</li><li>Improve inventory accuracy</li><li>Lower operational costs</li></ul>',
                 plainText: 'Smart warehouse systems utilize technologies like stacker cranes, shuttle systems, and AGVs to optimize storage and retrieval processes. These systems help businesses maximize storage density, reduce order fulfillment time, improve inventory accuracy, and lower operational costs.',
-                date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 14 days ago
+                date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 14 days ago
+                createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+                updatedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString()
             }
         ];
         localStorage.setItem('blogs', JSON.stringify(defaultBlogs));
@@ -523,7 +278,7 @@ function initializeDefaultSiteContent() {
 // Initialize all default data
 async function initializeAllData() {
     await initializeAdminCredentials();
-    initializeDefaultBlogs();
+    await initializeDefaultBlogs();
     initializeDefaultSiteContent();
 }
 
@@ -679,12 +434,6 @@ if (document.getElementById('adminDashboard')) {
             document.getElementById('aboutDescription').value = siteContent.pages.about.description;
         }
 
-        // Load API key if input exists
-        const apiKeyInput = document.getElementById('apiKey');
-        if (apiKeyInput) {
-            const config = loadBlogApiConfig();
-            apiKeyInput.value = config.apiKey || '';
-        }
     }
     
     // Save content
@@ -764,28 +513,6 @@ if (document.getElementById('adminDashboard')) {
         alert('Password changed successfully!');
     });
 
-    // Save API key
-    const saveApiKeyBtn = document.getElementById('saveApiKey');
-    if (saveApiKeyBtn) {
-        saveApiKeyBtn.addEventListener('click', function() {
-            const apiKeyInput = document.getElementById('apiKey');
-            if (!apiKeyInput) return;
-
-            const apiKey = apiKeyInput.value.trim();
-            if (!apiKey) {
-                alert('Please enter an API key');
-                return;
-            }
-
-            // Save API key to configuration
-            saveBlogApiConfig({ apiKey: apiKey });
-
-            // Clear input for security (optional)
-            // apiKeyInput.value = '';
-
-            alert('API key saved successfully! It will be used for all future API requests.');
-        });
-    }
 
     // Save pages content
     document.getElementById('savePages').addEventListener('click', function() {
@@ -972,6 +699,50 @@ if (document.getElementById('adminDashboard')) {
             alert(`Error deleting blog: ${error.message}`);
         }
     };
+
+    // Export blogs to JSON file
+    const exportBlogsBtn = document.getElementById('exportBlogs');
+    if (exportBlogsBtn) {
+        exportBlogsBtn.addEventListener('click', async function() {
+            try {
+                await blogApi.exportBlogs();
+                alert('Blogs exported successfully! Download the blogs.json file and replace the existing one in your project directory.');
+            } catch (error) {
+                console.error('Error exporting blogs:', error);
+                alert(`Error exporting blogs: ${error.message}`);
+            }
+        });
+    }
+
+    // Import blogs from JSON file
+    const importBlogsBtn = document.getElementById('importBlogs');
+    const importFileInput = document.getElementById('importFile');
+    if (importBlogsBtn && importFileInput) {
+        importBlogsBtn.addEventListener('click', function() {
+            importFileInput.click();
+        });
+
+        importFileInput.addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.name.endsWith('.json')) {
+                alert('Please select a JSON file');
+                return;
+            }
+
+            try {
+                await blogApi.importBlogs(file);
+                await loadBlogs();
+                alert('Blogs imported successfully!');
+                // Clear file input
+                e.target.value = '';
+            } catch (error) {
+                console.error('Error importing blogs:', error);
+                alert(`Error importing blogs: ${error.message}`);
+            }
+        });
+    }
 
     // Load blogs on page load
     loadBlogs();
@@ -1292,15 +1063,14 @@ const TRANSLATIONS = {
         'solutionsPage': 'Solutions Page',
         'aboutPage': 'About Page',
         'savePagesContent': 'Save Pages Content',
-        'apiConfiguration': 'API Configuration',
-        'cloudflareApiKey': 'Cloudflare API Key',
-        'saveApiKey': 'Save API Key',
         'blogManagement': 'Blog Management',
         'blogTitle': 'Blog Title',
         'date': 'Date',
         'blogContent': 'Blog Content (Rich Text Editor)',
         'addBlog': 'Add Blog',
         'blogList': 'Blog List',
+        'exportBlogs': 'Export Blogs JSON',
+        'importBlogs': 'Import Blogs JSON',
 
         // Editor buttons titles
         'bold': 'Bold',
@@ -1343,15 +1113,14 @@ const TRANSLATIONS = {
         'solutionsPage': '解决方案页面',
         'aboutPage': '关于页面',
         'savePagesContent': '保存页面内容',
-        'apiConfiguration': 'API配置',
-        'cloudflareApiKey': 'Cloudflare API密钥',
-        'saveApiKey': '保存API密钥',
         'blogManagement': '博客管理',
         'blogTitle': '博客标题',
         'date': '日期',
         'blogContent': '博客内容 (富文本编辑器)',
         'addBlog': '添加博客',
         'blogList': '博客列表',
+        'exportBlogs': '导出博客JSON',
+        'importBlogs': '导入博客JSON',
 
         // Editor buttons titles
         'bold': '粗体',
