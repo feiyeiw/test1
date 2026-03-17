@@ -17,10 +17,21 @@
 - **管理后台** (`admin.html`): 博客内容管理系统
 
 ### 2. 博客系统
-- **本地存储**: 博客数据存储在 `blogs.json` 文件中
-- **缓存策略**: 首次加载从JSON文件读取，缓存在localStorage中
+- **混合存储架构**: 支持跨设备访问的混合存储方案
+  - **Cloudflare KV**: 主存储，支持跨设备同步
+  - **本地JSON文件**: 备用数据源 (`blogs.json`)
+  - **浏览器缓存**: localStorage 提供离线访问和性能优化
+- **智能数据流**:
+  - 优先从远程KV API获取数据
+  - 失败时回退到本地JSON文件
+  - 最终回退到localStorage缓存
+  - 数据自动缓存，5分钟有效期
 - **管理功能**: 管理员可以通过后台添加、编辑、删除博客文章
-- **离线支持**: 浏览器localStorage提供离线访问能力
+  - 支持远程同步操作
+  - 支持本地离线编辑
+  - 提供数据导入/导出功能
+- **跨设备支持**: 通过Cloudflare KV实现数据跨设备同步
+- **离线支持**: 浏览器localStorage提供完整的离线访问和编辑能力
 
 ### 3. 缓存破坏机制
 - **构建时哈希**: 使用 `build.js` 对CSS、JS等静态文件生成内容哈希
@@ -45,8 +56,10 @@
 - **build.js**: 自定义构建脚本，处理文件复制和哈希生成
 
 ### 数据存储
-- **JSON文件**: `blogs.json` 存储博客数据
-- **localStorage**: 浏览器本地缓存
+- **Cloudflare KV**: 主存储，支持跨设备同步的键值存储
+- **JSON文件**: `blogs.json` 备用数据源和初始数据
+- **localStorage**: 浏览器本地缓存，提供离线支持
+- **Cloudflare Workers**: 无服务器API层，处理博客CRUD操作
 - **GitHub**: 代码版本控制和部署
 
 ## 文件结构
@@ -67,7 +80,14 @@
 │   ├── style.css           # 主样式文件
 │   └── script.js           # 主JavaScript文件
 ├── 数据文件/
-│   └── blogs.json          # 博客数据存储
+│   └── blogs.json          # 博客数据存储（备用数据源）
+├── Cloudflare Functions/
+│   ├── _middleware.js      # API中间件（CORS处理）
+│   ├── api/
+│   │   ├── blogs.js        # 博客列表API（GET/POST）
+│   │   ├── blogs/[id].js   # 单个博客API（GET/PUT/DELETE）
+│   │   └── health.js       # 健康检查API
+│   └── wrangler.toml       # Cloudflare Workers配置
 ├── 构建配置/
 │   ├── build.js            # 构建脚本
 │   ├── package.json        # 项目配置
@@ -116,6 +136,38 @@ node build.js
 3. 选择部署源为 `main` 分支的 `dist/` 目录
 4. 访问生成的 `https://[用户名].github.io/[仓库名]`
 
+#### Cloudflare Workers + Pages 部署（推荐）
+1. **部署静态网站到 Cloudflare Pages**:
+   - 将代码推送到GitHub仓库
+   - 在Cloudflare控制台创建Pages项目
+   - 连接到GitHub仓库，构建命令: `npm run build`
+   - 发布目录: `dist`
+
+2. **部署API到 Cloudflare Workers**:
+   ```bash
+   # 安装Wrangler CLI
+   npm install -g wrangler
+
+   # 登录Cloudflare
+   wrangler login
+
+   # 创建KV命名空间（第一次部署时）
+   wrangler kv:namespace create "BLOG_DATA"
+
+   # 更新wrangler.toml中的KV命名空间ID
+
+   # 部署Workers
+   wrangler deploy
+   ```
+
+3. **配置环境变量**:
+   - 在Workers设置中设置 `API_KEY` 环境变量
+   - 在admin管理后台输入相同的API密钥
+
+4. **配置自定义域名**（可选）:
+   - 为Pages和Workers配置相同域名
+   - 设置路由规则将 `/api/*` 转发到Workers
+
 #### 其他静态托管
 - 直接将 `dist/` 目录内容上传到任何静态托管服务
 - 如Netlify、Vercel、Cloudflare Pages等
@@ -136,8 +188,27 @@ node build.js
 
 #### 通过管理后台
 1. 访问 `admin.html`
-2. 使用预设凭据登录
+2. 使用预设凭据登录（默认: admin / admin123）
 3. 在界面中添加、编辑或删除博客
+
+#### 远程同步管理
+1. **配置API密钥**:
+   - 在管理后台的"跨设备同步设置"区域
+   - 输入Cloudflare Workers的API密钥
+   - 点击"保存API密钥"
+
+2. **测试连接**:
+   - 点击"测试API连接"验证配置
+   - 成功显示"API连接正常"
+
+3. **同步操作**:
+   - **同步到远程**: 将本地博客上传到Cloudflare KV
+   - **从远程刷新**: 从Cloudflare KV下载最新博客
+   - **自动同步**: 新建/编辑/删除博客时自动同步（需API密钥）
+
+4. **离线模式**:
+   - 无API密钥或网络断开时自动使用本地存储
+   - 恢复连接后可手动同步数据
 
 ### 5. 更新网站内容
 

@@ -319,6 +319,34 @@
                 <input type="file" id="importFile" accept=".json" style="display: none;">
             </div>
 
+            <!-- API Management Section -->
+            <div id="apiManagement" style="margin-top: 30px; padding: 20px; background-color: #f5f5f5; border-radius: 8px; border: 1px solid #ddd;">
+                <h3 style="margin-top: 0; color: #333;">跨设备同步设置 (Cloudflare KV)</h3>
+
+                <div style="margin-bottom: 15px;">
+                    <label for="apiKey" style="display: block; margin-bottom: 5px; font-weight: bold;">API密钥:</label>
+                    <input type="password" id="apiKey" placeholder="输入API密钥以启用远程同步" style="width: 100%; max-width: 400px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                    <div style="margin-top: 5px; font-size: 12px; color: #666;">
+                        API密钥用于认证管理操作。部署Cloudflare Workers时设置的环境变量。
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <div id="apiStatus" style="padding: 10px; border-radius: 4px; background-color: #fff; border: 1px solid #ddd;">
+                        <strong>API状态:</strong> <span id="apiStatusText">检查中...</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button id="testApi" class="save-btn" style="background-color: #6f42c1;">测试API连接</button>
+                    <button id="saveApiKey" class="save-btn" style="background-color: #20c997;">保存API密钥</button>
+                    <button id="syncBlogs" class="save-btn" style="background-color: #fd7e14;">同步到远程</button>
+                    <button id="refreshBlogs" class="save-btn" style="background-color: #6610f2;">从远程刷新</button>
+                </div>
+
+                <div id="apiResult" style="margin-top: 15px; padding: 10px; border-radius: 4px; display: none;"></div>
+            </div>
+
             <div id="blogList" style="margin-top: 30px;">
                 <h3 data-i18n="blogList">Blog List</h3>
                 <div id="blogsContainer"></div>

@@ -8,104 +8,363 @@ async function sha256Hash(text) {
     return hashHex;
 }
 
-// Local blog storage service
+// Cloudflare KV Blog Storage Service
+// Supports cross-device access with fallback to local storage
 
-// API Service functions
-const blogApi = {
-    // Get all blogs - try from JSON file first, then localStorage
-    async getAllBlogs() {
+// API Configuration
+const API_CONFIG = {
+    baseUrl: '/api', // Relative URL for Cloudflare Workers
+    apiKey: localStorage.getItem('adminApiKey') || '', // Admin API key
+    cacheTimeout: 5 * 60 * 1000, // 5 minutes cache timeout
+    retryAttempts: 2, // Number of retry attempts
+    retryDelay: 1000, // Delay between retries in ms
+};
+
+// Helper function to make API requests with retry logic
+async function apiRequest(endpoint, options = {}) {
+    const { retryAttempts = API_CONFIG.retryAttempts, retryDelay = API_CONFIG.retryDelay } = options;
+    let lastError;
+
+    for (let attempt = 0; attempt <= retryAttempts; attempt++) {
         try {
-            // Try to fetch from blogs.json
-            const response = await fetch('blogs.json');
-            if (response.ok) {
-                const blogs = await response.json();
+            const url = `${API_CONFIG.baseUrl}${endpoint}`;
+            const headers = {
+                'Content-Type': 'application/json',
+                ...options.headers,
+            };
 
-                // Cache in localStorage for offline use and admin editing
-                localStorage.setItem('blogs', JSON.stringify(blogs));
-
-                return blogs;
+            // Add API key if available and not already set
+            if (API_CONFIG.apiKey && !headers['X-API-Key']) {
+                headers['X-API-Key'] = API_CONFIG.apiKey;
             }
+
+            const response = await fetch(url, {
+                ...options,
+                headers,
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`API error ${response.status}: ${errorText}`);
+            }
+
+            return await response.json();
         } catch (error) {
-            console.warn('Failed to fetch blogs.json, falling back to localStorage:', error);
+            lastError = error;
+            console.warn(`API request attempt ${attempt + 1}/${retryAttempts + 1} failed:`, error.message);
+
+            // Don't wait on last attempt
+            if (attempt < retryAttempts) {
+                await new Promise(resolve => setTimeout(resolve, retryDelay * (attempt + 1)));
+            }
+        }
+    }
+
+    throw lastError;
+}
+
+// Helper function to check if API is available
+async function checkApiAvailability() {
+    try {
+        await fetch(`${API_CONFIG.baseUrl}/health`, { method: 'GET', timeout: 3000 });
+        return true;
+    } catch (error) {
+        console.warn('API not available:', error.message);
+        return false;
+    }
+}
+
+// Cache management
+const CACHE_KEYS = {
+    BLOGS: 'blogs_cache',
+    BLOGS_TIMESTAMP: 'blogs_cache_timestamp',
+    API_AVAILABLE: 'api_available_cache',
+};
+
+function getCachedBlogs() {
+    const cached = localStorage.getItem(CACHE_KEYS.BLOGS);
+    const timestamp = localStorage.getItem(CACHE_KEYS.BLOGS_TIMESTAMP);
+
+    if (!cached || !timestamp) {
+        return null;
+    }
+
+    const age = Date.now() - parseInt(timestamp);
+    if (age > API_CONFIG.cacheTimeout) {
+        return null; // Cache expired
+    }
+
+    try {
+        return JSON.parse(cached);
+    } catch (error) {
+        console.error('Error parsing cached blogs:', error);
+        return null;
+    }
+}
+
+function setCachedBlogs(blogs) {
+    try {
+        localStorage.setItem(CACHE_KEYS.BLOGS, JSON.stringify(blogs));
+        localStorage.setItem(CACHE_KEYS.BLOGS_TIMESTAMP, Date.now().toString());
+    } catch (error) {
+        console.error('Error caching blogs:', error);
+    }
+}
+
+// API Service functions with hybrid mode (remote API + local fallback)
+const blogApi = {
+    // Get all blogs - try from remote API first, then cache, then local JSON
+    async getAllBlogs() {
+        // First try cached data
+        const cachedBlogs = getCachedBlogs();
+        if (cachedBlogs) {
+            console.log('Using cached blogs');
+            return cachedBlogs;
         }
 
-        // Fallback to localStorage
-        return JSON.parse(localStorage.getItem('blogs')) || [];
-    },
-
-    // Get single blog by ID - try from JSON file first, then localStorage
-    async getBlogById(id) {
+        // Try remote API
         try {
-            const blogs = await this.getAllBlogs();
-            return blogs.find(blog => blog.id == id) || null;
-        } catch (error) {
-            console.warn(`Error getting blog ${id}:`, error);
-            const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-            return blogs.find(blog => blog.id == id) || null;
+            console.log('Fetching blogs from remote API...');
+            const blogs = await apiRequest('/blogs', { method: 'GET' });
+
+            // Cache the result
+            setCachedBlogs(blogs);
+
+            // Also update legacy localStorage for backward compatibility
+            localStorage.setItem('blogs', JSON.stringify(blogs));
+
+            return blogs;
+        } catch (apiError) {
+            console.warn('Failed to fetch from API, trying local JSON:', apiError.message);
+
+            // Fallback to local JSON file
+            try {
+                const response = await fetch('blogs.json');
+                if (response.ok) {
+                    const blogs = await response.json();
+
+                    // Cache the result
+                    setCachedBlogs(blogs);
+                    localStorage.setItem('blogs', JSON.stringify(blogs));
+
+                    return blogs;
+                }
+            } catch (jsonError) {
+                console.warn('Failed to fetch blogs.json:', jsonError.message);
+            }
+
+            // Final fallback to localStorage (legacy)
+            const legacyBlogs = JSON.parse(localStorage.getItem('blogs')) || [];
+            console.log('Using legacy localStorage blogs');
+            return legacyBlogs;
         }
     },
 
-    // Create new blog in localStorage (admin only)
+    // Get single blog by ID - try from remote API first, then cache
+    async getBlogById(id) {
+        if (!id) return null;
+
+        // First try to find in cached blogs
+        const cachedBlogs = getCachedBlogs();
+        if (cachedBlogs) {
+            const blog = cachedBlogs.find(b => b.id == id);
+            if (blog) return blog;
+        }
+
+        // Try remote API
+        try {
+            const blog = await apiRequest(`/blogs/${id}`, { method: 'GET' });
+            return blog;
+        } catch (apiError) {
+            console.warn(`Failed to fetch blog ${id} from API:`, apiError.message);
+
+            // Fallback to getAllBlogs
+            try {
+                const blogs = await this.getAllBlogs();
+                return blogs.find(blog => blog.id == id) || null;
+            } catch (error) {
+                console.warn(`Error getting blog ${id}:`, error);
+                const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+                return blogs.find(blog => blog.id == id) || null;
+            }
+        }
+    },
+
+    // Create new blog - try remote API first, then update local cache
     async createBlog(blogData) {
-        const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-        const newBlog = {
-            id: Date.now(),
-            title: blogData.title,
-            content: blogData.content,
+        // Validate required fields
+        if (!blogData.title || !blogData.content) {
+            throw new Error('Title and content are required');
+        }
+
+        // Prepare blog data
+        const blogPayload = {
+            title: blogData.title.trim(),
+            content: blogData.content.trim(),
             plainText: blogData.plainText || blogData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(),
             date: blogData.date || new Date().toISOString().split('T')[0],
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
         };
 
-        blogs.push(newBlog);
-        localStorage.setItem('blogs', JSON.stringify(blogs));
-        return newBlog;
+        try {
+            // Try remote API first
+            const newBlog = await apiRequest('/blogs', {
+                method: 'POST',
+                body: JSON.stringify(blogPayload)
+            });
+
+            // Update local cache
+            const cachedBlogs = getCachedBlogs() || [];
+            cachedBlogs.unshift(newBlog); // Add to beginning (newest first)
+            setCachedBlogs(cachedBlogs);
+
+            // Update legacy localStorage for backward compatibility
+            const legacyBlogs = JSON.parse(localStorage.getItem('blogs')) || [];
+            legacyBlogs.unshift(newBlog);
+            localStorage.setItem('blogs', JSON.stringify(legacyBlogs));
+
+            console.log('Blog created successfully via API:', newBlog.id);
+            return newBlog;
+        } catch (apiError) {
+            console.warn('Failed to create blog via API, using local storage:', apiError.message);
+
+            // Fallback to local storage
+            const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+            const newBlog = {
+                id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                ...blogPayload,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+
+            blogs.unshift(newBlog);
+            localStorage.setItem('blogs', JSON.stringify(blogs));
+            setCachedBlogs(blogs);
+
+            console.warn('Blog created locally (will not sync to other devices)');
+            return newBlog;
+        }
     },
 
-    // Update existing blog in localStorage (admin only)
+    // Update existing blog - try remote API first, then update local cache
     async updateBlog(id, blogData) {
-        const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-        const index = blogs.findIndex(blog => blog.id == id);
-
-        if (index === -1) {
-            throw new Error('Blog not found');
+        if (!id) {
+            throw new Error('Blog ID is required');
         }
 
-        const updatedBlog = {
-            ...blogs[index],
-            ...blogData,
-            id: id, // Ensure ID doesn't change
-            updatedAt: new Date().toISOString()
-        };
-
-        // Regenerate plainText if content changed
+        // Prepare update data
+        const updatePayload = { ...blogData };
         if (blogData.content !== undefined) {
-            updatedBlog.plainText = blogData.plainText || blogData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+            updatePayload.plainText = blogData.plainText || blogData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
         }
 
-        blogs[index] = updatedBlog;
-        localStorage.setItem('blogs', JSON.stringify(blogs));
-        return updatedBlog;
+        try {
+            // Try remote API first
+            const updatedBlog = await apiRequest(`/blogs/${id}`, {
+                method: 'PUT',
+                body: JSON.stringify(updatePayload)
+            });
+
+            // Update local cache
+            const cachedBlogs = getCachedBlogs() || [];
+            const cachedIndex = cachedBlogs.findIndex(blog => blog.id == id);
+            if (cachedIndex !== -1) {
+                cachedBlogs[cachedIndex] = updatedBlog;
+                setCachedBlogs(cachedBlogs);
+            }
+
+            // Update legacy localStorage
+            const legacyBlogs = JSON.parse(localStorage.getItem('blogs')) || [];
+            const legacyIndex = legacyBlogs.findIndex(blog => blog.id == id);
+            if (legacyIndex !== -1) {
+                legacyBlogs[legacyIndex] = updatedBlog;
+                localStorage.setItem('blogs', JSON.stringify(legacyBlogs));
+            }
+
+            console.log('Blog updated successfully via API:', id);
+            return updatedBlog;
+        } catch (apiError) {
+            console.warn('Failed to update blog via API, using local storage:', apiError.message);
+
+            // Fallback to local storage
+            const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+            const index = blogs.findIndex(blog => blog.id == id);
+
+            if (index === -1) {
+                throw new Error('Blog not found');
+            }
+
+            const updatedBlog = {
+                ...blogs[index],
+                ...blogData,
+                id: id, // Ensure ID doesn't change
+                updatedAt: new Date().toISOString()
+            };
+
+            // Regenerate plainText if content changed
+            if (blogData.content !== undefined) {
+                updatedBlog.plainText = blogData.plainText || blogData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+            }
+
+            blogs[index] = updatedBlog;
+            localStorage.setItem('blogs', JSON.stringify(blogs));
+            setCachedBlogs(blogs);
+
+            console.warn('Blog updated locally (will not sync to other devices)');
+            return updatedBlog;
+        }
     },
 
-    // Delete blog from localStorage (admin only)
+    // Delete blog - try remote API first, then update local cache
     async deleteBlog(id) {
-        const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-        const index = blogs.findIndex(blog => blog.id == id);
-
-        if (index === -1) {
-            throw new Error('Blog not found');
+        if (!id) {
+            throw new Error('Blog ID is required');
         }
 
-        blogs.splice(index, 1);
-        localStorage.setItem('blogs', JSON.stringify(blogs));
-        return true;
+        try {
+            // Try remote API first
+            await apiRequest(`/blogs/${id}`, { method: 'DELETE' });
+
+            // Update local cache
+            const cachedBlogs = getCachedBlogs() || [];
+            const cachedIndex = cachedBlogs.findIndex(blog => blog.id == id);
+            if (cachedIndex !== -1) {
+                cachedBlogs.splice(cachedIndex, 1);
+                setCachedBlogs(cachedBlogs);
+            }
+
+            // Update legacy localStorage
+            const legacyBlogs = JSON.parse(localStorage.getItem('blogs')) || [];
+            const legacyIndex = legacyBlogs.findIndex(blog => blog.id == id);
+            if (legacyIndex !== -1) {
+                legacyBlogs.splice(legacyIndex, 1);
+                localStorage.setItem('blogs', JSON.stringify(legacyBlogs));
+            }
+
+            console.log('Blog deleted successfully via API:', id);
+            return true;
+        } catch (apiError) {
+            console.warn('Failed to delete blog via API, using local storage:', apiError.message);
+
+            // Fallback to local storage
+            const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+            const index = blogs.findIndex(blog => blog.id == id);
+
+            if (index === -1) {
+                throw new Error('Blog not found');
+            }
+
+            blogs.splice(index, 1);
+            localStorage.setItem('blogs', JSON.stringify(blogs));
+            setCachedBlogs(blogs);
+
+            console.warn('Blog deleted locally (will not sync to other devices)');
+            return true;
+        }
     },
 
     // Export blogs to JSON file (admin only)
     async exportBlogs() {
-        const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+        const blogs = await this.getAllBlogs(); // Get latest data
         const jsonStr = JSON.stringify(blogs, null, 2);
 
         // Create a blob and download link
@@ -119,25 +378,140 @@ const blogApi = {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
 
+        console.log(`Exported ${blogs.length} blogs`);
         return blogs;
     },
 
-    // Import blogs from JSON file (admin only)
+    // Import blogs from JSON file (admin only) - adds to existing blogs
     async importBlogs(jsonFile) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = async (e) => {
                 try {
-                    const blogs = JSON.parse(e.target.result);
-                    localStorage.setItem('blogs', JSON.stringify(blogs));
-                    resolve(blogs);
+                    const importedBlogs = JSON.parse(e.target.result);
+                    if (!Array.isArray(importedBlogs)) {
+                        throw new Error('JSON file must contain an array of blogs');
+                    }
+
+                    console.log(`Importing ${importedBlogs.length} blogs...`);
+
+                    // Get existing blogs
+                    const existingBlogs = await this.getAllBlogs();
+                    const existingIds = new Set(existingBlogs.map(blog => blog.id));
+
+                    // Merge blogs (skip duplicates by ID)
+                    const mergedBlogs = [...existingBlogs];
+                    let addedCount = 0;
+                    let skippedCount = 0;
+
+                    for (const blog of importedBlogs) {
+                        if (!existingIds.has(blog.id)) {
+                            mergedBlogs.push(blog);
+                            existingIds.add(blog.id);
+                            addedCount++;
+
+                            // Try to upload to API
+                            try {
+                                await apiRequest('/blogs', {
+                                    method: 'POST',
+                                    body: JSON.stringify({
+                                        title: blog.title,
+                                        content: blog.content,
+                                        plainText: blog.plainText,
+                                        date: blog.date
+                                    })
+                                });
+                            } catch (apiError) {
+                                console.warn(`Failed to upload blog ${blog.id} to API:`, apiError.message);
+                            }
+                        } else {
+                            skippedCount++;
+                        }
+                    }
+
+                    // Update local storage
+                    localStorage.setItem('blogs', JSON.stringify(mergedBlogs));
+                    setCachedBlogs(mergedBlogs);
+
+                    console.log(`Import complete: ${addedCount} added, ${skippedCount} skipped`);
+                    resolve(mergedBlogs);
                 } catch (error) {
-                    reject(new Error('Invalid JSON file'));
+                    reject(new Error(`Invalid JSON file: ${error.message}`));
                 }
             };
             reader.onerror = () => reject(new Error('Failed to read file'));
             reader.readAsText(jsonFile);
         });
+    },
+
+    // Sync local blogs with remote API
+    async syncWithRemote() {
+        console.log('Starting sync with remote API...');
+        const localBlogs = JSON.parse(localStorage.getItem('blogs')) || [];
+
+        try {
+            // Get remote blogs
+            const remoteBlogs = await apiRequest('/blogs', { method: 'GET' });
+            const remoteIds = new Set(remoteBlogs.map(blog => blog.id));
+
+            // Upload local blogs that don't exist remotely
+            let uploadedCount = 0;
+            for (const blog of localBlogs) {
+                if (!remoteIds.has(blog.id)) {
+                    try {
+                        await apiRequest('/blogs', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                title: blog.title,
+                                content: blog.content,
+                                plainText: blog.plainText,
+                                date: blog.date
+                            })
+                        });
+                        uploadedCount++;
+                        console.log(`Uploaded blog: ${blog.id} - ${blog.title}`);
+                    } catch (error) {
+                        console.warn(`Failed to upload blog ${blog.id}:`, error.message);
+                    }
+                }
+            }
+
+            // Update cache with merged data
+            const allBlogs = [...remoteBlogs];
+            const remoteIdSet = new Set(remoteBlogs.map(b => b.id));
+
+            for (const blog of localBlogs) {
+                if (!remoteIdSet.has(blog.id)) {
+                    allBlogs.push(blog);
+                }
+            }
+
+            setCachedBlogs(allBlogs);
+            localStorage.setItem('blogs', JSON.stringify(allBlogs));
+
+            console.log(`Sync complete: Uploaded ${uploadedCount} blogs, total ${allBlogs.length} blogs`);
+            return allBlogs;
+        } catch (error) {
+            console.error('Sync failed:', error);
+            throw error;
+        }
+    },
+
+    // Check API status
+    async checkApiStatus() {
+        try {
+            const status = await fetch(`${API_CONFIG.baseUrl}/health`);
+            return status.ok;
+        } catch (error) {
+            return false;
+        }
+    },
+
+    // Set API key for admin operations
+    setApiKey(apiKey) {
+        API_CONFIG.apiKey = apiKey;
+        localStorage.setItem('adminApiKey', apiKey);
+        console.log('API key updated');
     }
 };
 
@@ -573,6 +947,160 @@ if (document.getElementById('adminDashboard')) {
             originalFormatText(command);
         }
     };
+
+    // API Management Functions
+    async function initializeApiManagement() {
+        // Load saved API key
+        const savedApiKey = localStorage.getItem('adminApiKey');
+        if (savedApiKey) {
+            document.getElementById('apiKey').value = savedApiKey;
+            blogApi.setApiKey(savedApiKey);
+        }
+
+        // Check API status
+        await checkApiStatus();
+
+        // Set up event listeners
+        document.getElementById('testApi').addEventListener('click', testApiConnection);
+        document.getElementById('saveApiKey').addEventListener('click', saveApiKey);
+        document.getElementById('syncBlogs').addEventListener('click', syncBlogsToRemote);
+        document.getElementById('refreshBlogs').addEventListener('click', refreshBlogsFromRemote);
+    }
+
+    async function checkApiStatus() {
+        try {
+            const apiStatusText = document.getElementById('apiStatusText');
+            const apiStatusDiv = document.getElementById('apiStatus');
+
+            apiStatusText.textContent = '检查中...';
+            apiStatusDiv.style.backgroundColor = '#fff3cd';
+            apiStatusDiv.style.borderColor = '#ffeaa7';
+
+            const isAvailable = await blogApi.checkApiStatus();
+
+            if (isAvailable) {
+                apiStatusText.textContent = '✅ 在线 - API连接正常';
+                apiStatusDiv.style.backgroundColor = '#d4edda';
+                apiStatusDiv.style.borderColor = '#c3e6cb';
+            } else {
+                apiStatusText.textContent = '❌ 离线 - 无法连接到API';
+                apiStatusDiv.style.backgroundColor = '#f8d7da';
+                apiStatusDiv.style.borderColor = '#f5c6cb';
+            }
+        } catch (error) {
+            console.error('Error checking API status:', error);
+            document.getElementById('apiStatusText').textContent = '❌ 错误 - ' + error.message;
+        }
+    }
+
+    async function testApiConnection() {
+        const resultDiv = document.getElementById('apiResult');
+        resultDiv.style.display = 'block';
+        resultDiv.style.backgroundColor = '#fff3cd';
+        resultDiv.style.borderColor = '#ffeaa7';
+        resultDiv.style.color = '#856404';
+        resultDiv.innerHTML = '<strong>测试中...</strong> 正在检查API连接...';
+
+        try {
+            const isAvailable = await blogApi.checkApiStatus();
+            if (isAvailable) {
+                resultDiv.style.backgroundColor = '#d4edda';
+                resultDiv.style.borderColor = '#c3e6cb';
+                resultDiv.style.color = '#155724';
+                resultDiv.innerHTML = '<strong>✅ 连接成功!</strong> API服务正常运行。';
+            } else {
+                resultDiv.style.backgroundColor = '#f8d7da';
+                resultDiv.style.borderColor = '#f5c6cb';
+                resultDiv.style.color = '#721c24';
+                resultDiv.innerHTML = '<strong>❌ 连接失败!</strong> 无法连接到API服务。请检查网络连接和API配置。';
+            }
+        } catch (error) {
+            resultDiv.style.backgroundColor = '#f8d7da';
+            resultDiv.style.borderColor = '#f5c6cb';
+            resultDiv.style.color = '#721c24';
+            resultDiv.innerHTML = `<strong>❌ 错误!</strong> ${error.message}`;
+        }
+    }
+
+    function saveApiKey() {
+        const apiKey = document.getElementById('apiKey').value.trim();
+
+        if (!apiKey) {
+            alert('请输入API密钥');
+            return;
+        }
+
+        blogApi.setApiKey(apiKey);
+
+        const resultDiv = document.getElementById('apiResult');
+        resultDiv.style.display = 'block';
+        resultDiv.style.backgroundColor = '#d4edda';
+        resultDiv.style.borderColor = '#c3e6cb';
+        resultDiv.style.color = '#155724';
+        resultDiv.innerHTML = '<strong>✅ API密钥已保存!</strong> 管理操作现在将使用此密钥进行远程同步。';
+
+        // Recheck API status
+        setTimeout(() => checkApiStatus(), 1000);
+    }
+
+    async function syncBlogsToRemote() {
+        const resultDiv = document.getElementById('apiResult');
+        resultDiv.style.display = 'block';
+        resultDiv.style.backgroundColor = '#fff3cd';
+        resultDiv.style.borderColor = '#ffeaa7';
+        resultDiv.style.color = '#856404';
+        resultDiv.innerHTML = '<strong>同步中...</strong> 正在将本地博客同步到远程服务器...';
+
+        try {
+            const syncedBlogs = await blogApi.syncWithRemote();
+
+            resultDiv.style.backgroundColor = '#d4edda';
+            resultDiv.style.borderColor = '#c3e6cb';
+            resultDiv.style.color = '#155724';
+            resultDiv.innerHTML = `<strong>✅ 同步完成!</strong> 成功同步 ${syncedBlogs.length} 篇博客到远程服务器。`;
+
+            // Refresh blog list
+            await loadBlogs();
+        } catch (error) {
+            resultDiv.style.backgroundColor = '#f8d7da';
+            resultDiv.style.borderColor = '#f5c6cb';
+            resultDiv.style.color = '#721c24';
+            resultDiv.innerHTML = `<strong>❌ 同步失败!</strong> ${error.message}`;
+        }
+    }
+
+    async function refreshBlogsFromRemote() {
+        const resultDiv = document.getElementById('apiResult');
+        resultDiv.style.display = 'block';
+        resultDiv.style.backgroundColor = '#fff3cd';
+        resultDiv.style.borderColor = '#ffeaa7';
+        resultDiv.style.color = '#856404';
+        resultDiv.innerHTML = '<strong>刷新中...</strong> 正在从远程服务器获取最新博客...';
+
+        try {
+            // Clear cache to force fresh fetch
+            localStorage.removeItem(CACHE_KEYS.BLOGS);
+            localStorage.removeItem(CACHE_KEYS.BLOGS_TIMESTAMP);
+
+            const blogs = await blogApi.getAllBlogs();
+
+            resultDiv.style.backgroundColor = '#d4edda';
+            resultDiv.style.borderColor = '#c3e6cb';
+            resultDiv.style.color = '#155724';
+            resultDiv.innerHTML = `<strong>✅ 刷新完成!</strong> 成功加载 ${blogs.length} 篇博客。`;
+
+            // Refresh blog list
+            await loadBlogs();
+        } catch (error) {
+            resultDiv.style.backgroundColor = '#f8d7da';
+            resultDiv.style.borderColor = '#f5c6cb';
+            resultDiv.style.color = '#721c24';
+            resultDiv.innerHTML = `<strong>❌ 刷新失败!</strong> ${error.message}`;
+        }
+    }
+
+    // Initialize API management
+    initializeApiManagement();
 
     // Blog management
 

@@ -1,0 +1,25 @@
+name = "1cube-machine-blog-api"
+main = "functions/_middleware.js"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[build]
+command = "npm run build"
+upload = { format = "service-worker" }
+
+[[kv_namespaces]]
+binding = "BLOG_DATA"
+id = ""
+
+[vars]
+API_KEY = ""
+
+[site]
+bucket = "./dist"
+entry-point = "functions"
+
+# [env.production]
+# name = "1cube-machine-blog-api-prod"
+
+# [env.staging]
+# name = "1cube-machine-blog-api-staging"
