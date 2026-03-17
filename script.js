@@ -926,11 +926,221 @@ if (document.getElementById('adminDashboard')) {
         }
     };
 
-    // Handle image insertion (simplified)
+    // Handle image insertion with file upload option
     window.insertImage = function() {
-        const url = prompt('Enter image URL:', 'https://');
-        if (url) {
-            document.execCommand('insertImage', false, url);
+        // Create modal dialog for image insertion
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        `;
+
+        const dialog = document.createElement('div');
+        dialog.style.cssText = `
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        `;
+
+        dialog.innerHTML = `
+            <h3 style="margin-top: 0; margin-bottom: 20px; color: #333;">Insert Image</h3>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold;">Option 1: Upload Image</label>
+                    <input type="file" id="imageUpload" accept="image/*" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                        Supported formats: JPG, PNG, GIF, WebP. Max size: 5MB. Images will be auto-compressed (max 1200x800) for optimal storage and faster loading.
+                    </div>
+                    <div id="imagePreview" style="margin-top: 15px; display: none;">
+                        <img id="previewImage" style="max-width: 100%; max-height: 200px; border-radius: 4px; border: 1px solid #ddd;">
+                        <div id="imageInfo" style="margin-top: 10px; font-size: 12px; color: #666;"></div>
+                    </div>
+                    <button id="uploadAndInsert" style="margin-top: 15px; padding: 10px 20px; background-color: #0066cc; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; display: none;">
+                        Compress & Insert
+                    </button>
+                </div>
+
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: bold;">Option 2: Use Image URL</label>
+                <input type="text" id="imageUrl" placeholder="https://example.com/image.jpg" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <button id="insertFromUrl" style="margin-top: 10px; padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">
+                    Insert from URL
+                </button>
+            </div>
+
+            <div style="text-align: right; margin-top: 25px;">
+                <button id="cancelInsert" style="padding: 8px 16px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Cancel
+                </button>
+            </div>
+        `;
+
+        modal.appendChild(dialog);
+        document.body.appendChild(modal);
+
+        // Close modal when clicking outside or cancel
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal || e.target.id === 'cancelInsert') {
+                document.body.removeChild(modal);
+            }
+        });
+
+        // Handle file upload preview
+        const imageUpload = dialog.querySelector('#imageUpload');
+        const imagePreview = dialog.querySelector('#imagePreview');
+        const previewImage = dialog.querySelector('#previewImage');
+        const uploadAndInsertBtn = dialog.querySelector('#uploadAndInsert');
+        const imageInfo = dialog.querySelector('#imageInfo');
+
+        imageUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Validate file size (5MB max)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Image size exceeds 5MB limit. Please choose a smaller image.');
+                e.target.value = '';
+                imagePreview.style.display = 'none';
+                uploadAndInsertBtn.style.display = 'none';
+                return;
+            }
+
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                alert('Please select a valid image file (JPG, PNG, GIF, or WebP).');
+                e.target.value = '';
+                imagePreview.style.display = 'none';
+                uploadAndInsertBtn.style.display = 'none';
+                return;
+            }
+
+            // Preview image and show file info
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                previewImage.src = event.target.result;
+                imagePreview.style.display = 'block';
+                uploadAndInsertBtn.style.display = 'block';
+
+                // Show image info
+                const sizeKB = (file.size / 1024).toFixed(1);
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                imageInfo.innerHTML = `<strong>Original:</strong> ${sizeKB >= 1024 ? sizeMB + ' MB' : sizeKB + ' KB'} | ${file.type} | Will be compressed to max 1200x800`;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Handle upload and insert
+        uploadAndInsertBtn.addEventListener('click', async function() {
+            const file = imageUpload.files[0];
+            if (!file) return;
+
+            uploadAndInsertBtn.textContent = 'Processing...';
+            uploadAndInsertBtn.disabled = true;
+
+            try {
+                // Compress and convert image to base64
+                const compressedDataUrl = await compressAndConvertImage(file);
+
+                // Insert into editor
+                const editor = document.getElementById('blogContent');
+                if (editor) {
+                    document.execCommand('insertImage', false, compressedDataUrl);
+                    editor.focus();
+                }
+
+                // Close modal
+                document.body.removeChild(modal);
+            } catch (error) {
+                alert('Error processing image: ' + error.message);
+                uploadAndInsertBtn.textContent = 'Upload & Insert';
+                uploadAndInsertBtn.disabled = false;
+            }
+        });
+
+        // Handle URL insertion
+        const insertFromUrlBtn = dialog.querySelector('#insertFromUrl');
+        const imageUrlInput = dialog.querySelector('#imageUrl');
+
+        insertFromUrlBtn.addEventListener('click', function() {
+            const url = imageUrlInput.value.trim();
+            if (!url) {
+                alert('Please enter an image URL');
+                return;
+            }
+
+            // Basic URL validation
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                alert('Please enter a valid URL starting with http:// or https://');
+                return;
+            }
+
+            // Insert into editor
+            const editor = document.getElementById('blogContent');
+            if (editor) {
+                document.execCommand('insertImage', false, url);
+                editor.focus();
+            }
+
+            // Close modal
+            document.body.removeChild(modal);
+        });
+
+        // Helper function to convert file to base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Helper function to compress and convert image to base64
+        async function compressAndConvertImage(file, maxWidth = 1200, maxHeight = 800, quality = 0.8) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        // Calculate new dimensions while maintaining aspect ratio
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > maxWidth || height > maxHeight) {
+                            const ratio = Math.min(maxWidth / width, maxHeight / height);
+                            width = width * ratio;
+                            height = height * ratio;
+                        }
+
+                        // Create canvas and resize
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Convert to compressed data URL
+                        const compressedDataUrl = canvas.toDataURL(file.type || 'image/jpeg', quality);
+                        resolve(compressedDataUrl);
+                    };
+                    img.onerror = (error) => reject(error);
+                };
+                reader.onerror = (error) => reject(error);
+            });
         }
     };
 
