@@ -139,9 +139,9 @@ function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-// Function to update HTML and CSS files with hashed file names
+// Function to update HTML, CSS, and JS files with hashed file names
 function updateHtmlFiles(distDir, fileMap) {
-  const extensions = ['.html', '.css'];
+  const extensions = ['.html', '.css', '.js'];
 
   for (const ext of extensions) {
     const files = fs.readdirSync(distDir).filter(file => file.endsWith(ext));

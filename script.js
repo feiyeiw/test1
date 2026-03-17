@@ -127,6 +127,11 @@ const blogApi = {
             console.log('Fetching blogs from remote API...');
             const blogs = await apiRequest('/blogs', { method: 'GET' });
 
+            // If API returns empty array, treat as failure to try local fallbacks
+            if (blogs.length === 0) {
+                throw new Error('API returned empty array, trying local fallbacks');
+            }
+
             // Cache the result
             setCachedBlogs(blogs);
 
@@ -1525,30 +1530,38 @@ async function updateMainPage() {
 // Load blogs on home page
 async function loadBlogsOnHome() {
     const blogsSection = document.getElementById('blogsSection');
-    if (!blogsSection) return;
+    if (!blogsSection) {
+        console.log('blogsSection not found in DOM');
+        return;
+    }
 
     // Show loading state
     blogsSection.innerHTML = '<div class="service-item"><h3>Loading...</h3><p>Fetching latest blogs</p></div>';
+    console.log('Starting to load blogs for home page...');
 
     try {
-        console.log('Fetching blogs for home page...');
+        console.log('Fetching blogs from blogApi.getAllBlogs()...');
         const blogs = await blogApi.getAllBlogs();
-        console.log('Loaded blogs for home page:', blogs.length);
+        console.log('Loaded blogs count:', blogs.length);
+        console.log('Blogs:', blogs);
 
         if (blogs.length === 0) {
-            blogsSection.innerHTML = '<div class="service-item"><h3>No blogs yet</h3><p>Check back soon for our latest insights and updates.</p></div>';
+            blogsSection.innerHTML = '<div class="service-item"><h3>No blogs yet</h3><p>Check back soon for our latest insights and updates. Please visit admin.html to create blogs.</p></div>';
             return;
         }
 
         // Sort blogs by date (newest first)
         const sortedBlogs = [...blogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+        console.log('Sorted blogs count:', sortedBlogs.length);
 
         // Show only the latest 3 blogs
         const latestBlogs = sortedBlogs.slice(0, 3);
+        console.log('Latest blogs to display:', latestBlogs.length);
 
         blogsSection.innerHTML = '';
 
         latestBlogs.forEach(blog => {
+            console.log('Rendering blog:', blog.id, blog.title);
             const blogLink = document.createElement('a');
             blogLink.href = `blog-detail.html?id=${blog.id}`;
             blogLink.className = 'service-item blog-link';
@@ -1569,6 +1582,8 @@ async function loadBlogsOnHome() {
 
             blogsSection.appendChild(blogLink);
         });
+
+        console.log('Successfully rendered', latestBlogs.length, 'blogs');
     } catch (error) {
         console.error('Error loading blogs for home page:', error);
         blogsSection.innerHTML = '<div class="service-item"><h3>Error loading blogs</h3><p>Please try again later.</p></div>';
