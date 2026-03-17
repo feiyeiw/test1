@@ -118,24 +118,13 @@ function setCachedBlogs(blogs) {
 
 // API Service functions with hybrid mode (remote API + local fallback)
 const blogApi = {
-    // Get all blogs - try from remote API first, then cache, then local JSON
+    // Get all blogs - try from remote API first, then fallbacks
     async getAllBlogs() {
-        // First try cached data
-        const cachedBlogs = getCachedBlogs();
-        if (cachedBlogs) {
-            console.log('Using cached blogs');
-            return cachedBlogs;
-        }
-
-        // Try remote API
+        // First try remote API for latest KV data
         try {
             console.log('Fetching blogs from remote API...');
             const blogs = await apiRequest('/blogs', { method: 'GET' });
-
-            // If API returns empty array, treat as failure to try local fallbacks
-            if (blogs.length === 0) {
-                throw new Error('API returned empty array, trying local fallbacks');
-            }
+            console.log('API returned', blogs.length, 'blogs');
 
             // Ensure all IDs are strings for consistent comparison (API should already return strings)
             const blogsWithStringIds = blogs.map(blog => ({
@@ -151,41 +140,18 @@ const blogApi = {
 
             return blogsWithStringIds;
         } catch (apiError) {
-            console.warn('Failed to fetch from API, trying local JSON:', apiError.message);
+            console.warn('Failed to fetch from API:', apiError.message);
 
-            // Fallback to local JSON file
-            try {
-                const response = await fetch('blogs.json');
-                if (response.ok) {
-                    const blogs = await response.json();
-
-                    // Ensure all IDs are strings for consistent comparison
-                    const blogsWithStringIds = blogs.map(blog => ({
-                        ...blog,
-                        id: String(blog.id)
-                    }));
-
-                    // Cache the result
-                    setCachedBlogs(blogsWithStringIds);
-                    localStorage.setItem('blogs', JSON.stringify(blogsWithStringIds));
-
-                    return blogsWithStringIds;
-                }
-            } catch (jsonError) {
-                console.warn('Failed to fetch blogs.json:', jsonError.message);
+            // API failed, try cached data
+            const cachedBlogs = getCachedBlogs();
+            if (cachedBlogs) {
+                console.log('Using cached blogs as API fallback');
+                return cachedBlogs;
             }
 
-            // Final fallback to localStorage (legacy)
-            const legacyBlogs = JSON.parse(localStorage.getItem('blogs')) || [];
-            console.log('Using legacy localStorage blogs');
-
-            // Ensure all IDs are strings for consistent comparison
-            const legacyBlogsWithStringIds = legacyBlogs.map(blog => ({
-                ...blog,
-                id: String(blog.id)
-            }));
-
-            return legacyBlogsWithStringIds;
+            // No local JSON fallback, only return cached data or empty array
+            console.log('No blogs available - API failed and no cache');
+            return [];
         }
     },
 
@@ -598,57 +564,6 @@ async function initializeAdminCredentials() {
     }
 }
 
-// Initialize default blog data - try to load from blogs.json, fallback to default
-async function initializeDefaultBlogs() {
-    const savedBlogs = localStorage.getItem('blogs');
-    if (!savedBlogs) {
-        try {
-            // Try to load from blogs.json
-            const response = await fetch('blogs.json');
-            if (response.ok) {
-                const blogs = await response.json();
-                localStorage.setItem('blogs', JSON.stringify(blogs));
-                console.log('Blog data loaded from blogs.json');
-                return;
-            }
-        } catch (error) {
-            console.warn('Failed to load blogs.json, using default data:', error);
-        }
-
-        // Fallback to default blogs
-        const defaultBlogs = [
-            {
-                id: 1,
-                title: 'Welcome to 1³ Machine Blog',
-                content: '<h3>Welcome to Our New Blog Section</h3><p>We are excited to launch our new blog section where we will share insights about automated production, smart warehouse solutions, and industry trends.</p><p>Stay tuned for more updates!</p>',
-                plainText: 'We are excited to launch our new blog section where we will share insights about automated production, smart warehouse solutions, and industry trends. Stay tuned for more updates!',
-                date: new Date().toISOString().split('T')[0],
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            },
-            {
-                id: 2,
-                title: 'Benefits of Automated Production Lines',
-                content: '<h3>Increasing Efficiency with Automation</h3><p>Automated production lines can significantly increase manufacturing efficiency by reducing manual labor, minimizing errors, and enabling 24/7 operation.</p><p>Key benefits include:</p><ul><li>Higher production output</li><li>Consistent product quality</li><li>Reduced labor costs</li><li>Improved workplace safety</li></ul>',
-                plainText: 'Automated production lines can significantly increase manufacturing efficiency by reducing manual labor, minimizing errors, and enabling 24/7 operation. Key benefits include higher production output, consistent product quality, reduced labor costs, and improved workplace safety.',
-                date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days ago
-                createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-                updatedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
-            },
-            {
-                id: 3,
-                title: 'Smart Warehouse Systems Overview',
-                content: '<h3>Modern Warehouse Automation</h3><p>Smart warehouse systems utilize technologies like stacker cranes, shuttle systems, and AGVs to optimize storage and retrieval processes.</p><p>These systems help businesses:</p><ul><li>Maximize storage density</li><li>Reduce order fulfillment time</li><li>Improve inventory accuracy</li><li>Lower operational costs</li></ul>',
-                plainText: 'Smart warehouse systems utilize technologies like stacker cranes, shuttle systems, and AGVs to optimize storage and retrieval processes. These systems help businesses maximize storage density, reduce order fulfillment time, improve inventory accuracy, and lower operational costs.',
-                date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 14 days ago
-                createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
-                updatedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString()
-            }
-        ];
-        localStorage.setItem('blogs', JSON.stringify(defaultBlogs));
-        console.log('Default blog data created with 3 sample blogs.');
-    }
-}
 
 // Initialize default site content
 function initializeDefaultSiteContent() {
@@ -696,7 +611,6 @@ function initializeDefaultSiteContent() {
 // Initialize all default data
 async function initializeAllData() {
     await initializeAdminCredentials();
-    await initializeDefaultBlogs();
     initializeDefaultSiteContent();
 }
 
