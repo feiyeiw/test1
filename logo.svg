@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <circle cx="50" cy="50" r="45" fill="#e60000" stroke="#333" stroke-width="2"/>
-  <text x="50" y="50" text-anchor="middle" dy=".3em" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">13</text>
-  <!-- Gear teeth -->
-  <circle cx="50" cy="50" r="30" fill="none" stroke="#333" stroke-width="8" stroke-dasharray="3,10"/>
-  <circle cx="50" cy="50" r="20" fill="none" stroke="#333" stroke-width="4"/>
-  <circle cx="50" cy="50" r="10" fill="#333"/>
-</svg>

@@ -50,14 +50,27 @@ body {
     border-bottom: 1px solid #e0e0e0;
 }
 
+.header-main .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .logo {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
+.logo a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
 .logo img {
-    height: 40px;
+    height: 50px;
     width: auto;
 }
 
@@ -66,6 +79,7 @@ body {
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
+    color: #333;
 }
 
 .search {
@@ -99,7 +113,7 @@ body {
 
 /* Navigation */
 nav {
-    background-color: #e60000;
+    background-color: #0066cc;
     padding: 0;
     position: relative;
 }
@@ -131,7 +145,7 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    background-color: #c40000;
+    background-color: #cc0000;
 }
 
 /* Dropdown Menu */
@@ -154,6 +168,7 @@ nav {
     display: none;
     padding: 30px 20px;
     margin-top: 0;
+    border-top: 2px solid #0066cc;
 }
 
 .dropdown-container:hover .dropdown {
@@ -197,7 +212,7 @@ nav {
 }
 
 .dropdown-column ul li a:hover {
-    color: #e60000;
+    color: #0066cc;
     background-color: transparent;
 }
 
@@ -230,7 +245,7 @@ nav {
 .btn {
     display: inline-block;
     padding: 12px 30px;
-    background-color: #e60000;
+    background-color: #0066cc;
     color: #fff;
     text-decoration: none;
     font-weight: bold;
@@ -240,7 +255,7 @@ nav {
 }
 
 .btn:hover {
-    background-color: #c40000;
+    background-color: #0052a3;
 }
 
 /* Services Section */
@@ -364,7 +379,7 @@ nav {
 }
 
 .contact-item a {
-    color: #e60000;
+    color: #0066cc;
     text-decoration: none;
 }
 
@@ -425,7 +440,7 @@ footer .container {
 }
 
 .footer-links a:hover {
-    color: #e60000;
+    color: #cc0000;
 }
 
 .footer-bottom {
@@ -447,7 +462,7 @@ footer .container {
 
 .blog-link:hover {
     background-color: #f0f0f0;
-    border-left: 4px solid #e60000;
+    border-left: 4px solid #0066cc;
 }
 
 .blog-link h3 {
@@ -456,7 +471,7 @@ footer .container {
 }
 
 .blog-link:hover h3 {
-    color: #e60000;
+    color: #0066cc;
 }
 
 /* Responsive Design */
