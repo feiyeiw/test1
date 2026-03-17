@@ -1527,8 +1527,13 @@ async function loadBlogsOnHome() {
     const blogsSection = document.getElementById('blogsSection');
     if (!blogsSection) return;
 
+    // Show loading state
+    blogsSection.innerHTML = '<div class="service-item"><h3>Loading...</h3><p>Fetching latest blogs</p></div>';
+
     try {
+        console.log('Fetching blogs for home page...');
         const blogs = await blogApi.getAllBlogs();
+        console.log('Loaded blogs for home page:', blogs.length);
 
         if (blogs.length === 0) {
             blogsSection.innerHTML = '<div class="service-item"><h3>No blogs yet</h3><p>Check back soon for our latest insights and updates.</p></div>';
@@ -1547,6 +1552,9 @@ async function loadBlogsOnHome() {
             const blogLink = document.createElement('a');
             blogLink.href = `blog-detail.html?id=${blog.id}`;
             blogLink.className = 'service-item blog-link';
+            blogLink.style.display = 'block';
+            blogLink.style.textDecoration = 'none';
+            blogLink.style.color = 'inherit';
 
             // Create plain text preview by stripping HTML tags
             const previewText = blog.plainText ||
@@ -1637,19 +1645,25 @@ function getUrlParameter(name) {
 // Load blog detail page
 async function loadBlogDetail() {
     const blogId = getUrlParameter('id');
+    console.log('Loading blog with ID:', blogId);
+
     if (!blogId) {
         // No blog ID specified, show error or redirect
         document.getElementById('blogTitle').textContent = 'Blog Not Found';
-        document.getElementById('blogContent').innerHTML = '<p>The blog you are looking for does not exist or has been removed.</p>';
+        document.getElementById('blogContent').innerHTML = '<p>No blog ID specified. Please select a blog from the <a href="index.html">home page</a>.</p>';
         return;
     }
 
     try {
+        // Show loading state
+        document.getElementById('blogContent').innerHTML = '<p style="text-align: center; color: #666;">Loading blog...</p>';
+
         const blog = await blogApi.getBlogById(blogId);
+        console.log('Loaded blog:', blog);
 
         if (!blog) {
             document.getElementById('blogTitle').textContent = 'Blog Not Found';
-            document.getElementById('blogContent').innerHTML = '<p>The blog you are looking for does not exist or has been removed.</p>';
+            document.getElementById('blogContent').innerHTML = '<p>The blog you are looking for does not exist or has been removed. <a href="index.html">Back to home</a></p>';
             return;
         }
 
@@ -1666,7 +1680,7 @@ async function loadBlogDetail() {
     } catch (error) {
         console.error('Error loading blog detail:', error);
         document.getElementById('blogTitle').textContent = 'Error Loading Blog';
-        document.getElementById('blogContent').innerHTML = '<p>An error occurred while loading the blog. Please try again later.</p>';
+        document.getElementById('blogContent').innerHTML = '<p>An error occurred while loading the blog. Please try again later. <a href="index.html">Back to home</a></p>';
     }
 }
 
