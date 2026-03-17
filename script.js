@@ -1346,7 +1346,7 @@ async function loadBlogsOnHome() {
                 <h3>${blog.title}</h3>
                 <p style="font-size: 14px; color: #666; margin-bottom: 10px;">${blog.date}</p>
                 <p style="line-height: 1.6;">${previewText.substring(0, 150)}${previewText.length > 150 ? '...' : ''}</p>
-                <div style="margin-top: 15px; color: #e60000; font-weight: bold; font-size: 14px;">Read More →</div>
+                <div style="margin-top: 15px; color: #e60000; font-weight: bold; font-size: 14px;">Read More &rarr;</div>
             `;
 
             blogsSection.appendChild(blogLink);
@@ -1480,11 +1480,11 @@ async function setupBlogNavigation(currentBlog) {
         if (currentIndex > 0) {
             const prevBlog = sortedBlogs[currentIndex - 1];
             prevBlogLink.href = `blog-detail.html?id=${prevBlog.id}`;
-            prevBlogLink.textContent = `← Newer: ${prevBlog.title.substring(0, 30)}${prevBlog.title.length > 30 ? '...' : ''}`;
+            prevBlogLink.textContent = `<- Newer: ${prevBlog.title.substring(0, 30)}${prevBlog.title.length > 30 ? '...' : ''}`;
             prevBlogLink.classList.remove('disabled');
         } else {
             prevBlogLink.href = '#';
-            prevBlogLink.textContent = '← No newer posts';
+            prevBlogLink.textContent = '<- No newer posts';
             prevBlogLink.classList.add('disabled');
         }
 
@@ -1492,11 +1492,11 @@ async function setupBlogNavigation(currentBlog) {
         if (currentIndex < sortedBlogs.length - 1) {
             const nextBlog = sortedBlogs[currentIndex + 1];
             nextBlogLink.href = `blog-detail.html?id=${nextBlog.id}`;
-            nextBlogLink.textContent = `Older: ${nextBlog.title.substring(0, 30)}${nextBlog.title.length > 30 ? '...' : ''} →`;
+            nextBlogLink.textContent = `Older: ${nextBlog.title.substring(0, 30)}${nextBlog.title.length > 30 ? '...' : ''} ->`;
             nextBlogLink.classList.remove('disabled');
         } else {
             nextBlogLink.href = '#';
-            nextBlogLink.textContent = 'No older posts →';
+            nextBlogLink.textContent = 'No older posts ->';
             nextBlogLink.classList.add('disabled');
         }
     } catch (error) {
@@ -1540,7 +1540,7 @@ async function loadRelatedBlogs(currentBlog) {
                 <h4>${blog.title}</h4>
                 <p style="font-size: 14px; color: #666; margin-bottom: 10px;">${blog.date}</p>
                 <p>${previewText.substring(0, 100)}${previewText.length > 100 ? '...' : ''}</p>
-                <a href="blog-detail.html?id=${blog.id}" class="related-blog-link">Read More →</a>
+                <a href="blog-detail.html?id=${blog.id}" class="related-blog-link">Read More &rarr;</a>
             `;
 
             container.appendChild(blogItem);
