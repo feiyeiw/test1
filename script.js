@@ -95,7 +95,12 @@ function getCachedBlogs() {
     }
 
     try {
-        return JSON.parse(cached);
+        const blogs = JSON.parse(cached);
+        // Ensure all IDs are strings for consistent comparison
+        return blogs.map(blog => ({
+            ...blog,
+            id: String(blog.id)
+        }));
     } catch (error) {
         console.error('Error parsing cached blogs:', error);
         return null;
@@ -132,13 +137,19 @@ const blogApi = {
                 throw new Error('API returned empty array, trying local fallbacks');
             }
 
+            // Ensure all IDs are strings for consistent comparison (API should already return strings)
+            const blogsWithStringIds = blogs.map(blog => ({
+                ...blog,
+                id: String(blog.id)
+            }));
+
             // Cache the result
-            setCachedBlogs(blogs);
+            setCachedBlogs(blogsWithStringIds);
 
             // Also update legacy localStorage for backward compatibility
-            localStorage.setItem('blogs', JSON.stringify(blogs));
+            localStorage.setItem('blogs', JSON.stringify(blogsWithStringIds));
 
-            return blogs;
+            return blogsWithStringIds;
         } catch (apiError) {
             console.warn('Failed to fetch from API, trying local JSON:', apiError.message);
 
@@ -148,11 +159,17 @@ const blogApi = {
                 if (response.ok) {
                     const blogs = await response.json();
 
-                    // Cache the result
-                    setCachedBlogs(blogs);
-                    localStorage.setItem('blogs', JSON.stringify(blogs));
+                    // Ensure all IDs are strings for consistent comparison
+                    const blogsWithStringIds = blogs.map(blog => ({
+                        ...blog,
+                        id: String(blog.id)
+                    }));
 
-                    return blogs;
+                    // Cache the result
+                    setCachedBlogs(blogsWithStringIds);
+                    localStorage.setItem('blogs', JSON.stringify(blogsWithStringIds));
+
+                    return blogsWithStringIds;
                 }
             } catch (jsonError) {
                 console.warn('Failed to fetch blogs.json:', jsonError.message);
@@ -161,36 +178,58 @@ const blogApi = {
             // Final fallback to localStorage (legacy)
             const legacyBlogs = JSON.parse(localStorage.getItem('blogs')) || [];
             console.log('Using legacy localStorage blogs');
-            return legacyBlogs;
+
+            // Ensure all IDs are strings for consistent comparison
+            const legacyBlogsWithStringIds = legacyBlogs.map(blog => ({
+                ...blog,
+                id: String(blog.id)
+            }));
+
+            return legacyBlogsWithStringIds;
         }
     },
 
     // Get single blog by ID - try from remote API first, then cache
     async getBlogById(id) {
+        console.log('getBlogById called with id:', id, 'type:', typeof id);
         if (!id) return null;
 
         // First try to find in cached blogs
         const cachedBlogs = getCachedBlogs();
         if (cachedBlogs) {
+            console.log('Checking cached blogs, count:', cachedBlogs.length);
             const blog = cachedBlogs.find(b => b.id == id);
-            if (blog) return blog;
+            if (blog) {
+                console.log('Found blog in cache:', blog.id, blog.title);
+                return blog;
+            }
+            console.log('Blog not found in cache');
         }
 
         // Try remote API
         try {
+            console.log('Trying to fetch blog from API with ID:', id);
             const blog = await apiRequest(`/blogs/${id}`, { method: 'GET' });
+            console.log('Successfully fetched blog from API:', blog ? blog.id : 'null');
             return blog;
         } catch (apiError) {
             console.warn(`Failed to fetch blog ${id} from API:`, apiError.message);
 
             // Fallback to getAllBlogs
             try {
+                console.log('Falling back to getAllBlogs for blog ID:', id);
                 const blogs = await this.getAllBlogs();
-                return blogs.find(blog => blog.id == id) || null;
+                console.log('getAllBlogs returned', blogs.length, 'blogs');
+                const foundBlog = blogs.find(blog => blog.id == id) || null;
+                console.log('Found blog in getAllBlogs fallback:', foundBlog ? foundBlog.id : 'null');
+                return foundBlog;
             } catch (error) {
                 console.warn(`Error getting blog ${id}:`, error);
+                console.log('Falling back to localStorage');
                 const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
-                return blogs.find(blog => blog.id == id) || null;
+                const foundBlog = blogs.find(blog => blog.id == id) || null;
+                console.log('Found blog in localStorage fallback:', foundBlog ? foundBlog.id : 'null');
+                return foundBlog;
             }
         }
     },
