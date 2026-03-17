@@ -31,7 +31,7 @@
         
         .logout-btn {
             padding: 8px 20px;
-            background-color: #0066cc;
+            background-color: #e60000;
             color: #fff;
             border: none;
             border-radius: 4px;
@@ -41,7 +41,7 @@
         }
         
         .logout-btn:hover {
-            background-color: #0052a3;
+            background-color: #c40000;
         }
         
         .admin-section {
@@ -90,7 +90,7 @@
         
         .save-btn {
             padding: 12px 30px;
-            background-color: #0066cc;
+            background-color: #e60000;
             color: #fff;
             border: none;
             border-radius: 4px;
@@ -101,7 +101,7 @@
         }
         
         .save-btn:hover {
-            background-color: #0052a3;
+            background-color: #c40000;
         }
 
         /* Rich Text Editor Styles */
@@ -146,7 +146,7 @@
 
         .editor-content:focus {
             outline: none;
-            border-color: #0066cc;
+            border-color: #e60000;
         }
 
         .editor-content h1, .editor-content h2, .editor-content h3 {
@@ -161,7 +161,7 @@
         }
 
         .editor-content a {
-            color: #0066cc;
+            color: #e60000;
             text-decoration: underline;
         }
     </style>
@@ -183,7 +183,7 @@
             <div class="container">
                 <div class="logo">
                     <a href="index.html">
-                        <img src="logo.jpg" alt="13machine">
+                        <img src="logo.svg" alt="13machine">
                         <span>1³ MACHINE</span>
                     </a>
                 </div>
@@ -285,6 +285,66 @@
         </div>
 
         <div class="admin-section">
+            <h2 data-i18n="apiConfig">API Configuration</h2>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="apiEnabled">
+                    <span data-i18n="enableCloudflareAPI">Enable Cloudflare KV API</span>
+                </label>
+                <p style="font-size: 14px; color: #666; margin-top: 5px;" data-i18n="apiConfigDescription">
+                    Enable to store blogs in Cloudflare KV for cross-device access. Disable to use browser localStorage only.
+                </p>
+            </div>
+
+            <div id="apiConfigDetails" style="display: none; margin-top: 20px; padding: 20px; background-color: #f8f8f8; border-radius: 4px;">
+                <div class="form-group">
+                    <label for="apiEndpoint" data-i18n="apiEndpoint">API Endpoint</label>
+                    <input type="text" id="apiEndpoint" placeholder="/api/blogs" style="font-family: monospace;">
+                    <p style="font-size: 14px; color: #666; margin-top: 5px;" data-i18n="apiEndpointDescription">
+                        Relative path to your API endpoint. Usually "/api/blogs" if deployed on same domain.
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="apiKey" data-i18n="apiKey">API Key</label>
+                    <input type="password" id="apiKey" placeholder="Your secret API key" style="font-family: monospace;">
+                    <p style="font-size: 14px; color: #666; margin-top: 5px;" data-i18n="apiKeyDescription">
+                        Secure API key from Cloudflare Pages environment variables.
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="useLocalStorageFallback" checked>
+                        <span data-i18n="useLocalStorageFallback">Use localStorage fallback</span>
+                    </label>
+                    <p style="font-size: 14px; color: #666; margin-top: 5px;" data-i18n="fallbackDescription">
+                        When enabled, blogs will be cached in localStorage for offline access and faster loading.
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="apiStatus" data-i18n="apiStatus">API Status</label>
+                    <div id="apiStatus" style="padding: 10px; background-color: #e8e8e8; border-radius: 4px; font-family: monospace; font-size: 14px;">
+                        <span data-i18n="loadingStatus">Loading status...</span>
+                    </div>
+                </div>
+
+                <button id="testApiConnection" class="save-btn" style="background-color: #0088cc; margin-right: 10px;" data-i18n="testConnection">Test Connection</button>
+                <button id="saveApiConfig" class="save-btn" data-i18n="saveApiConfig">Save API Configuration</button>
+            </div>
+
+            <div id="migrationSection" style="margin-top: 30px; display: none;">
+                <h3 data-i18n="dataMigration">Data Migration</h3>
+                <p data-i18n="migrationDescription">
+                    You have blogs stored in localStorage. Would you like to migrate them to Cloudflare KV?
+                </p>
+                <button id="migrateToKV" class="save-btn" style="background-color: #28a745;" data-i18n="migrateToKV">Migrate to Cloudflare KV</button>
+                <div id="migrationStatus" style="margin-top: 10px; padding: 10px; display: none;"></div>
+            </div>
+        </div>
+
+        <div class="admin-section">
             <h2 data-i18n="blogManagement">Blog Management</h2>
             <div class="form-group">
                 <label for="blogTitle" data-i18n="blogTitle">Blog Title</label>
@@ -302,22 +362,16 @@
                     <button type="button" class="editor-btn" onclick="formatText('italic')" title="Italic" data-i18n-title="italic"><i>I</i></button>
                     <button type="button" class="editor-btn" onclick="formatText('underline')" title="Underline" data-i18n-title="underline"><u>U</u></button>
                     <button type="button" class="editor-btn" onclick="formatText('heading')" title="Heading" data-i18n-title="heading">H</button>
-                    <button type="button" class="editor-btn" onclick="formatText('unorderedlist')" title="Bullet List" data-i18n-title="bulletList">�?/button>
+                    <button type="button" class="editor-btn" onclick="formatText('unorderedlist')" title="Bullet List" data-i18n-title="bulletList">•</button>
                     <button type="button" class="editor-btn" onclick="formatText('orderedlist')" title="Numbered List" data-i18n-title="numberedList">1.</button>
                     <button type="button" class="editor-btn" onclick="formatText('link')" title="Insert Link" data-i18n-title="insertLink">🔗</button>
-                    <button type="button" class="editor-btn" onclick="formatText('image')" title="Insert Image" data-i18n-title="insertImage">🖼�?/button>
+                    <button type="button" class="editor-btn" onclick="formatText('image')" title="Insert Image" data-i18n-title="insertImage">🖼️</button>
                 </div>
                 <div id="blogContent" class="editor-content" contenteditable="true"></div>
                 <textarea id="blogContentPlain" style="display:none;"></textarea>
             </div>
 
             <button id="addBlog" class="save-btn" data-i18n="addBlog">Add Blog</button>
-
-            <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-                <button id="exportBlogs" class="save-btn" style="background-color: #28a745;" data-i18n="exportBlogs">Export Blogs JSON</button>
-                <button id="importBlogs" class="save-btn" style="background-color: #17a2b8;" data-i18n="importBlogs">Import Blogs JSON</button>
-                <input type="file" id="importFile" accept=".json" style="display: none;">
-            </div>
 
             <div id="blogList" style="margin-top: 30px;">
                 <h3 data-i18n="blogList">Blog List</h3>
