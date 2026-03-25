@@ -558,7 +558,7 @@ async function initializeAdminCredentials() {
         console.log('Default admin credentials created. Username: admin, Password: admin123');
 
         // Show a warning to change default password
-        if (window.location.pathname.includes('admin.html')) {
+        if (window.location.pathname.includes('admin')) {
             alert('⚠️ Default admin credentials created.\nUsername: admin\nPassword: admin123\n\nPlease change the password in the admin panel.');
         }
     }
@@ -1563,13 +1563,14 @@ async function updatePageContent() {
     const heroDesc = document.querySelector('.hero p');
 
     if (heroTitle && heroDesc) {
-        if (pageName === 'services.html' && content.pages.services) {
+        // Check both with and without .html extension
+        if ((pageName === 'services' || pageName === 'services.html') && content.pages.services) {
             heroTitle.textContent = content.pages.services.title;
             heroDesc.textContent = content.pages.services.description;
-        } else if (pageName === 'solutions.html' && content.pages.solutions) {
+        } else if ((pageName === 'solutions' || pageName === 'solutions.html') && content.pages.solutions) {
             heroTitle.textContent = content.pages.solutions.title;
             heroDesc.textContent = content.pages.solutions.description;
-        } else if (pageName === 'about.html' && content.pages.about) {
+        } else if ((pageName === 'about' || pageName === 'about.html') && content.pages.about) {
             heroTitle.textContent = content.pages.about.title;
             heroDesc.textContent = content.pages.about.description;
         }
@@ -1584,9 +1585,9 @@ if (window.location.pathname.endsWith('index.html') || window.location.pathname 
 }
 
 // Update other pages content
-if (window.location.pathname.includes('services.html') ||
-    window.location.pathname.includes('solutions.html') ||
-    window.location.pathname.includes('about.html')) {
+if (window.location.pathname.includes('services') ||
+    window.location.pathname.includes('solutions') ||
+    window.location.pathname.includes('about')) {
     (async function() {
         await updatePageContent();
     })();
@@ -1746,7 +1747,7 @@ async function loadRelatedBlogs(currentBlog) {
 }
 
 // Check if we're on the blog detail page and load blog when DOM is ready
-if (window.location.pathname.includes('blog-detail.html')) {
+if (window.location.pathname.includes('blog-detail')) {
     document.addEventListener('DOMContentLoaded', function() {
         console.log('Blog detail page detected, loading blog...');
         (async function() {
@@ -1990,7 +1991,7 @@ async function loadBlogsOnInsights() {
 }
 
 // Check if we're on the insights page
-if (window.location.pathname.includes('insights.html')) {
+if (window.location.pathname.includes('insights')) {
     (async function() {
         await loadBlogsOnInsights();
     })();
