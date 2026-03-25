@@ -1915,6 +1915,82 @@ function translatePage() {
         : '管理仪表板 - 1³ Machine';
 }
 
+// Load blogs on insights page
+async function loadBlogsOnInsights() {
+    const container = document.getElementById('insightsContainer');
+    if (!container) {
+        console.log('insightsContainer not found in DOM');
+        return;
+    }
+
+    // Show loading state
+    container.innerHTML = '<div class="loading-message" style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">Loading insights...</div>';
+    console.log('Starting to load blogs for insights page...');
+
+    try {
+        console.log('Fetching blogs from blogApi.getAllBlogs()...');
+        const blogs = await blogApi.getAllBlogs();
+        console.log('Loaded blogs count:', blogs.length);
+
+        if (blogs.length === 0) {
+            container.innerHTML = '<div class="insight-item" style="grid-column: 1 / -1; text-align: center; padding: 40px;"><h3>No blogs yet</h3><p>Check back soon for our latest insights and updates. Please visit admin.html to create blogs.</p></div>';
+            return;
+        }
+
+        // Sort blogs by date (newest first)
+        const sortedBlogs = [...blogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+        console.log('Sorted blogs count:', sortedBlogs.length);
+
+        container.innerHTML = '';
+
+        sortedBlogs.forEach(blog => {
+            console.log('Rendering blog:', blog.id, blog.title);
+
+            // Create plain text preview by stripping HTML tags
+            const previewText = blog.plainText ||
+                blog.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+
+            // Create insight item
+            const insightItem = document.createElement('div');
+            insightItem.className = 'insight-item';
+
+            // For now, we don't have blog images, so we can use a placeholder or leave empty
+            // We'll add a placeholder image or use the first image from content if available
+            let imageUrl = 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=industrial%20automation&image_size=landscape_4_3';
+
+            // Try to extract first image from content if exists
+            const imgMatch = blog.content.match(/<img[^>]+src=["']([^"']+)["'][^>]*>/i);
+            if (imgMatch && imgMatch[1]) {
+                imageUrl = imgMatch[1];
+            }
+
+            insightItem.innerHTML = `
+                <img src="${imageUrl}" alt="${blog.title}" class="insight-image">
+                <div class="insight-content">
+                    <div class="insight-date">${blog.date}</div>
+                    <h3 class="insight-title">${blog.title}</h3>
+                    <p class="insight-excerpt">${previewText.substring(0, 150)}${previewText.length > 150 ? '...' : ''}</p>
+                    <a href="blog-detail.html?id=${blog.id}" class="insight-link">Read More →</a>
+                </div>
+            `;
+
+            container.appendChild(insightItem);
+        });
+
+        console.log('Successfully rendered', sortedBlogs.length, 'blogs');
+    } catch (error) {
+        console.error('Error loading blogs for insights page:', error);
+        container.innerHTML = '<div class="insight-item" style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #e60000;"><h3>Error loading blogs</h3><p>Please try again later.</p></div>';
+    }
+}
+
+// Check if we're on the insights page
+if (window.location.pathname.includes('insights.html')) {
+    (async function() {
+        await loadBlogsOnInsights();
+    })();
+}
+
 // Initialize language on page load
 document.addEventListener('DOMContentLoaded', function() {
     updateLanguageDisplay();
