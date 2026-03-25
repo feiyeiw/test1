@@ -1516,7 +1516,7 @@ async function loadBlogsOnHome() {
         latestBlogs.forEach(blog => {
             console.log('Rendering blog:', blog.id, blog.title);
             const blogLink = document.createElement('a');
-            blogLink.href = `blog-detail.html?id=${blog.id}`;
+            blogLink.href = `blog-detail.html?id=${encodeURIComponent(blog.id)}`;
             blogLink.className = 'service-item blog-link';
             blogLink.style.display = 'block';
             blogLink.style.textDecoration = 'none';
@@ -1612,8 +1612,10 @@ function getUrlParameter(name) {
 
 // Load blog detail page
 async function loadBlogDetail() {
+    console.log('loadBlogDetail called, URL:', window.location.href);
+    console.log('Search params:', window.location.search);
     const blogId = getUrlParameter('id');
-    console.log('Loading blog with ID:', blogId);
+    console.log('Loading blog with ID:', blogId, 'Type:', typeof blogId);
 
     if (!blogId) {
         // No blog ID specified, show error or redirect
@@ -1671,7 +1673,7 @@ async function setupBlogNavigation(currentBlog) {
         // Previous blog (newer blog if sorted newest first)
         if (currentIndex > 0) {
             const prevBlog = sortedBlogs[currentIndex - 1];
-            prevBlogLink.href = `blog-detail.html?id=${prevBlog.id}`;
+            prevBlogLink.href = `blog-detail.html?id=${encodeURIComponent(prevBlog.id)}`;
             prevBlogLink.textContent = `<- Newer: ${prevBlog.title.substring(0, 30)}${prevBlog.title.length > 30 ? '...' : ''}`;
             prevBlogLink.classList.remove('disabled');
         } else {
@@ -1683,7 +1685,7 @@ async function setupBlogNavigation(currentBlog) {
         // Next blog (older blog if sorted newest first)
         if (currentIndex < sortedBlogs.length - 1) {
             const nextBlog = sortedBlogs[currentIndex + 1];
-            nextBlogLink.href = `blog-detail.html?id=${nextBlog.id}`;
+            nextBlogLink.href = `blog-detail.html?id=${encodeURIComponent(nextBlog.id)}`;
             nextBlogLink.textContent = `Older: ${nextBlog.title.substring(0, 30)}${nextBlog.title.length > 30 ? '...' : ''} ->`;
             nextBlogLink.classList.remove('disabled');
         } else {
@@ -1732,7 +1734,7 @@ async function loadRelatedBlogs(currentBlog) {
                 <h4>${blog.title}</h4>
                 <p style="font-size: 14px; color: #666; margin-bottom: 10px;">${blog.date}</p>
                 <p>${previewText.substring(0, 100)}${previewText.length > 100 ? '...' : ''}</p>
-                <a href="blog-detail.html?id=${blog.id}" class="related-blog-link">Read More &rarr;</a>
+                <a href="blog-detail.html?id=${encodeURIComponent(blog.id)}" class="related-blog-link">Read More &rarr;</a>
             `;
 
             container.appendChild(blogItem);
@@ -1743,11 +1745,14 @@ async function loadRelatedBlogs(currentBlog) {
     }
 }
 
-// Check if we're on the blog detail page
+// Check if we're on the blog detail page and load blog when DOM is ready
 if (window.location.pathname.includes('blog-detail.html')) {
-    (async function() {
-        await loadBlogDetail();
-    })();
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Blog detail page detected, loading blog...');
+        (async function() {
+            await loadBlogDetail();
+        })();
+    });
 }
 
 // Language switching functionality for admin page
@@ -1970,7 +1975,7 @@ async function loadBlogsOnInsights() {
                     <div class="insight-date">${blog.date}</div>
                     <h3 class="insight-title">${blog.title}</h3>
                     <p class="insight-excerpt">${previewText.substring(0, 150)}${previewText.length > 150 ? '...' : ''}</p>
-                    <a href="blog-detail.html?id=${blog.id}" class="insight-link">Read More →</a>
+                    <a href="blog-detail.html?id=${encodeURIComponent(blog.id)}" class="insight-link">Read More →</a>
                 </div>
             `;
 
