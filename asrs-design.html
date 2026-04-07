@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASRS Warehouse Design Guide | 13machine</title>
+    <meta name="description" content="Learn how to design an ASRS warehouse. Compare stacker crane, shuttle, ACR, and AMR systems.">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ASRS Design Page Specific Styles */
+        .design-hero {
+            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+            padding: 100px 0;
+            text-align: center;
+            color: #fff;
+        }
+
+        .design-hero .container {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .design-hero h1 {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .design-hero p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+        }
+
+        /* System Types Section */
+        .system-types {
+            padding: 80px 0;
+            background-color: #f8f8f8;
+        }
+
+        .system-types .container {
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        .system-types h2 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            width: 100%;
+        }
+
+        .system-card {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 35px 25px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .system-card:hover {
+            border-color: #0066cc;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .system-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #0066cc;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 20px;
+        }
+
+        .system-card h3 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .system-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .system-specs {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+            text-align: left;
+        }
+
+        .system-specs li {
+            padding: 8px 0;
+            color: #666;
+            font-size: 13px;
+            list-style: none;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .system-specs li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #0066cc;
+            font-weight: bold;
+        }
+
+        /* Scale Matching Section */
+        .scale-matching {
+            padding: 80px 0;
+            background-color: #fff;
+        }
+
+        .scale-matching .container {
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        .scale-matching h2 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        .matching-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            width: 100%;
+        }
+
+        .matching-card {
+            background: #f8f8f8;
+            border-radius: 12px;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .matching-card:hover {
+            background: #fff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .matching-arrow {
+            font-size: 36px;
+            color: #0066cc;
+            margin: 20px 0;
+        }
+
+        .scale-label {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .system-label {
+            font-size: 28px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+
+        .matching-desc {
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Design Logic Section */
+        .design-logic {
+            padding: 80px 0;
+            background-color: #f8f8f8;
+        }
+
+        .design-logic .container {
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        .design-logic h2 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        .logic-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            width: 100%;
+        }
+
+        .logic-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .logic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .logic-icon {
+            width: 70px;
+            height: 70px;
+            background-color: #0066cc;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 25px;
+        }
+
+        .logic-card h3 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .logic-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .logic-metrics {
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .logic-metrics li {
+            padding: 8px 0;
+            color: #666;
+            font-size: 13px;
+            list-style: none;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .logic-metrics li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #0066cc;
+            font-weight: bold;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+        }
+
+        .cta-section .container {
+            justify-content: center;
+        }
+
+        .cta-box {
+            text-align: center;
+            color: #fff;
+            max-width: 600px;
+        }
+
+        .cta-box h2 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .cta-box p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .btn-cta {
+            display: inline-block;
+            padding: 16px 40px;
+            background-color: #fff;
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .btn-cta:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .systems-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .matching-grid,
+            .logic-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .design-hero {
+                padding: 60px 0;
+            }
+
+            .design-hero h1 {
+                font-size: 28px;
+            }
+
+            .systems-grid,
+            .matching-grid,
+            .logic-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .system-types h2,
+            .scale-matching h2,
+            .design-logic h2,
+            .cta-box h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="container">
+                <div class="header-top-right">
+                    <a href="contact.html">Contact</a>
+                    <a href="login.html">Login</a>
+                    <div class="language-selector">
+                        <span>English</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-main">
+            <div class="container">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="logo.jpg" alt="13machine">
+                        <span>1³ MACHINE</span>
+                    </a>
+                </div>
+                <div class="search">
+                    <input type="text" placeholder="Search">
+                    <button type="submit">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <nav>
+            <div class="container">
+                <ul>
+                    <li><a href="asrs-cost.html">ASRS Cost</a></li>
+                    <li><a href="asrs-design.html">ASRS Design</a></li>
+                    <li><a href="solutions.html">Solutions</a></li>
+                    <li><a href="case-studies.html">Case Studies</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- 区块 1: 页面标题 -->
+        <section class="design-hero">
+            <div class="container">
+                <h1>How to Design an ASRS Warehouse</h1>
+                <p>Expert guidance on selecting the right automated storage system for your specific warehouse requirements</p>
+            </div>
+        </section>
+
+        <!-- 区块 2: 系统类型 -->
+        <section class="system-types">
+            <div class="container">
+                <h2>ASRS System Types</h2>
+                <div class="systems-grid">
+                    <div class="system-card">
+                        <div class="system-icon">🏗️</div>
+                        <h3>Stacker Crane</h3>
+                        <p>Traditional high-bay storage with crane-based retrieval. Best for large-scale operations with high throughput requirements.</p>
+                        <ul class="system-specs">
+                            <li>Height: Up to 45 meters</li>
+                            <li>Capacity: 20,000+ pallets</li>
+                            <li>Speed: 200+ cycles/hour</li>
+                            <li>Best for: High-volume warehouses</li>
+                        </ul>
+                    </div>
+                    <div class="system-card">
+                        <div class="system-icon">🚃</div>
+                        <h3>Shuttle System</h3>
+                        <p>Radio shuttle vehicles move along rails within racking. Ideal for high-density storage with moderate throughput.</p>
+                        <ul class="system-specs">
+                            <li>Height: Up to 30 meters</li>
+                            <li>Capacity: 5,000-50,000 pallets</li>
+                            <li>Speed: 100-200 cycles/hour</li>
+                            <li>Best for: Multi-deep storage</li>
+                        </ul>
+                    </div>
+                    <div class="system-card">
+                        <div class="system-icon">🤖</div>
+                        <h3>ACR</h3>
+                        <p>Autonomous Case-handling Robots that climb shelves. Perfect for piece-picking and e-commerce fulfillment.</p>
+                        <ul class="system-specs">
+                            <li>Height: Up to 10 meters</li>
+                            <li>Capacity: 1,000-10,000 totes</li>
+                            <li>Speed: 300+ picks/hour</li>
+                            <li>Best for: Small parts handling</li>
+                        </ul>
+                    </div>
+                    <div class="system-card">
+                        <div class="system-icon">🚁</div>
+                        <h3>AMR</h3>
+                        <p>Autonomous Mobile Robots navigate freely without fixed infrastructure. Maximum flexibility for dynamic operations.</p>
+                        <ul class="system-specs">
+                            <li>Height: Ground level only</li>
+                            <li>Capacity: Flexible configuration</li>
+                            <li>Speed: Adaptive to layout</li>
+                            <li>Best for: Dynamic environments</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 区块 3: 规模匹配 -->
+        <section class="scale-matching">
+            <div class="container">
+                <h2>Warehouse Scale Matching</h2>
+                <div class="matching-grid">
+                    <div class="matching-card">
+                        <div class="scale-label">Small Warehouse</div>
+                        <div class="scale-spec">1,000 - 5,000 pallets</div>
+                        <div class="matching-arrow">↓</div>
+                        <div class="system-label">ACR</div>
+                        <p class="matching-desc">Autonomous Case-handling Robots provide cost-effective automation for smaller operations with flexible growth options.</p>
+                    </div>
+                    <div class="matching-card">
+                        <div class="scale-label">Large Warehouse</div>
+                        <div class="scale-spec">20,000+ pallets</div>
+                        <div class="matching-arrow">↓</div>
+                        <div class="system-label">Stacker Crane</div>
+                        <p class="matching-desc">High-bay stacker crane systems maximize vertical space utilization for large-scale distribution centers.</p>
+                    </div>
+                    <div class="matching-card">
+                        <div class="scale-label">Flexible Operations</div>
+                        <div class="scale-spec">Variable requirements</div>
+                        <div class="matching-arrow">↓</div>
+                        <div class="system-label">AMR</div>
+                        <p class="matching-desc">Autonomous Mobile Robots adapt to changing layouts and workflows without infrastructure modifications.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 区块 4: 设计逻辑 -->
+        <section class="design-logic">
+            <div class="container">
+                <h2>Design Logic & Key Metrics</h2>
+                <div class="logic-grid">
+                    <div class="logic-card">
+                        <div class="logic-icon">📦</div>
+                        <h3>Storage Density</h3>
+                        <p>Maximize the number of storage locations per square meter of warehouse space. Critical for expensive urban locations.</p>
+                        <ul class="logic-metrics">
+                            <li>Deep lane storage for slow movers</li>
+                            <li>Single-deep for fast movers</li>
+                            <li>Multi-deep shuttle systems</li>
+                            <li>Vertical space utilization</li>
+                        </ul>
+                    </div>
+                    <div class="logic-card">
+                        <div class="logic-icon">⚡</div>
+                        <h3>Throughput</h3>
+                        <p>Match system capability with operational demand. Balance peak capacity with average daily requirements.</p>
+                        <ul class="logic-metrics">
+                            <li>Inbound receiving rate</li>
+                            <li>Outbound shipping rate</li>
+                            <li>Peak vs average demand</li>
+                            <li>Seasonal variations</li>
+                        </ul>
+                    </div>
+                    <div class="logic-card">
+                        <div class="logic-icon">📐</div>
+                        <h3>Space Utilization</h3>
+                        <p>Optimize the relationship between storage volume, equipment footprint, and operational flow paths.</p>
+                        <ul class="logic-metrics">
+                            <li>Aisle width optimization</li>
+                            <li>Staging area sizing</li>
+                            <li>Equipment maneuvering space</li>
+                            <li>Future expansion capacity</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 区块 5: CTA -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-box">
+                    <h2>Need help choosing your system?</h2>
+                    <p>Our engineers will analyze your requirements and recommend the optimal ASRS configuration for your warehouse.</p>
+                    <a href="contact.html" class="btn-cta">Contact Us</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="logo.jpg" alt="13machine">
+                    <span>1³ MACHINE</span>
+                </div>
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="asrs-cost.html">ASRS Cost</a>
+                    <a href="asrs-design.html">ASRS Design</a>
+                    <a href="solutions.html">Solutions</a>
+                    <a href="case-studies.html">Case Studies</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 1³ Machine. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
