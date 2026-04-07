@@ -148,72 +148,9 @@ nav ul li a:hover {
     background-color: #cc0000;
 }
 
-/* Dropdown Menu */
-nav {
-    position: relative;
-}
-
-.dropdown-container {
-    position: inherit;
-}
-
-.dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: #fff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    z-index: 999;
-    display: none;
-    padding: 30px 20px;
-    margin-top: 0;
-    border-top: 2px solid #0066cc;
-}
-
-.dropdown-container:hover .dropdown {
-    display: block;
-}
-
-.dropdown-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 60px;
-    max-width: 1200px;
-    margin: 0 auto;
-    justify-content: flex-start;
-}
-
-.dropdown-column h3 {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    color: #333;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.dropdown-column ul {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.dropdown-column ul li {
-    position: relative;
-}
-
-.dropdown-column ul li a {
-    color: #666;
-    font-weight: normal;
-    text-transform: none;
-    padding: 5px 0;
-    font-size: 14px;
-}
-
-.dropdown-column ul li a:hover {
-    color: #0066cc;
-    background-color: transparent;
+/* Active Navigation State */
+nav ul li a.active {
+    background-color: #cc0000;
 }
 
 /* Hero Section */
