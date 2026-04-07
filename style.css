@@ -1,3 +1,20 @@
+/* CSS Variables */
+:root {
+    --primary-color: #0066cc;
+    --secondary-color: #cc0000;
+    --accent-color: #00a651;
+    --text-dark: #333;
+    --text-light: #666;
+    --bg-light: #f8f8f8;
+    --border-color: #e0e0e0;
+    --shadow-sm: 0 5px 20px rgba(0,0,0,0.08);
+    --shadow-md: 0 10px 30px rgba(0,0,0,0.1);
+    --shadow-lg: 0 5px 30px rgba(0,0,0,0.15);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --transition: all 0.3s ease;
+}
+
 /* Global Styles */
 * {
     margin: 0;
@@ -8,7 +25,7 @@
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
-    color: #333;
+    color: var(--text-dark);
 }
 
 .container {
