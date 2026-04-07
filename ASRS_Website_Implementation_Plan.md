@@ -17,10 +17,11 @@
 | 4 | 创建ASRS设计页 | ✅ | asrs-design.html |
 | 5 | 重构解决方案页 | ✅ | solutions.html |
 | 6 | 创建案例研究页 | ✅ | case-studies.html |
-| 7 | 更新联系页面 | ⏳ | contact.html |
-| 8 | 后端功能增强 | ⏳ | script.js |
-| 9 | SEO优化 | ⏳ | 所有页面 |
-| 10 | 最终测试 | ⏳ | - |
+| 7 | 更新样式文件 | ✅ | style.css |
+| 8 | 后端功能增强 | ✅ | script.js |
+| 9 | 移动端响应式优化 | ✅ | style.css |
+| 10 | SEO优化 | ⏳ | 所有页面 |
+| 11 | 最终测试 | ⏳ | - |
 
 ---
 
