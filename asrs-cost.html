@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASRS Warehouse Cost Breakdown 2026 | 13machine</title>
+    <meta name="description" content="ASRS warehouse cost ranges from $50K to $5M+. Get a detailed cost breakdown and custom estimate for your project.">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ASRS Cost Page Specific Styles */
+        .cost-hero {
+            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+            padding: 80px 0;
+            text-align: center;
+            color: #fff;
+        }
+
+        .cost-hero .container {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .cost-hero h1 {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .cost-range {
+            font-size: 48px;
+            font-weight: bold;
+            color: #fff;
+            margin: 20px 0;
+        }
+
+        .cost-hero p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+        }
+
+        /* Price Tiers */
+        .price-tiers {
+            padding: 80px 0;
+            background-color: #f8f8f8;
+        }
+
+        .price-tiers .container {
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        .price-tiers h2 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        .tiers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            width: 100%;
+        }
+
+        .tier-card {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tier-card:hover {
+            border-color: #0066cc;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .tier-card.featured {
+            border-color: #0066cc;
+            box-shadow: 0 5px 20px rgba(0, 102, 204, 0.15);
+        }
+
+        .tier-card.featured::before {
+            content: "Most Popular";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #0066cc;
+            color: #fff;
+            padding: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .tier-card h3 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 15px;
+            margin-top: 20px;
+        }
+
+        .tier-price {
+            font-size: 36px;
+            font-weight: bold;
+            color: #0066cc;
+            margin: 20px 0;
+        }
+
+        .tier-features {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .tier-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .tier-features li:last-child {
+            border-bottom: none;
+        }
+
+        /* Factors Section */
+        .factors-section {
+            padding: 80px 0;
+            background-color: #fff;
+        }
+
+        .factors-section .container {
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        .factors-section h2 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        .factors-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            width: 100%;
+        }
+
+        .factor-card {
+            background: #f8f8f8;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .factor-card:hover {
+            background: #fff;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .factor-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #0066cc;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 20px;
+        }
+
+        .factor-card h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .factor-card p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Case Comparison */
+        .case-comparison {
+            padding: 80px 0;
+            background-color: #f8f8f8;
+        }
+
+        .case-comparison .container {
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        .case-comparison h2 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        .comparison-table {
+            width: 100%;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background-color: #0066cc;
+            color: #fff;
+            padding: 20px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .comparison-table td {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table .price-cell {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+
+        /* Quote Form Section */
+        .quote-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+        }
+
+        .quote-section .container {
+            justify-content: center;
+        }
+
+        .quote-box {
+            background: #fff;
+            padding: 50px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .quote-box h2 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .quote-box > p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .quote-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            grid-column: 1 / -1;
+            padding: 16px 40px;
+            background-color: #cc0000;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background-color: #a80000;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .tiers-grid,
+            .factors-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .quote-form {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cost-hero h1 {
+                font-size: 28px;
+            }
+
+            .cost-range {
+                font-size: 32px;
+            }
+
+            .tiers-grid,
+            .factors-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                overflow-x: auto;
+            }
+
+            .comparison-table table {
+                min-width: 600px;
+            }
+
+            .quote-box {
+                padding: 30px 20px;
+            }
+
+            .quote-box h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="container">
+                <div class="header-top-right">
+                    <a href="contact.html">Contact</a>
+                    <a href="login.html">Login</a>
+                    <div class="language-selector">
+                        <span>English</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-main">
+            <div class="container">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="logo.jpg" alt="13machine">
+                        <span>1³ MACHINE</span>
+                    </a>
+                </div>
+                <div class="search">
+                    <input type="text" placeholder="Search">
+                    <button type="submit">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <nav>
+            <div class="container">
+                <ul>
+                    <li><a href="asrs-cost.html">ASRS Cost</a></li>
+                    <li><a href="asrs-design.html">ASRS Design</a></li>
+                    <li><a href="solutions.html">Solutions</a></li>
+                    <li><a href="case-studies.html">Case Studies</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- 区块 1: 成本概览 -->
+        <section class="cost-hero">
+            <div class="container">
+                <h1>ASRS Warehouse Cost Breakdown</h1>
+                <div class="cost-range">$50,000 – $5,000,000+</div>
+                <p>Get a detailed cost estimate based on your warehouse specifications and automation requirements</p>
+            </div>
+        </section>
+
+        <!-- 区块 2: 价格档次 -->
+        <section class="price-tiers">
+            <div class="container">
+                <h2>ASRS Investment Levels</h2>
+                <div class="tiers-grid">
+                    <div class="tier-card">
+                        <h3>Small Project</h3>
+                        <div class="tier-price">$50K – $800K</div>
+                        <ul class="tier-features">
+                            <li>1,000 – 5,000 pallet positions</li>
+                            <li>Single-deep or double-deep storage</li>
+                            <li>1-2 stacker cranes or shuttle system</li>
+                            <li>Basic WMS integration</li>
+                            <li>Manual staging areas</li>
+                            <li>Standard throughput: 50-100 pallets/hour</li>
+                        </ul>
+                    </div>
+                    <div class="tier-card featured">
+                        <h3>Medium Project</h3>
+                        <div class="tier-price">$1M – $3M</div>
+                        <ul class="tier-features">
+                            <li>5,000 – 20,000 pallet positions</li>
+                            <li>Multi-deep storage options</li>
+                            <li>3-6 stacker cranes or hybrid system</li>
+                            <li>Advanced WMS with optimization</li>
+                            <li>Automated receiving/shipping</li>
+                            <li>High throughput: 100-300 pallets/hour</li>
+                        </ul>
+                    </div>
+                    <div class="tier-card">
+                        <h3>Large Project</h3>
+                        <div class="tier-price">$3M+</div>
+                        <ul class="tier-features">
+                            <li>20,000+ pallet positions</li>
+                            <li>High-density storage systems</li>
+                            <li>7+ stacker cranes or multi-shuttle</li>
+                            <li>Enterprise WCS/WMS suite</li>
+                            <li>Fully automated operations</li>
+                            <li>Ultra-high throughput: 300+ pallets/hour</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 区块 3: 影响因素 -->
+        <section class="factors-section">
+            <div class="container">
+                <h2>Key Cost Factors</h2>
+                <div class="factors-grid">
+                    <div class="factor-card">
+                        <div class="factor-icon">📐</div>
+                        <h3>Warehouse Size</h3>
+                        <p>Length, width, and height directly impact equipment quantity and installation complexity</p>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-icon">📦</div>
+                        <h3>Storage Locations</h3>
+                        <p>Number of pallet positions determines rack configuration and equipment requirements</p>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-icon">⚖️</div>
+                        <h3>Unit Weight/Volume</h3>
+                        <p>Load specifications affect crane capacity, rack design, and conveyor selection</p>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-icon">🏷️</div>
+                        <h3>SKU Variety</h3>
+                        <p>Number of SKUs influences inventory management complexity and software requirements</p>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-icon">⚡</div>
+                        <h3>Throughput Rate</h3>
+                        <p>Movements per hour determine the number of cranes, shuttles, and conveyor speed</p>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-icon">🤖</div>
+                        <h3>Automation Level</h3>
+                        <p>From semi-automated to fully automated affects integration scope and software investment</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 区块 4: 项目对比 -->
+        <section class="case-comparison">
+            <div class="container">
+                <h2>Project Case Comparison</h2>
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Project Type</th>
+                                <th>Budget</th>
+                                <th>Storage Capacity</th>
+                                <th>System Type</th>
+                                <th>Key Features</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Small Project</strong><br>E-commerce Startup</td>
+                                <td class="price-cell">$500K</td>
+                                <td>3,000 pallet positions</td>
+                                <td>Shuttle System</td>
+                                <td>Basic WMS, single zone, 80 pallets/hour</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Medium Project</strong><br>Pharma Distribution</td>
+                                <td class="price-cell">$1.8M</td>
+                                <td>12,000 pallet positions</td>
+                                <td>Stacker Crane + Shuttle</td>
+                                <td>Batch tracking, temperature zones, 200 pallets/hour</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Large Project</strong><br>Automotive Parts</td>
+                                <td class="price-cell">$4M</td>
+                                <td>35,000 pallet positions</td>
+                                <td>Multi-Shuttle System</td>
+                                <td>Full automation, 450 pallets/hour, AGV integration</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 区块 5: 询盘表单 -->
+        <section class="quote-section" id="quote">
+            <div class="container">
+                <div class="quote-box">
+                    <h2>Get Your Cost Estimate</h2>
+                    <p>Fill in your warehouse details and we'll provide a detailed cost estimate within 24 hours</p>
+                    <form class="quote-form" id="costEstimateForm">
+                        <div class="form-group">
+                            <label for="company">Company Name</label>
+                            <input type="text" id="company" name="company" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Country & City</label>
+                            <input type="text" id="location" name="location" placeholder="e.g., USA, Chicago" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactName">Contact Name</label>
+                            <input type="text" id="contactName" name="contactName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactPhone">Phone / WhatsApp / WeChat</label>
+                            <input type="text" id="contactPhone" name="contactPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="warehouseSize">Warehouse Size (L × W × H in meters)</label>
+                            <input type="text" id="warehouseSize" name="warehouseSize" placeholder="e.g., 50m × 30m × 12m">
+                        </div>
+                        <div class="form-group">
+                            <label for="storageLocations">Number of Storage Locations</label>
+                            <input type="number" id="storageLocations" name="storageLocations" placeholder="e.g., 5000">
+                        </div>
+                        <div class="form-group">
+                            <label for="unitWeight">Storage Unit Weight/Volume</label>
+                            <input type="text" id="unitWeight" name="unitWeight" placeholder="e.g., 1000kg per pallet">
+                        </div>
+                        <div class="form-group">
+                            <label for="skuCount">Number of SKUs</label>
+                            <input type="number" id="skuCount" name="skuCount" placeholder="e.g., 500">
+                        </div>
+                        <div class="form-group">
+                            <label for="frequency">Required Throughput (pallets/hour)</label>
+                            <input type="number" id="frequency" name="frequency" placeholder="e.g., 150">
+                        </div>
+                        <div class="form-group">
+                            <label for="timeline">Project Completion Timeline</label>
+                            <select id="timeline" name="timeline">
+                                <option value="">Select timeline</option>
+                                <option value="3months">Within 3 months</option>
+                                <option value="6months">3-6 months</option>
+                                <option value="12months">6-12 months</option>
+                                <option value="12months+">More than 12 months</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="additionalInfo">Additional Requirements</label>
+                            <textarea id="additionalInfo" name="additionalInfo" placeholder="Please describe any special requirements, temperature control needs, or integration with existing systems..."></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Get Estimate</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="logo.jpg" alt="13machine">
+                    <span>1³ MACHINE</span>
+                </div>
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="asrs-cost.html">ASRS Cost</a>
+                    <a href="asrs-design.html">ASRS Design</a>
+                    <a href="solutions.html">Solutions</a>
+                    <a href="case-studies.html">Case Studies</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 1³ Machine. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Form submission handler
+        document.getElementById('costEstimateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                company: document.getElementById('company').value,
+                location: document.getElementById('location').value,
+                contactName: document.getElementById('contactName').value,
+                contactPhone: document.getElementById('contactPhone').value,
+                warehouseSize: document.getElementById('warehouseSize').value,
+                storageLocations: document.getElementById('storageLocations').value,
+                unitWeight: document.getElementById('unitWeight').value,
+                skuCount: document.getElementById('skuCount').value,
+                frequency: document.getElementById('frequency').value,
+                timeline: document.getElementById('timeline').value,
+                additionalInfo: document.getElementById('additionalInfo').value
+            };
+            
+            // Store in localStorage for demo purposes
+            // In production, this would be sent to a server
+            let inquiries = JSON.parse(localStorage.getItem('asrsInquiries') || '[]');
+            inquiries.push({
+                ...formData,
+                submittedAt: new Date().toISOString()
+            });
+            localStorage.setItem('asrsInquiries', JSON.stringify(inquiries));
+            
+            // Show success message
+            alert('Thank you for your inquiry! We will review your requirements and provide a detailed cost estimate within 24 hours.');
+            
+            // Reset form
+            this.reset();
+        });
+    </script>
+</body>
+</html>
