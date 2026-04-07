@@ -721,4 +721,77 @@ footer .container {
         flex-direction: column;
         gap: 10px;
     }
+    
+    /* Mobile form improvements */
+    .quote-form,
+    .form-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .form-group.full-width {
+        grid-column: 1 !important;
+    }
+    
+    /* Mobile table improvements */
+    .comparison-table {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .comparison-table table {
+        min-width: 600px;
+    }
+    
+    /* Mobile case tabs */
+    .case-tabs {
+        flex-direction: column;
+    }
+    
+    .case-tab {
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    /* Mobile navigation */
+    nav ul {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    nav ul li {
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    nav ul li:last-child {
+        border-bottom: none;
+    }
+    
+    /* Mobile button sizing */
+    .btn,
+    .btn-primary,
+    .btn-secondary,
+    .submit-btn {
+        width: 100%;
+        text-align: center;
+        padding: 14px 20px;
+    }
+    
+    /* Mobile section padding */
+    section {
+        padding: 60px 0 !important;
+    }
+    
+    /* Mobile heading sizes */
+    h1 {
+        font-size: 24px !important;
+    }
+    
+    h2 {
+        font-size: 20px !important;
+    }
+    
+    /* Mobile container padding */
+    .container {
+        padding: 0 15px;
+    }
 }
