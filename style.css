@@ -105,18 +105,9 @@ body {
     line-height: 1.3;
 }
 
-.logo-slogan::before {
-    content: '"';
-    color: #0066cc;
-    font-size: 14px;
-    margin-right: 2px;
-}
-
+.logo-slogan::before,
 .logo-slogan::after {
-    content: '"';
-    color: #0066cc;
-    font-size: 14px;
-    margin-left: 2px;
+    display: none;
 }
 
 .logo span {
