@@ -583,43 +583,43 @@
                     <form class="quote-form" id="costEstimateForm">
                         <div class="form-group">
                             <label for="company">Company Name</label>
-                            <input type="text" id="company" name="company" required>
+                            <input type="text" id="company" name="company" required oninvalid="this.setCustomValidity('Please fill in this field')" oninput="this.setCustomValidity('')">
                         </div>
                         <div class="form-group">
                             <label for="location">Country & City</label>
-                            <input type="text" id="location" name="location" placeholder="e.g., USA, Chicago" required>
+                            <input type="text" id="location" name="location" placeholder="e.g., USA, Chicago" required oninvalid="this.setCustomValidity('Please fill in this field')" oninput="this.setCustomValidity('')">
                         </div>
                         <div class="form-group">
                             <label for="contactName">Contact Name</label>
-                            <input type="text" id="contactName" name="contactName" required>
+                            <input type="text" id="contactName" name="contactName" required oninvalid="this.setCustomValidity('Please fill in this field')" oninput="this.setCustomValidity('')">
                         </div>
                         <div class="form-group">
                             <label for="contactPhone">Phone / WhatsApp / WeChat</label>
-                            <input type="text" id="contactPhone" name="contactPhone" required>
+                            <input type="text" id="contactPhone" name="contactPhone" required oninvalid="this.setCustomValidity('Please fill in this field')" oninput="this.setCustomValidity('')">
                         </div>
                         <div class="form-group">
                             <label for="warehouseSize">Warehouse Size (L × W × H in meters)</label>
-                            <input type="text" id="warehouseSize" name="warehouseSize" placeholder="e.g., 50m × 30m × 12m" required>
+                            <input type="text" id="warehouseSize" name="warehouseSize" placeholder="e.g., 50m × 30m × 12m" required oninvalid="this.setCustomValidity('Please fill in this field')" oninput="this.setCustomValidity('')">
                         </div>
                         <div class="form-group">
                             <label for="storageLocations">Number of Storage Locations</label>
-                            <input type="number" id="storageLocations" name="storageLocations" placeholder="e.g., 5000" required>
+                            <input type="number" id="storageLocations" name="storageLocations" placeholder="e.g., 5000" required oninvalid="this.setCustomValidity('Please fill in this field')" oninput="this.setCustomValidity('')">
                         </div>
                         <div class="form-group">
                             <label for="unitWeight">Storage Unit Weight/Volume</label>
-                            <input type="text" id="unitWeight" name="unitWeight" placeholder="e.g., 1000kg per pallet" required>
+                            <input type="text" id="unitWeight" name="unitWeight" placeholder="e.g., 1000kg per pallet" required oninvalid="this.setCustomValidity('Please fill in this field')" oninput="this.setCustomValidity('')">
                         </div>
                         <div class="form-group">
                             <label for="skuCount">Number of SKUs</label>
-                            <input type="number" id="skuCount" name="skuCount" placeholder="e.g., 500" required>
+                            <input type="number" id="skuCount" name="skuCount" placeholder="e.g., 500" required oninvalid="this.setCustomValidity('Please fill in this field')" oninput="this.setCustomValidity('')">
                         </div>
                         <div class="form-group">
                             <label for="frequency">Required Throughput (pallets/hour)</label>
-                            <input type="number" id="frequency" name="frequency" placeholder="e.g., 150" required>
+                            <input type="number" id="frequency" name="frequency" placeholder="e.g., 150" required oninvalid="this.setCustomValidity('Please fill in this field')" oninput="this.setCustomValidity('')">
                         </div>
                         <div class="form-group">
                             <label for="timeline">Project Completion Timeline</label>
-                            <select id="timeline" name="timeline" required>
+                            <select id="timeline" name="timeline" required oninvalid="this.setCustomValidity('Please select an option')" oninput="this.setCustomValidity('')">
                                 <option value="">Select timeline</option>
                                 <option value="3months">Within 3 months</option>
                                 <option value="6months">3-6 months</option>
