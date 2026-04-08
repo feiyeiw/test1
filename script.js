@@ -1593,17 +1593,7 @@ if (window.location.pathname.includes('services') ||
     })();
 }
 
-// Contact form functionality
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        // In a real system, this would send the form data to a server
-        alert('Thank you for your message! We will get back to you soon.');
-        contactForm.reset();
-    });
-}
+// Contact form functionality is now handled in contact.html with EmailJS
 
 // Utility function to get URL parameter
 function getUrlParameter(name) {
