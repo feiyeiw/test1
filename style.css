@@ -250,13 +250,13 @@ nav ul li a.active {
 }
 
 .btn-secondary {
-    background-color: transparent;
-    color: #fff;
+    background-color: #fff;
+    color: #0066cc;
     border: 2px solid #fff;
 }
 
 .btn-secondary:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #f0f0f0;
 }
 
 .btn-large {
