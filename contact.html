@@ -201,15 +201,27 @@
             btn.textContent = 'Sending...';
             btn.disabled = true;
             
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                subject: document.getElementById('subject').value,
-                message: document.getElementById('message').value,
+            // Get form values
+            const nameValue = document.getElementById('name').value;
+            const emailValue = document.getElementById('email').value;
+            const subjectValue = document.getElementById('subject').value;
+            const messageValue = document.getElementById('message').value;
+            
+            // Debug
+            console.log('Form values:', { nameValue, emailValue, subjectValue, messageValue });
+            
+            const templateParams = {
+                to_name: 'Admin',
+                from_name: nameValue,
+                from_email: emailValue,
+                subject: subjectValue,
+                message: messageValue,
+                reply_to: emailValue,
                 submittedAt: new Date().toLocaleString()
             };
             
-            emailjs.send('service_sm1ohf4', 'template_6qzse8j', formData)
+            console.log('Sending to EmailJS:', templateParams);
+            emailjs.send('service_sm1ohf4', 'template_6qzse8j', templateParams)
                 .then(function() {
                     alert('Thank you! Your message has been sent.');
                     document.getElementById('contactForm').reset();
