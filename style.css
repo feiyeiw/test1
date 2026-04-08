@@ -92,12 +92,30 @@ body {
 }
 
 .logo-slogan {
-    font-size: 14px;
-    color: #666;
-    margin-left: 20px;
-    font-style: italic;
-    max-width: 400px;
-    line-height: 1.4;
+    font-size: 13px;
+    color: #555;
+    margin-left: 25px;
+    padding-left: 20px;
+    border-left: 2px solid #0066cc;
+    max-width: 350px;
+    line-height: 1.5;
+    letter-spacing: 0.3px;
+}
+
+.logo-slogan::before {
+    content: '"';
+    color: #0066cc;
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 2px;
+}
+
+.logo-slogan::after {
+    content: '"';
+    color: #0066cc;
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 2px;
 }
 
 .logo span {
