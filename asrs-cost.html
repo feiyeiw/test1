@@ -7,6 +7,12 @@
     <meta name="description" content="ASRS warehouse cost ranges from $50K to $5M+. Get a detailed cost breakdown and custom estimate for your project.">
     <meta name="keywords" content="ASRS cost, warehouse cost, automated storage cost, ASRS price, warehouse automation budget">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        (function(){
+            emailjs.init("tX_fvaVsMZbzsFJNv");
+        })();
+    </script>
     <style>
         /* ASRS Cost Page Specific Styles */
         .cost-hero {
@@ -662,39 +668,42 @@
 
     <script src="script.js"></script>
     <script>
-        // Form submission handler
+        // Form submission handler with EmailJS
         document.getElementById('costEstimateForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Collect form data
+            const btn = this.querySelector('.submit-btn');
+            const originalText = btn.textContent;
+            btn.textContent = 'Sending...';
+            btn.disabled = true;
+            
             const formData = {
                 company: document.getElementById('company').value,
                 location: document.getElementById('location').value,
                 contactName: document.getElementById('contactName').value,
-                contactPhone: document.getElementById('contactPhone').value,
+                phone: document.getElementById('contactPhone').value,
                 warehouseSize: document.getElementById('warehouseSize').value,
                 storageLocations: document.getElementById('storageLocations').value,
                 unitWeight: document.getElementById('unitWeight').value,
-                skuCount: document.getElementById('skuCount').value,
+                sku: document.getElementById('skuCount').value,
                 frequency: document.getElementById('frequency').value,
                 timeline: document.getElementById('timeline').value,
                 additionalInfo: document.getElementById('additionalInfo').value
             };
             
-            // Store in localStorage for demo purposes
-            // In production, this would be sent to a server
-            let inquiries = JSON.parse(localStorage.getItem('asrsInquiries') || '[]');
-            inquiries.push({
-                ...formData,
-                submittedAt: new Date().toISOString()
-            });
-            localStorage.setItem('asrsInquiries', JSON.stringify(inquiries));
-            
-            // Show success message
-            alert('Thank you for your inquiry! We will review your requirements and provide a detailed cost estimate within 24 hours.');
-            
-            // Reset form
-            this.reset();
+            // Send via EmailJS
+            emailjs.send('service_sm1ohf4', 'template_dxxi5qa', formData)
+                .then(function() {
+                    alert('Thank you! We will contact you within 24 hours.');
+                    document.getElementById('costEstimateForm').reset();
+                }, function(error) {
+                    alert('Failed to send. Please try again or contact us directly.');
+                    console.log('EmailJS error:', error);
+                })
+                .finally(function() {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                });
         });
     </script>
 </body>
