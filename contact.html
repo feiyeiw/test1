@@ -7,6 +7,12 @@
     <meta name="description" content="Contact our ASRS experts for warehouse automation consultation and cost estimates.">
     <meta name="keywords" content="ASRS contact, warehouse automation consultation, ASRS quote">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        (function(){
+            emailjs.init("tX_fvaVsMZbzsFJNv");
+        })();
+    </script>
     <style>
         .contact-form {
             background-color: #f8f8f8;
@@ -185,5 +191,37 @@
         </div>
     </footer>
     <script src="script.js"></script>
+    <script>
+        // Contact form submission with EmailJS
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const btn = this.querySelector('.submit-btn');
+            const originalText = btn.textContent;
+            btn.textContent = 'Sending...';
+            btn.disabled = true;
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value,
+                submittedAt: new Date().toLocaleString()
+            };
+            
+            emailjs.send('service_sm1ohf4', 'template_6qzse8j', formData)
+                .then(function() {
+                    alert('Thank you! Your message has been sent.');
+                    document.getElementById('contactForm').reset();
+                }, function(error) {
+                    alert('Failed to send. Please try again or contact us directly.');
+                    console.log('EmailJS error:', error);
+                })
+                .finally(function() {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                });
+        });
+    </script>
 </body>
 </html>
