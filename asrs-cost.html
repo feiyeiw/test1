@@ -669,7 +669,7 @@
                                 <input type="text" id="date-picker" name="timeline" placeholder="Select date" required readonly>
                                 <div class="calendar-container" id="calendar-container">
                                     <div class="calendar-header">
-                                        <button class="calendar-btn" id="prev-year-1">«</button>
+                                        <button type="button" class="calendar-btn" id="prev-year-1">«</button>
                                         <input type="number" id="year-input" min="-9999" max="9999" step="1" style="-moz-appearance: textfield;">
                                         <style>
                                             #year-input::-webkit-inner-spin-button, 
@@ -692,7 +692,7 @@
                                             <option value="10">November</option>
                                             <option value="11">December</option>
                                         </select>
-                                        <button class="calendar-btn" id="next-year-1">»</button>
+                                        <button type="button" class="calendar-btn" id="next-year-1">»</button>
                                     </div>
                                     <div class="calendar-nav">
                                         <button class="calendar-btn" id="prev-month">‹</button>
@@ -976,6 +976,16 @@
                                     currentDate.setMonth(currentDate.getMonth() + 1);
                                     updateCalendarDisplay();
                                 });
+
+                                prevYear1Btn.addEventListener('click', function() {
+                                    currentDate.setFullYear(currentDate.getFullYear() - 1);
+                                    updateCalendarDisplay();
+                                });
+
+                                nextYear1Btn.addEventListener('click', function() {
+                                    currentDate.setFullYear(currentDate.getFullYear() + 1);
+                                    updateCalendarDisplay();
+                                });
                                 
 
                                 
@@ -989,6 +999,14 @@
                                 });
                                 
                                 yearInput.addEventListener('change', function() {
+                                    const year = parseInt(this.value);
+                                    if (!isNaN(year) && year >= -9999 && year <= 9999) {
+                                        currentDate.setFullYear(year);
+                                        updateCalendarDisplay();
+                                    }
+                                });
+
+                                yearInput.addEventListener('input', function() {
                                     const year = parseInt(this.value);
                                     if (!isNaN(year) && year >= -9999 && year <= 9999) {
                                         currentDate.setFullYear(year);
