@@ -309,51 +309,55 @@
             font-weight: bold;
             color: #333;
             font-size: 14px;
+            line-height: 1.4;
         }
 
         .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
+        .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 12px 40px 12px 15px;
+            padding: 14px 18px;
             border: 1px solid #e0e0e0;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 16px;
-            transition: all 0.3s;
-            appearance: none;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
         }
 
         .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #0066cc;
-        }
-
+        .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
             border-color: #0066cc;
-            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+            transform: translateY(-1px);
         }
 
+        .form-group input:hover,
+        .form-group textarea:hover,
         .form-group select:hover {
             border-color: #0066cc;
         }
 
+        .form-group select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            cursor: pointer;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
         .form-group textarea {
-            height: 100px;
+            height: 120px;
             resize: vertical;
+            min-height: 80px;
         }
 
         .submit-btn {
@@ -362,16 +366,25 @@
             background-color: #cc0000;
             color: #fff;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 20px;
+            transition: all 0.3s ease;
+            margin-top: 24px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(204, 0, 0, 0.1);
         }
 
         .submit-btn:hover {
             background-color: #a80000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(204, 0, 0, 0.15);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(204, 0, 0, 0.1);
         }
 
         /* Responsive Design */
@@ -382,6 +395,10 @@
             }
 
             .quote-form {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
                 grid-template-columns: 1fr;
             }
 
@@ -619,8 +636,12 @@
                             <input type="text" id="contactName" name="contactName" required oninvalid="this.setCustomValidity('Please fill in this field')" oninput="this.setCustomValidity('')">
                         </div>
                         <div class="form-group">
-                            <label for="contactPhone">Phone / WhatsApp / WeChat</label>
-                            <input type="text" id="contactPhone" name="contactPhone" required oninvalid="this.setCustomValidity('Please fill in this field')" oninput="this.setCustomValidity('')">
+                            <label for="contactEmail">Email <span style="color: red;">*</span></label>
+                            <input type="email" id="contactEmail" name="contactEmail" required oninvalid="this.setCustomValidity('Please fill in this field')" oninput="this.setCustomValidity('')">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactPhone">WhatsApp / WeChat</label>
+                            <input type="text" id="contactPhone" name="contactPhone" placeholder="Optional">
                         </div>
                         <div class="form-group">
                             <label for="warehouseSize">Warehouse Size (L × W × H in meters)</label>
@@ -648,8 +669,8 @@
                                 <input type="text" id="date-picker" name="timeline" placeholder="Select date" required oninvalid="this.setCustomValidity('Please select a date')" oninput="this.setCustomValidity('')" readonly>
                                 <div class="calendar-container" id="calendar-container">
                                     <div class="calendar-header">
-                                        <button class="calendar-btn" id="prev-year-100">««</button>
                                         <button class="calendar-btn" id="prev-year-10">«</button>
+                                        <button class="calendar-btn" id="prev-year-1">«</button>
                                         <input type="number" id="year-input" min="-9999" max="9999">
                                         <select id="month-select">
                                             <option value="0">January</option>
@@ -665,8 +686,8 @@
                                             <option value="10">November</option>
                                             <option value="11">December</option>
                                         </select>
+                                        <button class="calendar-btn" id="next-year-1">»</button>
                                         <button class="calendar-btn" id="next-year-10">»</button>
-                                        <button class="calendar-btn" id="next-year-100">»»</button>
                                     </div>
                                     <div class="calendar-nav">
                                         <button class="calendar-btn" id="prev-month">‹</button>
@@ -866,8 +887,8 @@
                                 const nextMonthBtn = document.getElementById('next-month');
                                 const prevYear10Btn = document.getElementById('prev-year-10');
                                 const nextYear10Btn = document.getElementById('next-year-10');
-                                const prevYear100Btn = document.getElementById('prev-year-100');
-                                const nextYear100Btn = document.getElementById('next-year-100');
+                                const prevYear1Btn = document.getElementById('prev-year-1');
+                                const nextYear1Btn = document.getElementById('next-year-1');
                                 const todayBtn = document.getElementById('today-btn');
                                 
                                 let currentDate = new Date();
@@ -963,15 +984,7 @@
                                     updateCalendarDisplay();
                                 });
                                 
-                                prevYear100Btn.addEventListener('click', function() {
-                                    currentDate.setFullYear(currentDate.getFullYear() - 100);
-                                    updateCalendarDisplay();
-                                });
-                                
-                                nextYear100Btn.addEventListener('click', function() {
-                                    currentDate.setFullYear(currentDate.getFullYear() + 100);
-                                    updateCalendarDisplay();
-                                });
+
                                 
                                 todayBtn.addEventListener('click', function() {
                                     currentDate = new Date();
@@ -1080,13 +1093,14 @@
                 company: document.getElementById('company').value,
                 location: document.getElementById('location').value,
                 contactName: document.getElementById('contactName').value,
+                email: document.getElementById('contactEmail').value,
                 phone: document.getElementById('contactPhone').value,
                 warehouseSize: document.getElementById('warehouseSize').value,
                 storageLocations: document.getElementById('storageLocations').value,
                 unitWeight: document.getElementById('unitWeight').value,
                 sku: document.getElementById('skuCount').value,
                 frequency: document.getElementById('frequency').value,
-                timeline: document.getElementById('timeline').value,
+                timeline: document.getElementById('date-picker').value,
                 additionalInfo: document.getElementById('additionalInfo').value
             };
             
