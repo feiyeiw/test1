@@ -116,6 +116,23 @@ body {
     margin-top: 5px;
 }
 
+.cost-button {
+    display: inline-block;
+    background-color: white;
+    color: #0066cc;
+    padding: 12px 24px;
+    border: 2px solid #0066cc;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.cost-button:hover {
+    background-color: #0066cc;
+    color: white;
+}
+
 .logo-slogan::before,
 .logo-slogan::after {
     display: none;
