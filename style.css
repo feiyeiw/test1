@@ -104,6 +104,7 @@ body {
     white-space: normal;
     line-height: 1.4;
     max-width: 400px;
+    text-align: right;
 }
 
 .logo-slogan::before,
