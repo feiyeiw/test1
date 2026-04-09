@@ -666,12 +666,18 @@
                         <div class="form-group">
                             <label for="date-picker">Planner Order Time</label>
                             <div class="date-picker-container">
-                                <input type="text" id="date-picker" name="timeline" placeholder="Select date" required oninvalid="this.setCustomValidity('Please select a date')" oninput="this.setCustomValidity('')" readonly>
+                                <input type="text" id="date-picker" name="timeline" placeholder="Select date" required readonly>
                                 <div class="calendar-container" id="calendar-container">
                                     <div class="calendar-header">
-                                        <button class="calendar-btn" id="prev-year-10">«</button>
                                         <button class="calendar-btn" id="prev-year-1">«</button>
-                                        <input type="number" id="year-input" min="-9999" max="9999">
+                                        <input type="number" id="year-input" min="-9999" max="9999" step="1" style="-moz-appearance: textfield;">
+                                        <style>
+                                            #year-input::-webkit-inner-spin-button, 
+                                            #year-input::-webkit-outer-spin-button {
+                                                -webkit-appearance: none;
+                                                margin: 0;
+                                            }
+                                        </style>
                                         <select id="month-select">
                                             <option value="0">January</option>
                                             <option value="1">February</option>
@@ -687,7 +693,6 @@
                                             <option value="11">December</option>
                                         </select>
                                         <button class="calendar-btn" id="next-year-1">»</button>
-                                        <button class="calendar-btn" id="next-year-10">»</button>
                                     </div>
                                     <div class="calendar-nav">
                                         <button class="calendar-btn" id="prev-month">‹</button>
@@ -885,8 +890,6 @@
                                 const monthSelect = document.getElementById('month-select');
                                 const prevMonthBtn = document.getElementById('prev-month');
                                 const nextMonthBtn = document.getElementById('next-month');
-                                const prevYear10Btn = document.getElementById('prev-year-10');
-                                const nextYear10Btn = document.getElementById('next-year-10');
                                 const prevYear1Btn = document.getElementById('prev-year-1');
                                 const nextYear1Btn = document.getElementById('next-year-1');
                                 const todayBtn = document.getElementById('today-btn');
@@ -974,15 +977,7 @@
                                     updateCalendarDisplay();
                                 });
                                 
-                                prevYear10Btn.addEventListener('click', function() {
-                                    currentDate.setFullYear(currentDate.getFullYear() - 10);
-                                    updateCalendarDisplay();
-                                });
-                                
-                                nextYear10Btn.addEventListener('click', function() {
-                                    currentDate.setFullYear(currentDate.getFullYear() + 10);
-                                    updateCalendarDisplay();
-                                });
+
                                 
 
                                 
@@ -1084,6 +1079,13 @@
         document.getElementById('costEstimateForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Validate date field
+            const datePicker = document.getElementById('date-picker');
+            if (!datePicker.value) {
+                alert('Please select a date for Planner Order Time');
+                return;
+            }
+            
             const btn = this.querySelector('.submit-btn');
             const originalText = btn.textContent;
             btn.textContent = 'Sending...';
@@ -1100,7 +1102,7 @@
                 unitWeight: document.getElementById('unitWeight').value,
                 sku: document.getElementById('skuCount').value,
                 frequency: document.getElementById('frequency').value,
-                timeline: document.getElementById('date-picker').value,
+                timeline: datePicker.value,
                 additionalInfo: document.getElementById('additionalInfo').value
             };
             
