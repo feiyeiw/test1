@@ -384,7 +384,6 @@
             <div class="container">
                 <div class="case-list-header">
                     <h2>Real ASRS Project Cases</h2>
-                    <span class="results-count" id="resultsCount">Showing 4 case studies</span>
                 </div>
                 <div class="cases-grid" id="casesGrid">
                     <!-- Card 1: E-commerce Shuttle -->
@@ -496,15 +495,12 @@
         const budgetFilter = document.getElementById('filter-budget');
         const industryFilter = document.getElementById('filter-industry');
         const casesGrid = document.getElementById('casesGrid');
-        const resultsCount = document.getElementById('resultsCount');
         const cards = Array.from(casesGrid.querySelectorAll('.case-summary-card'));
 
         function filterCases() {
             const system = systemFilter.value;
             const budget = budgetFilter.value;
             const industry = industryFilter.value;
-
-            let visibleCount = 0;
 
             cards.forEach(card => {
                 const matchSystem = system === 'all' || card.dataset.system === system;
@@ -513,13 +509,10 @@
 
                 if (matchSystem && matchBudget && matchIndustry) {
                     card.style.display = 'block';
-                    visibleCount++;
                 } else {
                     card.style.display = 'none';
                 }
             });
-
-            resultsCount.textContent = `Showing ${visibleCount} case study${visibleCount !== 1 ? 'ies' : 'y'}`;
         }
 
         function resetFilters() {
