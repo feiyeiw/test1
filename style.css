@@ -175,6 +175,24 @@ body {
     color: #666;
 }
 
+/* Header Actions */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.language-selector select {
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+    cursor: pointer;
+    min-width: 120px;
+}
+
 /* Navigation */
 nav {
     background-color: #0066cc;

@@ -82,14 +82,38 @@
                     <span class="slogan-line2">— we make automation work as a whole</span>
                 </span>
             </div>
-                <div class="search">
-                    <input type="text" placeholder="Search">
-                    <button type="submit">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <path d="m21 21-4.35-4.35"></path>
-                        </svg>
-                    </button>
+                <div class="header-actions">
+                    <div class="language-selector">
+                        <select id="lang-select" onchange="switchLanguage(this.value)">
+                            <option value="en">English</option>
+                            <option value="zh">中文</option>
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                            <option value="de">Deutsch</option>
+                            <option value="ja">日本語</option>
+                            <option value="ko">한국어</option>
+                            <option value="ar">العربية</option>
+                            <option value="pt">Português</option>
+                            <option value="ru">Русский</option>
+                            <option value="it">Italiano</option>
+                            <option value="nl">Nederlands</option>
+                            <option value="pl">Polski</option>
+                            <option value="tr">Türkçe</option>
+                            <option value="vi">Tiếng Việt</option>
+                            <option value="th">ไทย</option>
+                            <option value="id">Bahasa Indonesia</option>
+                            <option value="hi">हिन्दी</option>
+                        </select>
+                    </div>
+                    <div class="search">
+                        <input type="text" placeholder="Search">
+                        <button type="submit">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

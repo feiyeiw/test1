@@ -2151,12 +2151,31 @@ function initSmoothScroll() {
     });
 }
 
-// Initialize all ASRS features on page load
+// Global language switcher for header dropdown
+function switchLanguage(lang) {
+    localStorage.setItem('siteLanguage', lang);
+    // Sync all selectors on the page
+    document.querySelectorAll('#lang-select').forEach(function(el) {
+        el.value = lang;
+    });
+    // If the page has i18n support (admin), translate it
+    if (typeof translatePage === 'function') {
+        currentLanguage = lang;
+        translatePage();
+    }
+}
+
+// Sync language selectors on page load
 document.addEventListener('DOMContentLoaded', function() {
+    const savedLang = localStorage.getItem('siteLanguage') || 'en';
+    document.querySelectorAll('#lang-select').forEach(function(el) {
+        el.value = savedLang;
+    });
+
     // Existing initialization
     updateLanguageDisplay();
     translatePage();
-    
+
     // New ASRS features
     initCostCalculator();
     initCostEstimateForm();
