@@ -3,57 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real ASRS Project Cases | 13machine</title>
-    <meta name="description" content="Explore real ASRS projects. See project layouts, costs, and results.">
-    <meta name="keywords" content="ASRS case studies, warehouse projects, automated storage projects, ASRS implementation">
+    <title>ASRS Case Studies by System, Cost & Industry | 13machine</title>
+    <meta name="description" content="Explore real ASRS projects by system type, budget, and industry. See actual costs, ROI, and results from shuttle, crane, and mini-load installations.">
+    <meta name="keywords" content="ASRS case studies, shuttle ASRS project, crane ASRS cost, mini load system, warehouse automation case study">
     <link rel="stylesheet" href="style.css">
     <style>
         /* Case Studies Page Specific Styles */
         .cases-hero {
             background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
-            padding: 100px 0;
+            padding: 80px 0 60px;
             text-align: center;
             color: #fff;
         }
 
         .cases-hero .container {
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
         }
 
         .cases-hero h1 {
-            font-size: 42px;
+            font-size: 40px;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
-        .cases-hero p {
+        .cases-hero .subtitle {
             font-size: 18px;
             color: rgba(255, 255, 255, 0.9);
             max-width: 600px;
+            margin-bottom: 30px;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 20px 30px;
+            border-radius: 12px;
+            backdrop-filter: blur(4px);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .filter-group label {
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .filter-group select {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            min-width: 160px;
+            color: #333;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .filter-btn {
+            padding: 10px 22px;
+            border: 2px solid #fff;
+            background: transparent;
+            color: #fff;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            align-self: flex-end;
+        }
+
+        .filter-btn:hover {
+            background: #fff;
+            color: #0066cc;
         }
 
         /* Case List Section */
         .case-list {
-            padding: 80px 0;
+            padding: 60px 0 80px;
             background-color: #f8f8f8;
         }
 
         .case-list .container {
             flex-direction: column;
-            gap: 50px;
+            gap: 40px;
+        }
+
+        .case-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .case-list h2 {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
             color: #333;
-            text-align: center;
+        }
+
+        .results-count {
+            font-size: 14px;
+            color: #666;
         }
 
         .cases-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 30px;
             width: 100%;
         }
@@ -64,7 +134,9 @@
             border-radius: 12px;
             overflow: hidden;
             transition: all 0.3s;
-            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
 
         .case-summary-card:hover {
@@ -74,14 +146,16 @@
         }
 
         .case-image {
-            height: 180px;
+            height: 200px;
             background-color: #0066cc;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #fff;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
+            text-align: center;
+            padding: 20px;
         }
 
         .case-info {
@@ -91,209 +165,49 @@
         .case-info h3 {
             font-size: 20px;
             color: #333;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            line-height: 1.3;
         }
 
-        .case-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
+        .case-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
         }
 
-        .stat-box {
-            text-align: center;
-            padding: 12px;
-            background: #f8f8f8;
-            border-radius: 8px;
-        }
-
-        .stat-value {
-            font-size: 18px;
-            font-weight: bold;
-            color: #0066cc;
-        }
-
-        .stat-label {
-            font-size: 12px;
+        .case-meta span {
+            font-size: 13px;
             color: #666;
-            margin-top: 5px;
+            background: #f0f0f0;
+            padding: 5px 12px;
+            border-radius: 20px;
         }
 
-        .efficiency-badge {
-            display: inline-block;
-            padding: 8px 16px;
+        .case-highlights {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .highlight-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
             background-color: #d4edda;
             color: #155724;
             border-radius: 20px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
         }
 
-        /* Featured Case Detail Section */
-        .featured-case {
-            padding: 80px 0;
-            background-color: #fff;
+        .highlight-badge.alt {
+            background-color: #cce5ff;
+            color: #004085;
         }
 
-        .featured-case .container {
-            flex-direction: column;
-            gap: 50px;
-        }
-
-        .featured-case h2 {
-            font-size: 32px;
-            font-weight: bold;
-            color: #333;
-            text-align: center;
-        }
-
-        .case-detail-card {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .case-tabs {
-            display: flex;
-            background: #f8f8f8;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        .case-tab {
-            flex: 1;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: bold;
-            color: #666;
-            transition: all 0.3s;
-            border-bottom: 3px solid transparent;
-            margin-bottom: -2px;
-        }
-
-        .case-tab:hover {
-            color: #0066cc;
-        }
-
-        .case-tab.active {
-            color: #0066cc;
-            border-bottom-color: #0066cc;
-            background: #fff;
-        }
-
-        .case-content {
-            padding: 40px;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .tab-content h3 {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 25px;
-        }
-
-        .content-with-image {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: start;
-        }
-
-        .content-image {
-            background: #f0f0f0;
-            border-radius: 8px;
-            height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-size: 16px;
-        }
-
-        .content-text h4 {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .content-text p {
-            color: #666;
-            line-height: 1.8;
-            margin-bottom: 15px;
-        }
-
-        .content-text ul {
-            padding-left: 20px;
-            color: #666;
-            line-height: 1.8;
-        }
-
-        .content-text li {
-            margin-bottom: 8px;
-        }
-
-        .cost-breakdown {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .cost-item {
-            background: #f8f8f8;
-            padding: 20px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .cost-name {
-            color: #666;
-        }
-
-        .cost-value {
-            font-size: 20px;
-            font-weight: bold;
-            color: #0066cc;
-        }
-
-        .result-metrics {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-            margin-top: 30px;
-        }
-
-        .result-card {
-            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
-            color: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .result-number {
-            font-size: 36px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .result-label {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        /* CTA Section */
+        /* Bottom CTA Section */
         .cta-section {
             padding: 80px 0;
             background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
@@ -306,18 +220,18 @@
         .cta-box {
             text-align: center;
             color: #fff;
-            max-width: 600px;
+            max-width: 700px;
         }
 
         .cta-box h2 {
-            font-size: 36px;
+            font-size: 32px;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .cta-box p {
-            font-size: 18px;
-            margin-bottom: 30px;
+            font-size: 17px;
+            margin-bottom: 25px;
             color: rgba(255, 255, 255, 0.9);
         }
 
@@ -328,7 +242,7 @@
             color: #0066cc;
             text-decoration: none;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 17px;
             border-radius: 6px;
             transition: all 0.3s;
         }
@@ -341,61 +255,43 @@
         /* Responsive Design */
         @media (max-width: 1024px) {
             .cases-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .content-with-image {
                 grid-template-columns: 1fr;
-            }
-
-            .case-tabs {
-                flex-wrap: wrap;
-            }
-
-            .case-tab {
-                flex: 1 1 33%;
-            }
-
-            .result-metrics {
-                grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 768px) {
             .cases-hero {
-                padding: 60px 0;
+                padding: 60px 0 40px;
             }
 
             .cases-hero h1 {
-                font-size: 28px;
+                font-size: 26px;
             }
 
-            .cases-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .case-tabs {
+            .filter-bar {
                 flex-direction: column;
+                align-items: stretch;
+                padding: 15px 20px;
             }
 
-            .case-tab {
-                border-bottom: 1px solid #e0e0e0;
+            .filter-group select {
+                width: 100%;
             }
 
-            .case-content {
-                padding: 25px;
+            .filter-btn {
+                align-self: stretch;
+                margin-top: 10px;
             }
 
-            .cost-breakdown {
-                grid-template-columns: 1fr;
+            .case-image {
+                height: 160px;
             }
 
-            .result-metrics {
-                grid-template-columns: 1fr;
+            .case-list-header {
+                flex-direction: column;
+                align-items: flex-start;
             }
 
-            .case-list h2,
-            .featured-case h2,
             .cta-box h2 {
                 font-size: 24px;
             }
@@ -407,16 +303,16 @@
         <div class="header-main">
             <div class="container">
                 <div class="logo-brand">
-                <div class="logo">
-                    <a href="index.html">
-                        <img src="logo.jpg" alt="13machine">
-                    </a>
+                    <div class="logo">
+                        <a href="index.html">
+                            <img src="logo.jpg" alt="13machine">
+                        </a>
+                    </div>
+                    <span class="logo-slogan">
+                        <span class="slogan-line1">From system design to project delivery</span>
+                        <span class="slogan-line2">— we make automation work as a whole</span>
+                    </span>
                 </div>
-                <span class="logo-slogan">
-                    <span class="slogan-line1">From system design to project delivery</span>
-                    <span class="slogan-line2">— we make automation work as a whole</span>
-                </span>
-            </div>
                 <div class="search">
                     <input type="text" placeholder="Search">
                     <button type="submit">
@@ -443,247 +339,132 @@
     </header>
 
     <main>
-        <!-- 区块 1: 页面标题 -->
+        <!-- Hero + Filters -->
         <section class="cases-hero">
             <div class="container">
-                <h1>Real ASRS Projects</h1>
-                <p>See how we've helped businesses transform their warehouse operations with customized ASRS solutions</p>
+                <h1>Find Your ASRS Solution & Cost</h1>
+                <p class="subtitle">Explore real projects by system, cost, and industry. Each case study includes actual budgets, ROI, and performance results.</p>
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-system">By System</label>
+                        <select id="filter-system">
+                            <option value="all">All Systems</option>
+                            <option value="shuttle">Shuttle ASRS</option>
+                            <option value="crane">Crane / Stacker</option>
+                            <option value="miniload">Mini Load</option>
+                            <option value="multi">Multi-Shuttle</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-budget">By Budget</label>
+                        <select id="filter-budget">
+                            <option value="all">All Budgets</option>
+                            <option value="under500k">Under $500K</option>
+                            <option value="500k-2m">$500K – $2M</option>
+                            <option value="over2m">Over $2M</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-industry">By Industry</label>
+                        <select id="filter-industry">
+                            <option value="all">All Industries</option>
+                            <option value="ecommerce">E-commerce</option>
+                            <option value="pharma">Pharmaceutical</option>
+                            <option value="automotive">Automotive</option>
+                            <option value="electronics">Electronics / 3C</option>
+                        </select>
+                    </div>
+                    <button class="filter-btn" onclick="resetFilters()">Reset Filters</button>
+                </div>
             </div>
         </section>
 
-        <!-- 区块 2: 案例列表 -->
+        <!-- Case Cards Wall -->
         <section class="case-list">
             <div class="container">
-                <h2>Project Portfolio</h2>
-                <div class="cases-grid">
-                    <div class="case-summary-card" onclick="showCase('ecommerce')">
-                        <div class="case-image">E-commerce Fulfillment</div>
+                <div class="case-list-header">
+                    <h2>Real ASRS Project Cases</h2>
+                    <span class="results-count" id="resultsCount">Showing 4 case studies</span>
+                </div>
+                <div class="cases-grid" id="casesGrid">
+                    <!-- Card 1: E-commerce Shuttle -->
+                    <a href="case-ecommerce.html" class="case-summary-card" data-system="shuttle" data-budget="500k-2m" data-industry="ecommerce">
+                        <div class="case-image">E-commerce Fulfillment Center</div>
                         <div class="case-info">
-                            <h3>E-commerce Distribution Center</h3>
-                            <div class="case-stats">
-                                <div class="stat-box">
-                                    <div class="stat-value">$1.2M</div>
-                                    <div class="stat-label">Budget</div>
-                                </div>
-                                <div class="stat-box">
-                                    <div class="stat-value">10,000</div>
-                                    <div class="stat-label">Pallets</div>
-                                </div>
-                                <div class="stat-box">
-                                    <div class="stat-value">Shuttle</div>
-                                    <div class="stat-label">System</div>
-                                </div>
-                                <div class="stat-box">
-                                    <div class="stat-value">200/h</div>
-                                    <div class="stat-label">Throughput</div>
-                                </div>
+                            <h3>How a Shuttle ASRS Reduced Labor by 60% (10,000 Pallets)</h3>
+                            <div class="case-meta">
+                                <span>Industry: E-commerce</span>
+                                <span>Budget: $1.2M</span>
+                                <span>System: Shuttle</span>
                             </div>
-                            <span class="efficiency-badge">+180% Efficiency</span>
+                            <div class="case-highlights">
+                                <span class="highlight-badge">+180% Efficiency</span>
+                                <span class="highlight-badge alt">200 picks/hour</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="case-summary-card" onclick="showCase('pharma')">
-                        <div class="case-image">Pharmaceutical Storage</div>
+                    </a>
+
+                    <!-- Card 2: Pharma Crane -->
+                    <a href="case-pharma.html" class="case-summary-card" data-system="crane" data-budget="500k-2m" data-industry="pharma">
+                        <div class="case-image">Pharmaceutical Cold Storage</div>
                         <div class="case-info">
-                            <h3>Pharma Cold Storage</h3>
-                            <div class="case-stats">
-                                <div class="stat-box">
-                                    <div class="stat-value">$2.5M</div>
-                                    <div class="stat-label">Budget</div>
-                                </div>
-                                <div class="stat-box">
-                                    <div class="stat-value">15,000</div>
-                                    <div class="stat-label">Pallets</div>
-                                </div>
-                                <div class="stat-box">
-                                    <div class="stat-value">Stacker</div>
-                                    <div class="stat-label">System</div>
-                                </div>
-                                <div class="stat-box">
-                                    <div class="stat-value">150/h</div>
-                                    <div class="stat-label">Throughput</div>
-                                </div>
+                            <h3>Pharma Crane ASRS Delivers 99.9% Traceability (15,000 Pallets)</h3>
+                            <div class="case-meta">
+                                <span>Industry: Pharmaceutical</span>
+                                <span>Budget: $2.5M</span>
+                                <span>System: Crane / Stacker</span>
                             </div>
-                            <span class="efficiency-badge">+150% Efficiency</span>
+                            <div class="case-highlights">
+                                <span class="highlight-badge">+150% Efficiency</span>
+                                <span class="highlight-badge alt">150 picks/hour</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="case-summary-card" onclick="showCase('automotive')">
-                        <div class="case-image">Automotive Parts</div>
+                    </a>
+
+                    <!-- Card 3: Automotive Multi -->
+                    <a href="case-automotive.html" class="case-summary-card" data-system="multi" data-budget="over2m" data-industry="automotive">
+                        <div class="case-image">Automotive Parts Warehouse</div>
                         <div class="case-info">
-                            <h3>Auto Parts Warehouse</h3>
-                            <div class="case-stats">
-                                <div class="stat-box">
-                                    <div class="stat-value">$4M</div>
-                                    <div class="stat-label">Budget</div>
-                                </div>
-                                <div class="stat-box">
-                                    <div class="stat-value">35,000</div>
-                                    <div class="stat-label">Pallets</div>
-                                </div>
-                                <div class="stat-box">
-                                    <div class="stat-value">Multi</div>
-                                    <div class="stat-label">System</div>
-                                </div>
-                                <div class="stat-box">
-                                    <div class="stat-value">450/h</div>
-                                    <div class="stat-label">Throughput</div>
-                                </div>
+                            <h3>Multi-Shuttle ASRS Powers 450 Picks/Hour for Auto Parts (35,000 Pallets)</h3>
+                            <div class="case-meta">
+                                <span>Industry: Automotive</span>
+                                <span>Budget: $4M</span>
+                                <span>System: Multi-Shuttle</span>
                             </div>
-                            <span class="efficiency-badge">+220% Efficiency</span>
+                            <div class="case-highlights">
+                                <span class="highlight-badge">+220% Efficiency</span>
+                                <span class="highlight-badge alt">450 picks/hour</span>
+                            </div>
                         </div>
-                    </div>
+                    </a>
+
+                    <!-- Card 4: Electronics Mini Load -->
+                    <a href="case-miniload.html" class="case-summary-card" data-system="miniload" data-budget="500k-2m" data-industry="electronics">
+                        <div class="case-image">Electronics / 3C Distribution</div>
+                        <div class="case-info">
+                            <h3>Mini Load ASRS Scales 3C Fulfillment in 50% Less Floor Space</h3>
+                            <div class="case-meta">
+                                <span>Industry: Electronics / 3C</span>
+                                <span>Budget: $800K</span>
+                                <span>System: Mini Load</span>
+                            </div>
+                            <div class="case-highlights">
+                                <span class="highlight-badge">+200% Efficiency</span>
+                                <span class="highlight-badge alt">300 picks/hour</span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </section>
 
-        <!-- 区块 3: 案例详情结构 -->
-        <section class="featured-case" id="featuredCase">
-            <div class="container">
-                <h2>Featured Project: E-commerce Fulfillment Center</h2>
-                <div class="case-detail-card">
-                    <div class="case-tabs">
-                        <div class="case-tab active" onclick="switchTab('overview')">Overview</div>
-                        <div class="case-tab" onclick="switchTab('layout')">Layout</div>
-                        <div class="case-tab" onclick="switchTab('system')">System</div>
-                        <div class="case-tab" onclick="switchTab('cost')">Cost</div>
-                        <div class="case-tab" onclick="switchTab('result')">Result</div>
-                    </div>
-                    <div class="case-content">
-                        <!-- Overview Tab -->
-                        <div class="tab-content active" id="overview">
-                            <h3>Project Overview</h3>
-                            <div class="content-with-image">
-                                <div class="content-image">[Project Photo/Video]</div>
-                                <div class="content-text">
-                                    <h4>Client Background</h4>
-                                    <p>A leading e-commerce company in Southeast Asia needed to upgrade their fulfillment center to handle rapid growth in online orders. The existing manual warehouse could not meet the demand during peak seasons.</p>
-                                    <h4>Project Goals</h4>
-                                    <ul>
-                                        <li>Increase storage capacity by 200%</li>
-                                        <li>Improve order fulfillment speed</li>
-                                        <li>Reduce labor dependency</li>
-                                        <li>Enable 24/7 operations</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Layout Tab -->
-                        <div class="tab-content" id="layout">
-                            <h3>Warehouse Layout</h3>
-                            <div class="content-with-image">
-                                <div class="content-image">[Layout Drawing]</div>
-                                <div class="content-text">
-                                    <h4>Layout Design</h4>
-                                    <p>The 45m × 60m warehouse was divided into four zones: receiving, storage, picking, and shipping. The ASRS occupies the central 30m × 40m area with 8-meter high racks.</p>
-                                    <h4>Key Features</h4>
-                                    <ul>
-                                        <li>10 aisles with double-deep storage</li>
-                                        <li>Integrated conveyor system</li>
-                                        <li>Dedicated returns processing area</li>
-                                        <li>Future expansion预留空间</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- System Tab -->
-                        <div class="tab-content" id="system">
-                            <h3>System Configuration</h3>
-                            <div class="content-with-image">
-                                <div class="content-image">[System Diagram]</div>
-                                <div class="content-text">
-                                    <h4>Equipment List</h4>
-                                    <ul>
-                                        <li>4 shuttle vehicles per aisle</li>
-                                        <li>2 lift systems for level changing</li>
-                                        <li>Automated conveyor network (200m)</li>
-                                        <li>WMS with AI optimization</li>
-                                        <li>8 pick stations with RF terminals</li>
-                                    </ul>
-                                    <h4>Software Integration</h4>
-                                    <p>The system integrates with the client's existing ERP and includes real-time inventory tracking, predictive maintenance alerts, and dynamic slotting optimization.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Cost Tab -->
-                        <div class="tab-content" id="cost">
-                            <h3>Cost Analysis</h3>
-                            <div class="cost-breakdown">
-                                <div class="cost-item">
-                                    <span class="cost-name">Racking System</span>
-                                    <span class="cost-value">$320K</span>
-                                </div>
-                                <div class="cost-item">
-                                    <span class="cost-name">Shuttle Vehicles</span>
-                                    <span class="cost-value">$280K</span>
-                                </div>
-                                <div class="cost-item">
-                                    <span class="cost-name">Conveyor System</span>
-                                    <span class="cost-value">$180K</span>
-                                </div>
-                                <div class="cost-item">
-                                    <span class="cost-name">Software & Controls</span>
-                                    <span class="cost-value">$150K</span>
-                                </div>
-                                <div class="cost-item">
-                                    <span class="cost-name">Installation</span>
-                                    <span class="cost-value">$150K</span>
-                                </div>
-                                <div class="cost-item">
-                                    <span class="cost-name">Training & Commissioning</span>
-                                    <span class="cost-value">$120K</span>
-                                </div>
-                            </div>
-                            <div class="cost-item" style="margin-top: 20px; background: #0066cc; color: #fff;">
-                                <span class="cost-name" style="color: #fff; font-size: 18px;">Total Investment</span>
-                                <span class="cost-value" style="color: #fff; font-size: 24px;">$1.2M</span>
-                            </div>
-                        </div>
-
-                        <!-- Result Tab -->
-                        <div class="tab-content" id="result">
-                            <h3>Project Results</h3>
-                            <p>After 6 months of operation, the ASRS has delivered significant improvements across all key performance indicators:</p>
-                            <div class="result-metrics">
-                                <div class="result-card">
-                                    <div class="result-number">+180%</div>
-                                    <div class="result-label">Order Processing Speed</div>
-                                </div>
-                                <div class="result-card">
-                                    <div class="result-number">99.8%</div>
-                                    <div class="result-label">Inventory Accuracy</div>
-                                </div>
-                                <div class="result-card">
-                                    <div class="result-number">-60%</div>
-                                    <div class="result-label">Labor Requirements</div>
-                                </div>
-                                <div class="result-card">
-                                    <div class="result-number">18mo</div>
-                                    <div class="result-label">ROI Payback Period</div>
-                                </div>
-                                <div class="result-card">
-                                    <div class="result-number">24/7</div>
-                                    <div class="result-label">Operation Capability</div>
-                                </div>
-                                <div class="result-card">
-                                    <div class="result-number">Zero</div>
-                                    <div class="result-label">Lost Time Accidents</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 区块 4: CTA -->
+        <!-- Bottom CTA -->
         <section class="cta-section">
             <div class="container">
                 <div class="cta-box">
-                    <h2>Plan your project with us</h2>
-                    <p>Let's discuss how we can achieve similar results for your warehouse operation.</p>
-                    <a href="contact.html" class="btn-cta">Get Free Consultation</a>
+                    <h2>Not Sure Which ASRS Fits Your Project?</h2>
+                    <p>Talk to our engineers. We'll help you compare system types, estimate costs, and design the right layout for your warehouse.</p>
+                    <a href="contact.html" class="btn-cta">Get Free Layout & Cost Estimate</a>
                 </div>
             </div>
         </section>
@@ -705,38 +486,52 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 1³ Machine. All rights reserved.</p>
+                <p>&copy; 2026 1&sup3; Machine. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
     <script>
-        // Tab switching functionality
-        function switchTab(tabName) {
-            // Remove active class from all tabs and contents
-            document.querySelectorAll('.case-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
+        const systemFilter = document.getElementById('filter-system');
+        const budgetFilter = document.getElementById('filter-budget');
+        const industryFilter = document.getElementById('filter-industry');
+        const casesGrid = document.getElementById('casesGrid');
+        const resultsCount = document.getElementById('resultsCount');
+        const cards = Array.from(casesGrid.querySelectorAll('.case-summary-card'));
+
+        function filterCases() {
+            const system = systemFilter.value;
+            const budget = budgetFilter.value;
+            const industry = industryFilter.value;
+
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const matchSystem = system === 'all' || card.dataset.system === system;
+                const matchBudget = budget === 'all' || card.dataset.budget === budget;
+                const matchIndustry = industry === 'all' || card.dataset.industry === industry;
+
+                if (matchSystem && matchBudget && matchIndustry) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
             });
 
-            // Add active class to clicked tab
-            event.target.classList.add('active');
-
-            // Show corresponding content
-            document.getElementById(tabName).classList.add('active');
+            resultsCount.textContent = `Showing ${visibleCount} case study${visibleCount !== 1 ? 'ies' : 'y'}`;
         }
 
-        // Case selection functionality (for future expansion)
-        function showCase(caseType) {
-            // Scroll to featured case section
-            document.getElementById('featuredCase').scrollIntoView({ behavior: 'smooth' });
-            
-            // In a full implementation, this would load different case data
-            console.log('Selected case:', caseType);
+        function resetFilters() {
+            systemFilter.value = 'all';
+            budgetFilter.value = 'all';
+            industryFilter.value = 'all';
+            filterCases();
         }
+
+        systemFilter.addEventListener('change', filterCases);
+        budgetFilter.addEventListener('change', filterCases);
+        industryFilter.addEventListener('change', filterCases);
     </script>
 </body>
 </html>
