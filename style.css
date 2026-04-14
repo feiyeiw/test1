@@ -1,3 +1,11 @@
+/* i18n anti-flicker */
+body.i18n-loading {
+    visibility: hidden;
+}
+body.i18n-ready {
+    visibility: visible;
+}
+
 /* CSS Variables */
 :root {
     --primary-color: #0066cc;
