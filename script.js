@@ -20,6 +20,9 @@ const API_CONFIG = {
     retryDelay: 1000, // Delay between retries in ms
 };
 
+// i18n Configuration
+const LANGUAGE_KEY = 'siteLanguage';
+
 // Helper function to make API requests with retry logic
 async function apiRequest(endpoint, options = {}) {
     const { retryAttempts = API_CONFIG.retryAttempts, retryDelay = API_CONFIG.retryDelay } = options;
@@ -1488,8 +1491,9 @@ async function loadBlogsOnHome() {
         return;
     }
 
+    const tLoading = getNestedValue(translations[currentLanguage], 'common.loading') || 'Loading...';
     // Show loading state
-    blogsSection.innerHTML = '<div class="service-item"><h3>Loading...</h3><p>Fetching latest blogs</p></div>';
+    blogsSection.innerHTML = `<div class="service-item"><h3>${tLoading}</h3><p>Fetching latest blogs</p></div>`;
     console.log('Starting to load blogs for home page...');
 
     try {
@@ -1498,8 +1502,10 @@ async function loadBlogsOnHome() {
         console.log('Loaded blogs count:', blogs.length);
         console.log('Blogs:', blogs);
 
+        const tNoBlogs = getNestedValue(translations[currentLanguage], 'insights.no_blogs') || 'No blogs yet';
+        const tNoBlogsDesc = getNestedValue(translations[currentLanguage], 'insights.no_blogs_desc') || 'Check back soon for our latest insights and updates. Please visit admin.html to create blogs.';
         if (blogs.length === 0) {
-            blogsSection.innerHTML = '<div class="service-item"><h3>No blogs yet</h3><p>Check back soon for our latest insights and updates. Please visit admin.html to create blogs.</p></div>';
+            blogsSection.innerHTML = `<div class="service-item"><h3>${tNoBlogs}</h3><p>${tNoBlogsDesc}</p></div>`;
             return;
         }
 
@@ -1526,11 +1532,12 @@ async function loadBlogsOnHome() {
             const previewText = blog.plainText ||
                 blog.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 
+            const tReadMore = getNestedValue(translations[currentLanguage], 'common.read_more') || 'Read More →';
             blogLink.innerHTML = `
                 <h3>${blog.title}</h3>
                 <p style="font-size: 14px; color: #666; margin-bottom: 10px;">${blog.date}</p>
                 <p style="line-height: 1.6;">${previewText.substring(0, 150)}${previewText.length > 150 ? '...' : ''}</p>
-                <div style="margin-top: 15px; color: #e60000; font-weight: bold; font-size: 14px;">Read More &rarr;</div>
+                <div style="margin-top: 15px; color: #e60000; font-weight: bold; font-size: 14px;">${tReadMore}</div>
             `;
 
             blogsSection.appendChild(blogLink);
@@ -1539,7 +1546,9 @@ async function loadBlogsOnHome() {
         console.log('Successfully rendered', latestBlogs.length, 'blogs');
     } catch (error) {
         console.error('Error loading blogs for home page:', error);
-        blogsSection.innerHTML = '<div class="service-item"><h3>Error loading blogs</h3><p>Please try again later.</p></div>';
+        const tErr = getNestedValue(translations[currentLanguage], 'insights.error_loading') || 'Error loading blogs';
+        const tErrDesc = getNestedValue(translations[currentLanguage], 'insights.error_loading_desc') || 'Please try again later.';
+        blogsSection.innerHTML = `<div class="service-item"><h3>${tErr}</h3><p>${tErrDesc}</p></div>`;
     }
 }
 
@@ -1608,23 +1617,28 @@ async function loadBlogDetail() {
     const blogId = getUrlParameter('id');
     console.log('Loading blog with ID:', blogId, 'Type:', typeof blogId);
 
+    const tBlogNotFound = getNestedValue(translations[currentLanguage], 'common.blog_not_found') || 'Blog Not Found';
+    const tNoBlogId = getNestedValue(translations[currentLanguage], 'common.no_blog_id') || 'No blog ID specified. Please select a blog from the home page.';
+    const tBackToHome = getNestedValue(translations[currentLanguage], 'common.back_to_home') || 'Back to home';
     if (!blogId) {
         // No blog ID specified, show error or redirect
-        document.getElementById('blogTitle').textContent = 'Blog Not Found';
-        document.getElementById('blogContent').innerHTML = '<p>No blog ID specified. Please select a blog from the <a href="index.html">home page</a>.</p>';
+        document.getElementById('blogTitle').textContent = tBlogNotFound;
+        document.getElementById('blogContent').innerHTML = `<p>${tNoBlogId} <a href="index.html">${tBackToHome}</a></p>`;
         return;
     }
 
     try {
+        const tLoadingBlog = getNestedValue(translations[currentLanguage], 'common.loading_blog') || 'Loading blog...';
         // Show loading state
-        document.getElementById('blogContent').innerHTML = '<p style="text-align: center; color: #666;">Loading blog...</p>';
+        document.getElementById('blogContent').innerHTML = `<p style="text-align: center; color: #666;">${tLoadingBlog}</p>`;
 
         const blog = await blogApi.getBlogById(blogId);
         console.log('Loaded blog:', blog);
 
+        const tBlogNotExist = getNestedValue(translations[currentLanguage], 'common.blog_not_exist') || 'The blog you are looking for does not exist or has been removed.';
         if (!blog) {
-            document.getElementById('blogTitle').textContent = 'Blog Not Found';
-            document.getElementById('blogContent').innerHTML = '<p>The blog you are looking for does not exist or has been removed. <a href="index.html">Back to home</a></p>';
+            document.getElementById('blogTitle').textContent = tBlogNotFound;
+            document.getElementById('blogContent').innerHTML = `<p>${tBlogNotExist} <a href="index.html">${tBackToHome}</a></p>`;
             return;
         }
 
@@ -1640,8 +1654,10 @@ async function loadBlogDetail() {
         await loadRelatedBlogs(blog);
     } catch (error) {
         console.error('Error loading blog detail:', error);
-        document.getElementById('blogTitle').textContent = 'Error Loading Blog';
-        document.getElementById('blogContent').innerHTML = '<p>An error occurred while loading the blog. Please try again later. <a href="index.html">Back to home</a></p>';
+        const tErrLoad = getNestedValue(translations[currentLanguage], 'common.error_loading_blog') || 'Error Loading Blog';
+        const tErrLoadMsg = getNestedValue(translations[currentLanguage], 'common.error_loading_blog_msg') || 'An error occurred while loading the blog. Please try again later.';
+        document.getElementById('blogTitle').textContent = tErrLoad;
+        document.getElementById('blogContent').innerHTML = `<p>${tErrLoadMsg} <a href="index.html">${tBackToHome}</a></p>`;
     }
 }
 
@@ -1661,6 +1677,8 @@ async function setupBlogNavigation(currentBlog) {
 
         if (!prevBlogLink || !nextBlogLink) return;
 
+        const tNoNewer = getNestedValue(translations[currentLanguage], 'common.no_newer_posts') || '<- No newer posts';
+        const tNoOlder = getNestedValue(translations[currentLanguage], 'common.no_older_posts') || 'No older posts ->';
         // Previous blog (newer blog if sorted newest first)
         if (currentIndex > 0) {
             const prevBlog = sortedBlogs[currentIndex - 1];
@@ -1669,7 +1687,7 @@ async function setupBlogNavigation(currentBlog) {
             prevBlogLink.classList.remove('disabled');
         } else {
             prevBlogLink.href = '#';
-            prevBlogLink.textContent = '<- No newer posts';
+            prevBlogLink.textContent = tNoNewer;
             prevBlogLink.classList.add('disabled');
         }
 
@@ -1681,7 +1699,7 @@ async function setupBlogNavigation(currentBlog) {
             nextBlogLink.classList.remove('disabled');
         } else {
             nextBlogLink.href = '#';
-            nextBlogLink.textContent = 'No older posts ->';
+            nextBlogLink.textContent = tNoOlder;
             nextBlogLink.classList.add('disabled');
         }
     } catch (error) {
@@ -1708,8 +1726,10 @@ async function loadRelatedBlogs(currentBlog) {
             .filter(blog => blog.id != currentBlog.id)
             .slice(0, 3);
 
+        const tReadMore = getNestedValue(translations[currentLanguage], 'common.read_more') || 'Read More →';
         if (relatedBlogs.length === 0) {
-            container.innerHTML = '<p style="color: #666; text-align: center;">No other blogs available.</p>';
+            const tNoOther = getNestedValue(translations[currentLanguage], 'blog_detail.no_other_blogs') || 'No other blogs available.';
+            container.innerHTML = `<p style="color: #666; text-align: center;">${tNoOther}</p>`;
             return;
         }
 
@@ -1725,14 +1745,15 @@ async function loadRelatedBlogs(currentBlog) {
                 <h4>${blog.title}</h4>
                 <p style="font-size: 14px; color: #666; margin-bottom: 10px;">${blog.date}</p>
                 <p>${previewText.substring(0, 100)}${previewText.length > 100 ? '...' : ''}</p>
-                <a href="blog-detail.html?id=${encodeURIComponent(blog.id)}" class="related-blog-link">Read More &rarr;</a>
+                <a href="blog-detail.html?id=${encodeURIComponent(blog.id)}" class="related-blog-link">${tReadMore}</a>
             `;
 
             container.appendChild(blogItem);
         });
     } catch (error) {
         console.error('Error loading related blogs:', error);
-        container.innerHTML = '<p style="color: #666; text-align: center;">Error loading related blogs.</p>';
+        const tErrRelated = getNestedValue(translations[currentLanguage], 'blog_detail.error_related') || 'Error loading related blogs.';
+        container.innerHTML = `<p style="color: #666; text-align: center;">${tErrRelated}</p>`;
     }
 }
 
@@ -1850,9 +1871,7 @@ const TRANSLATIONS = {
     }
 };
 
-// Language management
-const LANGUAGE_KEY = 'siteLanguage';
-let currentLanguage = localStorage.getItem(LANGUAGE_KEY) || 'en';
+// Language management for admin page (uses global currentLanguage variable)
 
 // Function to update language text display
 function updateLanguageDisplay() {
@@ -1867,11 +1886,11 @@ function toggleLanguage() {
     currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
     localStorage.setItem(LANGUAGE_KEY, currentLanguage);
     updateLanguageDisplay();
-    translatePage();
+    translateAdminPage();
 }
 
-// Function to translate the page
-function translatePage() {
+// Function to translate the admin page
+function translateAdminPage() {
     // Only translate if we're on admin page
     if (!document.getElementById('adminDashboard')) {
         return;
@@ -1919,8 +1938,15 @@ async function loadBlogsOnInsights() {
         return;
     }
 
+    const tLoading = getNestedValue(translations[currentLanguage], 'insights.loading') || 'Loading insights...';
+    const tNoBlogs = getNestedValue(translations[currentLanguage], 'insights.no_blogs') || 'No blogs yet';
+    const tNoBlogsDesc = getNestedValue(translations[currentLanguage], 'insights.no_blogs_desc') || 'Check back soon for our latest insights and updates. Please visit admin.html to create blogs.';
+    const tErr = getNestedValue(translations[currentLanguage], 'insights.error_loading') || 'Error loading blogs';
+    const tErrDesc = getNestedValue(translations[currentLanguage], 'insights.error_loading_desc') || 'Please try again later.';
+    const tReadMore = getNestedValue(translations[currentLanguage], 'common.read_more') || 'Read More →';
+
     // Show loading state
-    container.innerHTML = '<div class="loading-message" style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">Loading insights...</div>';
+    container.innerHTML = `<div class="loading-message" style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">${tLoading}</div>`;
     console.log('Starting to load blogs for insights page...');
 
     try {
@@ -1929,7 +1955,7 @@ async function loadBlogsOnInsights() {
         console.log('Loaded blogs count:', blogs.length);
 
         if (blogs.length === 0) {
-            container.innerHTML = '<div class="insight-item" style="grid-column: 1 / -1; text-align: center; padding: 40px;"><h3>No blogs yet</h3><p>Check back soon for our latest insights and updates. Please visit admin.html to create blogs.</p></div>';
+            container.innerHTML = `<div class="insight-item" style="grid-column: 1 / -1; text-align: center; padding: 40px;"><h3>${tNoBlogs}</h3><p>${tNoBlogsDesc}</p></div>`;
             return;
         }
 
@@ -1966,7 +1992,7 @@ async function loadBlogsOnInsights() {
                     <div class="insight-date">${blog.date}</div>
                     <h3 class="insight-title">${blog.title}</h3>
                     <p class="insight-excerpt">${previewText.substring(0, 150)}${previewText.length > 150 ? '...' : ''}</p>
-                    <a href="blog-detail.html?id=${encodeURIComponent(blog.id)}" class="insight-link">Read More →</a>
+                    <a href="blog-detail.html?id=${encodeURIComponent(blog.id)}" class="insight-link">${tReadMore}</a>
                 </div>
             `;
 
@@ -1976,7 +2002,7 @@ async function loadBlogsOnInsights() {
         console.log('Successfully rendered', sortedBlogs.length, 'blogs');
     } catch (error) {
         console.error('Error loading blogs for insights page:', error);
-        container.innerHTML = '<div class="insight-item" style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #e60000;"><h3>Error loading blogs</h3><p>Please try again later.</p></div>';
+        container.innerHTML = `<div class="insight-item" style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #e60000;"><h3>${tErr}</h3><p>${tErrDesc}</p></div>`;
     }
 }
 
@@ -2151,30 +2177,90 @@ function initSmoothScroll() {
     });
 }
 
+// ============================================
+// Global i18n System
+// ============================================
+let currentLanguage = localStorage.getItem('siteLanguage') || 'en';
+let translations = {};
+
+async function loadTranslations() {
+    try {
+        const res = await fetch('translations.json');
+        translations = await res.json();
+    } catch (e) {
+        console.error('Failed to load translations:', e);
+    }
+}
+
+function getNestedValue(obj, path) {
+    return path.split('.').reduce((acc, key) => acc && acc[key], obj);
+}
+
+function translatePage() {
+    const dict = translations[currentLanguage];
+    if (!dict) return;
+
+    // 1. 替换 data-i18n 的 textContent
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        const value = getNestedValue(dict, key);
+        if (value !== undefined) {
+            el.textContent = value;
+        }
+    });
+
+    // 2. 替换 data-i18n-placeholder
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.dataset.i18nPlaceholder;
+        const value = getNestedValue(dict, key);
+        if (value !== undefined) {
+            el.placeholder = value;
+        }
+    });
+
+    // 3. 同步 html lang
+    document.documentElement.lang = currentLanguage;
+
+    // 4. 移除防闪烁 class
+    document.body.classList.remove('i18n-loading');
+    document.body.classList.add('i18n-ready');
+
+    // 5. admin 页面兼容：如果存在 translateAdminPage，调用它
+    if (document.getElementById('adminDashboard') && typeof translateAdminPage === 'function') {
+        translateAdminPage();
+    }
+}
+
 // Global language switcher for header dropdown
 function switchLanguage(lang) {
+    currentLanguage = lang;
     localStorage.setItem('siteLanguage', lang);
     // Sync all selectors on the page
     document.querySelectorAll('#lang-select').forEach(function(el) {
         el.value = lang;
     });
-    // If the page has i18n support (admin), translate it
-    if (typeof translatePage === 'function') {
-        currentLanguage = lang;
-        translatePage();
-    }
+    translatePage();
 }
 
 // Sync language selectors on page load
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    // 先加防闪烁 class
+    document.body.classList.add('i18n-loading');
+
     const savedLang = localStorage.getItem('siteLanguage') || 'en';
     document.querySelectorAll('#lang-select').forEach(function(el) {
         el.value = savedLang;
     });
 
+    await loadTranslations();
+    currentLanguage = savedLang;
+    translatePage();
+
     // Existing initialization
     updateLanguageDisplay();
-    translatePage();
+    if (typeof translateAdminPage === 'function') {
+        translateAdminPage();
+    }
 
     // New ASRS features
     initCostCalculator();
