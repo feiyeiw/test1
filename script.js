@@ -1819,6 +1819,106 @@ const TRANSLATIONS = {
         'insertLink': 'Insert Link',
         'insertImage': 'Insert Image'
     },
+    ja: {
+        // Header
+        'home': 'ホーム',
+        'english': 'English',
+        'logout': 'ログアウト',
+
+        // Admin Dashboard
+        'adminDashboard': '管理ダッシュボード',
+        'accountSettings': 'アカウント設定',
+        'currentPassword': '現在のパスワード',
+        'newPassword': '新しいパスワード',
+        'confirmPassword': '新しいパスワード（確認）',
+        'changePassword': 'パスワードを変更',
+        'heroSection': 'ヒーローセクション',
+        'title': 'タイトル',
+        'description': '説明',
+        'servicesSection': 'サービスセクション',
+        'service1Title': 'サービス1 タイトル',
+        'service1Description': 'サービス1 説明',
+        'service2Title': 'サービス2 タイトル',
+        'service2Description': 'サービス2 説明',
+        'service3Title': 'サービス3 タイトル',
+        'service3Description': 'サービス3 説明',
+        'saveContent': '内容を保存',
+        'otherPagesManagement': 'その他のページ管理',
+        'servicesPage': 'サービスページ',
+        'pageTitle': 'ページタイトル',
+        'pageDescription': 'ページ説明',
+        'solutionsPage': 'ソリューションページ',
+        'aboutPage': 'Aboutページ',
+        'savePagesContent': 'ページ内容を保存',
+        'blogManagement': 'ブログ管理',
+        'blogTitle': 'ブログタイトル',
+        'date': '日付',
+        'blogContent': 'ブログ内容（リッチテキストエディタ）',
+        'addBlog': 'ブログを追加',
+        'blogList': 'ブログ一覧',
+        'exportBlogs': 'ブログJSONをエクスポート',
+        'importBlogs': 'ブログJSONをインポート',
+
+        // Editor buttons titles
+        'bold': '太字',
+        'italic': '斜体',
+        'underline': '下線',
+        'heading': '見出し',
+        'bulletList': '箇条書き',
+        'numberedList': '番号付きリスト',
+        'insertLink': 'リンクを挿入',
+        'insertImage': '画像を挿入'
+    },
+    fr: {
+        // Header
+        'home': 'Accueil',
+        'english': 'English',
+        'logout': 'Déconnexion',
+
+        // Admin Dashboard
+        'adminDashboard': 'Tableau de bord admin',
+        'accountSettings': 'Paramètres du compte',
+        'currentPassword': 'Mot de passe actuel',
+        'newPassword': 'Nouveau mot de passe',
+        'confirmPassword': 'Confirmer le nouveau mot de passe',
+        'changePassword': 'Changer le mot de passe',
+        'heroSection': 'Section Hero',
+        'title': 'Titre',
+        'description': 'Description',
+        'servicesSection': 'Section Services',
+        'service1Title': 'Titre du service 1',
+        'service1Description': 'Description du service 1',
+        'service2Title': 'Titre du service 2',
+        'service2Description': 'Description du service 2',
+        'service3Title': 'Titre du service 3',
+        'service3Description': 'Description du service 3',
+        'saveContent': 'Enregistrer le contenu',
+        'otherPagesManagement': 'Gestion des autres pages',
+        'servicesPage': 'Page Services',
+        'pageTitle': 'Titre de la page',
+        'pageDescription': 'Description de la page',
+        'solutionsPage': 'Page Solutions',
+        'aboutPage': 'Page À propos',
+        'savePagesContent': 'Enregistrer le contenu des pages',
+        'blogManagement': 'Gestion du blog',
+        'blogTitle': 'Titre du blog',
+        'date': 'Date',
+        'blogContent': 'Contenu du blog (éditeur de texte enrichi)',
+        'addBlog': 'Ajouter un blog',
+        'blogList': 'Liste des blogs',
+        'exportBlogs': 'Exporter les blogs en JSON',
+        'importBlogs': 'Importer les blogs en JSON',
+
+        // Editor buttons titles
+        'bold': 'Gras',
+        'italic': 'Italique',
+        'underline': 'Souligné',
+        'heading': 'Titre',
+        'bulletList': 'Liste à puces',
+        'numberedList': 'Liste numérotée',
+        'insertLink': 'Insérer un lien',
+        'insertImage': 'Insérer une image'
+    },
     zh: {
         // Header
         'home': '首页',
@@ -1877,13 +1977,16 @@ const TRANSLATIONS = {
 function updateLanguageDisplay() {
     const languageText = document.getElementById('languageText');
     if (languageText) {
-        languageText.textContent = currentLanguage === 'en' ? 'English' : '中文';
+        const langNames = { en: 'English', zh: '中文', ja: '日本語', fr: 'Français' };
+        languageText.textContent = langNames[currentLanguage] || 'English';
     }
 }
 
 // Function to toggle language
 function toggleLanguage() {
-    currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+    const langs = ['en', 'zh', 'ja', 'fr'];
+    const currentIndex = langs.indexOf(currentLanguage);
+    currentLanguage = langs[(currentIndex + 1) % langs.length];
     localStorage.setItem(LANGUAGE_KEY, currentLanguage);
     updateLanguageDisplay();
     translateAdminPage();
@@ -1925,9 +2028,13 @@ function translateAdminPage() {
     });
 
     // Update page title
-    document.title = currentLanguage === 'en'
-        ? 'Admin Dashboard - 1³ Machine'
-        : '管理仪表板 - 1³ Machine';
+    const adminTitles = {
+        en: 'Admin Dashboard - 1³ Machine',
+        zh: '管理仪表板 - 1³ Machine',
+        ja: '管理ダッシュボード - 1³ Machine',
+        fr: 'Tableau de bord admin - 1³ Machine'
+    };
+    document.title = adminTitles[currentLanguage] || adminTitles.en;
 }
 
 // Load blogs on insights page
