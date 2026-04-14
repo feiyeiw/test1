@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automotive ASRS Case Study: $4M Multi-Shuttle System for 35,000 Pallets | 13machine</title>
+    <meta name="description" content="See how a $4M Multi-Shuttle ASRS delivered 450 picks/hour, +220% efficiency, and 24/7 reliability for a large automotive parts distribution center.">
+    <meta name="keywords" content="automotive ASRS, multi-shuttle system, ASRS for auto parts, large scale warehouse automation, 35,000 pallet ASRS">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .case-hero {
+            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+            padding: 70px 0 50px;
+            color: #fff;
+        }
+        .case-hero .container {
+            flex-direction: column;
+            gap: 25px;
+            align-items: flex-start;
+        }
+        .breadcrumb {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .breadcrumb a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .case-hero h1 {
+            font-size: 34px;
+            font-weight: bold;
+            line-height: 1.2;
+            max-width: 900px;
+        }
+        .hero-lead {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.95);
+            max-width: 800px;
+            line-height: 1.5;
+        }
+        .quick-info-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .quick-info-bar span {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .hero-cta {
+            margin-top: 10px;
+        }
+        .btn-cta {
+            display: inline-block;
+            padding: 14px 32px;
+            background-color: #fff;
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        .btn-cta:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+        }
+        .content-section {
+            padding: 60px 0;
+        }
+        .content-section .container {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 25px;
+            max-width: 900px;
+        }
+        .content-section h2 {
+            font-size: 26px;
+            color: #333;
+            font-weight: bold;
+        }
+        .content-section p, .content-section li {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.8;
+        }
+        .content-section ul {
+            padding-left: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .content-section.alt-bg {
+            background-color: #f8f8f8;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .result-card {
+            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+            color: #fff;
+            padding: 28px 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .result-number {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .result-label {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+        .cost-breakdown {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .cost-item {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            padding: 22px 18px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .cost-name {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .cost-value {
+            font-size: 26px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+        .cost-note {
+            background: #fff;
+            border-left: 4px solid #0066cc;
+            padding: 18px 22px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 10px;
+        }
+        .cost-note p {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+        .cost-note ul {
+            margin-top: 10px;
+            padding-left: 18px;
+        }
+        .cost-note li {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        .cta-box-section {
+            padding: 60px 0;
+            background-color: #fff;
+        }
+        .cta-box-section .container {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 18px;
+            max-width: 900px;
+        }
+        .cta-box-section h2 {
+            font-size: 26px;
+            color: #333;
+            font-weight: bold;
+        }
+        .cta-box-section ul {
+            padding-left: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .cta-box-section li {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.7;
+        }
+        .cta-section {
+            padding: 70px 0;
+            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+        }
+        .cta-section .container {
+            justify-content: center;
+        }
+        .cta-box {
+            text-align: center;
+            color: #fff;
+            max-width: 700px;
+        }
+        .cta-box h2 {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .cta-box p {
+            font-size: 17px;
+            margin-bottom: 25px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        @media (max-width: 768px) {
+            .case-hero h1 { font-size: 24px; }
+            .hero-lead { font-size: 17px; }
+            .results-grid { grid-template-columns: 1fr; }
+            .cost-breakdown { grid-template-columns: 1fr; }
+            .content-section h2, .cta-box-section h2 { font-size: 22px; }
+            .cta-box h2 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-main">
+            <div class="container">
+                <div class="logo-brand">
+                    <div class="logo">
+                        <a href="index.html">
+                            <img src="logo.jpg" alt="13machine">
+                        </a>
+                    </div>
+                    <span class="logo-slogan">
+                        <span class="slogan-line1">From system design to project delivery</span>
+                        <span class="slogan-line2">— we make automation work as a whole</span>
+                    </span>
+                </div>
+                <div class="search">
+                    <input type="text" placeholder="Search">
+                    <button type="submit">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <nav>
+            <div class="container">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="asrs-cost.html">ASRS Cost</a></li>
+                    <li><a href="asrs-design.html">ASRS Design</a></li>
+                    <li><a href="solutions.html">Solutions</a></li>
+                    <li><a href="case-studies.html">Case Studies</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="case-hero">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="index.html">Home</a> &rsaquo; <a href="case-studies.html">Case Studies</a> &rsaquo; Automotive Multi-Shuttle ASRS
+                </div>
+                <h1>$4M Multi-Shuttle ASRS for Automotive Parts Warehouse<br>450 Picks/Hour &amp; +220% Efficiency Across 35,000 Pallets</h1>
+                <p class="hero-lead">A global automotive supplier needed massive throughput, multi-shift reliability, and dense storage for thousands of SKUs. Our Multi-Shuttle ASRS became the backbone of their distribution network.</p>
+                <div class="quick-info-bar">
+                    <span><strong>Industry:</strong> Automotive Parts</span>
+                    <span><strong>Location:</strong> North America</span>
+                    <span><strong>System:</strong> Multi-Shuttle ASRS</span>
+                    <span><strong>Capacity:</strong> 35,000 Pallets</span>
+                    <span><strong>Throughput:</strong> 450 pallets/hour</span>
+                    <span><strong>Investment:</strong> $4 Million</span>
+                    <span><strong>ROI:</strong> ~4 Years</span>
+                </div>
+                <div class="hero-cta">
+                    <a href="contact.html" class="btn-cta">Get Your ASRS Cost Estimate &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <h2>The Challenge</h2>
+                <p>The client supplied components to multiple OEM plants and needed to maintain strict delivery schedules while handling thousands of SKUs. Key challenges included:</p>
+                <ul>
+                    <li>Extremely high throughput requirements across multiple shifts</li>
+                    <li>Need for FIFO/LIFO flexibility depending on part type</li>
+                    <li>Large physical footprint with poor space utilization</li>
+                    <li>Seasonal demand spikes causing fulfillment delays</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="content-section alt-bg">
+            <div class="container">
+                <h2>The ASRS Solution</h2>
+                <p>We implemented a large-scale Multi-Shuttle ASRS with redundant aisles and high-speed conveyors to support just-in-time automotive logistics.</p>
+                <p><strong>The solution includes:</strong></p>
+                <ul>
+                    <li>12 aisles of multi-shuttle racking (up to 12 meters high)</li>
+                    <li>Dual shuttle carriers per level for redundancy and speed</li>
+                    <li>High-speed conveyor loop with pick stations and quality gates</li>
+                    <li>WMS integrated with client MRP and sequencing systems</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <h2>Results &amp; Performance</h2>
+                <p>After go-live, the distribution center achieved:</p>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-number">+220%</div>
+                        <div class="result-label">Overall Efficiency</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-number">450/h</div>
+                        <div class="result-label">Peak Throughput</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-number">-55%</div>
+                        <div class="result-label">Labor Dependency</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-number">99.8%</div>
+                        <div class="result-label">On-Time Delivery</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-number">35K</div>
+                        <div class="result-label">Pallet Positions</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-number">4 yr</div>
+                        <div class="result-label">ROI Payback</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section alt-bg">
+            <div class="container">
+                <h2>ASRS Cost Breakdown</h2>
+                <p>The total investment for this project was approximately <strong>$4 million</strong>, including:</p>
+                <div class="cost-breakdown">
+                    <div class="cost-item">
+                        <div class="cost-name">Equipment (Shuttle + Racking)</div>
+                        <div class="cost-value">58%</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-name">Software (WMS + MRP Integration)</div>
+                        <div class="cost-value">17%</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-name">Installation &amp; Commissioning</div>
+                        <div class="cost-value">25%</div>
+                    </div>
+                </div>
+                <div class="cost-note">
+                    <p><strong>Actual cost varies depending on:</strong></p>
+                    <ul>
+                        <li>Number of aisles and throughput targets</li>
+                        <li>Integration depth with existing ERP/MRP systems</li>
+                        <li>Redundancy and safety system requirements</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <h2>Is This ASRS Solution Right for You?</h2>
+                <p>This solution is ideal if you:</p>
+                <ul>
+                    <li>Manage high-SKU automotive or industrial parts</li>
+                    <li>Need very high throughput across multiple shifts</li>
+                    <li>Require tight integration with production planning systems</li>
+                    <li>Operate at a large scale with room for vertical expansion</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="cta-box-section alt-bg">
+            <div class="container">
+                <h2>Plan Your ASRS Project</h2>
+                <p>Not sure how much an ASRS system would cost for your warehouse?<br>We can help you:</p>
+                <ul>
+                    <li>Estimate your project budget</li>
+                    <li>Design the optimal system layout</li>
+                    <li>Recommend the right automation level</li>
+                </ul>
+                <a href="contact.html" class="btn-cta">Get Your Free ASRS Cost &amp; Layout Plan &rarr;</a>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-box">
+                    <h2>Not Sure Which ASRS Fits Your Project?</h2>
+                    <p>Talk to our engineers. We'll help you compare system types, estimate costs, and design the right layout for your warehouse.</p>
+                    <a href="contact.html" class="btn-cta">Get Free Layout &amp; Cost Estimate</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="logo.jpg" alt="13machine">
+                </div>
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="asrs-cost.html">ASRS Cost</a>
+                    <a href="asrs-design.html">ASRS Design</a>
+                    <a href="solutions.html">Solutions</a>
+                    <a href="case-studies.html">Case Studies</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 1&sup3; Machine. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
