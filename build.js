@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const Terser = require('terser');
+const CleanCSS = require('clean-css');
 
 console.log('Starting build process...');
 
@@ -52,8 +54,41 @@ function generateFileHash(filePath) {
   return crypto.createHash('md5').update(content).digest('hex').substring(0, 8);
 }
 
+// Minify CSS/JS content
+async function minifyContent(filePath, content) {
+  const ext = path.extname(filePath);
+  if (ext === '.js') {
+    try {
+      const result = await Terser.minify(content.toString(), {
+        compress: {
+          drop_console: false,
+          drop_debugger: true,
+          passes: 1
+        },
+        mangle: true
+      });
+      if (result.error) {
+        console.warn(`Warning: JS minification failed for ${path.basename(filePath)}:`, result.error);
+        return content;
+      }
+      return Buffer.from(result.code);
+    } catch (err) {
+      console.warn(`Warning: JS minification error for ${path.basename(filePath)}:`, err.message);
+      return content;
+    }
+  } else if (ext === '.css') {
+    const result = new CleanCSS({ level: 2 }).minify(content.toString());
+    if (result.errors && result.errors.length > 0) {
+      console.warn(`Warning: CSS minification failed for ${path.basename(filePath)}:`, result.errors.join(', '));
+      return content;
+    }
+    return Buffer.from(result.styles);
+  }
+  return content;
+}
+
 // Function to copy files matching patterns with hash naming
-function copyFiles(srcDir, destDir) {
+async function copyFiles(srcDir, destDir) {
   const entries = fs.readdirSync(srcDir, { withFileTypes: true });
   const fileMap = {};
 
@@ -104,7 +139,13 @@ function copyFiles(srcDir, destDir) {
           console.log(`Copying file: ${entry.name} -> ${finalFileName}`);
         }
 
-        fs.copyFileSync(srcPath, finalDestPath);
+        if (parsedPath.ext === '.js' || parsedPath.ext === '.css') {
+          const rawContent = fs.readFileSync(srcPath);
+          const minified = await minifyContent(srcPath, rawContent);
+          fs.writeFileSync(finalDestPath, minified);
+        } else {
+          fs.copyFileSync(srcPath, finalDestPath);
+        }
 
         // Store mapping for reference updates
         fileMap[entry.name] = finalFileName;
@@ -174,13 +215,15 @@ function updateHtmlFiles(distDir, fileMap) {
   }
 }
 
-// Copy files from current directory to dist
-console.log('Copying static files...');
-const fileMap = copyFiles('.', distDir);
+(async function main() {
+  // Copy files from current directory to dist
+  console.log('Copying static files...');
+  const fileMap = await copyFiles('.', distDir);
 
-// Update HTML files with hashed file names
-console.log('Updating HTML files with hashed file names...');
-updateHtmlFiles(distDir, fileMap);
+  // Update HTML files with hashed file names
+  console.log('Updating HTML files with hashed file names...');
+  updateHtmlFiles(distDir, fileMap);
 
-console.log('Build completed successfully!');
-console.log(`Files in ${distDir}:`, fs.readdirSync(distDir));
+  console.log('Build completed successfully!');
+  console.log(`Files in ${distDir}:`, fs.readdirSync(distDir));
+})();

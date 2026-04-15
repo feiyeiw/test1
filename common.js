@@ -842,6 +842,80 @@ function getUrlParameter(name) {
     return urlParams.get(name);
 }
 
+// Prefetch / Prerender for faster page transitions
+function initPagePrefetch() {
+    const prefetched = new Set();
+    const prerendered = new Set();
+
+    function addPrefetch(url) {
+        if (prefetched.has(url)) return;
+        prefetched.add(url);
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.href = url;
+        document.head.appendChild(link);
+    }
+
+    function addPrerender(url) {
+        if (prerendered.has(url)) return;
+        prerendered.add(url);
+        const link = document.createElement('link');
+        link.rel = 'prerender';
+        link.href = url;
+        document.head.appendChild(link);
+    }
+
+    function isInternalHtmlLink(url) {
+        if (!url) return false;
+        if (url.startsWith('#') || url.startsWith('javascript:') || url.startsWith('mailto:') || url.startsWith('tel:')) return false;
+        try {
+            const link = new URL(url, window.location.href);
+            return link.origin === window.location.origin && link.pathname.endsWith('.html');
+        } catch (e) {
+            return false;
+        }
+    }
+
+    // Prerender main navigation links immediately for near-instant switching
+    document.querySelectorAll('header nav a[href]').forEach(a => {
+        const url = a.getAttribute('href');
+        if (isInternalHtmlLink(url)) {
+            addPrerender(url);
+        }
+    });
+
+    // Hover/touch prefetch for all internal links
+    let hoverTimer = null;
+    document.addEventListener('mouseover', function(e) {
+        const a = e.target.closest('a[href]');
+        if (!a) return;
+        const url = a.getAttribute('href');
+        if (!isInternalHtmlLink(url)) return;
+
+        if (hoverTimer) clearTimeout(hoverTimer);
+        hoverTimer = setTimeout(() => {
+            addPrefetch(url);
+        }, 65);
+    }, { passive: true });
+
+    document.addEventListener('mouseout', function(e) {
+        const a = e.target.closest('a[href]');
+        if (a && hoverTimer) {
+            clearTimeout(hoverTimer);
+            hoverTimer = null;
+        }
+    }, { passive: true });
+
+    document.addEventListener('touchstart', function(e) {
+        const a = e.target.closest('a[href]');
+        if (!a) return;
+        const url = a.getAttribute('href');
+        if (isInternalHtmlLink(url)) {
+            addPrefetch(url);
+        }
+    }, { passive: true });
+}
+
 // Smooth scroll for anchor links
 function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -934,4 +1008,5 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.documentElement.classList.remove('i18n-pending');
 
     initSmoothScroll();
+    initPagePrefetch();
 });
