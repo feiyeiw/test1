@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Services - 1³ Machine</title>
     <link rel="stylesheet" href="style.css">
+    <script>
+    (function() {
+        var lang = localStorage.getItem('siteLanguage') || 'en';
+        if (lang !== 'en') {
+            document.documentElement.classList.add('i18n-pending');
+        }
+    })();
+    </script>
+
 </head>
 <body>
     <header>
