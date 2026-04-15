@@ -906,6 +906,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     await loadTranslations();
     currentLanguage = savedLang;
     translatePage();
+    document.documentElement.classList.remove('i18n-pending');
 
     initSmoothScroll();
 });
