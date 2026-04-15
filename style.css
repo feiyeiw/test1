@@ -10,6 +10,12 @@
     }
 }
 
+/* Prevent flash of untranslated text for non-English languages */
+.i18n-pending [data-i18n],
+.i18n-pending [data-i18n-placeholder] {
+    opacity: 0;
+}
+
 /* CSS Variables */
 :root {
     --primary-color: #0066cc;
