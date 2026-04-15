@@ -55,21 +55,25 @@ if (document.getElementById('adminDashboard')) {
     // Load data from localStorage
     let siteContent = JSON.parse(localStorage.getItem('siteContent')) || {
         hero: {
-            title: 'Automated Production & Smart Warehouse Solutions',
-            description: 'We help manufacturers plan and implement automated production lines, packaging systems, and smart warehouse solutions using China-made equipment.'
+            title: 'How Much Does an ASRS Warehouse Cost?',
+            description: 'We help you design your system, estimate your investment, and deliver complete ASRS solutions.'
         },
         services: [
             {
-                title: 'Production Line Planning',
-                description: 'Packaging, food, pharma, and chemical production lines'
+                title: 'System Design',
+                description: 'Custom ASRS layout and workflow optimization tailored to your warehouse requirements'
             },
             {
-                title: 'Automated Warehouse Systems',
-                description: 'Stacker cranes, shuttle systems, and AGV logistics'
+                title: 'Cost Estimation',
+                description: 'Detailed investment analysis with ROI calculations and budget planning'
             },
             {
-                title: 'Multi-machine Integration',
-                description: 'Process matching and system coordination'
+                title: 'Equipment Integration',
+                description: 'Seamless integration of all modules including shelves, stackers, four-way shuttle trucks, AGVs/AMRs, robots, conveyors, and WMS/WCS systems'
+            },
+            {
+                title: 'Full Project Delivery',
+                description: 'End-to-end project management from design to installation and commissioning'
             }
         ],
         // Other pages content
