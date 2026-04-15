@@ -7,6 +7,15 @@
     <meta name="description" content="Contact our ASRS experts for warehouse automation consultation and cost estimates." data-i18n="contact.meta_description">
     <meta name="keywords" content="ASRS contact, warehouse automation consultation, ASRS quote" data-i18n="contact.meta_keywords">
     <link rel="stylesheet" href="style.css">
+    <script>
+    (function() {
+        var lang = localStorage.getItem('siteLanguage') || 'en';
+        if (lang !== 'en') {
+            document.documentElement.classList.add('i18n-pending');
+        }
+    })();
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
         (function(){
