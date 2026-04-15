@@ -7,6 +7,15 @@
     <meta name="description" content="ASRS solutions for e-commerce, manufacturing, cold storage, and spare parts warehouses.">
     <meta name="keywords" content="ASRS solutions, e-commerce warehouse, manufacturing storage, cold storage, spare parts warehouse">
     <link rel="stylesheet" href="style.css">
+    <script>
+    (function() {
+        var lang = localStorage.getItem('siteLanguage') || 'en';
+        if (lang !== 'en') {
+            document.documentElement.classList.add('i18n-pending');
+        }
+    })();
+    </script>
+
     <style>
         /* Solutions Page Specific Styles */
         .solutions-hero {
