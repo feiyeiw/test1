@@ -1171,7 +1171,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     initSmoothScroll();
     initPagePrefetch();
-    initPjax();
+    // initPjax(); // disabled: causes layout issues on some pages
 
     await runPageSpecificScripts();
 });
