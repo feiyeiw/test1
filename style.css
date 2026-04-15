@@ -1,9 +1,13 @@
-/* i18n anti-flicker */
-body.i18n-loading {
-    visibility: hidden;
+/* i18n element fade-in */
+.i18n-fade-in {
+    opacity: 0;
+    animation: i18nFadeIn 0.25s ease forwards;
 }
-body.i18n-ready {
-    visibility: visible;
+
+@keyframes i18nFadeIn {
+    to {
+        opacity: 1;
+    }
 }
 
 /* CSS Variables */

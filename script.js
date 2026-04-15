@@ -2464,8 +2464,9 @@ function translatePage() {
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.dataset.i18n;
         const value = getNestedValue(dict, key);
-        if (value !== undefined) {
+        if (value !== undefined && el.textContent !== value) {
             el.textContent = value;
+            el.classList.add('i18n-fade-in');
         }
     });
 
@@ -2473,19 +2474,16 @@ function translatePage() {
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         const key = el.dataset.i18nPlaceholder;
         const value = getNestedValue(dict, key);
-        if (value !== undefined) {
+        if (value !== undefined && el.placeholder !== value) {
             el.placeholder = value;
+            el.classList.add('i18n-fade-in');
         }
     });
 
     // 3. 同步 html lang
     document.documentElement.lang = currentLanguage;
 
-    // 4. 移除防闪烁 class
-    document.body.classList.remove('i18n-loading');
-    document.body.classList.add('i18n-ready');
-
-    // 5. admin 页面兼容：如果存在 translateAdminPage，调用它
+    // 4. admin 页面兼容：如果存在 translateAdminPage，调用它
     if (document.getElementById('adminDashboard') && typeof translateAdminPage === 'function') {
         translateAdminPage();
     }
@@ -2504,9 +2502,6 @@ function switchLanguage(lang) {
 
 // Sync language selectors on page load
 document.addEventListener('DOMContentLoaded', async function() {
-    // 先加防闪烁 class
-    document.body.classList.add('i18n-loading');
-
     const savedLang = localStorage.getItem('siteLanguage') || 'en';
     document.querySelectorAll('#lang-select').forEach(function(el) {
         el.value = savedLang;
