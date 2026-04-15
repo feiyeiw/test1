@@ -818,23 +818,17 @@ async function updatePageContent() {
     }
 }
 
-// Update main page if on index.html
-if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-    (async function() {
+// Run page-specific initializations based on current path
+async function runPageSpecificScripts() {
+    const pathname = window.location.pathname;
+    if (pathname.endsWith('index.html') || pathname === '/') {
         await updateMainPage();
-    })();
-}
-
-// Update other pages content
-if (window.location.pathname.includes('services') ||
-    window.location.pathname.includes('solutions') ||
-    window.location.pathname.includes('about')) {
-    (async function() {
+    } else if (pathname.includes('services') ||
+               pathname.includes('solutions') ||
+               pathname.includes('about')) {
         await updatePageContent();
-    })();
+    }
 }
-
-// Contact form functionality is now handled in contact.html with EmailJS
 
 // Utility function to get URL parameter
 function getUrlParameter(name) {
@@ -842,14 +836,182 @@ function getUrlParameter(name) {
     return urlParams.get(name);
 }
 
-// Prefetch / Prerender for faster page transitions
-function initPagePrefetch() {
-    const prefetched = new Set();
-    const prerendered = new Set();
+// Lightweight PJAX for smooth page transitions
+function initPjax() {
+    if (!window.history || !window.fetch || !window.DOMParser) return;
 
+    let isNavigating = false;
+
+    function isInternalHtmlLink(url) {
+        if (!url) return false;
+        if (url.startsWith('#') || url.startsWith('javascript:') || url.startsWith('mailto:') || url.startsWith('tel:')) return false;
+        try {
+            const link = new URL(url, window.location.href);
+            return link.origin === window.location.origin && link.pathname.endsWith('.html');
+        } catch (e) {
+            return false;
+        }
+    }
+
+    async function navigateTo(url, pushState = true) {
+        if (isNavigating) return;
+        isNavigating = true;
+
+        const main = document.querySelector('main');
+        if (main) {
+            main.classList.add('pjax-fade-out');
+        }
+
+        try {
+            const response = await fetch(url, {
+                credentials: 'same-origin',
+                headers: { 'X-PJAX': 'true' }
+            });
+            if (!response.ok) throw new Error('Fetch failed');
+            const html = await response.text();
+            const parser = new DOMParser();
+            const newDoc = parser.parseFromString(html, 'text/html');
+
+            // Wait for fade-out
+            await new Promise(r => setTimeout(r, 120));
+
+            // Update head meta
+            document.title = newDoc.title;
+            updateMeta(newDoc);
+
+            // Replace main content
+            const newMain = newDoc.querySelector('main');
+            if (main && newMain) {
+                main.innerHTML = newMain.innerHTML;
+                main.classList.remove('pjax-fade-out');
+                main.classList.add('pjax-fade-in');
+                requestAnimationFrame(() => {
+                    setTimeout(() => main.classList.remove('pjax-fade-in'), 250);
+                });
+            } else {
+                window.location.href = url;
+                return;
+            }
+
+            // Load new external scripts then execute inline scripts
+            await loadNewScripts(newDoc);
+
+            if (pushState) {
+                window.history.pushState({ url }, '', url);
+            }
+
+            window.scrollTo(0, 0);
+
+            // Re-initialize
+            await runPageSpecificScripts();
+            translatePage();
+            initSmoothScroll();
+            initPagePrefetch();
+            window.dispatchEvent(new Event('pjax:complete'));
+
+        } catch (err) {
+            window.location.href = url;
+        } finally {
+            isNavigating = false;
+        }
+    }
+
+    function updateMeta(newDoc) {
+        const names = ['description', 'keywords'];
+        names.forEach(name => {
+            const oldMeta = document.querySelector(`meta[name="${name}"]`);
+            const newMeta = newDoc.querySelector(`meta[name="${name}"]`);
+            if (oldMeta && newMeta) {
+                oldMeta.content = newMeta.content;
+            } else if (newMeta && !oldMeta) {
+                document.head.appendChild(newMeta.cloneNode(true));
+            }
+        });
+    }
+
+    async function loadNewScripts(newDoc) {
+        const newScripts = Array.from(newDoc.body.querySelectorAll('script[src]'));
+        const currentScripts = Array.from(document.body.querySelectorAll('script[src]'));
+        const currentSrcs = new Set(currentScripts.map(s => s.getAttribute('src')));
+        const scriptsToLoad = newScripts.filter(s => !currentSrcs.has(s.getAttribute('src')));
+
+        for (const script of scriptsToLoad) {
+            await loadScript(script.getAttribute('src'));
+        }
+
+        const main = document.querySelector('main');
+        const newMain = newDoc.querySelector('main');
+        if (main) {
+            executeInlineScripts(main);
+        }
+
+        // Execute body-level inline scripts that are outside <main>
+        const currentInlineContents = new Set(
+            Array.from(document.body.querySelectorAll('script:not([src])')).map(s => s.textContent.trim())
+        );
+        const newInlineScripts = Array.from(newDoc.body.querySelectorAll('script:not([src])')).filter(s => {
+            if (newMain && newMain.contains(s)) return false;
+            return !currentInlineContents.has(s.textContent.trim());
+        });
+        for (const oldScript of newInlineScripts) {
+            const newScript = document.createElement('script');
+            if (oldScript.type) newScript.type = oldScript.type;
+            newScript.textContent = oldScript.textContent;
+            document.body.appendChild(newScript);
+        }
+    }
+
+    function loadScript(src) {
+        return new Promise((resolve) => {
+            const s = document.createElement('script');
+            s.src = src;
+            s.async = false;
+            s.onload = resolve;
+            s.onerror = resolve;
+            document.body.appendChild(s);
+        });
+    }
+
+    function executeInlineScripts(container) {
+        const scripts = container.querySelectorAll('script:not([src])');
+        scripts.forEach(oldScript => {
+            const newScript = document.createElement('script');
+            if (oldScript.type) newScript.type = oldScript.type;
+            newScript.textContent = oldScript.textContent;
+            oldScript.parentNode.replaceChild(newScript, oldScript);
+        });
+    }
+
+    // Intercept clicks
+    document.addEventListener('click', function(e) {
+        const a = e.target.closest('a');
+        if (!a) return;
+        const url = a.getAttribute('href');
+        if (!isInternalHtmlLink(url)) return;
+        if (e.ctrlKey || e.metaKey || e.shiftKey || e.which === 2) return;
+
+        e.preventDefault();
+        navigateTo(url);
+    });
+
+    // Handle back/forward
+    window.addEventListener('popstate', function(e) {
+        if (e.state && e.state.url) {
+            navigateTo(e.state.url, false);
+        }
+    });
+}
+
+// Prefetch / Prerender for faster page transitions
+const prefetchedUrls = window.__prefetchedUrls || new Set();
+const prerenderedUrls = window.__prerenderedUrls || new Set();
+window.__prefetchedUrls = prefetchedUrls;
+window.__prerenderedUrls = prerenderedUrls;
+
+function initPagePrefetch() {
     function addPrefetch(url) {
-        if (prefetched.has(url)) return;
-        prefetched.add(url);
+        if (prefetchedUrls.has(url)) return;
+        prefetchedUrls.add(url);
         const link = document.createElement('link');
         link.rel = 'prefetch';
         link.href = url;
@@ -857,8 +1019,8 @@ function initPagePrefetch() {
     }
 
     function addPrerender(url) {
-        if (prerendered.has(url)) return;
-        prerendered.add(url);
+        if (prerenderedUrls.has(url)) return;
+        prerenderedUrls.add(url);
         const link = document.createElement('link');
         link.rel = 'prerender';
         link.href = url;
@@ -1009,4 +1171,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     initSmoothScroll();
     initPagePrefetch();
+    initPjax();
+
+    await runPageSpecificScripts();
 });

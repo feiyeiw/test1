@@ -878,3 +878,27 @@ footer .container {
         padding: 0 15px;
     }
 }
+
+/* PJAX page transition animations */
+main {
+    transition: opacity 120ms ease;
+}
+
+main.pjax-fade-out {
+    opacity: 0;
+}
+
+main.pjax-fade-in {
+    animation: pjaxFadeIn 250ms ease forwards;
+}
+
+@keyframes pjaxFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
