@@ -1134,16 +1134,17 @@
                 location: document.getElementById('location').value,
                 contactName: document.getElementById('contactName').value,
                 email: document.getElementById('contactEmail').value,
+                reply_to: document.getElementById('contactEmail').value,
                 phone: document.getElementById('contactPhone').value,
                 warehouseSize: document.getElementById('warehouseSize').value,
                 storageLocations: document.getElementById('storageLocations').value,
                 unitWeight: document.getElementById('unitWeight').value,
-                sku: document.getElementById('skuCount').value,
-                frequency: document.getElementById('frequency').value,
+                skuCount: document.getElementById('skuCount').value,
+                throughput: document.getElementById('frequency').value,
                 timeline: datePicker.value,
                 additionalInfo: document.getElementById('additionalInfo').value
             };
-            
+
             // Send via EmailJS
             emailjs.send('service_yp6on5e', 'template_66p84u8', formData)
                 .then(function() {
