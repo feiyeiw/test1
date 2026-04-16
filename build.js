@@ -32,7 +32,9 @@ const patterns = [
   '*.jpg',
   '*.jpeg',
   '*.gif',
-  '*.webp'
+  '*.webp',
+  '*.txt',
+  '*.xml'
 ];
 
 // Files to exclude from dist
@@ -126,11 +128,11 @@ async function copyFiles(srcDir, destDir) {
         // Determine if file should be hashed
         let finalFileName, finalDestPath;
 
-        if (parsedPath.ext === '.html') {
-          // HTML files keep original names for better URLs
+        if (parsedPath.ext === '.html' || parsedPath.ext === '.txt' || parsedPath.ext === '.xml') {
+          // HTML, robots.txt and sitemap.xml keep original names for fixed URLs
           finalFileName = entry.name;
           finalDestPath = path.join(destDir, finalFileName);
-          console.log(`Copying HTML file: ${entry.name}`);
+          console.log(`Copying preserved-name file: ${entry.name}`);
         } else {
           // Generate hash for other files
           const hash = generateFileHash(srcPath);
