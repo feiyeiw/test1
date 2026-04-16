@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin.html
+Disallow: /login.html
+Allow: /
+Sitemap: https://13machine.cc.cd/sitemap.xml
