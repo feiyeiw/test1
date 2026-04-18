@@ -5,17 +5,31 @@
  * POST /api/blogs - Requires API key, creates new blog
  */
 
-// Helper function to validate API key
-function validateApiKey(request, env) {
-    const apiKey = request.headers.get('X-API-Key');
-    const expectedKey = env.API_KEY;
+import { verifyToken, extractBearerToken, unauthorizedResponse } from '../auth/_utils.js';
 
-    if (!expectedKey) {
-        console.error('API_KEY environment variable is not set');
-        return false;
+// Validate request: supports JWT Bearer token (preferred) or legacy X-API-Key
+async function validateAuth(request, env) {
+    // 1. Try JWT Bearer token first
+    const token = extractBearerToken(request);
+    if (token && env.JWT_SECRET) {
+        const payload = await verifyToken(token, env.JWT_SECRET);
+        if (payload && payload.role === 'admin') {
+            return { valid: true, method: 'jwt', user: payload.sub };
+        }
     }
 
-    return apiKey === expectedKey;
+    // 2. Fallback to legacy X-API-Key (for backward compatibility)
+    const apiKey = request.headers.get('X-API-Key');
+    const expectedKey = env.API_KEY;
+    if (expectedKey && apiKey === expectedKey) {
+        return { valid: true, method: 'apikey' };
+    }
+
+    if (!expectedKey && !env.JWT_SECRET) {
+        console.error('Neither JWT_SECRET nor API_KEY environment variable is set');
+    }
+
+    return { valid: false };
 }
 
 // Helper function to get all blog keys from KV
@@ -103,12 +117,10 @@ async function handleGet(request, env) {
 // POST handler - creates new blog
 async function handlePost(request, env) {
     try {
-        // Validate API key
-        if (!validateApiKey(request, env)) {
-            return new Response(JSON.stringify({ error: 'Unauthorized: Invalid API key' }), {
-                status: 401,
-                headers: { 'Content-Type': 'application/json' }
-            });
+        // Validate authentication (JWT preferred, fallback to API key)
+        const authResult = await validateAuth(request, env);
+        if (!authResult.valid) {
+            return unauthorizedResponse('Unauthorized: Invalid or missing authentication');
         }
 
         // Parse request body

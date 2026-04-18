@@ -3,43 +3,35 @@ const loginForm = document.getElementById('loginForm');
 const errorMessage = document.getElementById('errorMessage');
 
 if (loginForm) {
-    // Initialize credentials on login page load
-    (async function() {
-        await initializeAllData();
-    })();
-
     loginForm.addEventListener('submit', async function(e) {
         e.preventDefault();
+        errorMessage.textContent = '';
 
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
 
-        const savedCredentials = JSON.parse(localStorage.getItem(ADMIN_STORAGE_KEY));
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
 
-        if (!savedCredentials) {
-            errorMessage.textContent = 'System error: Admin credentials not found';
-            return;
-        }
+            const data = await response.json();
 
-        // Hash the entered password
-        const enteredPasswordHash = await sha256Hash(password);
+            if (response.ok && data.token) {
+                // Store JWT token
+                _setAdminJwtToken(data.token);
+                localStorage.setItem('adminLoggedIn', 'true'); // Legacy flag
 
-        if (username === savedCredentials.username && enteredPasswordHash === savedCredentials.passwordHash) {
-            // Create session
-            const session = {
-                loggedIn: true,
-                username: username,
-                loginTime: new Date().toISOString(),
-                sessionId: 'session_' + Date.now()
-            };
-
-            sessionStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(session));
-            localStorage.setItem('adminLoggedIn', 'true'); // Legacy support
-
-            // Redirect to admin dashboard
-            window.location.href = 'admin.html';
-        } else {
-            errorMessage.textContent = 'Invalid username or password';
+                // Redirect to admin dashboard
+                window.location.href = 'admin.html';
+            } else {
+                errorMessage.textContent = data.error || 'Invalid username or password';
+            }
+        } catch (error) {
+            console.error('Login request failed:', error);
+            errorMessage.textContent = 'Network error. Please try again.';
         }
     });
 }

@@ -1,20 +1,12 @@
 name = "1cube-machine-blog-api"
 compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "./dist"
 
 [[kv_namespaces]]
 binding = "BLOG_DATA"
 id = "d90f93c9485747fd80c497b9ce508ca2"
 
-[vars]
-API_KEY = "3510d3214386575f98d76bd49a5ded18185a41d284f944f7f2d83db32a38a0e2"
-
-[site]
-bucket = "./dist"
-entry-point = "functions"
-
-# [env.production]
-# name = "1cube-machine-blog-api-prod"
-
-# [env.staging]
-# name = "1cube-machine-blog-api-staging"
+# Deploy command: wrangler pages deploy ./dist
+# Secrets managed via Cloudflare Dashboard (Variables and Secrets)
+# Required: API_KEY, ADMIN_USERNAME, ADMIN_PASSWORD_HASH, JWT_SECRET

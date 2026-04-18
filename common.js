@@ -14,11 +14,30 @@ async function sha256Hash(text) {
 // API Configuration
 const API_CONFIG = {
     baseUrl: '/api', // Relative URL for Cloudflare Workers
-    apiKey: localStorage.getItem('adminApiKey') || '', // Admin API key
+    apiKey: localStorage.getItem('adminApiKey') || '', // Admin API key (legacy fallback)
     cacheTimeout: 5 * 60 * 1000, // 5 minutes cache timeout
     retryAttempts: 2, // Number of retry attempts
     retryDelay: 1000, // Delay between retries in ms
 };
+
+// JWT Token helpers
+function getJwtToken() {
+    try {
+        const session = JSON.parse(sessionStorage.getItem('adminSession') || '{}');
+        return session.token || null;
+    } catch {
+        return null;
+    }
+}
+
+function _setAdminJwtToken(token) {
+    const session = {
+        loggedIn: true,
+        token: token,
+        loginTime: new Date().toISOString(),
+    };
+    sessionStorage.setItem('adminSession', JSON.stringify(session));
+}
 
 // i18n Configuration
 const LANGUAGE_KEY = 'siteLanguage';
@@ -36,8 +55,14 @@ async function apiRequest(endpoint, options = {}) {
                 ...options.headers,
             };
 
-            // Add API key if available and not already set
-            if (API_CONFIG.apiKey && !headers['X-API-Key']) {
+            // Add JWT Bearer token if available (preferred auth method)
+            const jwtToken = getJwtToken();
+            if (jwtToken && !headers['Authorization']) {
+                headers['Authorization'] = `Bearer ${jwtToken}`;
+            }
+
+            // Fallback: add legacy API key if available and not already set
+            if (!jwtToken && API_CONFIG.apiKey && !headers['X-API-Key']) {
                 headers['X-API-Key'] = API_CONFIG.apiKey;
             }
 
@@ -520,11 +545,16 @@ const blogApi = {
         }
     },
 
-    // Set API key for admin operations
+    // Set API key for admin operations (legacy fallback)
     setApiKey(apiKey) {
         API_CONFIG.apiKey = apiKey;
         localStorage.setItem('adminApiKey', apiKey);
         console.log('API key updated');
+    },
+
+    // Set JWT token for admin operations (preferred auth method)
+    setJwtToken(token) {
+        _setAdminJwtToken(token);
     }
 };
 
@@ -636,36 +666,53 @@ function initializeDefaultSiteContent() {
     }
 }
 
-// Initialize all default data
+// Initialize all default data (admin credentials now managed server-side)
 async function initializeAllData() {
-    await initializeAdminCredentials();
     initializeDefaultSiteContent();
 }
 
 // Check if user is logged in for admin pages
 async function checkAdminLogin() {
-    // Initialize credentials first
-    await initializeAdminCredentials();
-
-    // Check session storage first (more secure)
-    const session = JSON.parse(sessionStorage.getItem(ADMIN_SESSION_KEY));
+    // Check for JWT token first (new auth method)
+    const jwtToken = getJwtToken();
     const legacyLogin = localStorage.getItem('adminLoggedIn') === 'true';
 
-    if (!session && !legacyLogin) {
+    if (!jwtToken && !legacyLogin) {
         window.location.href = 'login.html';
         return false;
     }
 
-    // Validate session if exists
-    if (session) {
-        // Check if session is not too old (24 hours)
+    // If we have a JWT token, optionally verify it server-side
+    if (jwtToken) {
+        try {
+            const response = await fetch('/api/auth/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: jwtToken })
+            });
+
+            if (!response.ok) {
+                // Token invalid or expired - clear and redirect
+                sessionStorage.removeItem(ADMIN_SESSION_KEY);
+                localStorage.removeItem('adminLoggedIn');
+                window.location.href = 'login.html';
+                return false;
+            }
+        } catch (error) {
+            // Network error - allow if token exists locally (graceful offline)
+            console.warn('Could not verify token server-side:', error.message);
+        }
+    }
+
+    // Legacy session check (backward compatibility)
+    const session = JSON.parse(sessionStorage.getItem(ADMIN_SESSION_KEY) || '{}');
+    if (session.loginTime) {
         const loginTime = new Date(session.loginTime);
         const now = new Date();
-        const hoursDiff = Math.abs(now - loginTime) / 36e5; // hours
-
+        const hoursDiff = Math.abs(now - loginTime) / 36e5;
         if (hoursDiff > 24) {
-            // Session expired
             sessionStorage.removeItem(ADMIN_SESSION_KEY);
+            localStorage.removeItem('adminLoggedIn');
             window.location.href = 'login.html';
             return false;
         }
