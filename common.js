@@ -1161,24 +1161,25 @@ function getCurrentPageKey() {
     const filename = path.substring(path.lastIndexOf('/') + 1) || 'index.html';
     const pageName = filename.replace(/\.html$/, '') || 'index';
 
-    const manifest = {
-        'index': 'translations-index',
-        'about': 'translations-about',
-        'services': 'translations-services',
-        'solutions': 'translations-solutions',
-        'insights': 'translations-insights',
-        'blog-detail': 'translations-blog-detail',
-        'case-studies': 'translations-case-studies',
-        'case-ecommerce': 'translations-case-ecommerce',
-        'case-pharma': 'translations-case-pharma',
-        'case-automotive': 'translations-case-automotive',
-        'case-miniload': 'translations-case-miniload',
-        'asrs-design': 'translations-asrs-design',
-        'asrs-cost': 'translations-asrs-cost',
-        'contact': 'translations-contact'
+    // Map HTML page name to original JSON key (underscore format used in data-i18n)
+    const htmlToJsonKey = {
+        'index': 'index',
+        'about': 'about',
+        'services': 'services',
+        'solutions': 'solutions',
+        'insights': 'insights',
+        'blog-detail': 'blog_detail',
+        'case-studies': 'case_studies',
+        'case-ecommerce': 'case_ecommerce',
+        'case-pharma': 'case_pharma',
+        'case-automotive': 'case_automotive',
+        'case-miniload': 'case_miniload',
+        'asrs-design': 'asrs_design',
+        'asrs-cost': 'asrs_cost',
+        'contact': 'contact'
     };
 
-    return manifest[pageName] || null;
+    return htmlToJsonKey[pageName] || null;
 }
 
 async function loadTranslationFile(filename) {
@@ -1213,12 +1214,12 @@ async function loadTranslations() {
 
         const pageKey = getCurrentPageKey();
         if (pageKey) {
-            const pageData = await loadTranslationFile(pageKey + '.json');
+            const pageFile = 'translations-' + pageKey.replace(/_/g, '-') + '.json';
+            const pageData = await loadTranslationFile(pageFile);
             if (pageData) {
-                const pageName = pageKey.replace('translations-', '');
                 for (const lang of Object.keys(pageData)) {
                     if (!translations[lang]) translations[lang] = {};
-                    translations[lang][pageName] = pageData[lang];
+                    translations[lang][pageKey] = pageData[lang];
                 }
             }
         }
