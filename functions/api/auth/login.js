@@ -5,10 +5,46 @@
  * Validates credentials against Cloudflare Secrets and returns a JWT token.
  */
 
-import { signToken, jsonResponse, unauthorizedResponse } from './_utils.js';
+// ====== JWT Utilities (inlined for Cloudflare Pages Functions compatibility) ======
+const ALGORITHM = { name: 'HMAC', hash: 'SHA-256' };
 
-// Admin SHA-256 hash of 'admin123'
-// In production, this should be stored as a Cloudflare Secret
+function base64UrlEncode(str) {
+    const bytes = new TextEncoder().encode(str);
+    let base64 = btoa(String.fromCharCode(...bytes));
+    return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+async function importJwtSecret(secret) {
+    const encoder = new TextEncoder();
+    return crypto.subtle.importKey('raw', encoder.encode(secret), ALGORITHM, false, ['sign', 'verify']);
+}
+
+async function hmacSign(key, data) {
+    const encoder = new TextEncoder();
+    const signature = await crypto.subtle.sign(ALGORITHM, key, encoder.encode(data));
+    return btoa(String.fromCharCode(...new Uint8Array(signature)))
+        .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+async function signToken(payload, secret, expiresInHours = 24) {
+    const now = Math.floor(Date.now() / 1000);
+    const fullPayload = { ...payload, iat: now, exp: now + expiresInHours * 3600 };
+    const headerB64 = base64UrlEncode(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+    const payloadB64 = base64UrlEncode(JSON.stringify(fullPayload));
+    const signingInput = `${headerB64}.${payloadB64}`;
+    const key = await importJwtSecret(secret);
+    const signature = await hmacSign(key, signingInput);
+    return `${signingInput}.${signature}`;
+}
+
+function jsonResponse(data, status = 200) {
+    return new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } });
+}
+
+function unauthorizedResponse(message = 'Unauthorized') {
+    return new Response(JSON.stringify({ error: message }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+}
+// ====== End JWT Utilities ======
 
 async function hashPassword(password) {
     const encoder = new TextEncoder();

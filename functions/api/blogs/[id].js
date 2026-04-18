@@ -2,15 +2,65 @@
  * Single Blog API - Handles GET, PUT, DELETE for a specific blog
  *
  * GET /api/blogs/:id - Public, returns single blog
- * PUT /api/blogs/:id - Requires API key, updates blog
- * DELETE /api/blogs/:id - Requires API key, deletes blog
+ * PUT /api/blogs/:id - Requires JWT Bearer token or legacy API key
+ * DELETE /api/blogs/:id - Requires JWT Bearer token or legacy API key
  */
 
-import { verifyToken, extractBearerToken, unauthorizedResponse } from '../../auth/_utils.js';
+// ====== JWT Utilities (inlined for Cloudflare Pages Functions compatibility) ======
+const ALGORITHM = { name: 'HMAC', hash: 'SHA-256' };
+
+function base64UrlEncode(str) {
+    const bytes = new TextEncoder().encode(str);
+    let base64 = btoa(String.fromCharCode(...bytes));
+    return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function base64UrlDecode(str) {
+    str += new Array(5 - (str.length % 4)).join('=');
+    str = str.replace(/\-/g, '+').replace(/\_/g, '/');
+    const bytes = atob(str).split('').map(c => c.charCodeAt(0));
+    return new Uint8Array(bytes);
+}
+
+async function importJwtSecret(secret) {
+    const encoder = new TextEncoder();
+    return crypto.subtle.importKey('raw', encoder.encode(secret), ALGORITHM, false, ['sign', 'verify']);
+}
+
+async function verifyToken(token, secret) {
+    try {
+        const parts = token.split('.');
+        if (parts.length !== 3) return null;
+        const [headerB64, payloadB64, signatureB64] = parts;
+        const key = await importJwtSecret(secret);
+        const encoder = new TextEncoder();
+        const expectedSig = base64UrlDecode(signatureB64);
+        const isValid = await crypto.subtle.verify(ALGORITHM, key, expectedSig, encoder.encode(`${headerB64}.${payloadB64}`));
+        if (!isValid) return null;
+        const payloadStr = new TextDecoder().decode(base64UrlDecode(payloadB64));
+        const payload = JSON.parse(payloadStr);
+        const now = Math.floor(Date.now() / 1000);
+        if (payload.exp && payload.exp < now) return null;
+        return payload;
+    } catch (error) {
+        console.error('JWT verification error:', error);
+        return null;
+    }
+}
+
+function extractBearerToken(request) {
+    const auth = request.headers.get('Authorization') || '';
+    const match = auth.match(/^Bearer\s+(.+)$/i);
+    return match ? match[1] : null;
+}
+
+function unauthorizedResponse(message = 'Unauthorized') {
+    return new Response(JSON.stringify({ error: message }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+}
+// ====== End JWT Utilities ======
 
 // Validate request: supports JWT Bearer token (preferred) or legacy X-API-Key
 async function validateAuth(request, env) {
-    // 1. Try JWT Bearer token first
     const token = extractBearerToken(request);
     if (token && env.JWT_SECRET) {
         const payload = await verifyToken(token, env.JWT_SECRET);
@@ -18,18 +68,14 @@ async function validateAuth(request, env) {
             return { valid: true, method: 'jwt', user: payload.sub };
         }
     }
-
-    // 2. Fallback to legacy X-API-Key (for backward compatibility)
     const apiKey = request.headers.get('X-API-Key');
     const expectedKey = env.API_KEY;
     if (expectedKey && apiKey === expectedKey) {
         return { valid: true, method: 'apikey' };
     }
-
     if (!expectedKey && !env.JWT_SECRET) {
         console.error('Neither JWT_SECRET nor API_KEY environment variable is set');
     }
-
     return { valid: false };
 }
 
