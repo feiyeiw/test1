@@ -685,32 +685,36 @@ async function updateMainPage() {
     // Initialize default data if not exists
     await initializeAllData();
 
-    const savedContent = localStorage.getItem('siteContent');
-    if (savedContent) {
-        const content = JSON.parse(savedContent);
-        
-        // Update hero section
-        const heroTitle = document.querySelector('.hero h1');
-        const heroDesc = document.querySelector('.hero p');
-        if (heroTitle && heroDesc) {
-            heroTitle.textContent = content.hero.title;
-            heroDesc.textContent = content.hero.description;
-        }
-        
-        // Update services section
-        const serviceItems = document.querySelectorAll('.service-item');
-        if (serviceItems.length === content.services.length) {
-            serviceItems.forEach((item, index) => {
-                const title = item.querySelector('h3');
-                const desc = item.querySelector('p');
-                if (title && desc) {
-                    title.textContent = content.services[index].title;
-                    desc.textContent = content.services[index].description;
-                }
-            });
+    // Only override with custom admin content in English mode.
+    // In other languages let translatePage() handle the text so i18n works correctly.
+    if (currentLanguage === 'en') {
+        const savedContent = localStorage.getItem('siteContent');
+        if (savedContent) {
+            const content = JSON.parse(savedContent);
+
+            // Update hero section
+            const heroTitle = document.querySelector('.hero h1');
+            const heroDesc = document.querySelector('.hero p');
+            if (heroTitle && heroDesc) {
+                heroTitle.textContent = content.hero.title;
+                heroDesc.textContent = content.hero.description;
+            }
+
+            // Update services section
+            const serviceItems = document.querySelectorAll('.service-item');
+            if (serviceItems.length === content.services.length) {
+                serviceItems.forEach((item, index) => {
+                    const title = item.querySelector('h3');
+                    const desc = item.querySelector('p');
+                    if (title && desc) {
+                        title.textContent = content.services[index].title;
+                        desc.textContent = content.services[index].description;
+                    }
+                });
+            }
         }
     }
-    
+
     // Load blogs on home page
     loadBlogsOnHome();
 }
@@ -788,6 +792,10 @@ async function loadBlogsOnHome() {
 async function updatePageContent() {
     // Initialize default data if not exists
     await initializeAllData();
+
+    // Only override with custom admin content in English mode.
+    // In other languages let translatePage() handle the text so i18n works correctly.
+    if (currentLanguage !== 'en') return;
 
     const savedContent = localStorage.getItem('siteContent');
     if (!savedContent) return;
