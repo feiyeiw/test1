@@ -1225,12 +1225,6 @@ async function loadTranslations() {
         }
     } catch (e) {
         console.error('Failed to load translations:', e);
-        try {
-            const res = await fetch('translations.json');
-            translations = await res.json();
-        } catch (fallbackErr) {
-            console.error('Fallback also failed:', fallbackErr);
-        }
     }
 }
 
