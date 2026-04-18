@@ -1,0 +1,16 @@
+{
+  "index": "translations-index",
+  "about": "translations-about",
+  "services": "translations-services",
+  "solutions": "translations-solutions",
+  "insights": "translations-insights",
+  "blog-detail": "translations-blog-detail",
+  "case-studies": "translations-case-studies",
+  "case-ecommerce": "translations-case-ecommerce",
+  "case-pharma": "translations-case-pharma",
+  "case-automotive": "translations-case-automotive",
+  "case-miniload": "translations-case-miniload",
+  "asrs-design": "translations-asrs-design",
+  "asrs-cost": "translations-asrs-cost",
+  "contact": "translations-contact"
+}

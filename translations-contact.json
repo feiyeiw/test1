@@ -1,0 +1,30 @@
+{
+  "en": {
+    "quote_title": "Contact Us With Project Details",
+    "quote_sub": "Fill in your warehouse details and we'll provide a detailed cost estimate within 24 hours"
+  },
+  "zh": {
+    "quote_title": "联系我们并提供项目详情",
+    "quote_sub": "填写您的仓库信息，我们将在 24 小时内提供详细的成本估算"
+  },
+  "ja": {
+    "quote_title": "プロジェクト詳細とともにお問い合わせください",
+    "quote_sub": "倉庫の詳細をご記入ください。24時間以内に詳細なコスト見積もりをご提案いたします"
+  },
+  "fr": {
+    "quote_title": "Contactez-nous avec les détails de votre projet",
+    "quote_sub": "Renseignez les détails de votre entrepôt et nous vous fournirons un devis détaillé dans les 24 heures"
+  },
+  "es": {
+    "quote_title": "Contáctenos con los Detalles de su Proyecto",
+    "quote_sub": "Complete los detalles de su almacén y le proporcionaremos una estimación de costos detallada en 24 horas"
+  },
+  "ar": {
+    "quote_title": "تواصل معنا بتفاصيل المشروع",
+    "quote_sub": "املأ تفاصيل مستودعك وسنقدم تقديراً تفصيلياً للتكلفة خلال 24 ساعة"
+  },
+  "ko": {
+    "quote_title": "프로젝트 상세 정보와 함께 문의해 주십시오",
+    "quote_sub": "창고 정보를 기입해 주시면 24시간 이내에 상세한 비용 견적을 제공해 드리겠습니다"
+  }
+}

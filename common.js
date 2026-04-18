@@ -1154,13 +1154,80 @@ function initSmoothScroll() {
 // ============================================
 let currentLanguage = localStorage.getItem('siteLanguage') || 'en';
 let translations = {};
+const TRANSLATION_CACHE = {};
+
+function getCurrentPageKey() {
+    const path = window.location.pathname;
+    const filename = path.substring(path.lastIndexOf('/') + 1) || 'index.html';
+    const pageName = filename.replace(/\.html$/, '') || 'index';
+
+    const manifest = {
+        'index': 'translations-index',
+        'about': 'translations-about',
+        'services': 'translations-services',
+        'solutions': 'translations-solutions',
+        'insights': 'translations-insights',
+        'blog-detail': 'translations-blog-detail',
+        'case-studies': 'translations-case-studies',
+        'case-ecommerce': 'translations-case-ecommerce',
+        'case-pharma': 'translations-case-pharma',
+        'case-automotive': 'translations-case-automotive',
+        'case-miniload': 'translations-case-miniload',
+        'asrs-design': 'translations-asrs-design',
+        'asrs-cost': 'translations-asrs-cost',
+        'contact': 'translations-contact'
+    };
+
+    return manifest[pageName] || null;
+}
+
+async function loadTranslationFile(filename) {
+    if (TRANSLATION_CACHE[filename]) {
+        return TRANSLATION_CACHE[filename];
+    }
+    try {
+        const res = await fetch(filename);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        TRANSLATION_CACHE[filename] = data;
+        return data;
+    } catch (e) {
+        console.error('Failed to load ' + filename + ':', e);
+        return null;
+    }
+}
 
 async function loadTranslations() {
     try {
-        const res = await fetch('translations.json');
-        translations = await res.json();
+        const commonData = await loadTranslationFile('translations-common.json');
+        if (!commonData) {
+            console.error('Failed to load common translations');
+            return;
+        }
+
+        translations = { ...commonData };
+
+        const pageKey = getCurrentPageKey();
+        if (pageKey) {
+            const pageData = await loadTranslationFile(pageKey + '.json');
+            if (pageData) {
+                for (const lang of Object.keys(pageData)) {
+                    if (translations[lang]) {
+                        translations[lang] = { ...translations[lang], ...pageData[lang] };
+                    } else {
+                        translations[lang] = pageData[lang];
+                    }
+                }
+            }
+        }
     } catch (e) {
         console.error('Failed to load translations:', e);
+        try {
+            const res = await fetch('translations.json');
+            translations = await res.json();
+        } catch (fallbackErr) {
+            console.error('Fallback also failed:', fallbackErr);
+        }
     }
 }
 

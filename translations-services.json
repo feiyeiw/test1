@@ -1,0 +1,93 @@
+{
+  "en": {
+    "hero_title": "Our Services",
+    "hero_sub": "Comprehensive solutions for automated production and smart warehouse systems",
+    "service_planning_title": "Production Line Planning",
+    "service_planning_p1": "We design and implement complete production lines for packaging, food, pharmaceutical, and chemical industries. Our expertise includes process optimization, equipment selection, and system integration.",
+    "service_planning_p2": "Our approach ensures efficient production flow, reduced downtime, and maximum output while maintaining product quality standards.",
+    "service_warehouse_title": "Automated Warehouse Systems",
+    "service_warehouse_p1": "We specialize in designing and implementing automated storage and retrieval systems (ASRS), including stacker cranes, shuttle systems, and AGV logistics solutions.",
+    "service_warehouse_p2": "Our warehouse systems optimize space utilization, improve inventory management, and increase operational efficiency through advanced automation technology.",
+    "service_integration_title": "Multi-machine Integration",
+    "service_integration_p1": "We provide process matching and system coordination services to ensure seamless integration between different machines and production stages.",
+    "service_integration_p2": "Our integration solutions eliminate bottlenecks, reduce manual intervention, and create a cohesive production ecosystem that maximizes efficiency and reliability."
+  },
+  "zh": {
+    "hero_title": "我们的服务",
+    "hero_sub": "自动化生产和智能仓储系统的综合解决方案",
+    "service_planning_title": "生产线规划",
+    "service_planning_p1": "我们为包装、食品、制药和化工行业设计和实施完整的生产线。我们的专业知识包括工艺优化、设备选型和系统集成。",
+    "service_planning_p2": "我们的方法确保高效的生产流程、减少停机时间并在保持产品质量标准的同时实现最大产出。",
+    "service_warehouse_title": "自动化仓储系统",
+    "service_warehouse_p1": "我们专注于设计和实施自动化存取系统（ASRS），包括堆垛机、穿梭车系统和 AGV 物流解决方案。",
+    "service_warehouse_p2": "我们的仓储系统通过先进的自动化技术优化空间利用率、改善库存管理并提高运营效率。",
+    "service_integration_title": "多机集成",
+    "service_integration_p1": "我们提供工艺匹配和系统协调服务，确保不同机器和生产阶段之间的无缝集成。",
+    "service_integration_p2": "我们的集成解决方案消除瓶颈、减少人工干预，并创建一个统一的生产生态系统，以最大化效率和可靠性。"
+  },
+  "ja": {
+    "hero_title": "サービス内容",
+    "hero_sub": "自動化生産とスマート物流倉庫システムのトータルソリューション",
+    "service_planning_title": "生産ライン設計",
+    "service_planning_p1": "包装、食品、製薬、化学産業向けの生産ラインを設計・構築します。プロセス最適化、設備選定、システムインテグレーションの専門知識を有しています。",
+    "service_planning_p2": "効率的な生産フロー、ダウンタイムの削減、品質基準を維持しながら最大限の生産性を実現するアプローチを提供します。",
+    "service_warehouse_title": "自動倉庫システム",
+    "service_warehouse_p1": "スタッカークレーン、シャトルシステム、AGV物流ソリューションなど、自動倉庫システム（ASRS）の設計・構築を専門としています。",
+    "service_warehouse_p2": "当社の倉庫システムは、先進の自動化技術を通じて空間利用率の最適化、在庫管理の改善、運用効率の向上を実現します。",
+    "service_integration_title": "マルチマシン統合",
+    "service_integration_p1": "異なる機械や生産工程間のシームレスな統合を確保するため、プロセスマッチングとシステム調整サービスを提供します。",
+    "service_integration_p2": "当社の統合ソリューションはボトルネックを排除し、人手介在を減らし、効率と信頼性を最大化する統合生産エコシステムを構築します。"
+  },
+  "fr": {
+    "hero_title": "Nos services",
+    "hero_sub": "Des solutions complètes pour l'automatisation de la production et les systèmes d'entrepôt intelligent",
+    "service_planning_title": "Planification de lignes de production",
+    "service_planning_p1": "Nous concevons et mettons en œuvre des lignes de production complètes pour les industries de l'emballage, de l'agroalimentaire, de la pharmaceutique et de la chimie. Notre expertise couvre l'optimisation des processus, la sélection d'équipements et l'intégration de systèmes.",
+    "service_planning_p2": "Notre approche garantit un flux de production efficace, une réduction des temps d'arrêt et un rendement maximal tout en maintenant les normes de qualité des produits.",
+    "service_warehouse_title": "Systèmes d'entrepôt automatisés",
+    "service_warehouse_p1": "Nous sommes spécialisés dans la conception et la mise en œuvre de systèmes de stockage et de prélèvement automatisés (ASRS), incluant transstockeurs, systèmes navette et solutions logistiques AGV.",
+    "service_warehouse_p2": "Nos systèmes d'entrepôt optimisent l'utilisation de l'espace, améliorent la gestion des stocks et augmentent l'efficacité opérationnelle grâce à des technologies d'automatisation avancées.",
+    "service_integration_title": "Intégration multi-machines",
+    "service_integration_p1": "Nous fournissons des services d'adaptation de processus et de coordination de systèmes pour garantir une intégration transparente entre les différentes machines et étapes de production.",
+    "service_integration_p2": "Nos solutions d'intégration éliminent les goulots d'étranglement, réduisent l'intervention manuelle et créent un écosystème de production cohérent qui maximise l'efficacité et la fiabilité."
+  },
+  "es": {
+    "hero_title": "Nuestros Servicios",
+    "hero_sub": "Soluciones integrales para sistemas de producción automatizada y almacenes inteligentes",
+    "service_planning_title": "Planificación de Líneas de Producción",
+    "service_planning_p1": "Diseñamos e implementamos líneas de producción completas para las industrias de empaque, alimentos, farmacéutica y química. Nuestra experiencia incluye optimización de procesos, selección de equipos e integración de sistemas.",
+    "service_planning_p2": "Nuestro enfoque garantiza un flujo de producción eficiente, reducción de tiempos de inactividad y una producción máxima manteniendo los estándares de calidad del producto.",
+    "service_warehouse_title": "Sistemas de Almacén Automatizado",
+    "service_warehouse_p1": "Nos especializamos en el diseño e implementación de sistemas de almacenamiento y recuperación automatizados (ASRS), incluyendo grúas apiladoras, sistemas shuttle y soluciones logísticas AGV.",
+    "service_warehouse_p2": "Nuestros sistemas de almacén optimizan el uso del espacio, mejoran la gestión de inventario y aumentan la eficiencia operativa mediante tecnología de automatización avanzada.",
+    "service_integration_title": "Integración Multi-Máquina",
+    "service_integration_p1": "Proporcionamos servicios de adecuación de procesos y coordinación de sistemas para garantizar una integración perfecta entre diferentes máquinas y etapas de producción.",
+    "service_integration_p2": "Nuestras soluciones de integración eliminan cuellos de botella, reducen la intervención manual y crean un ecosistema de producción cohesivo que maximiza la eficiencia y la fiabilidad."
+  },
+  "ar": {
+    "hero_title": "خدماتنا",
+    "hero_sub": "حلول شاملة للإنتاج الآلي وأنظمة المستودعات الذكية",
+    "service_planning_title": "تخطيط خطوط الإنتاج",
+    "service_planning_p1": "نصمم وننفذ خطوط إنتاج كاملة لصناعات التعبئة والتغليف، والأغذية، والأدوية، والمواد الكيميائية. تشمل خبرتنا تحسين العمليات، واختيار المعدات، وتكامل الأنظمة.",
+    "service_planning_p2": "يضمن نهجنا تدفقاً إنتاجياً فعالاً، وتقليلاً لأوقات التوقف، وأقصى إنتاج مع الحفاظ على معايير جودة المنتج.",
+    "service_warehouse_title": "أنظمة المستودعات الآلية",
+    "service_warehouse_p1": "نتخصص في تصميم وتنفيذ أنظمة التخزين والاسترجاع الآلي (ASRS)، بما في ذلك رافعات التكديس، وأنظمة الشاتل، وحلول الخدمات اللوجستية بمركبات AGV.",
+    "service_warehouse_p2": "تحسّن أنظمة مستودعاتنا استغلال المساحة، وإدارة المخزون، وكفاءة التشغيل من خلال تقنيات الأتمتة المتقدمة.",
+    "service_integration_title": "تكامل الآلات المتعددة",
+    "service_integration_p1": "نوفر خدمات مطابقة العمليات وتنسيق الأنظمة لضمان التكامل السلس بين الآلات المختلفة ومراحل الإنتاج.",
+    "service_integration_p2": "تعمل حلول التكامل لدينا على إزالة الاختناقات، وتقليل التدخل اليدوي، وخلق بيئة إنتاجية متكاملة تعظم الكفاءة والموثوقية."
+  },
+  "ko": {
+    "hero_title": "서비스",
+    "hero_sub": "자동화 생산 및 스마트 창고 시스템을 위한 종합 솔루션",
+    "service_planning_title": "생산 라인 계획",
+    "service_planning_p1": "우리는 포장, 식품, 제약, 화학 산업을 위한 완전한 생산 라인을 설계하고 구현합니다. 전문성에는 공정 최적화, 장비 선정, 시스템 통합이 포함됩니다.",
+    "service_planning_p2": "우리의 접근 방식은 효율적인 생산 흐름, 가동 중단 시간 감소, 제품 품질 기준을 유지하면서 최대 산출을 보장합니다.",
+    "service_warehouse_title": "자동화 창고 시스템",
+    "service_warehouse_p1": "우리는 스태커크레인, 셔틀 시스템, AGV 물류 솔루션을 포함한 자동화 저장 및 반출 시스템(ASRS)의 설계 및 구현을 전문으로 합니다.",
+    "service_warehouse_p2": "우리의 창고 시스템은 첨단 자동화 기술을 통해 공간 활용률을 최적화하고, 재고 관리를 개선하며, 운영 효율성을 높입니다.",
+    "service_integration_title": "다중 장비 통합",
+    "service_integration_p1": "우리는 서로 다른 기계와 생산 단계 간의 원활한 통합을 보장하기 위해 공정 매칭 및 시스템 조정 서비스를 제공합니다.",
+    "service_integration_p2": "우리의 통합 솔루션은 병목 현상을 제거하고, 수동 개입을 줄이며, 효율성과 신뢰성을 극대화하는 통합된 생산 생태계를 만듭니다."
+  }
+}

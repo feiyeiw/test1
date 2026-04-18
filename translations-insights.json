@@ -1,0 +1,65 @@
+{
+  "en": {
+    "hero_title": "Industry Insights",
+    "hero_sub": "Latest trends, technologies, and best practices in automation and smart manufacturing",
+    "loading": "Loading insights...",
+    "no_blogs": "No blogs yet",
+    "no_blogs_desc": "Check back soon for our latest insights and updates. Please visit admin.html to create blogs.",
+    "error_loading": "Error loading blogs",
+    "error_loading_desc": "Please try again later."
+  },
+  "zh": {
+    "hero_title": "行业洞察",
+    "hero_sub": "自动化和智能制造领域的最新趋势、技术与最佳实践",
+    "loading": "正在加载洞察...",
+    "no_blogs": "暂无博客",
+    "no_blogs_desc": "敬请期待我们的最新洞察和更新。请访问 admin.html 创建博客。",
+    "error_loading": "加载博客出错",
+    "error_loading_desc": "请稍后再试。"
+  },
+  "ja": {
+    "hero_title": "業界インサイト",
+    "hero_sub": "自動化とスマート製造の最新トレンド、技術、ベストプラクティス",
+    "loading": "読み込み中...",
+    "no_blogs": "ブログはまだありません",
+    "no_blogs_desc": "最新のインサイトやアップデートをお楽しみに。ブログの作成はadmin.htmlから行えます。",
+    "error_loading": "ブログの読み込みエラー",
+    "error_loading_desc": "しばらくしてから再度お試しください。"
+  },
+  "fr": {
+    "hero_title": "Perspectives sectorielles",
+    "hero_sub": "Dernières tendances, technologies et meilleures pratiques en automatisation et fabrication intelligente",
+    "loading": "Chargement des articles...",
+    "no_blogs": "Aucun article pour le moment",
+    "no_blogs_desc": "Revenez bientôt pour nos dernières perspectives et mises à jour. Veuillez consulter admin.html pour créer des articles.",
+    "error_loading": "Erreur de chargement des articles",
+    "error_loading_desc": "Veuillez réessayer plus tard."
+  },
+  "es": {
+    "hero_title": "Perspectivas de la Industria",
+    "hero_sub": "Últimas tendencias, tecnologías y mejores prácticas en automatización y manufactura inteligente",
+    "loading": "Cargando perspectivas...",
+    "no_blogs": "Aún no hay blogs",
+    "no_blogs_desc": "Vuelva pronto para nuestras últimas perspectivas y actualizaciones. Visite admin.html para crear blogs.",
+    "error_loading": "Error al cargar los blogs",
+    "error_loading_desc": "Inténtelo de nuevo más tarde."
+  },
+  "ar": {
+    "hero_title": "رؤى الصناعة",
+    "hero_sub": "أحدث الاتجاهات والتقنيات وأفضل الممارسات في الأتمتة والتصنيع الذكي",
+    "loading": "جاري تحميل الرؤى...",
+    "no_blogs": "لا توجد مدونات بعد",
+    "no_blogs_desc": "يرجى العودة قريباً للاطلاع على أحدث رؤانا وتحديثاتنا. يُرجى زيارة admin.html لإنشاء المدونات.",
+    "error_loading": "خطأ في تحميل المدونات",
+    "error_loading_desc": "يُرجى المحاولة مرة أخرى لاحقاً."
+  },
+  "ko": {
+    "hero_title": "산업 인사이트",
+    "hero_sub": "자동화 및 스마트 제조의 최신 트렌드, 기술 및 모범 사례",
+    "loading": "인사이트 로딩 중...",
+    "no_blogs": "아직 블로그가 없습니다",
+    "no_blogs_desc": "최신 인사이트와 업데이트를 곧 확인해 보십시오. 블로그 작성은 admin.html에서 가능합니다.",
+    "error_loading": "블로그 로딩 오류",
+    "error_loading_desc": "잠시 후 다시 시도해 주십시오."
+  }
+}

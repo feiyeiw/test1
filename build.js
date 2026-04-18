@@ -128,8 +128,9 @@ async function copyFiles(srcDir, destDir) {
         // Determine if file should be hashed
         let finalFileName, finalDestPath;
 
-        if (parsedPath.ext === '.html' || parsedPath.ext === '.txt' || parsedPath.ext === '.xml') {
-          // HTML, robots.txt and sitemap.xml keep original names for fixed URLs
+        if (parsedPath.ext === '.html' || parsedPath.ext === '.txt' || parsedPath.ext === '.xml' ||
+            (parsedPath.ext === '.json' && parsedPath.name.startsWith('translations-'))) {
+          // HTML, robots.txt, sitemap.xml, and translation files keep original names
           finalFileName = entry.name;
           finalDestPath = path.join(destDir, finalFileName);
           console.log(`Copying preserved-name file: ${entry.name}`);
