@@ -208,7 +208,11 @@
       "th_budget": "Budget Range",
       "th_scale": "Scale",
       "cta_title": "Get your customized solution",
-      "cta_desc": "Every warehouse is unique. Let our experts design the perfect ASRS solution for your specific requirements."
+      "cta_desc": "Every warehouse is unique. Let our experts design the perfect ASRS solution for your specific requirements.",
+      "scenario_ecommerce": "🛒 E-commerce",
+      "scenario_manufacturing": "🏭 Manufacturing",
+      "scenario_cold_storage": "❄️ Cold Storage",
+      "scenario_spare_parts": "🔧 Spare Parts"
     },
     "insights": {
       "hero_title": "Industry Insights",
@@ -699,7 +703,10 @@
       "comp_large_system": "Multi Four-Way Shuttle System",
       "comp_large_features": "Full automation, 450 pallets/hour, AGV integration",
       "quote_title": "Get Your Cost Estimate",
-      "quote_sub": "Fill in your warehouse details and we'll provide a detailed cost estimate within 24 hours"
+      "quote_sub": "Fill in your warehouse details and we'll provide a detailed cost estimate within 24 hours",
+      "comp_small_subtype": "E-commerce Startup",
+      "comp_medium_subtype": "Pharma Distribution",
+      "comp_large_subtype": "Automotive Parts"
     },
     "contact": {
       "quote_title": "Contact Us With Project Details",
@@ -915,7 +922,11 @@
       "th_budget": "预算范围",
       "th_scale": "规模",
       "cta_title": "获取您的定制方案",
-      "cta_desc": "每个仓库都是独一无二的。让我们的专家根据您的具体需求设计完美的 ASRS 解决方案。"
+      "cta_desc": "每个仓库都是独一无二的。让我们的专家根据您的具体需求设计完美的 ASRS 解决方案。",
+      "scenario_ecommerce": "🛒 电商",
+      "scenario_manufacturing": "🏭 制造业",
+      "scenario_cold_storage": "❄️ 冷链仓储",
+      "scenario_spare_parts": "🔧 备件仓储"
     },
     "insights": {
       "hero_title": "行业洞察",
@@ -1406,7 +1417,10 @@
       "comp_large_system": "多四向穿梭车系统",
       "comp_large_features": "全自动化，450 托盘/小时，AGV 集成",
       "quote_title": "获取您的成本估算",
-      "quote_sub": "填写您的仓库信息，我们将在 24 小时内提供详细的成本估算"
+      "quote_sub": "填写您的仓库信息，我们将在 24 小时内提供详细的成本估算",
+      "comp_small_subtype": "电商初创企业",
+      "comp_medium_subtype": "医药配送",
+      "comp_large_subtype": "汽车零部件"
     },
     "contact": {
       "quote_title": "联系我们并提供项目详情",
@@ -1622,7 +1636,11 @@
       "th_budget": "予算目安",
       "th_scale": "規模",
       "cta_title": "カスタマイズソリューションのご相談",
-      "cta_desc": "すべての倉庫は独自のものです。当社の専門家が、あなたの具体的な要件に最適なASRSソリューションを設計いたします。"
+      "cta_desc": "すべての倉庫は独自のものです。当社の専門家が、あなたの具体的な要件に最適なASRSソリューションを設計いたします。",
+      "scenario_ecommerce": "🛒 Eコマース",
+      "scenario_manufacturing": "🏭 製造業",
+      "scenario_cold_storage": "❄️ 冷蔵倉庫",
+      "scenario_spare_parts": "🔧 スペアパーツ"
     },
     "insights": {
       "hero_title": "業界インサイト",
@@ -2113,7 +2131,10 @@
       "comp_large_system": "マルチ四方向シャトルシステム",
       "comp_large_features": "完全自動化、450パレット/時間、AGV統合",
       "quote_title": "コスト見積もりを取得",
-      "quote_sub": "倉庫の詳細をご記入ください。24時間以内に詳細なコスト見積もりをご提案いたします"
+      "quote_sub": "倉庫の詳細をご記入ください。24時間以内に詳細なコスト見積もりをご提案いたします",
+      "comp_small_subtype": "Eコマーススタートアップ",
+      "comp_medium_subtype": "医薬品流通",
+      "comp_large_subtype": "自動車部品"
     },
     "contact": {
       "quote_title": "プロジェクト詳細とともにお問い合わせください",
@@ -2329,7 +2350,11 @@
       "th_budget": "Fourchette budgétaire",
       "th_scale": "Échelle",
       "cta_title": "Obtenez votre solution personnalisée",
-      "cta_desc": "Chaque entrepôt est unique. Laissez nos experts concevoir la solution ASRS parfaite pour vos exigences spécifiques."
+      "cta_desc": "Chaque entrepôt est unique. Laissez nos experts concevoir la solution ASRS parfaite pour vos exigences spécifiques.",
+      "scenario_ecommerce": "🛒 E-commerce",
+      "scenario_manufacturing": "🏭 Fabrication",
+      "scenario_cold_storage": "❄️ Stockage frigorifique",
+      "scenario_spare_parts": "🔧 Pièces de rechange"
     },
     "insights": {
       "hero_title": "Perspectives sectorielles",
@@ -2820,7 +2845,10 @@
       "comp_large_system": "Système multi-navettes quatre directions",
       "comp_large_features": "Automatisation complète, 450 palettes/heure, intégration AGV",
       "quote_title": "Obtenez votre devis",
-      "quote_sub": "Renseignez les détails de votre entrepôt et nous vous fournirons un devis détaillé dans les 24 heures"
+      "quote_sub": "Renseignez les détails de votre entrepôt et nous vous fournirons un devis détaillé dans les 24 heures",
+      "comp_small_subtype": "Startup e-commerce",
+      "comp_medium_subtype": "Distribution pharmaceutique",
+      "comp_large_subtype": "Pièces automobiles"
     },
     "contact": {
       "quote_title": "Contactez-nous avec les détails de votre projet",
@@ -3036,7 +3064,11 @@
       "th_budget": "Rango de Presupuesto",
       "th_scale": "Escala",
       "cta_title": "Obtenga su solución personalizada",
-      "cta_desc": "Cada almacén es único. Permita que nuestros expertos diseñen la solución ASRS perfecta para sus requisitos específicos."
+      "cta_desc": "Cada almacén es único. Permita que nuestros expertos diseñen la solución ASRS perfecta para sus requisitos específicos.",
+      "scenario_ecommerce": "🛒 E-commerce",
+      "scenario_manufacturing": "🏭 Manufactura",
+      "scenario_cold_storage": "❄️ Almacenamiento en Frío",
+      "scenario_spare_parts": "🔧 Repuestos"
     },
     "insights": {
       "hero_title": "Perspectivas de la Industria",
@@ -3527,7 +3559,10 @@
       "comp_large_system": "Sistema Multi-Shuttle de Cuatro Direcciones",
       "comp_large_features": "Automatización completa, 450 palets/hora, integración AGV",
       "quote_title": "Obtenga su Estimación de Costo",
-      "quote_sub": "Complete los detalles de su almacén y le proporcionaremos una estimación de costos detallada en 24 horas"
+      "quote_sub": "Complete los detalles de su almacén y le proporcionaremos una estimación de costos detallada en 24 horas",
+      "comp_small_subtype": "Startup de E-commerce",
+      "comp_medium_subtype": "Distribución Farmacéutica",
+      "comp_large_subtype": "Autopartes"
     },
     "contact": {
       "quote_title": "Contáctenos con los Detalles de su Proyecto",
@@ -3743,7 +3778,11 @@
       "th_budget": "نطاق الميزانية",
       "th_scale": "الحجم",
       "cta_title": "احصل على الحل المخصص لك",
-      "cta_desc": "كل مستودع فريد. دع خبراءنا يصممون حل ASRS المثالي لمتطلباتك المحددة."
+      "cta_desc": "كل مستودع فريد. دع خبراءنا يصممون حل ASRS المثالي لمتطلباتك المحددة.",
+      "scenario_ecommerce": "🛒 التجارة الإلكترونية",
+      "scenario_manufacturing": "🏭 التصنيع",
+      "scenario_cold_storage": "❄️ التخزين البارد",
+      "scenario_spare_parts": "🔧 قطع الغيار"
     },
     "insights": {
       "hero_title": "رؤى الصناعة",
@@ -4234,7 +4273,10 @@
       "comp_large_system": "نظام شاتل رباعي الاتجاهات متعدد",
       "comp_large_features": "أتمتة كاملة، 450 منصة نقالة/ساعة، تكامل AGV",
       "quote_title": "احصل على تقدير التكلفة الخاص بك",
-      "quote_sub": "املأ تفاصيل مستودعك وسنقدم تقديراً تفصيلياً للتكلفة خلال 24 ساعة"
+      "quote_sub": "املأ تفاصيل مستودعك وسنقدم تقديراً تفصيلياً للتكلفة خلال 24 ساعة",
+      "comp_small_subtype": "شركة تجارة إلكترونية ناشئة",
+      "comp_medium_subtype": "توزيع الأدوية",
+      "comp_large_subtype": "قطع السيارات"
     },
     "contact": {
       "quote_title": "تواصل معنا بتفاصيل المشروع",
@@ -4450,7 +4492,11 @@
       "th_budget": "예산 범위",
       "th_scale": "규모",
       "cta_title": "맞춤형 솔루션 받기",
-      "cta_desc": "모든 창고는 고유합니다. 저희 전문가가 귀하의 특정 요구사항에 완벽한 ASRS 솔루션을 설계해 드리겠습니다."
+      "cta_desc": "모든 창고는 고유합니다. 저희 전문가가 귀하의 특정 요구사항에 완벽한 ASRS 솔루션을 설계해 드리겠습니다.",
+      "scenario_ecommerce": "🛒 이커머스",
+      "scenario_manufacturing": "🏭 제조업",
+      "scenario_cold_storage": "❄️ 냉동창고",
+      "scenario_spare_parts": "🔧 예비부품"
     },
     "insights": {
       "hero_title": "산업 인사이트",
@@ -4941,7 +4987,10 @@
       "comp_large_system": "멀티 4방향 셔틀 시스템",
       "comp_large_features": "완전 자동화, 시간당 450 팔레트, AGV 통합",
       "quote_title": "비용 견적 받기",
-      "quote_sub": "창고 정보를 기입해 주시면 24시간 이내에 상세한 비용 견적을 제공해 드리겠습니다"
+      "quote_sub": "창고 정보를 기입해 주시면 24시간 이내에 상세한 비용 견적을 제공해 드리겠습니다",
+      "comp_small_subtype": "이커머스 스타트업",
+      "comp_medium_subtype": "제약 유통",
+      "comp_large_subtype": "자동차 부품"
     },
     "contact": {
       "quote_title": "프로젝트 상세 정보와 함께 문의해 주십시오",
