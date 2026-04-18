@@ -145,16 +145,6 @@ async function loadRelatedBlogs(currentBlog) {
     }
 }
 
-// Check if we're on the blog detail page and load blog when DOM is ready
-if (window.location.pathname.includes('blog-detail')) {
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Blog detail page detected, loading blog...');
-        (async function() {
-            await loadBlogDetail();
-        })();
-    });
-}
-
 // Load blogs on insights page
 async function loadBlogsOnInsights() {
     const container = document.getElementById('insightsContainer');
@@ -231,19 +221,11 @@ async function loadBlogsOnInsights() {
     }
 }
 
-// Check if we're on the blog detail page and load blog when DOM is ready
-if (window.location.pathname.includes('blog-detail')) {
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Blog detail page detected, loading blog...');
-        (async function() {
-            await loadBlogDetail();
-        })();
-    });
-}
-
-// Check if we're on the insights page
-if (window.location.pathname.includes('insights')) {
-    (async function() {
+window.initBlogPages = async function() {
+    const pathname = window.location.pathname;
+    if (pathname.includes('blog-detail')) {
+        await loadBlogDetail();
+    } else if (pathname.includes('insights')) {
         await loadBlogsOnInsights();
-    })();
-}
+    }
+};

@@ -36,13 +36,14 @@ if (loginForm) {
     });
 }
 
-if (document.getElementById('adminDashboard')) {
-    (async function() {
-        const isLoggedIn = await checkAdminLogin();
-        if (!isLoggedIn) return;
+window.initAdminPage = async function() {
+    const isLoggedIn = await checkAdminLogin();
+    if (!isLoggedIn) return;
 
-        // Initialize default data if not exists
-        await initializeAllData();
+    updateLanguageDisplay();
+
+    // Initialize default data if not exists
+    await initializeAllData();
 
     // Load data from localStorage
     let siteContent = JSON.parse(localStorage.getItem('siteContent')) || {
@@ -782,8 +783,7 @@ if (document.getElementById('adminDashboard')) {
 
     // Load blogs on page load
     loadBlogs();
-    })(); // End of async IIFE
-}
+};
 
 // Language switching functionality for admin page
 const TRANSLATIONS = {
@@ -1208,10 +1208,3 @@ function translateAdminPage() {
     document.title = adminTitles[currentLanguage] || adminTitles.en;
 }
 
-// Initialize admin page features when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-    updateLanguageDisplay();
-    if (document.getElementById('adminDashboard') && typeof translateAdminPage === 'function') {
-        translateAdminPage();
-    }
-});
