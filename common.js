@@ -1205,18 +1205,20 @@ async function loadTranslations() {
             return;
         }
 
-        translations = { ...commonData };
+        // Reconstruct original nested structure: { en: { common: {...} } }
+        translations = {};
+        for (const lang of Object.keys(commonData)) {
+            translations[lang] = { common: commonData[lang] };
+        }
 
         const pageKey = getCurrentPageKey();
         if (pageKey) {
             const pageData = await loadTranslationFile(pageKey + '.json');
             if (pageData) {
+                const pageName = pageKey.replace('translations-', '');
                 for (const lang of Object.keys(pageData)) {
-                    if (translations[lang]) {
-                        translations[lang] = { ...translations[lang], ...pageData[lang] };
-                    } else {
-                        translations[lang] = pageData[lang];
-                    }
+                    if (!translations[lang]) translations[lang] = {};
+                    translations[lang][pageName] = pageData[lang];
                 }
             }
         }
