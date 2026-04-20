@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /admin.html
 Disallow: /login.html
 Allow: /
-Sitemap: https://asrs.com/sitemap.xml
+Sitemap: https://13asrs.com/sitemap.xml
