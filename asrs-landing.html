@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>13ASRS | ASRS Warehouse Cost &amp; Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================
+       GLOBAL
+       ========================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-primary: #1a1a2e;
+      --bg-secondary: #16213e;
+      --bg-tertiary: #0d0d1a;
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0c0;
+      --accent-blue: #0f3460;
+      --accent-orange: #e94560;
+      --border-color: #2a2a4a;
+      --radius: 8px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ==========================================
+       NAVIGATION (System B)
+       ========================================== */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.3s ease, backdrop-filter 0.3s ease;
+    }
+    #navbar.scrolled {
+      background: rgba(26, 26, 46, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .nav-logo {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text-primary);
+    }
+    .nav-logo span { color: var(--accent-orange); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+
+    /* ==========================================
+       HERO (System A + System B)
+       ========================================== */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #three-container {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    #three-container canvas { display: block; width: 100%; height: 100%; }
+    #three-loader {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: var(--bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s ease;
+    }
+    #three-loader.hidden { opacity: 0; pointer-events: none; }
+    .loader-spinner {
+      width: 40px; height: 40px;
+      border: 2px solid var(--accent-blue);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 800px;
+      text-align: center;
+      padding: 0 24px;
+      pointer-events: none;
+    }
+    .hero-content > * { pointer-events: auto; }
+    #hero-title {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+    }
+    .hero-word { display: inline-block; margin-right: 0.25em; }
+    #hero-subtitle {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cta-button {
+      display: inline-block;
+      padding: 14px 36px;
+      background: var(--accent-orange);
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      border-radius: var(--radius);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(233, 69, 96, 0.35);
+    }
+    #scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      opacity: 0.6;
+    }
+
+    /* ==========================================
+       SECTIONS COMMON
+       ========================================== */
+    section { position: relative; z-index: 1; }
+    section h2 {
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    section > p {
+      color: var(--text-secondary);
+      font-size: 16px;
+      max-width: 600px;
+    }
+
+    /* ==========================================
+       PRICING (System B)
+       ========================================== */
+    #pricing { padding: 120px 24px; max-width: 1200px; margin: 0 auto; }
+    #pricing > h2 { text-align: center; margin-bottom: 60px; }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .pricing-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    }
+    .pricing-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      border-color: var(--accent-blue);
+    }
+    .pricing-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .pricing-card .price {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin: 20px 0;
+    }
+    .pricing-card > p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    .pricing-card > a {
+      display: inline-block;
+      padding: 10px 24px;
+      background: var(--accent-blue);
+      color: #fff;
+      font-weight: 500;
+      font-size: 14px;
+      border-radius: var(--radius);
+      transition: background 0.3s;
+    }
+    .pricing-card > a:hover { background: #1a4a7a; }
+
+    /* ==========================================
+       QUESTIONS (System B)
+       ========================================== */
+    #questions { padding: 120px 24px; max-width: 800px; margin: 0 auto; }
+    #questions > h2 { text-align: center; margin-bottom: 48px; }
+    .question-list { list-style: none; padding: 0; }
+    .question-list li {
+      position: relative;
+      padding: 24px 0 24px 20px;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .q-indicator {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 60%;
+      background: var(--accent-blue);
+      border-radius: 2px;
+      transform-origin: top;
+    }
+
+    /* ==========================================
+       SERVICES (System B)
+       ========================================== */
+    #services { padding: 120px 24px; max-width: 1200px; margin: 0 auto; }
+    #services > h2 { text-align: center; margin-bottom: 60px; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+    .service-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 40px 28px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .service-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    }
+    .service-icon {
+      font-size: 40px;
+      margin-bottom: 16px;
+      line-height: 1;
+    }
+    .service-item h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .service-item p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ==========================================
+       CASES (System B)
+       ========================================== */
+    #cases { padding: 120px 24px; max-width: 1200px; margin: 0 auto; }
+    #cases > h2 { margin-bottom: 48px; }
+    .cases-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+    .case-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .case-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+    .case-image {
+      background: var(--bg-secondary);
+      aspect-ratio: 16/10;
+      border-radius: 0;
+      overflow: hidden;
+    }
+    .case-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .case-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      padding: 24px 24px 0;
+    }
+    .case-card p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      padding: 8px 24px 0;
+      line-height: 1.6;
+    }
+    .case-card > a {
+      display: inline-block;
+      margin: 16px 24px 24px;
+      padding: 8px 20px;
+      background: var(--accent-orange);
+      color: #fff;
+      font-weight: 500;
+      font-size: 14px;
+      border-radius: var(--radius);
+      transition: background 0.3s;
+    }
+    .case-card > a:hover { background: #d13a54; }
+
+    /* ==========================================
+       CTA (System B)
+       ========================================== */
+    #estimate {
+      padding: 160px 24px;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    #estimate h2 { margin-bottom: 16px; }
+    #estimate > p {
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+      font-size: 16px;
+    }
+    #cta-final {
+      animation: pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(233, 69, 96, 0.4); }
+      50% { box-shadow: 0 0 0 12px rgba(233, 69, 96, 0); }
+    }
+
+    /* ==========================================
+       FOOTER
+       ========================================== */
+    footer {
+      padding: 60px 24px;
+      text-align: center;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border-color);
+      font-size: 14px;
+    }
+
+    /* ==========================================
+       RESPONSIVE
+       ========================================== */
+    @media (max-width: 1024px) {
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      .cases-grid { grid-template-columns: 1fr; }
+      #hero-title { font-size: 32px; }
+      #hero-subtitle { font-size: 16px; }
+    }
+
+    /* ==========================================
+       REDUCED MOTION
+       ========================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== NAVIGATION (System B) ========== -->
+  <nav id="navbar">
+    <div class="nav-logo">13<span>ASRS</span></div>
+    <ul class="nav-links">
+      <li><a href="#services">System Design</a></li>
+      <li><a href="#pricing">Cost</a></li>
+      <li><a href="#cases">Cases</a></li>
+      <li><a href="#estimate">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ========== HERO (System A + System B) ========== -->
+  <section id="hero">
+    <div id="three-container"></div>
+    <div id="three-loader"><div class="loader-spinner"></div></div>
+    <div class="hero-content">
+      <h1 id="hero-title">How Much Does an ASRS Warehouse Cost?</h1>
+      <p id="hero-subtitle">We help you design your system, estimate your investment, and deliver complete ASRS solutions.</p>
+      <a href="#estimate" class="cta-button">Get Free Estimate</a>
+    </div>
+    <div id="scroll-hint">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b0b0c0" stroke-width="2">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ========== PRICING (System B) ========== -->
+  <section id="pricing">
+    <h2>Which ASRS Project Fits You?</h2>
+    <div class="pricing-grid">
+      <div class="pricing-card" data-tier="small">
+        <h3>Small Project</h3>
+        <div class="price">$300K – $800K</div>
+        <p>Perfect for warehouses with 1,000-5,000 pallet positions</p>
+        <a href="#">See Example</a>
+      </div>
+      <div class="pricing-card" data-tier="medium">
+        <h3>Medium Project</h3>
+        <div class="price">$1M – $3M</div>
+        <p>Ideal for warehouses with 5,000-20,000 pallet positions</p>
+        <a href="#">See Example</a>
+      </div>
+      <div class="pricing-card" data-tier="large">
+        <h3>Large Project</h3>
+        <div class="price">$3M+</div>
+        <p>Designed for warehouses with 20,000+ pallet positions</p>
+        <a href="#">See Example</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== QUESTIONS (System B) ========== -->
+  <section id="questions">
+    <h2>Planning an ASRS Project?</h2>
+    <ul class="question-list">
+      <li><span class="q-indicator"></span>How much will it cost?</li>
+      <li><span class="q-indicator"></span>What system should I choose?</li>
+      <li><span class="q-indicator"></span>Is the ROI worth it?</li>
+      <li><span class="q-indicator"></span>How long will it take?</li>
+    </ul>
+  </section>
+
+  <!-- ========== SERVICES (System B) ========== -->
+  <section id="services">
+    <h2>What We Do</h2>
+    <div class="services-grid">
+      <div class="service-item">
+        <div class="service-icon">📐</div>
+        <h3>System Design</h3>
+        <p>Custom ASRS layout and workflow optimization tailored to your warehouse requirements</p>
+      </div>
+      <div class="service-item">
+        <div class="service-icon">💰</div>
+        <h3>Cost Estimation</h3>
+        <p>Detailed investment analysis with ROI calculations and budget planning</p>
+      </div>
+      <div class="service-item">
+        <div class="service-icon">⚙️</div>
+        <h3>Equipment Integration</h3>
+        <p>Seamless integration of all modules including shelves, stackers, shuttles, AGVs, robots, conveyors, and WMS/WCS</p>
+      </div>
+      <div class="service-item">
+        <div class="service-icon">🚚</div>
+        <h3>Full Project Delivery</h3>
+        <p>End-to-end project management from design to installation and commissioning</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CASES (System B) ========== -->
+  <section id="cases">
+    <h2>Real ASRS Projects</h2>
+    <div class="cases-grid">
+      <div class="case-card">
+        <div class="case-image" style="background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);"></div>
+        <h3>E-commerce Fulfillment Center</h3>
+        <p>10,000 pallet positions with shuttle system achieving 200 picks/hour</p>
+        <a href="#">View Case</a>
+      </div>
+      <div class="case-card">
+        <div class="case-image" style="background: linear-gradient(135deg, #16213e 0%, #0d0d1a 100%);"></div>
+        <h3>Automated Cold Storage</h3>
+        <p>-25°C automated warehouse with 15,000 pallet positions and stacker cranes</p>
+        <a href="#">View Case</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CTA (System B) ========== -->
+  <section id="estimate">
+    <h2>Get Your ASRS Project Evaluation</h2>
+    <p>Tell us your warehouse size and requirements, we will estimate your cost and propose a solution.</p>
+    <a href="#" class="cta-button" id="cta-final">Get Free Estimate</a>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <p>&copy; 2024 13ASRS. All rights reserved.</p>
+  </footer>
+
+  <!-- ========== CDN SCRIPTS ========== -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script>
+  (function() {
+    'use strict';
+
+    const isMobile = window.innerWidth < 768;
+    const isSmallMobile = window.innerWidth < 480;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ==========================================
+    // SYSTEM A: THREE.JS ASRS WAREHOUSE SCENE
+    // ==========================================
+    const sceneContainer = document.getElementById('three-container');
+    const loaderEl = document.getElementById('three-loader');
+
+    let scene, camera, renderer;
+    let crane, craneMast, cranePlatform, craneFork;
+    let shuttle;
+    let cargoMeshes = [];
+    let pickLight;
+    let rackConfig;
+
+    let cameraAngle = Math.PI / 6;
+    let cameraRadius = isSmallMobile ? 20 : 16;
+    let targetCamX = 0, targetCamZ = 0;
+    let currentCamX = 0, currentCamZ = 0;
+    let autoRotateSpeed = isSmallMobile ? 0 : 0.001;
+
+    // Crane stays at z=0 always; moves only in X to target column
+    let craneTask = { phase: 'idle', startTime: 0, targetCol: 0, targetLevel: 0, hasCargo: false, isInbound: true };
+    const PHASE_DURATIONS = { moveX: 1200, moveY: 900, extend: 600, retract: 600, drop: 600, pause: 1200 };
+
+    let heroInViewport = true;
+    let heroVisibleOnce = false;
+
+    function initThree() {
+      if (typeof THREE === 'undefined') {
+        console.warn('Three.js not loaded');
+        if (loaderEl) loaderEl.classList.add('hidden');
+        return;
+      }
+
+      scene = new THREE.Scene();
+      scene.fog = new THREE.Fog(0x1a1a2e, 15, 40);
+
+      camera = new THREE.PerspectiveCamera(45, sceneContainer.clientWidth / sceneContainer.clientHeight, 0.1, 100);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(sceneContainer.clientWidth, sceneContainer.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setClearColor(0x1a1a2e, 1);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      sceneContainer.appendChild(renderer.domElement);
+
+      // Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
+      scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0xffffff, 0.75);
+      dirLight.position.set(6, 14, 8);
+      dirLight.castShadow = true;
+      dirLight.shadow.mapSize.width = 1024;
+      dirLight.shadow.mapSize.height = 1024;
+      scene.add(dirLight);
+
+      const fillLight = new THREE.DirectionalLight(0x0f3460, 0.3);
+      fillLight.position.set(-4, 6, -4);
+      scene.add(fillLight);
+
+      pickLight = new THREE.PointLight(0xffffff, 0, 7);
+      scene.add(pickLight);
+
+      // Ground
+      const groundGeo = new THREE.PlaneGeometry(40, 40);
+      const groundMat = new THREE.MeshLambertMaterial({ color: 0x0d0d1a });
+      const ground = new THREE.Mesh(groundGeo, groundMat);
+      ground.rotation.x = -Math.PI / 2;
+      ground.receiveShadow = true;
+      scene.add(ground);
+
+      // Grid
+      const gridHelper = new THREE.GridHelper(40, 40, 0x16213e, 0x111122);
+      gridHelper.position.y = 0.01;
+      scene.add(gridHelper);
+
+      // Rack config: single row to prevent Z-axis clipping
+      rackConfig = {
+        rows: 1,
+        cols: isMobile ? 3 : 4,
+        levels: isMobile ? 3 : 4,
+        cellW: 1.0,
+        cellH: 0.7,
+        cellD: 0.9,
+        aisleW: 1.4
+      };
+
+      createRacks();
+      createCrane();
+      createShuttle();
+
+      window.addEventListener('resize', onThreeResize);
+      if (!isMobile) {
+        sceneContainer.addEventListener('mousemove', onMouseMove);
+        sceneContainer.addEventListener('wheel', onWheel, { passive: true });
+      }
+
+      setTimeout(() => {
+        if (loaderEl) {
+          loaderEl.classList.add('hidden');
+          setTimeout(() => { loaderEl.style.display = 'none'; }, 800);
+        }
+        gsap.from(renderer.domElement, { opacity: 0, duration: 0.6 });
+      }, 600);
+
+      requestAnimationFrame(animateThree);
+    }
+
+    function createRacks() {
+      const { cols, levels, cellW, cellH, cellD, aisleW } = rackConfig;
+      const rackMat = new THREE.MeshLambertMaterial({ color: 0x16213e });
+      const beamMat = new THREE.MeshLambertMaterial({ color: 0x0f3460 });
+
+      const zCenter = 0;
+
+      // Left rack
+      for (let c = 0; c < cols; c++) {
+        for (let l = 0; l < levels; l++) {
+          const x = -0.5 * aisleW - (cols - c) * cellW + cellW / 2;
+          const y = 0.1 + l * cellH + cellH / 2;
+
+          const frame = new THREE.Mesh(
+            new THREE.BoxGeometry(cellW * 0.95, cellH * 0.15, cellD * 0.95),
+            beamMat
+          );
+          frame.position.set(x, y - cellH / 2 + 0.05, zCenter);
+          frame.castShadow = true;
+          scene.add(frame);
+
+          if (Math.random() > 0.35) {
+            createCargo(x, y - cellH / 2 + 0.12, zCenter, cellW * 0.7, cellH * 0.25, cellD * 0.7);
+          }
+        }
+      }
+
+      // Right rack
+      for (let c = 0; c < cols; c++) {
+        for (let l = 0; l < levels; l++) {
+          const x = 0.5 * aisleW + c * cellW + cellW / 2;
+          const y = 0.1 + l * cellH + cellH / 2;
+
+          const frame = new THREE.Mesh(
+            new THREE.BoxGeometry(cellW * 0.95, cellH * 0.15, cellD * 0.95),
+            beamMat
+          );
+          frame.position.set(x, y - cellH / 2 + 0.05, zCenter);
+          frame.castShadow = true;
+          scene.add(frame);
+
+          if (Math.random() > 0.35) {
+            createCargo(x, y - cellH / 2 + 0.12, zCenter, cellW * 0.7, cellH * 0.25, cellD * 0.7);
+          }
+        }
+      }
+
+      // Uprights
+      const h = levels * cellH + 0.2;
+      const uprightGeo = new THREE.BoxGeometry(0.06, h, 0.06);
+
+      for (let c = 0; c <= cols; c++) {
+        const lx = -0.5 * aisleW - (cols - c) * cellW;
+        const rx = 0.5 * aisleW + c * cellW;
+
+        const positions = [
+          [lx, h / 2 + 0.1, zCenter - cellD / 2],
+          [rx, h / 2 + 0.1, zCenter - cellD / 2],
+          [lx, h / 2 + 0.1, zCenter + cellD / 2],
+          [rx, h / 2 + 0.1, zCenter + cellD / 2]
+        ];
+
+        positions.forEach(pos => {
+          const upright = new THREE.Mesh(uprightGeo, rackMat);
+          upright.position.set(...pos);
+          scene.add(upright);
+        });
+      }
+    }
+
+    function createCargo(x, y, z, w, h, d) {
+      const colors = [0x3a4a6a, 0x3a4a6a, 0x3a4a6a, 0x0f3460, 0xe94560];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const geo = new THREE.BoxGeometry(w, h, d);
+      const mat = new THREE.MeshLambertMaterial({ color: color });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(x, y + h / 2, z);
+      mesh.castShadow = true;
+      mesh.userData = { originalColor: color, isCargo: true };
+      scene.add(mesh);
+      cargoMeshes.push(mesh);
+    }
+
+    function createCrane() {
+      crane = new THREE.Group();
+
+      // Base - depth matched to cellD to avoid clipping through uprights
+      const baseGeo = new THREE.BoxGeometry(0.5, 0.15, rackConfig.cellD * 0.75);
+      const baseMat = new THREE.MeshLambertMaterial({ color: 0x999999 });
+      const base = new THREE.Mesh(baseGeo, baseMat);
+      base.position.y = 0.075;
+      base.castShadow = true;
+      crane.add(base);
+
+      // Mast
+      const mastHeight = rackConfig.levels * rackConfig.cellH + 1.0;
+      const mastGeo = new THREE.BoxGeometry(0.12, mastHeight, 0.12);
+      const mastMat = new THREE.MeshLambertMaterial({ color: 0xbbbbbb });
+      craneMast = new THREE.Mesh(mastGeo, mastMat);
+      craneMast.position.y = mastHeight / 2;
+      craneMast.castShadow = true;
+      crane.add(craneMast);
+
+      // Platform
+      cranePlatform = new THREE.Group();
+      const platGeo = new THREE.BoxGeometry(0.6, 0.1, rackConfig.cellD * 0.6);
+      const platMat = new THREE.MeshLambertMaterial({ color: 0xaaaaaa });
+      const platform = new THREE.Mesh(platGeo, platMat);
+      platform.castShadow = true;
+      cranePlatform.add(platform);
+
+      // Fork
+      craneFork = new THREE.Group();
+      const forkGeo = new THREE.BoxGeometry(0.5, 0.04, 0.08);
+      const forkMat = new THREE.MeshLambertMaterial({ color: 0xcccccc });
+      const forkL = new THREE.Mesh(forkGeo, forkMat);
+      forkL.position.set(0, 0, 0.15);
+      const forkR = new THREE.Mesh(forkGeo, forkMat);
+      forkR.position.set(0, 0, -0.15);
+      craneFork.add(forkL);
+      craneFork.add(forkR);
+      cranePlatform.add(craneFork);
+
+      cranePlatform.position.y = 0.5;
+      crane.add(cranePlatform);
+
+      crane.position.z = 0;
+      scene.add(crane);
+
+      pickNextCraneTask();
+    }
+
+    function createShuttle() {
+      shuttle = new THREE.Group();
+      const bodyGeo = new THREE.BoxGeometry(0.5, 0.12, 0.8);
+      const bodyMat = new THREE.MeshLambertMaterial({ color: 0x0f3460 });
+      const body = new THREE.Mesh(bodyGeo, bodyMat);
+      body.position.y = 0.06;
+      body.castShadow = true;
+      shuttle.add(body);
+
+      const wheelGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.06, 8);
+      const wheelMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+      const positions = [[-0.2, 0.05, 0.3], [0.2, 0.05, 0.3], [-0.2, 0.05, -0.3], [0.2, 0.05, -0.3]];
+      positions.forEach(pos => {
+        const wheel = new THREE.Mesh(wheelGeo, wheelMat);
+        wheel.rotation.z = Math.PI / 2;
+        wheel.position.set(...pos);
+        shuttle.add(wheel);
+      });
+
+      shuttle.position.set(0, 0, -4);
+      scene.add(shuttle);
+    }
+
+    function pickNextCraneTask() {
+      const { cols, levels, cellW, aisleW } = rackConfig;
+      const col = Math.floor(Math.random() * cols);
+      const level = Math.floor(Math.random() * levels);
+      const isInbound = Math.random() > 0.5;
+
+      const xSide = Math.random() > 0.5 ? -1 : 1;
+      const targetX = xSide * (0.5 * aisleW + col * cellW + cellW / 2);
+      const targetY = 0.1 + level * rackConfig.cellH + rackConfig.cellH / 2;
+
+      craneTask = {
+        phase: 'moveX',
+        startTime: performance.now(),
+        targetCol: targetX,
+        targetLevel: targetY,
+        startX: crane.position.x,
+        startY: cranePlatform.position.y,
+        hasCargo: false,
+        isInbound: isInbound,
+        fromSide: xSide
+      };
+    }
+
+    function updateCrane(now) {
+      if (!crane) return;
+      const t = craneTask;
+      const elapsed = now - t.startTime;
+
+      function easeInOut(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
+
+      switch (t.phase) {
+        case 'moveX': {
+          const p = Math.min(elapsed / PHASE_DURATIONS.moveX, 1);
+          crane.position.x = t.startX + (t.targetCol - t.startX) * easeInOut(p);
+          // Z stays at 0 — crane never moves in Z, preventing aisle-to-aisle clipping
+          if (p >= 1) { t.phase = 'moveY'; t.startTime = now; t.startY = cranePlatform.position.y; }
+          break;
+        }
+        case 'moveY': {
+          const p = Math.min(elapsed / PHASE_DURATIONS.moveY, 1);
+          cranePlatform.position.y = t.startY + (t.targetLevel - t.startY) * easeInOut(p);
+          if (p >= 1) { t.phase = 'extend'; t.startTime = now; t.forkStartX = 0; }
+          break;
+        }
+        case 'extend': {
+          const p = Math.min(elapsed / PHASE_DURATIONS.extend, 1);
+          const extendDist = t.fromSide * 0.6;
+          craneFork.position.x = t.forkStartX + extendDist * easeInOut(p);
+          if (p >= 1) {
+            t.phase = 'retract';
+            t.startTime = now;
+            t.hasCargo = true;
+            pickLight.position.set(t.targetCol, t.targetLevel, 0);
+            pickLight.intensity = 1.5;
+            let nearest = null, nearestDist = Infinity;
+            cargoMeshes.forEach(m => {
+              const d = m.position.distanceTo(new THREE.Vector3(t.targetCol, t.targetLevel, 0));
+              if (d < nearestDist) { nearestDist = d; nearest = m; }
+            });
+            if (nearest && nearestDist < 1.0) {
+              nearest.material.emissive = new THREE.Color(t.isInbound ? 0x0f3460 : 0xe94560);
+              nearest.material.emissiveIntensity = 0.6;
+              setTimeout(() => { if (nearest) nearest.material.emissiveIntensity = 0; }, 800);
+            }
+          }
+          break;
+        }
+        case 'retract': {
+          const p = Math.min(elapsed / PHASE_DURATIONS.retract, 1);
+          const extendDist = t.fromSide * 0.6;
+          craneFork.position.x = extendDist * (1 - easeInOut(p));
+          if (p >= 1) { t.phase = 'moveToDrop'; t.startTime = now; t.startX = crane.position.x; }
+          break;
+        }
+        case 'moveToDrop': {
+          const dropX = t.isInbound ? t.targetCol : 0;
+          const p = Math.min(elapsed / PHASE_DURATIONS.moveX, 1);
+          crane.position.x = t.startX + (dropX - t.startX) * easeInOut(p);
+          if (p >= 1) { t.phase = 'drop'; t.startTime = now; t.forkStartX = 0; }
+          break;
+        }
+        case 'drop': {
+          const p = Math.min(elapsed / PHASE_DURATIONS.drop, 1);
+          const dropSide = t.isInbound ? t.fromSide : (t.fromSide * -1);
+          const extendDist = dropSide * 0.6;
+          craneFork.position.x = extendDist * easeInOut(Math.sin(p * Math.PI));
+          if (p >= 1) {
+            t.phase = 'pause';
+            t.startTime = now;
+            t.hasCargo = false;
+          }
+          break;
+        }
+        case 'pause': {
+          if (elapsed > PHASE_DURATIONS.pause) {
+            pickNextCraneTask();
+          }
+          break;
+        }
+      }
+
+      if (pickLight.intensity > 0.01) {
+        pickLight.intensity *= 0.97;
+      } else {
+        pickLight.intensity = 0;
+      }
+    }
+
+    function updateShuttle() {
+      if (!shuttle) return;
+      const speed = 2;
+      const range = 5;
+      const time = performance.now() / 1000;
+      shuttle.position.x = Math.sin(time * speed * 0.5) * range;
+    }
+
+    function updateCamera() {
+      if (prefersReducedMotion) autoRotateSpeed = 0;
+      cameraAngle += autoRotateSpeed;
+      currentCamX += (targetCamX - currentCamX) * 0.05;
+      currentCamZ += (targetCamZ - currentCamZ) * 0.05;
+
+      camera.position.x = Math.sin(cameraAngle) * cameraRadius + currentCamX;
+      camera.position.z = Math.cos(cameraAngle) * cameraRadius + currentCamZ;
+      camera.position.y = 8;
+      camera.lookAt(0, 2.5, 0);
+    }
+
+    function onMouseMove(e) {
+      const rect = sceneContainer.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      targetCamX = x * 0.5;
+      targetCamZ = y * 0.5;
+    }
+
+    function onWheel(e) {
+      cameraRadius += e.deltaY * 0.005;
+      cameraRadius = Math.max(10, Math.min(24, cameraRadius));
+    }
+
+    function onThreeResize() {
+      if (!camera || !renderer) return;
+      camera.aspect = sceneContainer.clientWidth / sceneContainer.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(sceneContainer.clientWidth, sceneContainer.clientHeight);
+    }
+
+    function animateThree() {
+      requestAnimationFrame(animateThree);
+      if (!heroInViewport && heroVisibleOnce) return;
+
+      const now = performance.now();
+      updateCrane(now);
+      updateShuttle();
+      updateCamera();
+
+      if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+      }
+    }
+
+    // ==========================================
+    // VIEWPORT TRACKING
+    // ==========================================
+    function initHeroViewportTracking() {
+      if (typeof ScrollTrigger === 'undefined') return;
+      ScrollTrigger.create({
+        trigger: '#hero',
+        start: 'top bottom',
+        end: 'bottom top',
+        onEnter: () => { heroInViewport = true; heroVisibleOnce = true; },
+        onLeave: () => { heroInViewport = false; },
+        onEnterBack: () => { heroInViewport = true; },
+        onLeaveBack: () => { heroInViewport = false; },
+      });
+    }
+
+    // ==========================================
+    // SYSTEM B: GSAP SCROLL ANIMATIONS
+    // ==========================================
+    function initGSAP() {
+      if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+        console.warn('GSAP not loaded');
+        return;
+      }
+      gsap.registerPlugin(ScrollTrigger);
+
+      if (prefersReducedMotion) {
+        gsap.globalTimeline.timeScale(0);
+        return;
+      }
+
+      const mob = isMobile;
+
+      // Navbar scroll effect
+      const navbar = document.getElementById('navbar');
+      if (navbar) {
+        window.addEventListener('scroll', function() {
+          navbar.classList.toggle('scrolled', window.scrollY > 100);
+        }, { passive: true });
+      }
+
+      // Hero text
+      const heroTitle = document.getElementById('hero-title');
+      if (heroTitle) {
+        const text = heroTitle.textContent.trim();
+        const words = text.split(/\s+/);
+        heroTitle.innerHTML = words.map(w => '<span class="hero-word">' + w + '</span>').join(' ');
+      }
+
+      const heroTl = gsap.timeline({ delay: 0.5 });
+      heroTl.from('.hero-word', {
+        y: mob ? 15 : 30,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.05,
+        ease: 'power2.out'
+      });
+      heroTl.from('#hero-subtitle', {
+        y: mob ? 10 : 20,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out'
+      }, '-=0.4');
+      heroTl.from('#hero .cta-button', {
+        y: mob ? 10 : 20,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out'
+      }, '-=0.3');
+      heroTl.from('#scroll-hint', {
+        opacity: 0,
+        y: -10,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, '-=0.2');
+
+      gsap.to('#scroll-hint', {
+        y: 8,
+        duration: 1.5,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut'
+      });
+
+      // Pricing cards
+      gsap.from('.pricing-card', {
+        y: mob ? 30 : 60,
+        opacity: 0,
+        scale: 0.95,
+        duration: mob ? 0.5 : 0.7,
+        stagger: mob ? 0.08 : 0.15,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: '.pricing-grid', start: 'top 80%', once: true }
+      });
+
+      // Questions
+      gsap.from('#questions h2', {
+        x: mob ? -15 : -30,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: '#questions', start: 'top 80%', once: true }
+      });
+
+      const qItems = document.querySelectorAll('.question-list li');
+      qItems.forEach((item, i) => {
+        const indicator = item.querySelector('.q-indicator');
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: item, start: 'top 85%', once: true }
+        });
+        tl.from(item, {
+          x: mob ? 15 : 30,
+          opacity: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+          delay: i * (mob ? 0.06 : 0.1)
+        });
+        if (indicator) {
+          tl.from(indicator, {
+            scaleY: 0,
+            transformOrigin: 'top',
+            duration: 0.4,
+            ease: 'power2.out'
+          }, '-=0.3');
+        }
+      });
+
+      // Services
+      gsap.from('#services h2', {
+        x: mob ? -15 : -30,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: '#services', start: 'top 80%', once: true }
+      });
+
+      const serviceItems = document.querySelectorAll('.service-item');
+      serviceItems.forEach(item => {
+        const icon = item.querySelector('.service-icon');
+        const texts = item.querySelectorAll('h3, p');
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: item, start: 'top 85%', once: true }
+        });
+        if (icon) {
+          tl.from(icon, {
+            scale: 0.8,
+            opacity: 0,
+            duration: 0.5,
+            ease: mob ? 'power2.out' : 'back.out(1.2)'
+          });
+        }
+        tl.from(texts, {
+          y: mob ? 10 : 20,
+          opacity: 0,
+          duration: 0.5,
+          ease: 'power2.out'
+        }, '-=0.3');
+      });
+
+      // Cases
+      const caseCards = document.querySelectorAll('.case-card');
+      caseCards.forEach((card) => {
+        const image = card.querySelector('.case-image');
+        const contents = card.querySelectorAll('h3, p, a');
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: card, start: 'top 80%', once: true }
+        });
+        if (image) {
+          if (mob) {
+            tl.from(image, { opacity: 0, y: 20, duration: 0.7, ease: 'power2.out' });
+          } else {
+            tl.from(image, {
+              clipPath: 'inset(0 50% 0 50%)',
+              duration: 0.8,
+              ease: 'power2.inOut'
+            });
+          }
+        }
+        tl.from(contents, {
+          y: mob ? 20 : 30,
+          opacity: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power2.out'
+        }, '-=0.35');
+      });
+
+      // CTA
+      const ctaTl = gsap.timeline({
+        scrollTrigger: { trigger: '#estimate', start: 'top 80%', once: true }
+      });
+      ctaTl.from('#estimate h2, #estimate > p', {
+        y: mob ? 20 : 40,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: 'power2.out'
+      });
+      ctaTl.from('#cta-final', {
+        scale: 0.9,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'back.out(1.5)'
+      }, '+=0.2');
+    }
+
+    // ==========================================
+    // BOOT
+    // ==========================================
+    function boot() {
+      initThree();
+      initHeroViewportTracking();
+      initGSAP();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  })();
+  </script>
+</body>
+</html>
