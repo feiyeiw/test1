@@ -9,6 +9,11 @@
 (function() {
     'use strict';
 
+    // Prevent duplicate initialization
+    if (window.__asrsAnimationsInitialized) {
+        return;
+    }
+
     // ==========================================
     // Configuration & Environment Detection
     // ==========================================
@@ -340,17 +345,52 @@
 
     // ==========================================
     // Section 7: Navbar Scroll Effect
+    // - Only on homepage (where .hero exists)
+    // - Hide on scroll down, show on scroll up
+    // - Background change after 100px
     // ==========================================
 
     function initNavbarScroll() {
         const header = document.querySelector('header');
-        if (!header) return;
+        const hero = document.querySelector('.hero');
+        if (!header || !hero) return;
+
+        // Only apply sticky auto-hide on homepage
+        header.classList.add('header-sticky');
+
+        // Compensate header height in hero padding
+        const headerHeight = header.offsetHeight;
+        const currentPaddingTop = parseInt(window.getComputedStyle(hero).paddingTop, 10) || 0;
+        if (currentPaddingTop < headerHeight + 20) {
+            hero.style.paddingTop = (headerHeight + 20) + 'px';
+        }
+
+        let lastScrollY = 0;
+        let ticking = false;
 
         window.addEventListener('scroll', function() {
-            if (window.scrollY > 100) {
-                header.classList.add('header-scrolled');
-            } else {
-                header.classList.remove('header-scrolled');
+            if (!ticking) {
+                window.requestAnimationFrame(function() {
+                    const currentScrollY = window.scrollY;
+
+                    // Background change after 100px
+                    if (currentScrollY > 100) {
+                        header.classList.add('header-scrolled');
+                    } else {
+                        header.classList.remove('header-scrolled');
+                    }
+
+                    // Hide on scroll down (after 200px), show on scroll up
+                    if (currentScrollY > lastScrollY && currentScrollY > 200) {
+                        header.classList.add('header-hidden');
+                    } else {
+                        header.classList.remove('header-hidden');
+                    }
+
+                    lastScrollY = currentScrollY;
+                    ticking = false;
+                });
+                ticking = true;
             }
         }, { passive: true });
     }
@@ -365,16 +405,23 @@
             console.warn('GSAP or ScrollTrigger not loaded. Animations skipped.');
             return;
         }
+        if (window.__asrsAnimationsInitialized) return;
 
-        gsap.registerPlugin(ScrollTrigger);
+        window.__asrsAnimationsInitialized = true;
 
-        initHeroAnimation();
-        initScalesAnimation();
-        initFaqAnimation();
-        initServicesAnimation();
-        initCasesAnimation();
-        initCtaAnimation();
-        initNavbarScroll();
+        try {
+            gsap.registerPlugin(ScrollTrigger);
+
+            initHeroAnimation();
+            initScalesAnimation();
+            initFaqAnimation();
+            initServicesAnimation();
+            initCasesAnimation();
+            initCtaAnimation();
+            initNavbarScroll();
+        } catch (error) {
+            console.error('Animation initialization failed:', error);
+        }
     }
 
     // ==========================================
@@ -407,9 +454,6 @@
     }
 
     window.addEventListener('load', function() {
-        if (typeof gsap !== 'undefined' && !window.__asrsAnimationsInitialized) {
-            window.__asrsAnimationsInitialized = true;
-            initAllAnimations();
-        }
+        initAllAnimations();
     });
 })();

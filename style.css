@@ -790,11 +790,15 @@ footer .container {
 }
 
 /* Navbar scroll effect */
-header {
+header.header-sticky {
     position: sticky;
     top: 0;
     z-index: 1000;
-    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+    transition: transform 0.3s ease, background-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+header.header-hidden {
+    transform: translateY(-100%);
 }
 
 .header-main {
