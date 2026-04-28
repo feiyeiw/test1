@@ -258,6 +258,9 @@
 
     // ==========================================
     // Section 5: Case Studies
+    // Desktop: image reveals via clip-path wipe from center,
+    //          text fades in after image is ~60% revealed
+    // Mobile: simplified fade-up
     // ==========================================
 
     function initCasesAnimation() {
@@ -281,27 +284,26 @@
                     tl.from(image, {
                         opacity: 0,
                         y: 20,
-                        duration: PARAMS.caseImageDuration,
+                        duration: 0.7,
                         ease: 'power2.out',
                     });
                 } else {
                     tl.from(image, {
-                        filter: 'blur(8px) brightness(0.7)',
-                        scale: 1.05,
-                        duration: PARAMS.caseImageDuration,
-                        ease: 'power2.out',
+                        clipPath: 'inset(0 50% 0 50%)',
+                        duration: 0.8,
+                        ease: 'power2.inOut',
                     });
                 }
             }
 
             if (contents.length > 0) {
                 tl.from(contents, {
-                    y: isMobile ? 20 : 40,
+                    y: isMobile ? 20 : 30,
                     opacity: 0,
                     duration: 0.6,
                     stagger: 0.1,
                     ease: 'power2.out',
-                }, PARAMS.caseTextDelay);
+                }, isMobile ? '-=0.3' : '-=0.35');
             }
         });
     }
