@@ -171,6 +171,35 @@
       border-color: rgba(47, 128, 237, 0.72);
     }
 
+    .nav-tools {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .language-selector select {
+      min-height: 38px;
+      padding: 0 34px 0 12px;
+      color: var(--text);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .language-selector select:focus {
+      outline: none;
+      border-color: var(--line-blue);
+      box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.16);
+    }
+
+    .language-selector option {
+      color: #111923;
+      background: #fff;
+    }
+
     .hero {
       position: relative;
       min-height: 94svh;
@@ -646,9 +675,16 @@
         align-items: flex-start;
       }
 
-      .nav-links,
       .nav-cta {
         display: none;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .language-selector select {
+        width: 112px;
       }
 
       .hero {
@@ -710,13 +746,26 @@
       <span>ASRS</span>
     </a>
     <ul class="nav-links">
-      <li><a href="asrs-cost.html">ASRS Cost</a></li>
-      <li><a href="asrs-design.html">ASRS Design</a></li>
-      <li><a href="solutions.html">Solutions</a></li>
-      <li><a href="case-studies.html">Cases</a></li>
-      <li><a href="contact.html">Contact</a></li>
+      <li><a href="asrs-cost.html" data-i18n="nav.cost">ASRS Cost</a></li>
+      <li><a href="asrs-design.html" data-i18n="nav.design">ASRS Design</a></li>
+      <li><a href="solutions.html" data-i18n="nav.solutions">Solutions</a></li>
+      <li><a href="case-studies.html" data-i18n="nav.cases">Cases</a></li>
+      <li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
     </ul>
-    <a class="nav-cta" href="contact.html">Request Evaluation</a>
+    <div class="nav-tools">
+      <div class="language-selector">
+        <select id="lang-select" onchange="switchLanguage(this.value)" aria-label="Language">
+          <option value="en">English</option>
+          <option value="zh">中文</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="ja">日本語</option>
+          <option value="ko">한국어</option>
+          <option value="ar">العربية</option>
+        </select>
+      </div>
+      <a class="nav-cta" href="contact.html" data-i18n="cta.request_short">Request Evaluation</a>
+    </div>
   </nav>
 
   <section class="hero" aria-label="ASRS digital twin hero">
@@ -726,32 +775,32 @@
 
     <div class="hero-layout">
       <div class="hero-copy">
-        <div class="eyebrow">ASRS project evaluation</div>
-        <h1>Design the automated warehouse before you invest in it.</h1>
-        <p><span class="hero-positioning">ASRS design, cost planning, and full system delivery.</span> We turn warehouse constraints into a practical automation concept, budget range, and next-step project direction.</p>
+        <div class="eyebrow" data-i18n="hero.eyebrow">ASRS project evaluation</div>
+        <h1 data-i18n="hero.title">Design the automated warehouse before you invest in it.</h1>
+        <p data-i18n-html="hero.description"><span class="hero-positioning">ASRS design, cost planning, and full system delivery.</span> We turn warehouse constraints into a practical automation concept, budget range, and next-step project direction.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="contact.html">Request Project Evaluation</a>
-          <a class="btn btn-secondary" href="asrs-design.html">Explore ASRS Design</a>
+          <a class="btn btn-primary" href="contact.html" data-i18n="cta.request_project">Request Project Evaluation</a>
+          <a class="btn btn-secondary" href="asrs-design.html" data-i18n="cta.explore_design">Explore ASRS Design</a>
         </div>
       </div>
 
       <aside class="hero-panel" aria-label="ASRS evaluation signals">
         <div class="panel-header">
-          <span>Project inputs</span>
-          <span class="live-dot">Ready</span>
+          <span data-i18n="panel.title">Project inputs</span>
+          <span class="live-dot" data-i18n="panel.ready">Ready</span>
         </div>
         <div class="signal-list">
           <div class="signal-item">
             <span class="signal-index">01</span>
-            <span><strong>Warehouse constraints</strong><span>Height, footprint, storage target</span></span>
+            <span><strong data-i18n="panel.input1_title">Warehouse constraints</strong><span data-i18n="panel.input1_desc">Height, footprint, storage target</span></span>
           </div>
           <div class="signal-item">
             <span class="signal-index">02</span>
-            <span><strong>Material flow</strong><span>Inbound, outbound, SKU velocity</span></span>
+            <span><strong data-i18n="panel.input2_title">Material flow</strong><span data-i18n="panel.input2_desc">Inbound, outbound, SKU velocity</span></span>
           </div>
           <div class="signal-item">
             <span class="signal-index">03</span>
-            <span><strong>Investment logic</strong><span>Cost range, ROI, delivery path</span></span>
+            <span><strong data-i18n="panel.input3_title">Investment logic</strong><span data-i18n="panel.input3_desc">Cost range, ROI, delivery path</span></span>
           </div>
         </div>
       </aside>
@@ -763,27 +812,27 @@
       <div class="section-inner">
         <div class="section-heading">
           <div>
-            <div class="section-kicker">Capabilities</div>
-            <h2>Focused support for the decisions that shape an ASRS project.</h2>
+            <div class="section-kicker" data-i18n="capabilities.kicker">Capabilities</div>
+            <h2 data-i18n="capabilities.title">Focused support for the decisions that shape an ASRS project.</h2>
           </div>
-          <p>The homepage should stay simple: show confidence, explain the value, and move serious visitors toward a project evaluation form.</p>
+          <p data-i18n="capabilities.desc">The homepage should stay simple: show confidence, explain the value, and move serious visitors toward a project evaluation form.</p>
         </div>
 
         <div class="capability-grid">
           <article class="capability-card">
             <span>01</span>
-            <h3>Design</h3>
-            <p>Translate warehouse size, clear height, SKU profile, pallet count, and throughput targets into a workable ASRS concept.</p>
+            <h3 data-i18n="capabilities.design_title">Design</h3>
+            <p data-i18n="capabilities.design_desc">Translate warehouse size, clear height, SKU profile, pallet count, and throughput targets into a workable ASRS concept.</p>
           </article>
           <article class="capability-card">
             <span>02</span>
-            <h3>Cost</h3>
-            <p>Build an early investment range around equipment type, storage density, controls, installation scope, and project risk.</p>
+            <h3 data-i18n="capabilities.cost_title">Cost</h3>
+            <p data-i18n="capabilities.cost_desc">Build an early investment range around equipment type, storage density, controls, installation scope, and project risk.</p>
           </article>
           <article class="capability-card">
             <span>03</span>
-            <h3>Integration</h3>
-            <p>Connect racks, cranes, shuttles, conveyors, AGVs, robots, WMS, WCS, PLC, safety, commissioning, and handover planning.</p>
+            <h3 data-i18n="capabilities.integration_title">Integration</h3>
+            <p data-i18n="capabilities.integration_desc">Connect racks, cranes, shuttles, conveyors, AGVs, robots, WMS, WCS, PLC, safety, commissioning, and handover planning.</p>
           </article>
         </div>
       </div>
@@ -793,27 +842,27 @@
       <div class="section-inner">
         <div class="section-heading">
           <div>
-            <div class="section-kicker">Evaluation process</div>
-            <h2>Start with project data. Leave with a clearer system direction.</h2>
+            <div class="section-kicker" data-i18n="process.kicker">Evaluation process</div>
+            <h2 data-i18n="process.title">Start with project data. Leave with a clearer system direction.</h2>
           </div>
-          <p>Instead of making visitors browse repeated content, the page should make the next action obvious and professional.</p>
+          <p data-i18n="process.desc">Instead of making visitors browse repeated content, the page should make the next action obvious and professional.</p>
         </div>
 
         <div class="process-panel">
           <article class="process-step">
-            <span>Step 01</span>
-            <h3>Submit data</h3>
-            <p>Share warehouse dimensions, storage target, material flow, SKU profile, and automation expectations.</p>
+            <span data-i18n="process.step1_label">Step 01</span>
+            <h3 data-i18n="process.step1_title">Submit data</h3>
+            <p data-i18n="process.step1_desc">Share warehouse dimensions, storage target, material flow, SKU profile, and automation expectations.</p>
           </article>
           <article class="process-step">
-            <span>Step 02</span>
-            <h3>Get concept</h3>
-            <p>Receive a practical ASRS direction with likely equipment mix, project scale, and cost logic.</p>
+            <span data-i18n="process.step2_label">Step 02</span>
+            <h3 data-i18n="process.step2_title">Get concept</h3>
+            <p data-i18n="process.step2_desc">Receive a practical ASRS direction with likely equipment mix, project scale, and cost logic.</p>
           </article>
           <article class="process-step">
-            <span>Step 03</span>
-            <h3>Discuss solution</h3>
-            <p>Review assumptions, adjust priorities, and move toward design, supply, integration, and delivery planning.</p>
+            <span data-i18n="process.step3_label">Step 03</span>
+            <h3 data-i18n="process.step3_title">Discuss solution</h3>
+            <p data-i18n="process.step3_desc">Review assumptions, adjust priorities, and move toward design, supply, integration, and delivery planning.</p>
           </article>
         </div>
       </div>
@@ -823,17 +872,17 @@
   <section class="final-cta" id="evaluation">
     <div class="cta-inner">
       <div>
-        <div class="section-kicker">Project evaluation</div>
-        <h2>Tell us what your warehouse needs to become.</h2>
-        <p>Use the form to send your project basics. We will help turn them into an ASRS concept, cost range, and delivery direction.</p>
+        <div class="section-kicker" data-i18n="final.kicker">Project evaluation</div>
+        <h2 data-i18n="final.title">Tell us what your warehouse needs to become.</h2>
+        <p data-i18n="final.desc">Use the form to send your project basics. We will help turn them into an ASRS concept, cost range, and delivery direction.</p>
       </div>
-      <a class="btn btn-primary" href="contact.html">Request Project Evaluation</a>
+      <a class="btn btn-primary" href="contact.html" data-i18n="cta.request_project">Request Project Evaluation</a>
     </div>
   </section>
 
   <footer>
-    <span>13ASRS landing concept</span>
-    <span>ASRS design, cost planning, and full system delivery</span>
+    <span data-i18n="footer.left">13ASRS landing concept</span>
+    <span data-i18n="footer.right">ASRS design, cost planning, and full system delivery</span>
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -843,6 +892,517 @@
   <script>
   (function() {
     "use strict";
+
+    const LANGUAGE_KEY = "siteLanguage";
+    const landingTranslations = {
+      en: {
+        meta: {
+          title: "13ASRS | ASRS Design, Cost Planning, and Delivery",
+          description: "ASRS design, cost planning, and full system delivery for automated storage projects."
+        },
+        nav: {
+          cost: "ASRS Cost",
+          design: "ASRS Design",
+          solutions: "Solutions",
+          cases: "Cases",
+          contact: "Contact"
+        },
+        cta: {
+          request_short: "Request Evaluation",
+          request_project: "Request Project Evaluation",
+          explore_design: "Explore ASRS Design"
+        },
+        hero: {
+          eyebrow: "ASRS project evaluation",
+          title: "Design the automated warehouse before you invest in it.",
+          description: "<span class=\"hero-positioning\">ASRS design, cost planning, and full system delivery.</span> We turn warehouse constraints into a practical automation concept, budget range, and next-step project direction."
+        },
+        panel: {
+          title: "Project inputs",
+          ready: "Ready",
+          input1_title: "Warehouse constraints",
+          input1_desc: "Height, footprint, storage target",
+          input2_title: "Material flow",
+          input2_desc: "Inbound, outbound, SKU velocity",
+          input3_title: "Investment logic",
+          input3_desc: "Cost range, ROI, delivery path"
+        },
+        capabilities: {
+          kicker: "Capabilities",
+          title: "Focused support for the decisions that shape an ASRS project.",
+          desc: "The homepage should stay simple: show confidence, explain the value, and move serious visitors toward a project evaluation form.",
+          design_title: "Design",
+          design_desc: "Translate warehouse size, clear height, SKU profile, pallet count, and throughput targets into a workable ASRS concept.",
+          cost_title: "Cost",
+          cost_desc: "Build an early investment range around equipment type, storage density, controls, installation scope, and project risk.",
+          integration_title: "Integration",
+          integration_desc: "Connect racks, cranes, shuttles, conveyors, AGVs, robots, WMS, WCS, PLC, safety, commissioning, and handover planning."
+        },
+        process: {
+          kicker: "Evaluation process",
+          title: "Start with project data. Leave with a clearer system direction.",
+          desc: "Instead of making visitors browse repeated content, the page should make the next action obvious and professional.",
+          step1_label: "Step 01",
+          step1_title: "Submit data",
+          step1_desc: "Share warehouse dimensions, storage target, material flow, SKU profile, and automation expectations.",
+          step2_label: "Step 02",
+          step2_title: "Get concept",
+          step2_desc: "Receive a practical ASRS direction with likely equipment mix, project scale, and cost logic.",
+          step3_label: "Step 03",
+          step3_title: "Discuss solution",
+          step3_desc: "Review assumptions, adjust priorities, and move toward design, supply, integration, and delivery planning."
+        },
+        final: {
+          kicker: "Project evaluation",
+          title: "Tell us what your warehouse needs to become.",
+          desc: "Use the form to send your project basics. We will help turn them into an ASRS concept, cost range, and delivery direction."
+        },
+        footer: {
+          left: "13ASRS landing concept",
+          right: "ASRS design, cost planning, and full system delivery"
+        }
+      },
+      zh: {
+        meta: {
+          title: "13ASRS | ASRS 设计、成本规划与项目交付",
+          description: "为自动化立体仓库项目提供 ASRS 设计、成本规划和完整系统交付。"
+        },
+        nav: {
+          cost: "ASRS 成本",
+          design: "ASRS 设计",
+          solutions: "解决方案",
+          cases: "案例",
+          contact: "联系"
+        },
+        cta: {
+          request_short: "项目评估",
+          request_project: "申请项目评估",
+          explore_design: "查看 ASRS 设计"
+        },
+        hero: {
+          eyebrow: "ASRS 项目评估",
+          title: "在投资之前，先把自动化仓库设计清楚。",
+          description: "<span class=\"hero-positioning\">ASRS 设计、成本规划与完整系统交付。</span> 我们把仓库约束转化为可落地的自动化方案、预算范围和下一步项目方向。"
+        },
+        panel: {
+          title: "项目输入",
+          ready: "就绪",
+          input1_title: "仓库约束",
+          input1_desc: "高度、面积、存储目标",
+          input2_title: "物流流程",
+          input2_desc: "入库、出库、SKU 周转",
+          input3_title: "投资逻辑",
+          input3_desc: "成本范围、ROI、交付路径"
+        },
+        capabilities: {
+          kicker: "核心能力",
+          title: "聚焦影响 ASRS 项目的关键决策。",
+          desc: "主页应保持简洁：建立信任、说明价值，并引导有明确需求的访客提交项目评估。",
+          design_title: "设计",
+          design_desc: "将仓库尺寸、净高、SKU 结构、托盘数量和吞吐目标转化为可执行的 ASRS 概念方案。",
+          cost_title: "成本",
+          cost_desc: "围绕设备类型、存储密度、控制系统、安装范围和项目风险，建立早期投资区间。",
+          integration_title: "集成",
+          integration_desc: "连接货架、堆垛机、穿梭车、输送线、AGV、机器人、WMS、WCS、PLC、安全、调试与交付规划。"
+        },
+        process: {
+          kicker: "评估流程",
+          title: "从项目数据开始，得到更清晰的系统方向。",
+          desc: "页面不应让访客反复浏览重复内容，而应让下一步行动清楚、专业。",
+          step1_label: "步骤 01",
+          step1_title: "提交数据",
+          step1_desc: "提供仓库尺寸、存储目标、物流流程、SKU 结构和自动化预期。",
+          step2_label: "步骤 02",
+          step2_title: "获得概念方案",
+          step2_desc: "获得可行的 ASRS 方向，包括可能的设备组合、项目规模和成本逻辑。",
+          step3_label: "步骤 03",
+          step3_title: "讨论解决方案",
+          step3_desc: "复核假设、调整优先级，并进入设计、供应、集成和交付规划。"
+        },
+        final: {
+          kicker: "项目评估",
+          title: "告诉我们，你的仓库需要变成什么样。",
+          desc: "通过表单发送项目基础信息，我们会帮助你形成 ASRS 概念方案、成本范围和交付方向。"
+        },
+        footer: {
+          left: "13ASRS 主页概念",
+          right: "ASRS 设计、成本规划与完整系统交付"
+        }
+      },
+      es: {
+        meta: {
+          title: "13ASRS | Diseño ASRS, planificación de costos y entrega",
+          description: "Diseño ASRS, planificación de costos y entrega completa de sistemas para proyectos de almacenamiento automatizado."
+        },
+        nav: {
+          cost: "Costo ASRS",
+          design: "Diseño ASRS",
+          solutions: "Soluciones",
+          cases: "Casos",
+          contact: "Contacto"
+        },
+        cta: {
+          request_short: "Solicitar evaluación",
+          request_project: "Solicitar evaluación del proyecto",
+          explore_design: "Explorar diseño ASRS"
+        },
+        hero: {
+          eyebrow: "Evaluación de proyecto ASRS",
+          title: "Diseñe el almacén automatizado antes de invertir.",
+          description: "<span class=\"hero-positioning\">Diseño ASRS, planificación de costos y entrega completa del sistema.</span> Convertimos las restricciones del almacén en un concepto práctico, rango de presupuesto y dirección del proyecto."
+        },
+        panel: {
+          title: "Datos del proyecto",
+          ready: "Listo",
+          input1_title: "Restricciones del almacén",
+          input1_desc: "Altura, superficie, objetivo de almacenamiento",
+          input2_title: "Flujo de materiales",
+          input2_desc: "Entrada, salida, rotación de SKU",
+          input3_title: "Lógica de inversión",
+          input3_desc: "Rango de costo, ROI, ruta de entrega"
+        },
+        capabilities: {
+          kicker: "Capacidades",
+          title: "Apoyo enfocado para las decisiones que definen un proyecto ASRS.",
+          desc: "La página principal debe ser simple: generar confianza, explicar el valor y guiar hacia el formulario de evaluación.",
+          design_title: "Diseño",
+          design_desc: "Convertimos tamaño, altura libre, perfil SKU, pallets y objetivos de rendimiento en un concepto ASRS viable.",
+          cost_title: "Costo",
+          cost_desc: "Creamos un rango de inversión inicial según equipos, densidad, controles, instalación y riesgo.",
+          integration_title: "Integración",
+          integration_desc: "Conectamos racks, grúas, shuttles, transportadores, AGV, robots, WMS, WCS, PLC, seguridad, puesta en marcha y entrega."
+        },
+        process: {
+          kicker: "Proceso de evaluación",
+          title: "Empiece con datos del proyecto. Termine con una dirección más clara.",
+          desc: "La página debe hacer que el siguiente paso sea obvio y profesional.",
+          step1_label: "Paso 01",
+          step1_title: "Enviar datos",
+          step1_desc: "Comparta dimensiones, objetivo de almacenamiento, flujo, perfil SKU y expectativas de automatización.",
+          step2_label: "Paso 02",
+          step2_title: "Recibir concepto",
+          step2_desc: "Reciba una dirección ASRS práctica con mezcla de equipos, escala del proyecto y lógica de costos.",
+          step3_label: "Paso 03",
+          step3_title: "Discutir solución",
+          step3_desc: "Revise supuestos, ajuste prioridades y avance hacia diseño, suministro, integración y entrega."
+        },
+        final: {
+          kicker: "Evaluación del proyecto",
+          title: "Cuéntenos en qué debe convertirse su almacén.",
+          desc: "Use el formulario para enviar los datos básicos. Le ayudaremos a crear un concepto ASRS, rango de costo y dirección de entrega."
+        },
+        footer: {
+          left: "Concepto de landing 13ASRS",
+          right: "Diseño ASRS, planificación de costos y entrega completa"
+        }
+      },
+      fr: {
+        meta: {
+          title: "13ASRS | Conception ASRS, budget et livraison",
+          description: "Conception ASRS, planification des coûts et livraison complète pour projets de stockage automatisé."
+        },
+        nav: {
+          cost: "Coût ASRS",
+          design: "Conception ASRS",
+          solutions: "Solutions",
+          cases: "Cas",
+          contact: "Contact"
+        },
+        cta: {
+          request_short: "Demander une évaluation",
+          request_project: "Demander une évaluation projet",
+          explore_design: "Explorer la conception ASRS"
+        },
+        hero: {
+          eyebrow: "Évaluation de projet ASRS",
+          title: "Concevez l'entrepôt automatisé avant d'investir.",
+          description: "<span class=\"hero-positioning\">Conception ASRS, planification des coûts et livraison complète.</span> Nous transformons les contraintes d'entrepôt en concept pratique, budget indicatif et direction projet."
+        },
+        panel: {
+          title: "Données projet",
+          ready: "Prêt",
+          input1_title: "Contraintes d'entrepôt",
+          input1_desc: "Hauteur, surface, objectif de stockage",
+          input2_title: "Flux matière",
+          input2_desc: "Entrées, sorties, vélocité SKU",
+          input3_title: "Logique d'investissement",
+          input3_desc: "Coût, ROI, chemin de livraison"
+        },
+        capabilities: {
+          kicker: "Capacités",
+          title: "Un appui ciblé pour les décisions qui structurent un projet ASRS.",
+          desc: "La page d'accueil doit rester simple : inspirer confiance, expliquer la valeur et mener vers l'évaluation.",
+          design_title: "Conception",
+          design_desc: "Transformer dimensions, hauteur, profil SKU, nombre de palettes et objectifs de débit en concept ASRS exploitable.",
+          cost_title: "Coût",
+          cost_desc: "Établir une fourchette d'investissement selon équipement, densité, contrôle, installation et risque projet.",
+          integration_title: "Intégration",
+          integration_desc: "Relier racks, transstockeurs, shuttles, convoyeurs, AGV, robots, WMS, WCS, PLC, sécurité, mise en service et transfert."
+        },
+        process: {
+          kicker: "Processus d'évaluation",
+          title: "Commencez par les données. Repartez avec une direction plus claire.",
+          desc: "La page doit rendre l'action suivante évidente et professionnelle.",
+          step1_label: "Étape 01",
+          step1_title: "Soumettre les données",
+          step1_desc: "Partagez dimensions, objectif de stockage, flux, profil SKU et attentes d'automatisation.",
+          step2_label: "Étape 02",
+          step2_title: "Recevoir le concept",
+          step2_desc: "Obtenez une direction ASRS avec équipements probables, échelle et logique de coût.",
+          step3_label: "Étape 03",
+          step3_title: "Discuter la solution",
+          step3_desc: "Validez les hypothèses, ajustez les priorités et avancez vers conception, fourniture, intégration et livraison."
+        },
+        final: {
+          kicker: "Évaluation projet",
+          title: "Dites-nous ce que votre entrepôt doit devenir.",
+          desc: "Envoyez les informations de base via le formulaire. Nous vous aiderons à établir un concept ASRS, un budget et une direction de livraison."
+        },
+        footer: {
+          left: "Concept de page 13ASRS",
+          right: "Conception ASRS, planification des coûts et livraison complète"
+        }
+      },
+      ja: {
+        meta: {
+          title: "13ASRS | ASRS設計・コスト計画・導入支援",
+          description: "自動倉庫プロジェクト向けのASRS設計、コスト計画、システム納入支援。"
+        },
+        nav: {
+          cost: "ASRSコスト",
+          design: "ASRS設計",
+          solutions: "ソリューション",
+          cases: "事例",
+          contact: "お問い合わせ"
+        },
+        cta: {
+          request_short: "評価を依頼",
+          request_project: "プロジェクト評価を依頼",
+          explore_design: "ASRS設計を見る"
+        },
+        hero: {
+          eyebrow: "ASRSプロジェクト評価",
+          title: "投資の前に、自動倉庫を設計で見える化します。",
+          description: "<span class=\"hero-positioning\">ASRS設計、コスト計画、システム全体の導入支援。</span> 倉庫条件を実行可能な自動化コンセプト、予算レンジ、次の方向性に変換します。"
+        },
+        panel: {
+          title: "プロジェクト入力",
+          ready: "準備完了",
+          input1_title: "倉庫条件",
+          input1_desc: "高さ、面積、保管目標",
+          input2_title: "物流フロー",
+          input2_desc: "入庫、出庫、SKU回転",
+          input3_title: "投資ロジック",
+          input3_desc: "コスト範囲、ROI、導入ルート"
+        },
+        capabilities: {
+          kicker: "対応領域",
+          title: "ASRSプロジェクトを左右する意思決定を支援します。",
+          desc: "ホームページは簡潔に、信頼感と価値を伝え、評価フォームへ自然に導きます。",
+          design_title: "設計",
+          design_desc: "倉庫寸法、有効高さ、SKU構成、パレット数、処理能力目標をASRSコンセプトに変換します。",
+          cost_title: "コスト",
+          cost_desc: "設備タイプ、保管密度、制御、設置範囲、リスクに基づき初期投資レンジを整理します。",
+          integration_title: "統合",
+          integration_desc: "ラック、クレーン、シャトル、コンベヤ、AGV、ロボット、WMS、WCS、PLC、安全、試運転、引き渡しをつなぎます。"
+        },
+        process: {
+          kicker: "評価プロセス",
+          title: "プロジェクトデータから、明確なシステム方向へ。",
+          desc: "ページは次の行動を明確で専門的に示すべきです。",
+          step1_label: "ステップ 01",
+          step1_title: "データ提出",
+          step1_desc: "倉庫寸法、保管目標、物流フロー、SKU構成、自動化要件を共有します。",
+          step2_label: "ステップ 02",
+          step2_title: "コンセプト取得",
+          step2_desc: "設備構成、プロジェクト規模、コストロジックを含むASRS方向性を受け取ります。",
+          step3_label: "ステップ 03",
+          step3_title: "解決策を検討",
+          step3_desc: "前提を確認し、優先順位を調整して、設計・供給・統合・導入計画へ進みます。"
+        },
+        final: {
+          kicker: "プロジェクト評価",
+          title: "倉庫をどう変えたいか教えてください。",
+          desc: "フォームで基本情報を送信してください。ASRSコンセプト、コスト範囲、導入方向を整理します。"
+        },
+        footer: {
+          left: "13ASRSランディングコンセプト",
+          right: "ASRS設計、コスト計画、システム導入支援"
+        }
+      },
+      ko: {
+        meta: {
+          title: "13ASRS | ASRS 설계, 비용 계획, 시스템 납품",
+          description: "자동창고 프로젝트를 위한 ASRS 설계, 비용 계획, 전체 시스템 납품 지원."
+        },
+        nav: {
+          cost: "ASRS 비용",
+          design: "ASRS 설계",
+          solutions: "솔루션",
+          cases: "사례",
+          contact: "문의"
+        },
+        cta: {
+          request_short: "평가 요청",
+          request_project: "프로젝트 평가 요청",
+          explore_design: "ASRS 설계 보기"
+        },
+        hero: {
+          eyebrow: "ASRS 프로젝트 평가",
+          title: "투자 전에 자동화 창고를 먼저 설계하십시오.",
+          description: "<span class=\"hero-positioning\">ASRS 설계, 비용 계획, 전체 시스템 납품.</span> 창고 제약 조건을 실행 가능한 자동화 컨셉, 예산 범위, 다음 프로젝트 방향으로 전환합니다."
+        },
+        panel: {
+          title: "프로젝트 입력",
+          ready: "준비됨",
+          input1_title: "창고 제약",
+          input1_desc: "높이, 면적, 보관 목표",
+          input2_title: "물류 흐름",
+          input2_desc: "입고, 출고, SKU 회전",
+          input3_title: "투자 로직",
+          input3_desc: "비용 범위, ROI, 납품 경로"
+        },
+        capabilities: {
+          kicker: "핵심 역량",
+          title: "ASRS 프로젝트를 결정하는 핵심 판단을 지원합니다.",
+          desc: "홈페이지는 신뢰를 만들고 가치를 설명하며 평가 양식으로 이어져야 합니다.",
+          design_title: "설계",
+          design_desc: "창고 크기, 유효 높이, SKU 프로필, 팔레트 수, 처리량 목표를 실행 가능한 ASRS 컨셉으로 전환합니다.",
+          cost_title: "비용",
+          cost_desc: "장비 유형, 보관 밀도, 제어, 설치 범위, 프로젝트 리스크를 기준으로 초기 투자 범위를 만듭니다.",
+          integration_title: "통합",
+          integration_desc: "랙, 크레인, 셔틀, 컨베이어, AGV, 로봇, WMS, WCS, PLC, 안전, 시운전, 인수인계를 연결합니다."
+        },
+        process: {
+          kicker: "평가 프로세스",
+          title: "프로젝트 데이터로 시작해 더 명확한 시스템 방향을 얻습니다.",
+          desc: "페이지는 다음 행동을 명확하고 전문적으로 보여주어야 합니다.",
+          step1_label: "단계 01",
+          step1_title: "데이터 제출",
+          step1_desc: "창고 치수, 보관 목표, 물류 흐름, SKU 프로필, 자동화 기대치를 공유합니다.",
+          step2_label: "단계 02",
+          step2_title: "컨셉 받기",
+          step2_desc: "예상 장비 조합, 프로젝트 규모, 비용 로직이 포함된 ASRS 방향을 받습니다.",
+          step3_label: "단계 03",
+          step3_title: "솔루션 논의",
+          step3_desc: "가정을 검토하고 우선순위를 조정하여 설계, 공급, 통합, 납품 계획으로 이동합니다."
+        },
+        final: {
+          kicker: "프로젝트 평가",
+          title: "창고가 어떤 모습이 되어야 하는지 알려주세요.",
+          desc: "양식으로 기본 정보를 보내주시면 ASRS 컨셉, 비용 범위, 납품 방향을 정리해 드립니다."
+        },
+        footer: {
+          left: "13ASRS 랜딩 컨셉",
+          right: "ASRS 설계, 비용 계획, 전체 시스템 납품"
+        }
+      },
+      ar: {
+        meta: {
+          title: "13ASRS | تصميم ASRS وتخطيط التكلفة والتسليم",
+          description: "تصميم ASRS وتخطيط التكلفة وتسليم النظام الكامل لمشاريع التخزين الآلي."
+        },
+        nav: {
+          cost: "تكلفة ASRS",
+          design: "تصميم ASRS",
+          solutions: "الحلول",
+          cases: "الحالات",
+          contact: "اتصال"
+        },
+        cta: {
+          request_short: "طلب تقييم",
+          request_project: "طلب تقييم المشروع",
+          explore_design: "استكشاف تصميم ASRS"
+        },
+        hero: {
+          eyebrow: "تقييم مشروع ASRS",
+          title: "صمّم المستودع الآلي قبل الاستثمار فيه.",
+          description: "<span class=\"hero-positioning\">تصميم ASRS وتخطيط التكلفة وتسليم النظام الكامل.</span> نحول قيود المستودع إلى مفهوم أتمتة عملي ونطاق ميزانية واتجاه واضح للمشروع."
+        },
+        panel: {
+          title: "مدخلات المشروع",
+          ready: "جاهز",
+          input1_title: "قيود المستودع",
+          input1_desc: "الارتفاع، المساحة، هدف التخزين",
+          input2_title: "تدفق المواد",
+          input2_desc: "الوارد، الصادر، سرعة SKU",
+          input3_title: "منطق الاستثمار",
+          input3_desc: "نطاق التكلفة، ROI، مسار التسليم"
+        },
+        capabilities: {
+          kicker: "القدرات",
+          title: "دعم مركز للقرارات التي تشكل مشروع ASRS.",
+          desc: "يجب أن تبقى الصفحة الرئيسية بسيطة: تبني الثقة، تشرح القيمة، وتقود الزائر إلى نموذج التقييم.",
+          design_title: "التصميم",
+          design_desc: "نحوّل حجم المستودع والارتفاع وملف SKU وعدد المنصات وأهداف الإنتاجية إلى مفهوم ASRS قابل للتنفيذ.",
+          cost_title: "التكلفة",
+          cost_desc: "نبني نطاق استثمار أولي حسب نوع المعدات وكثافة التخزين وأنظمة التحكم ونطاق التركيب والمخاطر.",
+          integration_title: "التكامل",
+          integration_desc: "نربط الرفوف والرافعات والمكوكات والناقلات وAGV والروبوتات وWMS وWCS وPLC والسلامة والتشغيل والتسليم."
+        },
+        process: {
+          kicker: "عملية التقييم",
+          title: "ابدأ ببيانات المشروع واحصل على اتجاه أوضح للنظام.",
+          desc: "يجب أن تجعل الصفحة الخطوة التالية واضحة ومهنية.",
+          step1_label: "الخطوة 01",
+          step1_title: "إرسال البيانات",
+          step1_desc: "شارك أبعاد المستودع وهدف التخزين وتدفق المواد وملف SKU وتوقعات الأتمتة.",
+          step2_label: "الخطوة 02",
+          step2_title: "الحصول على مفهوم",
+          step2_desc: "احصل على اتجاه ASRS عملي مع مزيج المعدات وحجم المشروع ومنطق التكلفة.",
+          step3_label: "الخطوة 03",
+          step3_title: "مناقشة الحل",
+          step3_desc: "راجع الفرضيات واضبط الأولويات وانتقل إلى التخطيط للتصميم والتوريد والتكامل والتسليم."
+        },
+        final: {
+          kicker: "تقييم المشروع",
+          title: "أخبرنا بما يجب أن يصبح عليه مستودعك.",
+          desc: "استخدم النموذج لإرسال أساسيات المشروع، وسنساعدك على تحويلها إلى مفهوم ASRS ونطاق تكلفة واتجاه تسليم."
+        },
+        footer: {
+          left: "مفهوم صفحة 13ASRS",
+          right: "تصميم ASRS وتخطيط التكلفة وتسليم النظام الكامل"
+        }
+      }
+    };
+
+    function getLandingValue(lang, key) {
+      return key.split(".").reduce((value, part) => value && value[part], landingTranslations[lang]) ||
+        key.split(".").reduce((value, part) => value && value[part], landingTranslations.en);
+    }
+
+    function translateLandingPage(lang) {
+      const safeLang = landingTranslations[lang] ? lang : "en";
+      document.documentElement.lang = safeLang;
+      document.title = getLandingValue(safeLang, "meta.title");
+      const metaDescription = document.querySelector("meta[name=\"description\"]");
+      if (metaDescription) {
+        metaDescription.setAttribute("content", getLandingValue(safeLang, "meta.description"));
+      }
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        const value = getLandingValue(safeLang, element.dataset.i18n);
+        if (value !== undefined) element.textContent = value;
+      });
+      document.querySelectorAll("[data-i18n-html]").forEach((element) => {
+        const value = getLandingValue(safeLang, element.dataset.i18nHtml);
+        if (value !== undefined) element.innerHTML = value;
+      });
+      document.querySelectorAll("#lang-select").forEach((select) => {
+        select.value = safeLang;
+      });
+    }
+
+    function switchLanguage(lang) {
+      const safeLang = landingTranslations[lang] ? lang : "en";
+      localStorage.setItem(LANGUAGE_KEY, safeLang);
+      translateLandingPage(safeLang);
+    }
+
+    window.switchLanguage = switchLanguage;
+
+    function initLanguage() {
+      switchLanguage(localStorage.getItem(LANGUAGE_KEY) || "en");
+    }
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isMobile = window.innerWidth < 760;
@@ -1114,6 +1674,7 @@
     }
 
     function boot() {
+      initLanguage();
       initNavigation();
       createScene();
       initScrollMotion();
