@@ -114,7 +114,7 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 26px;
+      gap: clamp(14px, 1.7vw, 24px);
       list-style: none;
       color: var(--muted);
       font-size: 13px;
@@ -710,9 +710,11 @@
       <span>ASRS</span>
     </a>
     <ul class="nav-links">
-      <li><a href="#capabilities">Capabilities</a></li>
-      <li><a href="#process">Process</a></li>
-      <li><a href="#evaluation">Evaluation</a></li>
+      <li><a href="asrs-cost.html">ASRS Cost</a></li>
+      <li><a href="asrs-design.html">ASRS Design</a></li>
+      <li><a href="solutions.html">Solutions</a></li>
+      <li><a href="case-studies.html">Cases</a></li>
+      <li><a href="contact.html">Contact</a></li>
     </ul>
     <a class="nav-cta" href="contact.html">Request Evaluation</a>
   </nav>
@@ -729,7 +731,7 @@
         <p><span class="hero-positioning">ASRS design, cost planning, and full system delivery.</span> We turn warehouse constraints into a practical automation concept, budget range, and next-step project direction.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="contact.html">Request Project Evaluation</a>
-          <a class="btn btn-secondary" href="#capabilities">What We Help With</a>
+          <a class="btn btn-secondary" href="asrs-design.html">Explore ASRS Design</a>
         </div>
       </div>
 
@@ -1028,6 +1030,8 @@
       world.add(crane);
 
       const activePallet = mesh(new THREE.BoxGeometry(0.62, 0.22, 0.48), materials.palletAmber, [-4.2, 0.55, -6.3]);
+      activePallet.material.transparent = true;
+      activePallet.material.opacity = 1;
       world.add(activePallet);
 
       const shuttle = new THREE.Group();
@@ -1059,21 +1063,31 @@
 
       function playSequence() {
         if (!window.gsap || reducedMotion) return;
-        const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.15, defaults: { ease: "power2.inOut" } });
-        tl.fromTo(world.scale, { x: 0.96, y: 0.96, z: 0.96 }, { x: 1, y: 1, z: 1, duration: 0.9, ease: "power3.out" }, 0);
-        tl.fromTo(rackObjects.map((item) => item.material), { emissiveIntensity: 0 }, { emissiveIntensity: 0.2, duration: 0.6, yoyo: true, repeat: 1 }, 0.2);
-        tl.to(activePallet.position, { x: -1.2, duration: 1.2 }, 1.1);
-        tl.to(materials.flow, { opacity: 0.18, duration: 0.25, yoyo: true, repeat: 3 }, 1.1);
-        tl.to(crane.position, { x: -1.2, duration: 1.2 }, 2.35);
-        tl.to(lift.position, { y: 2.58, duration: 0.85 }, 3.1);
-        tl.to(activePallet.position, { x: -1.2, y: 2.64, z: -0.08, duration: 0.75 }, 3.3);
-        tl.to([forkA.position, forkB.position], { x: 0.76, duration: 0.42, yoyo: true, repeat: 1 }, 3.95);
-        tl.to(activePallet.position, { x: -2.2, z: -1.45, duration: 0.85 }, 4.5);
-        tl.to(shuttle.position, { x: -3.7, duration: 1.6 }, 5.55);
-        tl.to(shuttle.position, { x: 4.2, duration: 1.6 }, 7.15);
-        tl.to(lift.position, { y: 1, duration: 0.72 }, 7.1);
-        tl.to(crane.position, { x: -3.4, duration: 0.9 }, 7.35);
-        tl.set(activePallet.position, { x: -4.2, y: 0.55, z: -6.3 }, 8.1);
+        gsap.fromTo(world.scale, { x: 0.96, y: 0.96, z: 0.96 }, { x: 1, y: 1, z: 1, duration: 0.9, ease: "power3.out" });
+        gsap.fromTo(rackObjects.map((item) => item.material), { emissiveIntensity: 0 }, { emissiveIntensity: 0.2, duration: 0.6, yoyo: true, repeat: 1, delay: 0.2 });
+
+        const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.35, defaults: { ease: "power2.inOut" } });
+        tl.set(activePallet.position, { x: -4.2, y: 0.55, z: -6.3 }, 0);
+        tl.set(activePallet.material, { opacity: 1 }, 0);
+        tl.set(crane.position, { x: -3.4 }, 0);
+        tl.set(lift.position, { y: 1 }, 0);
+        tl.set(shuttle.position, { x: 4.2 }, 0);
+        tl.set(materials.flow, { opacity: 0.72 }, 0);
+
+        tl.to(activePallet.position, { x: -1.2, duration: 1.2 }, 0.45);
+        tl.to(materials.flow, { opacity: 0.18, duration: 0.25, yoyo: true, repeat: 3 }, 0.45);
+        tl.to(crane.position, { x: -1.2, duration: 1.2 }, 1.65);
+        tl.to(lift.position, { y: 2.58, duration: 0.85 }, 2.4);
+        tl.to(activePallet.position, { x: -1.2, y: 2.64, z: -0.08, duration: 0.75 }, 2.62);
+        tl.to([forkA.position, forkB.position], { x: 0.76, duration: 0.42, yoyo: true, repeat: 1 }, 3.28);
+        tl.to(activePallet.position, { x: -2.2, z: -1.45, duration: 0.85 }, 3.82);
+        tl.to(activePallet.material, { opacity: 0, duration: 0.45 }, 4.42);
+        tl.to(shuttle.position, { x: -3.7, duration: 1.6 }, 4.9);
+        tl.to(shuttle.position, { x: 4.2, duration: 1.6 }, 6.5);
+        tl.to(lift.position, { y: 1, duration: 0.72 }, 6.45);
+        tl.to(crane.position, { x: -3.4, duration: 0.9 }, 6.72);
+        tl.set(activePallet.position, { x: -4.2, y: 0.55, z: -6.3 }, 7.62);
+        tl.to(activePallet.material, { opacity: 1, duration: 0.45, ease: "power1.out" }, 7.68);
       }
 
       function animate() {
