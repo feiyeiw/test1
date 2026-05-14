@@ -1,1691 +1,1279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>13ASRS | ASRS Design, Cost Planning, and Delivery</title>
-  <meta name="description" content="ASRS design, cost planning, and full system delivery for automated storage projects.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg: #080b10;
-      --panel: rgba(13, 19, 27, 0.78);
-      --panel-strong: #0d131b;
-      --line: rgba(148, 163, 184, 0.18);
-      --line-blue: rgba(47, 128, 237, 0.46);
-      --text: #f7fbff;
-      --muted: #aab6c4;
-      --quiet: #6f7f90;
-      --blue: #2f80ed;
-      --cyan: #00a3c7;
-      --green: #38b779;
-      --radius: 8px;
-      --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
-    }
-
-    html {
-      scroll-behavior: smooth;
-      background: var(--bg);
-    }
-
-    body {
-      min-height: 100vh;
-      color: var(--text);
-      background:
-        linear-gradient(180deg, #080b10 0%, #0b1017 46%, #080b10 100%);
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.5;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
-      background-size: 72px 72px;
-      mask-image: linear-gradient(180deg, rgba(0,0,0,0.85), transparent 76%);
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    #navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 50;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 28px;
-      padding: 18px clamp(18px, 4vw, 56px);
-      background: rgba(8, 11, 16, 0.34);
-      border-bottom: 1px solid transparent;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      transition: background 0.25s ease, border-color 0.25s ease, padding 0.25s ease;
-    }
-
-    #navbar.scrolled {
-      padding-top: 12px;
-      padding-bottom: 12px;
-      background: rgba(8, 11, 16, 0.9);
-      border-bottom-color: var(--line);
-    }
-
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .nav-logo-mark {
-      display: grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      background: linear-gradient(135deg, #164c84, #111923);
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 7px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.14);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: clamp(14px, 1.7vw, 24px);
-      list-style: none;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .nav-links a {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      min-height: 34px;
-      transition: color 0.2s ease;
-    }
-
-    .nav-links a::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 1px;
-      height: 1px;
-      background: var(--cyan);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.2s ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--text);
-    }
-
-    .nav-links a:hover::after {
-      transform: scaleX(1);
-    }
-
-    .nav-cta {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 38px;
-      padding: 0 15px;
-      color: var(--text);
-      background: rgba(47, 128, 237, 0.14);
-      border: 1px solid var(--line-blue);
-      border-radius: var(--radius);
-      font-size: 13px;
-      font-weight: 800;
-      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-    }
-
-    .nav-cta:hover {
-      transform: translateY(-1px);
-      background: rgba(47, 128, 237, 0.22);
-      border-color: rgba(47, 128, 237, 0.72);
-    }
-
-    .nav-tools {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .language-selector select {
-      min-height: 38px;
-      padding: 0 34px 0 12px;
-      color: var(--text);
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: var(--radius);
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .language-selector select:focus {
-      outline: none;
-      border-color: var(--line-blue);
-      box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.16);
-    }
-
-    .language-selector option {
-      color: #111923;
-      background: #fff;
-    }
-
-    .hero {
-      position: relative;
-      min-height: 94svh;
-      padding: 112px clamp(18px, 4vw, 56px) 52px;
-      overflow: hidden;
-      isolation: isolate;
-    }
-
-    #three-container {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      background: #080b10;
-    }
-
-    #three-container canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-
-    .hero-shade {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      background:
-        linear-gradient(90deg, rgba(8, 11, 16, 0.96) 0%, rgba(8, 11, 16, 0.7) 34%, rgba(8, 11, 16, 0.12) 64%, rgba(8, 11, 16, 0.78) 100%),
-        linear-gradient(180deg, rgba(8, 11, 16, 0.28) 0%, rgba(8, 11, 16, 0.08) 45%, rgba(8, 11, 16, 0.92) 100%);
-    }
-
-    .loader {
-      position: absolute;
-      inset: 0;
-      z-index: 4;
-      display: grid;
-      place-items: center;
-      background: #080b10;
-      transition: opacity 0.55s ease, visibility 0.55s ease;
-    }
-
-    .loader.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .loader-core {
-      width: 48px;
-      height: 48px;
-      border: 1px solid rgba(47, 128, 237, 0.22);
-      border-top-color: var(--cyan);
-      border-radius: 50%;
-      animation: spin 0.9s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .hero-layout {
-      position: relative;
-      z-index: 3;
-      display: grid;
-      grid-template-columns: minmax(0, 0.95fr) minmax(310px, 0.5fr);
-      align-items: end;
-      gap: clamp(28px, 5vw, 80px);
-      min-height: calc(94svh - 164px);
-      max-width: 1440px;
-      margin: 0 auto;
-    }
-
-    .eyebrow,
-    .section-kicker,
-    .panel-header {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: #c7d6e8;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow::before,
-    .section-kicker::before {
-      content: "";
-      width: 34px;
-      height: 1px;
-      background: var(--cyan);
-      box-shadow: 0 0 18px rgba(0, 163, 199, 0.9);
-    }
-
-    .hero-copy {
-      max-width: 820px;
-      padding-bottom: clamp(36px, 7vh, 92px);
-    }
-
-    .hero-copy h1 {
-      max-width: 850px;
-      margin-top: 18px;
-      font-size: clamp(40px, 5.2vw, 76px);
-      line-height: 1;
-      letter-spacing: 0;
-      font-weight: 800;
-      text-wrap: balance;
-    }
-
-    .hero-copy p {
-      max-width: 640px;
-      margin-top: 24px;
-      color: #bdc8d5;
-      font-size: clamp(16px, 1.5vw, 20px);
-    }
-
-    .hero-positioning {
-      color: var(--text);
-      font-weight: 700;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 34px;
-    }
-
-    .btn {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 48px;
-      padding: 0 20px;
-      border: 1px solid transparent;
-      border-radius: var(--radius);
-      font-size: 14px;
-      font-weight: 800;
-      overflow: hidden;
-      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-    }
-
-    .btn::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: -42%;
-      width: 36%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
-      transform: skewX(-16deg);
-      opacity: 0;
-      transition: left 0.45s ease, opacity 0.2s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .btn:hover::before {
-      left: 108%;
-      opacity: 1;
-    }
-
-    .btn-primary {
-      color: #fff;
-      background: #1f6fd6;
-      border-color: rgba(111, 179, 255, 0.4);
-      box-shadow: 0 16px 32px rgba(31, 111, 214, 0.26);
-    }
-
-    .btn-secondary {
-      color: #d9e8f7;
-      background: rgba(255,255,255,0.055);
-      border-color: rgba(255,255,255,0.18);
-    }
-
-    .hero-panel {
-      align-self: center;
-      width: min(100%, 380px);
-      margin-left: auto;
-      padding: 18px;
-      background: linear-gradient(180deg, rgba(15, 23, 33, 0.92), rgba(10, 15, 22, 0.82));
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-
-    .panel-header {
-      justify-content: space-between;
-      width: 100%;
-      color: var(--quiet);
-      letter-spacing: 0.12em;
-    }
-
-    .live-dot {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      color: #8fd6ff;
-      letter-spacing: 0.08em;
-    }
-
-    .live-dot::before {
-      content: "";
-      width: 7px;
-      height: 7px;
-      background: var(--green);
-      border-radius: 50%;
-      box-shadow: 0 0 16px rgba(56, 183, 121, 0.9);
-    }
-
-    .signal-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .signal-item {
-      display: grid;
-      grid-template-columns: 38px 1fr;
-      gap: 12px;
-      align-items: center;
-      min-height: 68px;
-      padding: 12px;
-      background: rgba(255,255,255,0.045);
-      border: 1px solid rgba(255,255,255,0.09);
-      border-radius: var(--radius);
-    }
-
-    .signal-index {
-      display: grid;
-      place-items: center;
-      width: 36px;
-      height: 36px;
-      color: #b7d7ff;
-      background: rgba(47, 128, 237, 0.12);
-      border: 1px solid rgba(47, 128, 237, 0.25);
-      border-radius: 7px;
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .signal-item strong {
-      display: block;
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .signal-item span:last-child {
-      display: block;
-      margin-top: 3px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    main {
-      position: relative;
-      z-index: 2;
-      background: linear-gradient(180deg, rgba(8,11,16,0.1), #080b10 8%, #080b10 100%);
-    }
-
-    .section {
-      padding: clamp(76px, 10vw, 126px) clamp(18px, 4vw, 56px);
-    }
-
-    .section-inner {
-      width: min(100%, 1160px);
-      margin: 0 auto;
-    }
-
-    .section-heading {
-      display: grid;
-      grid-template-columns: minmax(0, 0.86fr) minmax(280px, 0.5fr);
-      gap: clamp(24px, 6vw, 86px);
-      align-items: end;
-      margin-bottom: 34px;
-    }
-
-    .section-heading h2 {
-      margin-top: 12px;
-      font-size: clamp(30px, 4.2vw, 56px);
-      line-height: 1.03;
-      font-weight: 800;
-      letter-spacing: 0;
-      text-wrap: balance;
-    }
-
-    .section-heading p {
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .capability-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1px;
-      background: var(--line);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-
-    .capability-card {
-      min-height: 300px;
-      padding: clamp(24px, 3vw, 34px);
-      background: #0d131b;
-      transition: background 0.2s ease;
-    }
-
-    .capability-card:hover {
-      background: #111a24;
-    }
-
-    .capability-card span {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 42px;
-      height: 42px;
-      color: #b7d7ff;
-      background: rgba(47, 128, 237, 0.12);
-      border: 1px solid rgba(47, 128, 237, 0.26);
-      border-radius: 7px;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-    }
-
-    .capability-card h3 {
-      margin-top: 54px;
-      font-size: 28px;
-      line-height: 1;
-      font-weight: 800;
-    }
-
-    .capability-card p {
-      margin-top: 16px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .process-panel {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .process-step {
-      position: relative;
-      min-height: 230px;
-      padding: 28px;
-      background: var(--panel-strong);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-
-    .process-step::before {
-      content: "";
-      position: absolute;
-      left: 28px;
-      top: 72px;
-      width: 1px;
-      height: calc(100% - 104px);
-      background: linear-gradient(180deg, var(--cyan), transparent);
-    }
-
-    .process-step span {
-      color: #8bc7ff;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .process-step h3 {
-      margin-top: 50px;
-      font-size: 22px;
-      line-height: 1.12;
-      font-weight: 800;
-    }
-
-    .process-step p {
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .final-cta {
-      position: relative;
-      padding: clamp(86px, 12vw, 146px) clamp(18px, 4vw, 56px);
-      background: #0b1017;
-      border-top: 1px solid var(--line);
-      overflow: hidden;
-    }
-
-    .final-cta::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(rgba(47,128,237,0.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(47,128,237,0.055) 1px, transparent 1px);
-      background-size: 46px 46px;
-      mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent);
-    }
-
-    .cta-inner {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: minmax(0, 0.76fr) auto;
-      align-items: center;
-      gap: 24px;
-      width: min(100%, 1160px);
-      margin: 0 auto;
-    }
-
-    .cta-inner h2 {
-      max-width: 780px;
-      margin-top: 14px;
-      font-size: clamp(34px, 5vw, 66px);
-      line-height: 1;
-      font-weight: 800;
-      letter-spacing: 0;
-      text-wrap: balance;
-    }
-
-    .cta-inner p {
-      max-width: 620px;
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 16px;
-    }
-
-    footer {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 34px clamp(18px, 4vw, 56px);
-      color: var(--quiet);
-      background: #080b10;
-      border-top: 1px solid var(--line);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    @media (max-width: 1000px) {
-      .hero-layout,
-      .section-heading,
-      .cta-inner {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-panel {
-        width: 100%;
-        margin-left: 0;
-      }
-
-      .capability-grid,
-      .process-panel {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 760px) {
-      #navbar {
-        align-items: flex-start;
-      }
-
-      .nav-cta {
-        display: none;
-      }
-
-      .nav-links {
-        display: none;
-      }
-
-      .language-selector select {
-        width: 112px;
-      }
-
-      .hero {
-        min-height: 92svh;
-        padding-top: 96px;
-      }
-
-      .hero-layout {
-        min-height: calc(92svh - 148px);
-      }
-
-      .hero-copy {
-        padding-bottom: 24px;
-      }
-
-      .hero-copy h1 {
-        font-size: clamp(34px, 12vw, 46px);
-        line-height: 1.02;
-      }
-
-      .hero-panel {
-        display: none;
-      }
-
-      .hero-shade {
-        background:
-          linear-gradient(180deg, rgba(8,11,16,0.86) 0%, rgba(8,11,16,0.42) 42%, rgba(8,11,16,0.94) 100%);
-      }
-
-      .capability-card {
-        min-height: 230px;
-      }
-
-      .capability-card h3 {
-        margin-top: 34px;
-      }
-
-      footer {
-        flex-direction: column;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-        transition-duration: 0.001ms !important;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13machine | Smart ASRS and Factory Logistics Automation</title>
+    <meta name="description" content="Cinematic smart warehouse automation story for ASRS, factory conveyor lines, AGV transport, unmanned forklifts, CTU/STU smart shelving, four-way shuttle systems, and WMS/WCS control.">
+    <meta name="keywords" content="ASRS, smart warehouse, factory logistics, AGV, unmanned forklift, CTU, STU, four-way shuttle, automated conveyor">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --asrs-blue: #0066cc;
+            --asrs-blue-dark: #004499;
+            --asrs-blue-soft: #eef7ff;
+            --asrs-blue-pale: #f8fbff;
+            --asrs-red: #cc0000;
+            --asrs-green: #00a651;
+            --asrs-text: #162536;
+            --asrs-muted: #5f6f80;
+            --asrs-line: #d8e8f7;
+            --asrs-card: #ffffff;
+            --asrs-shadow: 0 18px 55px rgba(0, 72, 153, 0.12);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background: var(--asrs-blue-pale);
+        }
+
+        body {
+            color: var(--asrs-text);
+            background:
+                radial-gradient(circle at 80% 12%, rgba(0, 102, 204, 0.12), transparent 26%),
+                linear-gradient(180deg, #f8fbff 0%, #eef7ff 44%, #ffffff 100%);
+            overflow-x: hidden;
+        }
+
+        header {
+            position: relative;
+            z-index: 30;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 4px 24px rgba(0, 72, 153, 0.08);
+        }
+
+        nav ul li a.active {
+            background-color: var(--asrs-red);
+        }
+
+        main {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scrolly-stage {
+            position: relative;
+            min-height: 600vh;
+            background: #f8fbff;
+        }
+
+        .scrolly-frame {
+            position: sticky;
+            top: 0;
+            min-height: 100svh;
+            overflow: hidden;
+            isolation: isolate;
+            background:
+                linear-gradient(180deg, rgba(248, 251, 255, 0.98), rgba(238, 247, 255, 0.92)),
+                radial-gradient(circle at 72% 18%, rgba(0, 102, 204, 0.18), transparent 34%);
+        }
+
+        .scrolly-frame::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(0, 102, 204, 0.075) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 102, 204, 0.075) 1px, transparent 1px);
+            background-size: 52px 52px;
+            mask-image: linear-gradient(180deg, rgba(0,0,0,0.8), rgba(0,0,0,0.46) 62%, transparent 100%);
+        }
+
+        .scrolly-scene {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        .scrolly-scene canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .scene-loader {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            display: grid;
+            place-items: center;
+            background: rgba(248, 251, 255, 0.86);
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        .scene-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-ring {
+            width: 44px;
+            height: 44px;
+            border: 3px solid rgba(0, 102, 204, 0.16);
+            border-top-color: var(--asrs-blue);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .cinema-shade {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background:
+                linear-gradient(90deg, rgba(248,251,255,0.95) 0%, rgba(248,251,255,0.62) 32%, rgba(248,251,255,0.1) 58%, rgba(248,251,255,0.72) 100%),
+                linear-gradient(180deg, rgba(248,251,255,0.68) 0%, rgba(248,251,255,0.08) 48%, rgba(248,251,255,0.82) 100%);
+        }
+
+        .cinema-noise {
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            opacity: 0.28;
+            pointer-events: none;
+            background-image:
+                linear-gradient(90deg, rgba(0,102,204,0.06), transparent 32%, rgba(0,166,81,0.05)),
+                repeating-linear-gradient(0deg, rgba(0,102,204,0.04) 0 1px, transparent 1px 5px);
+            mix-blend-mode: multiply;
+        }
+
+        .story-copy {
+            position: absolute;
+            left: clamp(20px, 6vw, 82px);
+            bottom: clamp(86px, 13vh, 150px);
+            z-index: 6;
+            width: min(760px, calc(100vw - 40px));
+        }
+
+        .scene-kicker,
+        .hud-label,
+        .timeline-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--asrs-blue);
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .scene-kicker::before {
+            content: "";
+            width: 34px;
+            height: 3px;
+            background: var(--asrs-blue);
+            border-radius: 99px;
+        }
+
+        .story-slide {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .story-slide:first-child {
+            position: relative;
+        }
+
+        .story-slide h1,
+        .story-slide h2 {
+            max-width: 760px;
+            margin-top: 16px;
+            color: #142233;
+            font-size: clamp(42px, 6vw, 82px);
+            line-height: 0.98;
+            letter-spacing: 0;
+            font-weight: 900;
+            text-wrap: balance;
+            clip-path: inset(0 0 100% 0);
+        }
+
+        .story-slide h2 {
+            font-size: clamp(34px, 5vw, 68px);
+        }
+
+        .story-slide p {
+            max-width: 640px;
+            margin-top: 22px;
+            color: var(--asrs-muted);
+            font-size: clamp(16px, 1.5vw, 20px);
+            line-height: 1.65;
+        }
+
+        .glitch-word {
+            position: relative;
+            display: inline-block;
+            color: var(--asrs-blue-dark);
+        }
+
+        .glitch-word::before,
+        .glitch-word::after {
+            content: attr(data-text);
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .glitch-word::before {
+            color: var(--asrs-red);
+            transform: translateX(-2px);
+        }
+
+        .glitch-word::after {
+            color: var(--asrs-green);
+            transform: translateX(2px);
+        }
+
+        .story-slide.active .glitch-word::before,
+        .story-slide.active .glitch-word::after {
+            animation: wordGlitch 1.15s steps(2, end) both;
+        }
+
+        @keyframes wordGlitch {
+            0%, 72%, 100% { opacity: 0; clip-path: inset(0 0 0 0); }
+            74% { opacity: 0.7; clip-path: inset(0 0 62% 0); }
+            79% { opacity: 0.5; clip-path: inset(42% 0 18% 0); }
+            84% { opacity: 0.55; clip-path: inset(68% 0 0 0); }
+        }
+
+        .story-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 28px;
+            pointer-events: auto;
+        }
+
+        .asrs-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0 22px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 900;
+            text-decoration: none;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+
+        .asrs-btn.primary {
+            color: #fff;
+            background: var(--asrs-red);
+            box-shadow: 0 14px 30px rgba(204, 0, 0, 0.18);
+        }
+
+        .asrs-btn.secondary {
+            color: var(--asrs-blue);
+            background: #fff;
+            border: 2px solid var(--asrs-blue);
+        }
+
+        .asrs-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 36px rgba(0, 72, 153, 0.16);
+        }
+
+        .hud-panel {
+            position: absolute;
+            right: clamp(18px, 4vw, 62px);
+            top: clamp(96px, 16vh, 154px);
+            z-index: 7;
+            width: min(360px, calc(100vw - 36px));
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.86);
+            border: 1px solid rgba(0, 102, 204, 0.16);
+            border-radius: 8px;
+            box-shadow: var(--asrs-shadow);
+            backdrop-filter: blur(16px);
+        }
+
+        .hud-grid {
+            display: grid;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .hud-row {
+            display: grid;
+            grid-template-columns: 76px 1fr auto;
+            align-items: center;
+            gap: 12px;
+            min-height: 42px;
+            color: var(--asrs-muted);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .hud-bar {
+            position: relative;
+            height: 7px;
+            background: #e5f1fc;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .hud-bar span {
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: var(--value);
+            background: linear-gradient(90deg, var(--asrs-blue), var(--asrs-green));
+            border-radius: inherit;
+            transform-origin: left;
+        }
+
+        .hud-value {
+            color: var(--asrs-blue-dark);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .chapter-rail {
+            position: absolute;
+            left: clamp(18px, 3vw, 42px);
+            top: 50%;
+            z-index: 8;
+            display: grid;
+            gap: 13px;
+            transform: translateY(-50%);
+        }
+
+        .chapter-dot {
+            display: grid;
+            place-items: center;
+            width: 34px;
+            height: 34px;
+            color: var(--asrs-blue-dark);
+            background: rgba(255,255,255,0.78);
+            border: 1px solid rgba(0,102,204,0.2);
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: 900;
+            box-shadow: 0 8px 22px rgba(0, 72, 153, 0.08);
+            transition: transform 0.25s ease, color 0.25s ease, background 0.25s ease;
+        }
+
+        .chapter-dot.active {
+            color: #fff;
+            background: var(--asrs-blue);
+            transform: scale(1.12);
+        }
+
+        .system-tags {
+            position: absolute;
+            right: clamp(18px, 4vw, 62px);
+            bottom: clamp(24px, 6vh, 62px);
+            z-index: 7;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 8px;
+            width: min(560px, calc(100vw - 36px));
+        }
+
+        .system-tags span {
+            padding: 7px 10px;
+            color: var(--asrs-blue-dark);
+            background: rgba(255,255,255,0.82);
+            border: 1px solid #cfe5fa;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 900;
+            backdrop-filter: blur(12px);
+        }
+
+        .scroll-cue {
+            position: absolute;
+            left: 50%;
+            bottom: 24px;
+            z-index: 9;
+            display: grid;
+            justify-items: center;
+            gap: 8px;
+            color: var(--asrs-muted);
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transform: translateX(-50%);
+        }
+
+        .scroll-cue span:last-child {
+            width: 2px;
+            height: 34px;
+            background: linear-gradient(180deg, var(--asrs-blue), transparent);
+            animation: cueDrop 1.5s ease-in-out infinite;
+        }
+
+        @keyframes cueDrop {
+            0%, 100% { transform: scaleY(0.45); opacity: 0.45; }
+            50% { transform: scaleY(1); opacity: 1; }
+        }
+
+        .reduced-story {
+            display: none;
+            padding: 82px 0 92px;
+            background: #fff;
+        }
+
+        .reduced-story .container {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            width: 90%;
+            max-width: 1180px;
+        }
+
+        .reduced-card {
+            padding: 26px;
+            background: #fff;
+            border: 1px solid var(--asrs-line);
+            border-radius: 8px;
+            box-shadow: 0 12px 34px rgba(0, 72, 153, 0.08);
+        }
+
+        .reduced-card h3 {
+            color: var(--asrs-blue-dark);
+            font-size: 24px;
+        }
+
+        .reduced-card p {
+            margin-top: 10px;
+            color: var(--asrs-muted);
+            line-height: 1.65;
+        }
+
+        .asrs-footer {
+            padding: 28px 0;
+            background: #fff;
+            border-top: 1px solid var(--asrs-line);
+            color: var(--asrs-muted);
+            font-size: 13px;
+        }
+
+        .asrs-footer .container {
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        @media (max-width: 1020px) {
+            .hud-panel {
+                top: auto;
+                right: 18px;
+                bottom: 108px;
+                width: min(340px, calc(100vw - 36px));
+            }
+
+            .chapter-rail {
+                display: none;
+            }
+
+            .system-tags {
+                justify-content: flex-start;
+                right: auto;
+                left: 20px;
+                bottom: 24px;
+                max-width: calc(100vw - 40px);
+            }
+
+            .story-copy {
+                bottom: clamp(220px, 30vh, 280px);
+            }
+
+            .story-slide h1,
+            .story-slide h2 {
+                max-width: 680px;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .scrolly-stage {
+                min-height: 560vh;
+            }
+
+            .story-copy {
+                left: 18px;
+                bottom: 246px;
+                width: calc(100vw - 36px);
+            }
+
+            .story-slide h1,
+            .story-slide h2 {
+                font-size: clamp(34px, 11vw, 48px);
+                line-height: 1.02;
+            }
+
+            .story-slide p {
+                font-size: 15px;
+                line-height: 1.55;
+            }
+
+            .story-actions {
+                gap: 10px;
+            }
+
+            .asrs-btn {
+                width: 100%;
+                min-height: 46px;
+            }
+
+            .hud-panel {
+                left: 18px;
+                right: 18px;
+                bottom: 86px;
+                width: auto;
+                padding: 14px;
+            }
+
+            .hud-row {
+                grid-template-columns: 62px 1fr 42px;
+                gap: 8px;
+            }
+
+            .system-tags {
+                display: none;
+            }
+
+            .scroll-cue {
+                display: none;
+            }
+
+            .cinema-shade {
+                background:
+                    linear-gradient(180deg, rgba(248,251,255,0.84) 0%, rgba(248,251,255,0.25) 45%, rgba(248,251,255,0.94) 100%);
+            }
+
+            .reduced-story .container {
+                grid-template-columns: 1fr;
+            }
+
+            .asrs-footer .container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.001ms !important;
+            }
+
+            .scrolly-stage {
+                min-height: auto;
+            }
+
+            .scrolly-frame {
+                position: relative;
+                min-height: 92svh;
+            }
+
+            .story-slide {
+                position: relative;
+                opacity: 1 !important;
+                transform: none !important;
+                margin-bottom: 28px;
+            }
+
+            .story-slide:not(:first-child) {
+                display: none;
+            }
+
+            .story-slide h1,
+            .story-slide h2 {
+                clip-path: inset(0 0 0 0);
+            }
+
+            .hud-panel,
+            .system-tags,
+            .scroll-cue {
+                display: none;
+            }
+
+            .reduced-story {
+                display: block;
+            }
+        }
+    </style>
 </head>
 <body>
-  <nav id="navbar" aria-label="Primary navigation">
-    <a class="nav-logo" href="index.html" aria-label="13ASRS home">
-      <span class="nav-logo-mark">13</span>
-      <span>ASRS</span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="asrs-cost.html" data-i18n="nav.cost">ASRS Cost</a></li>
-      <li><a href="asrs-design.html" data-i18n="nav.design">ASRS Design</a></li>
-      <li><a href="solutions.html" data-i18n="nav.solutions">Solutions</a></li>
-      <li><a href="case-studies.html" data-i18n="nav.cases">Cases</a></li>
-      <li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
-    </ul>
-    <div class="nav-tools">
-      <div class="language-selector">
-        <select id="lang-select" onchange="switchLanguage(this.value)" aria-label="Language">
-          <option value="en">English</option>
-          <option value="zh">中文</option>
-          <option value="es">Español</option>
-          <option value="fr">Français</option>
-          <option value="ja">日本語</option>
-          <option value="ko">한국어</option>
-          <option value="ar">العربية</option>
-        </select>
-      </div>
-      <a class="nav-cta" href="contact.html" data-i18n="cta.request_short">Request Evaluation</a>
-    </div>
-  </nav>
-
-  <section class="hero" aria-label="ASRS digital twin hero">
-    <div id="three-container" aria-hidden="true"></div>
-    <div class="hero-shade" aria-hidden="true"></div>
-    <div class="loader" id="scene-loader" aria-hidden="true"><div class="loader-core"></div></div>
-
-    <div class="hero-layout">
-      <div class="hero-copy">
-        <div class="eyebrow" data-i18n="hero.eyebrow">ASRS project evaluation</div>
-        <h1 data-i18n="hero.title">Design the automated warehouse before you invest in it.</h1>
-        <p data-i18n-html="hero.description"><span class="hero-positioning">ASRS design, cost planning, and full system delivery.</span> We turn warehouse constraints into a practical automation concept, budget range, and next-step project direction.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="contact.html" data-i18n="cta.request_project">Request Project Evaluation</a>
-          <a class="btn btn-secondary" href="asrs-design.html" data-i18n="cta.explore_design">Explore ASRS Design</a>
+    <header>
+        <div class="header-main">
+            <div class="container">
+                <div class="logo-brand">
+                    <div class="logo">
+                        <a href="index.html">
+                            <img src="logo.jpg" alt="13machine">
+                        </a>
+                    </div>
+                    <span class="logo-slogan">
+                        <span class="slogan-line1">From system design to project delivery</span>
+                        <span class="slogan-line2">we make automation work as a whole</span>
+                    </span>
+                </div>
+                <div class="header-actions">
+                    <div class="language-selector">
+                        <select id="lang-select" onchange="switchLanguage(this.value)" aria-label="Language">
+                            <option value="en">English</option>
+                            <option value="zh">Chinese</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="ja">Japanese</option>
+                            <option value="ko">Korean</option>
+                            <option value="ar">Arabic</option>
+                        </select>
+                    </div>
+                    <a class="cost-button" href="contact.html">Start a Project</a>
+                </div>
+            </div>
         </div>
-      </div>
+        <nav>
+            <div class="container">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="asrs-cost.html">ASRS Cost</a></li>
+                    <li><a href="asrs-design.html">ASRS Design</a></li>
+                    <li><a href="solutions.html" class="active">Solutions</a></li>
+                    <li><a href="case-studies.html">Case Studies</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
 
-      <aside class="hero-panel" aria-label="ASRS evaluation signals">
-        <div class="panel-header">
-          <span data-i18n="panel.title">Project inputs</span>
-          <span class="live-dot" data-i18n="panel.ready">Ready</span>
+    <main>
+        <section class="scrolly-stage" id="cinematic-asrs" aria-label="ASRS cinematic scrollytelling">
+            <div class="scrolly-frame">
+                <div class="scrolly-scene" id="smart-warehouse-scene" aria-hidden="true"></div>
+                <div class="scene-loader" id="scene-loader" aria-hidden="true">
+                    <div class="loader-ring"></div>
+                </div>
+                <div class="cinema-shade" aria-hidden="true"></div>
+                <div class="cinema-noise" aria-hidden="true"></div>
+
+                <div class="chapter-rail" aria-hidden="true">
+                    <span class="chapter-dot active">01</span>
+                    <span class="chapter-dot">02</span>
+                    <span class="chapter-dot">03</span>
+                    <span class="chapter-dot">04</span>
+                    <span class="chapter-dot">05</span>
+                </div>
+
+                <div class="story-copy">
+                    <article class="story-slide active" data-scene="0">
+                        <div class="scene-kicker">Smart warehouse automation</div>
+                        <h1>Design the system before the first meter of steel is installed.</h1>
+                        <p>ASRS, conveyors, AGV transport, unmanned forklifts, CTU/STU shelving, and four-way shuttles become one planned material flow.</p>
+                        <div class="story-actions">
+                            <a class="asrs-btn primary" href="contact.html">Request System Evaluation</a>
+                            <a class="asrs-btn secondary" href="asrs-design.html">Explore ASRS Design</a>
+                        </div>
+                    </article>
+
+                    <article class="story-slide" data-scene="1">
+                        <div class="scene-kicker">Scene 01 / Storage grid</div>
+                        <h2>The high-bay layout appears as a living <span class="glitch-word" data-text="ASRS">ASRS</span> model.</h2>
+                        <p>Rack height, aisle logic, pallet positions, clearances, and expansion lanes are staged before procurement.</p>
+                    </article>
+
+                    <article class="story-slide" data-scene="2">
+                        <div class="scene-kicker">Scene 02 / Retrieval rhythm</div>
+                        <h2>Stacker crane and four-way shuttle movements reveal throughput pressure.</h2>
+                        <p>Storage density is tested against lifts, shuttle layers, cache points, and pallet transfer timing.</p>
+                    </article>
+
+                    <article class="story-slide" data-scene="3">
+                        <div class="scene-kicker">Scene 03 / Factory logistics</div>
+                        <h2><span class="glitch-word" data-text="AGV">AGV</span>, unmanned forklift, and conveyor routes connect the floor.</h2>
+                        <p>Receiving, line-side delivery, picking, buffering, charging, and outbound merge points move as one route network.</p>
+                    </article>
+
+                    <article class="story-slide" data-scene="4">
+                        <div class="scene-kicker">Scene 04 / Control layer</div>
+                        <h2><span class="glitch-word" data-text="WMS">WMS</span>, <span class="glitch-word" data-text="WCS">WCS</span>, PLC, and equipment feedback become visible.</h2>
+                        <p>Tasks, confirmations, alarms, and exception handling are mapped before the system reaches site commissioning.</p>
+                    </article>
+
+                    <article class="story-slide" data-scene="5">
+                        <div class="scene-kicker">Scene 05 / Project decision</div>
+                        <h2>Turn warehouse constraints into a smart logistics automation concept.</h2>
+                        <p>Send the warehouse size, clear height, SKU profile, storage target, inbound/outbound flow, and automation expectations.</p>
+                        <div class="story-actions">
+                            <a class="asrs-btn primary" href="contact.html">Request Evaluation</a>
+                            <a class="asrs-btn secondary" href="asrs-cost.html">Estimate ASRS Cost</a>
+                        </div>
+                    </article>
+                </div>
+
+                <aside class="hud-panel" aria-label="ASRS system indicators">
+                    <div class="hud-label">Digital twin online</div>
+                    <div class="hud-grid">
+                        <div class="hud-row">
+                            <span>Storage</span>
+                            <div class="hud-bar"><span id="hud-storage" style="--value: 38%"></span></div>
+                            <strong class="hud-value" id="hud-storage-value">38%</strong>
+                        </div>
+                        <div class="hud-row">
+                            <span>Flow</span>
+                            <div class="hud-bar"><span id="hud-flow" style="--value: 42%"></span></div>
+                            <strong class="hud-value" id="hud-flow-value">42%</strong>
+                        </div>
+                        <div class="hud-row">
+                            <span>Control</span>
+                            <div class="hud-bar"><span id="hud-control" style="--value: 26%"></span></div>
+                            <strong class="hud-value" id="hud-control-value">26%</strong>
+                        </div>
+                    </div>
+                </aside>
+
+                <div class="system-tags" aria-label="Automation system scope">
+                    <span>ASRS</span>
+                    <span>Conveyor</span>
+                    <span>AGV</span>
+                    <span>Unmanned forklift</span>
+                    <span>CTU/STU</span>
+                    <span>Four-way shuttle</span>
+                    <span>WMS / WCS / PLC</span>
+                </div>
+
+                <div class="scroll-cue" aria-hidden="true">
+                    <span>Scroll the system film</span>
+                    <span></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="reduced-story" aria-label="Static ASRS summary">
+            <div class="container">
+                <article class="reduced-card">
+                    <h3>Automated smart ASRS</h3>
+                    <p>High-bay storage, stacker cranes, rack structure, pallet positions, and location management planned around throughput.</p>
+                </article>
+                <article class="reduced-card">
+                    <h3>Factory logistics flow</h3>
+                    <p>Conveyors, AGVs, unmanned forklifts, buffers, docks, charging zones, and production-side delivery are connected as one route model.</p>
+                </article>
+                <article class="reduced-card">
+                    <h3>CTU/STU and shuttle storage</h3>
+                    <p>Small-item shelving, goods-to-person picking, dense shuttle layers, lifts, and cache positions are evaluated together.</p>
+                </article>
+                <article class="reduced-card">
+                    <h3>Control and delivery</h3>
+                    <p>WMS, WCS, PLC signals, equipment feedback, alarms, cost planning, schedule, and acceptance criteria stay connected.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="asrs-footer">
+        <div class="container">
+            <span>13machine smart ASRS landing page</span>
+            <span>ASRS design, cost planning, integration, and project delivery</span>
         </div>
-        <div class="signal-list">
-          <div class="signal-item">
-            <span class="signal-index">01</span>
-            <span><strong data-i18n="panel.input1_title">Warehouse constraints</strong><span data-i18n="panel.input1_desc">Height, footprint, storage target</span></span>
-          </div>
-          <div class="signal-item">
-            <span class="signal-index">02</span>
-            <span><strong data-i18n="panel.input2_title">Material flow</strong><span data-i18n="panel.input2_desc">Inbound, outbound, SKU velocity</span></span>
-          </div>
-          <div class="signal-item">
-            <span class="signal-index">03</span>
-            <span><strong data-i18n="panel.input3_title">Investment logic</strong><span data-i18n="panel.input3_desc">Cost range, ROI, delivery path</span></span>
-          </div>
-        </div>
-      </aside>
-    </div>
-  </section>
+    </footer>
 
-  <main>
-    <section class="section" id="capabilities">
-      <div class="section-inner">
-        <div class="section-heading">
-          <div>
-            <div class="section-kicker" data-i18n="capabilities.kicker">Capabilities</div>
-            <h2 data-i18n="capabilities.title">Focused support for the decisions that shape an ASRS project.</h2>
-          </div>
-          <p data-i18n="capabilities.desc">The homepage should stay simple: show confidence, explain the value, and move serious visitors toward a project evaluation form.</p>
-        </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script>
+        (function() {
+            "use strict";
 
-        <div class="capability-grid">
-          <article class="capability-card">
-            <span>01</span>
-            <h3 data-i18n="capabilities.design_title">Design</h3>
-            <p data-i18n="capabilities.design_desc">Translate warehouse size, clear height, SKU profile, pallet count, and throughput targets into a workable ASRS concept.</p>
-          </article>
-          <article class="capability-card">
-            <span>02</span>
-            <h3 data-i18n="capabilities.cost_title">Cost</h3>
-            <p data-i18n="capabilities.cost_desc">Build an early investment range around equipment type, storage density, controls, installation scope, and project risk.</p>
-          </article>
-          <article class="capability-card">
-            <span>03</span>
-            <h3 data-i18n="capabilities.integration_title">Integration</h3>
-            <p data-i18n="capabilities.integration_desc">Connect racks, cranes, shuttles, conveyors, AGVs, robots, WMS, WCS, PLC, safety, commissioning, and handover planning.</p>
-          </article>
-        </div>
-      </div>
-    </section>
+            var LANGUAGE_KEY = "siteLanguage";
+            var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            var sceneEl = document.getElementById("smart-warehouse-scene");
+            var loader = document.getElementById("scene-loader");
+            var sceneApi = null;
 
-    <section class="section" id="process">
-      <div class="section-inner">
-        <div class="section-heading">
-          <div>
-            <div class="section-kicker" data-i18n="process.kicker">Evaluation process</div>
-            <h2 data-i18n="process.title">Start with project data. Leave with a clearer system direction.</h2>
-          </div>
-          <p data-i18n="process.desc">Instead of making visitors browse repeated content, the page should make the next action obvious and professional.</p>
-        </div>
+            window.switchLanguage = function(lang) {
+                localStorage.setItem(LANGUAGE_KEY, lang || "en");
+                document.documentElement.lang = lang || "en";
+                var select = document.getElementById("lang-select");
+                if (select) {
+                    select.value = lang || "en";
+                }
+            };
 
-        <div class="process-panel">
-          <article class="process-step">
-            <span data-i18n="process.step1_label">Step 01</span>
-            <h3 data-i18n="process.step1_title">Submit data</h3>
-            <p data-i18n="process.step1_desc">Share warehouse dimensions, storage target, material flow, SKU profile, and automation expectations.</p>
-          </article>
-          <article class="process-step">
-            <span data-i18n="process.step2_label">Step 02</span>
-            <h3 data-i18n="process.step2_title">Get concept</h3>
-            <p data-i18n="process.step2_desc">Receive a practical ASRS direction with likely equipment mix, project scale, and cost logic.</p>
-          </article>
-          <article class="process-step">
-            <span data-i18n="process.step3_label">Step 03</span>
-            <h3 data-i18n="process.step3_title">Discuss solution</h3>
-            <p data-i18n="process.step3_desc">Review assumptions, adjust priorities, and move toward design, supply, integration, and delivery planning.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-  </main>
+            window.switchLanguage(localStorage.getItem(LANGUAGE_KEY) || "en");
 
-  <section class="final-cta" id="evaluation">
-    <div class="cta-inner">
-      <div>
-        <div class="section-kicker" data-i18n="final.kicker">Project evaluation</div>
-        <h2 data-i18n="final.title">Tell us what your warehouse needs to become.</h2>
-        <p data-i18n="final.desc">Use the form to send your project basics. We will help turn them into an ASRS concept, cost range, and delivery direction.</p>
-      </div>
-      <a class="btn btn-primary" href="contact.html" data-i18n="cta.request_project">Request Project Evaluation</a>
-    </div>
-  </section>
-
-  <footer>
-    <span data-i18n="footer.left">13ASRS landing concept</span>
-    <span data-i18n="footer.right">ASRS design, cost planning, and full system delivery</span>
-  </footer>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
-  <script>
-  (function() {
-    "use strict";
-
-    const LANGUAGE_KEY = "siteLanguage";
-    const landingTranslations = {
-      en: {
-        meta: {
-          title: "13ASRS | ASRS Design, Cost Planning, and Delivery",
-          description: "ASRS design, cost planning, and full system delivery for automated storage projects."
-        },
-        nav: {
-          cost: "ASRS Cost",
-          design: "ASRS Design",
-          solutions: "Solutions",
-          cases: "Cases",
-          contact: "Contact"
-        },
-        cta: {
-          request_short: "Request Evaluation",
-          request_project: "Request Project Evaluation",
-          explore_design: "Explore ASRS Design"
-        },
-        hero: {
-          eyebrow: "ASRS project evaluation",
-          title: "Design the automated warehouse before you invest in it.",
-          description: "<span class=\"hero-positioning\">ASRS design, cost planning, and full system delivery.</span> We turn warehouse constraints into a practical automation concept, budget range, and next-step project direction."
-        },
-        panel: {
-          title: "Project inputs",
-          ready: "Ready",
-          input1_title: "Warehouse constraints",
-          input1_desc: "Height, footprint, storage target",
-          input2_title: "Material flow",
-          input2_desc: "Inbound, outbound, SKU velocity",
-          input3_title: "Investment logic",
-          input3_desc: "Cost range, ROI, delivery path"
-        },
-        capabilities: {
-          kicker: "Capabilities",
-          title: "Focused support for the decisions that shape an ASRS project.",
-          desc: "The homepage should stay simple: show confidence, explain the value, and move serious visitors toward a project evaluation form.",
-          design_title: "Design",
-          design_desc: "Translate warehouse size, clear height, SKU profile, pallet count, and throughput targets into a workable ASRS concept.",
-          cost_title: "Cost",
-          cost_desc: "Build an early investment range around equipment type, storage density, controls, installation scope, and project risk.",
-          integration_title: "Integration",
-          integration_desc: "Connect racks, cranes, shuttles, conveyors, AGVs, robots, WMS, WCS, PLC, safety, commissioning, and handover planning."
-        },
-        process: {
-          kicker: "Evaluation process",
-          title: "Start with project data. Leave with a clearer system direction.",
-          desc: "Instead of making visitors browse repeated content, the page should make the next action obvious and professional.",
-          step1_label: "Step 01",
-          step1_title: "Submit data",
-          step1_desc: "Share warehouse dimensions, storage target, material flow, SKU profile, and automation expectations.",
-          step2_label: "Step 02",
-          step2_title: "Get concept",
-          step2_desc: "Receive a practical ASRS direction with likely equipment mix, project scale, and cost logic.",
-          step3_label: "Step 03",
-          step3_title: "Discuss solution",
-          step3_desc: "Review assumptions, adjust priorities, and move toward design, supply, integration, and delivery planning."
-        },
-        final: {
-          kicker: "Project evaluation",
-          title: "Tell us what your warehouse needs to become.",
-          desc: "Use the form to send your project basics. We will help turn them into an ASRS concept, cost range, and delivery direction."
-        },
-        footer: {
-          left: "13ASRS landing concept",
-          right: "ASRS design, cost planning, and full system delivery"
-        }
-      },
-      zh: {
-        meta: {
-          title: "13ASRS | ASRS 设计、成本规划与项目交付",
-          description: "为自动化立体仓库项目提供 ASRS 设计、成本规划和完整系统交付。"
-        },
-        nav: {
-          cost: "ASRS 成本",
-          design: "ASRS 设计",
-          solutions: "解决方案",
-          cases: "案例",
-          contact: "联系"
-        },
-        cta: {
-          request_short: "项目评估",
-          request_project: "申请项目评估",
-          explore_design: "查看 ASRS 设计"
-        },
-        hero: {
-          eyebrow: "ASRS 项目评估",
-          title: "在投资之前，先把自动化仓库设计清楚。",
-          description: "<span class=\"hero-positioning\">ASRS 设计、成本规划与完整系统交付。</span> 我们把仓库约束转化为可落地的自动化方案、预算范围和下一步项目方向。"
-        },
-        panel: {
-          title: "项目输入",
-          ready: "就绪",
-          input1_title: "仓库约束",
-          input1_desc: "高度、面积、存储目标",
-          input2_title: "物流流程",
-          input2_desc: "入库、出库、SKU 周转",
-          input3_title: "投资逻辑",
-          input3_desc: "成本范围、ROI、交付路径"
-        },
-        capabilities: {
-          kicker: "核心能力",
-          title: "聚焦影响 ASRS 项目的关键决策。",
-          desc: "主页应保持简洁：建立信任、说明价值，并引导有明确需求的访客提交项目评估。",
-          design_title: "设计",
-          design_desc: "将仓库尺寸、净高、SKU 结构、托盘数量和吞吐目标转化为可执行的 ASRS 概念方案。",
-          cost_title: "成本",
-          cost_desc: "围绕设备类型、存储密度、控制系统、安装范围和项目风险，建立早期投资区间。",
-          integration_title: "集成",
-          integration_desc: "连接货架、堆垛机、穿梭车、输送线、AGV、机器人、WMS、WCS、PLC、安全、调试与交付规划。"
-        },
-        process: {
-          kicker: "评估流程",
-          title: "从项目数据开始，得到更清晰的系统方向。",
-          desc: "页面不应让访客反复浏览重复内容，而应让下一步行动清楚、专业。",
-          step1_label: "步骤 01",
-          step1_title: "提交数据",
-          step1_desc: "提供仓库尺寸、存储目标、物流流程、SKU 结构和自动化预期。",
-          step2_label: "步骤 02",
-          step2_title: "获得概念方案",
-          step2_desc: "获得可行的 ASRS 方向，包括可能的设备组合、项目规模和成本逻辑。",
-          step3_label: "步骤 03",
-          step3_title: "讨论解决方案",
-          step3_desc: "复核假设、调整优先级，并进入设计、供应、集成和交付规划。"
-        },
-        final: {
-          kicker: "项目评估",
-          title: "告诉我们，你的仓库需要变成什么样。",
-          desc: "通过表单发送项目基础信息，我们会帮助你形成 ASRS 概念方案、成本范围和交付方向。"
-        },
-        footer: {
-          left: "13ASRS 主页概念",
-          right: "ASRS 设计、成本规划与完整系统交付"
-        }
-      },
-      es: {
-        meta: {
-          title: "13ASRS | Diseño ASRS, planificación de costos y entrega",
-          description: "Diseño ASRS, planificación de costos y entrega completa de sistemas para proyectos de almacenamiento automatizado."
-        },
-        nav: {
-          cost: "Costo ASRS",
-          design: "Diseño ASRS",
-          solutions: "Soluciones",
-          cases: "Casos",
-          contact: "Contacto"
-        },
-        cta: {
-          request_short: "Solicitar evaluación",
-          request_project: "Solicitar evaluación del proyecto",
-          explore_design: "Explorar diseño ASRS"
-        },
-        hero: {
-          eyebrow: "Evaluación de proyecto ASRS",
-          title: "Diseñe el almacén automatizado antes de invertir.",
-          description: "<span class=\"hero-positioning\">Diseño ASRS, planificación de costos y entrega completa del sistema.</span> Convertimos las restricciones del almacén en un concepto práctico, rango de presupuesto y dirección del proyecto."
-        },
-        panel: {
-          title: "Datos del proyecto",
-          ready: "Listo",
-          input1_title: "Restricciones del almacén",
-          input1_desc: "Altura, superficie, objetivo de almacenamiento",
-          input2_title: "Flujo de materiales",
-          input2_desc: "Entrada, salida, rotación de SKU",
-          input3_title: "Lógica de inversión",
-          input3_desc: "Rango de costo, ROI, ruta de entrega"
-        },
-        capabilities: {
-          kicker: "Capacidades",
-          title: "Apoyo enfocado para las decisiones que definen un proyecto ASRS.",
-          desc: "La página principal debe ser simple: generar confianza, explicar el valor y guiar hacia el formulario de evaluación.",
-          design_title: "Diseño",
-          design_desc: "Convertimos tamaño, altura libre, perfil SKU, pallets y objetivos de rendimiento en un concepto ASRS viable.",
-          cost_title: "Costo",
-          cost_desc: "Creamos un rango de inversión inicial según equipos, densidad, controles, instalación y riesgo.",
-          integration_title: "Integración",
-          integration_desc: "Conectamos racks, grúas, shuttles, transportadores, AGV, robots, WMS, WCS, PLC, seguridad, puesta en marcha y entrega."
-        },
-        process: {
-          kicker: "Proceso de evaluación",
-          title: "Empiece con datos del proyecto. Termine con una dirección más clara.",
-          desc: "La página debe hacer que el siguiente paso sea obvio y profesional.",
-          step1_label: "Paso 01",
-          step1_title: "Enviar datos",
-          step1_desc: "Comparta dimensiones, objetivo de almacenamiento, flujo, perfil SKU y expectativas de automatización.",
-          step2_label: "Paso 02",
-          step2_title: "Recibir concepto",
-          step2_desc: "Reciba una dirección ASRS práctica con mezcla de equipos, escala del proyecto y lógica de costos.",
-          step3_label: "Paso 03",
-          step3_title: "Discutir solución",
-          step3_desc: "Revise supuestos, ajuste prioridades y avance hacia diseño, suministro, integración y entrega."
-        },
-        final: {
-          kicker: "Evaluación del proyecto",
-          title: "Cuéntenos en qué debe convertirse su almacén.",
-          desc: "Use el formulario para enviar los datos básicos. Le ayudaremos a crear un concepto ASRS, rango de costo y dirección de entrega."
-        },
-        footer: {
-          left: "Concepto de landing 13ASRS",
-          right: "Diseño ASRS, planificación de costos y entrega completa"
-        }
-      },
-      fr: {
-        meta: {
-          title: "13ASRS | Conception ASRS, budget et livraison",
-          description: "Conception ASRS, planification des coûts et livraison complète pour projets de stockage automatisé."
-        },
-        nav: {
-          cost: "Coût ASRS",
-          design: "Conception ASRS",
-          solutions: "Solutions",
-          cases: "Cas",
-          contact: "Contact"
-        },
-        cta: {
-          request_short: "Demander une évaluation",
-          request_project: "Demander une évaluation projet",
-          explore_design: "Explorer la conception ASRS"
-        },
-        hero: {
-          eyebrow: "Évaluation de projet ASRS",
-          title: "Concevez l'entrepôt automatisé avant d'investir.",
-          description: "<span class=\"hero-positioning\">Conception ASRS, planification des coûts et livraison complète.</span> Nous transformons les contraintes d'entrepôt en concept pratique, budget indicatif et direction projet."
-        },
-        panel: {
-          title: "Données projet",
-          ready: "Prêt",
-          input1_title: "Contraintes d'entrepôt",
-          input1_desc: "Hauteur, surface, objectif de stockage",
-          input2_title: "Flux matière",
-          input2_desc: "Entrées, sorties, vélocité SKU",
-          input3_title: "Logique d'investissement",
-          input3_desc: "Coût, ROI, chemin de livraison"
-        },
-        capabilities: {
-          kicker: "Capacités",
-          title: "Un appui ciblé pour les décisions qui structurent un projet ASRS.",
-          desc: "La page d'accueil doit rester simple : inspirer confiance, expliquer la valeur et mener vers l'évaluation.",
-          design_title: "Conception",
-          design_desc: "Transformer dimensions, hauteur, profil SKU, nombre de palettes et objectifs de débit en concept ASRS exploitable.",
-          cost_title: "Coût",
-          cost_desc: "Établir une fourchette d'investissement selon équipement, densité, contrôle, installation et risque projet.",
-          integration_title: "Intégration",
-          integration_desc: "Relier racks, transstockeurs, shuttles, convoyeurs, AGV, robots, WMS, WCS, PLC, sécurité, mise en service et transfert."
-        },
-        process: {
-          kicker: "Processus d'évaluation",
-          title: "Commencez par les données. Repartez avec une direction plus claire.",
-          desc: "La page doit rendre l'action suivante évidente et professionnelle.",
-          step1_label: "Étape 01",
-          step1_title: "Soumettre les données",
-          step1_desc: "Partagez dimensions, objectif de stockage, flux, profil SKU et attentes d'automatisation.",
-          step2_label: "Étape 02",
-          step2_title: "Recevoir le concept",
-          step2_desc: "Obtenez une direction ASRS avec équipements probables, échelle et logique de coût.",
-          step3_label: "Étape 03",
-          step3_title: "Discuter la solution",
-          step3_desc: "Validez les hypothèses, ajustez les priorités et avancez vers conception, fourniture, intégration et livraison."
-        },
-        final: {
-          kicker: "Évaluation projet",
-          title: "Dites-nous ce que votre entrepôt doit devenir.",
-          desc: "Envoyez les informations de base via le formulaire. Nous vous aiderons à établir un concept ASRS, un budget et une direction de livraison."
-        },
-        footer: {
-          left: "Concept de page 13ASRS",
-          right: "Conception ASRS, planification des coûts et livraison complète"
-        }
-      },
-      ja: {
-        meta: {
-          title: "13ASRS | ASRS設計・コスト計画・導入支援",
-          description: "自動倉庫プロジェクト向けのASRS設計、コスト計画、システム納入支援。"
-        },
-        nav: {
-          cost: "ASRSコスト",
-          design: "ASRS設計",
-          solutions: "ソリューション",
-          cases: "事例",
-          contact: "お問い合わせ"
-        },
-        cta: {
-          request_short: "評価を依頼",
-          request_project: "プロジェクト評価を依頼",
-          explore_design: "ASRS設計を見る"
-        },
-        hero: {
-          eyebrow: "ASRSプロジェクト評価",
-          title: "投資の前に、自動倉庫を設計で見える化します。",
-          description: "<span class=\"hero-positioning\">ASRS設計、コスト計画、システム全体の導入支援。</span> 倉庫条件を実行可能な自動化コンセプト、予算レンジ、次の方向性に変換します。"
-        },
-        panel: {
-          title: "プロジェクト入力",
-          ready: "準備完了",
-          input1_title: "倉庫条件",
-          input1_desc: "高さ、面積、保管目標",
-          input2_title: "物流フロー",
-          input2_desc: "入庫、出庫、SKU回転",
-          input3_title: "投資ロジック",
-          input3_desc: "コスト範囲、ROI、導入ルート"
-        },
-        capabilities: {
-          kicker: "対応領域",
-          title: "ASRSプロジェクトを左右する意思決定を支援します。",
-          desc: "ホームページは簡潔に、信頼感と価値を伝え、評価フォームへ自然に導きます。",
-          design_title: "設計",
-          design_desc: "倉庫寸法、有効高さ、SKU構成、パレット数、処理能力目標をASRSコンセプトに変換します。",
-          cost_title: "コスト",
-          cost_desc: "設備タイプ、保管密度、制御、設置範囲、リスクに基づき初期投資レンジを整理します。",
-          integration_title: "統合",
-          integration_desc: "ラック、クレーン、シャトル、コンベヤ、AGV、ロボット、WMS、WCS、PLC、安全、試運転、引き渡しをつなぎます。"
-        },
-        process: {
-          kicker: "評価プロセス",
-          title: "プロジェクトデータから、明確なシステム方向へ。",
-          desc: "ページは次の行動を明確で専門的に示すべきです。",
-          step1_label: "ステップ 01",
-          step1_title: "データ提出",
-          step1_desc: "倉庫寸法、保管目標、物流フロー、SKU構成、自動化要件を共有します。",
-          step2_label: "ステップ 02",
-          step2_title: "コンセプト取得",
-          step2_desc: "設備構成、プロジェクト規模、コストロジックを含むASRS方向性を受け取ります。",
-          step3_label: "ステップ 03",
-          step3_title: "解決策を検討",
-          step3_desc: "前提を確認し、優先順位を調整して、設計・供給・統合・導入計画へ進みます。"
-        },
-        final: {
-          kicker: "プロジェクト評価",
-          title: "倉庫をどう変えたいか教えてください。",
-          desc: "フォームで基本情報を送信してください。ASRSコンセプト、コスト範囲、導入方向を整理します。"
-        },
-        footer: {
-          left: "13ASRSランディングコンセプト",
-          right: "ASRS設計、コスト計画、システム導入支援"
-        }
-      },
-      ko: {
-        meta: {
-          title: "13ASRS | ASRS 설계, 비용 계획, 시스템 납품",
-          description: "자동창고 프로젝트를 위한 ASRS 설계, 비용 계획, 전체 시스템 납품 지원."
-        },
-        nav: {
-          cost: "ASRS 비용",
-          design: "ASRS 설계",
-          solutions: "솔루션",
-          cases: "사례",
-          contact: "문의"
-        },
-        cta: {
-          request_short: "평가 요청",
-          request_project: "프로젝트 평가 요청",
-          explore_design: "ASRS 설계 보기"
-        },
-        hero: {
-          eyebrow: "ASRS 프로젝트 평가",
-          title: "투자 전에 자동화 창고를 먼저 설계하십시오.",
-          description: "<span class=\"hero-positioning\">ASRS 설계, 비용 계획, 전체 시스템 납품.</span> 창고 제약 조건을 실행 가능한 자동화 컨셉, 예산 범위, 다음 프로젝트 방향으로 전환합니다."
-        },
-        panel: {
-          title: "프로젝트 입력",
-          ready: "준비됨",
-          input1_title: "창고 제약",
-          input1_desc: "높이, 면적, 보관 목표",
-          input2_title: "물류 흐름",
-          input2_desc: "입고, 출고, SKU 회전",
-          input3_title: "투자 로직",
-          input3_desc: "비용 범위, ROI, 납품 경로"
-        },
-        capabilities: {
-          kicker: "핵심 역량",
-          title: "ASRS 프로젝트를 결정하는 핵심 판단을 지원합니다.",
-          desc: "홈페이지는 신뢰를 만들고 가치를 설명하며 평가 양식으로 이어져야 합니다.",
-          design_title: "설계",
-          design_desc: "창고 크기, 유효 높이, SKU 프로필, 팔레트 수, 처리량 목표를 실행 가능한 ASRS 컨셉으로 전환합니다.",
-          cost_title: "비용",
-          cost_desc: "장비 유형, 보관 밀도, 제어, 설치 범위, 프로젝트 리스크를 기준으로 초기 투자 범위를 만듭니다.",
-          integration_title: "통합",
-          integration_desc: "랙, 크레인, 셔틀, 컨베이어, AGV, 로봇, WMS, WCS, PLC, 안전, 시운전, 인수인계를 연결합니다."
-        },
-        process: {
-          kicker: "평가 프로세스",
-          title: "프로젝트 데이터로 시작해 더 명확한 시스템 방향을 얻습니다.",
-          desc: "페이지는 다음 행동을 명확하고 전문적으로 보여주어야 합니다.",
-          step1_label: "단계 01",
-          step1_title: "데이터 제출",
-          step1_desc: "창고 치수, 보관 목표, 물류 흐름, SKU 프로필, 자동화 기대치를 공유합니다.",
-          step2_label: "단계 02",
-          step2_title: "컨셉 받기",
-          step2_desc: "예상 장비 조합, 프로젝트 규모, 비용 로직이 포함된 ASRS 방향을 받습니다.",
-          step3_label: "단계 03",
-          step3_title: "솔루션 논의",
-          step3_desc: "가정을 검토하고 우선순위를 조정하여 설계, 공급, 통합, 납품 계획으로 이동합니다."
-        },
-        final: {
-          kicker: "프로젝트 평가",
-          title: "창고가 어떤 모습이 되어야 하는지 알려주세요.",
-          desc: "양식으로 기본 정보를 보내주시면 ASRS 컨셉, 비용 범위, 납품 방향을 정리해 드립니다."
-        },
-        footer: {
-          left: "13ASRS 랜딩 컨셉",
-          right: "ASRS 설계, 비용 계획, 전체 시스템 납품"
-        }
-      },
-      ar: {
-        meta: {
-          title: "13ASRS | تصميم ASRS وتخطيط التكلفة والتسليم",
-          description: "تصميم ASRS وتخطيط التكلفة وتسليم النظام الكامل لمشاريع التخزين الآلي."
-        },
-        nav: {
-          cost: "تكلفة ASRS",
-          design: "تصميم ASRS",
-          solutions: "الحلول",
-          cases: "الحالات",
-          contact: "اتصال"
-        },
-        cta: {
-          request_short: "طلب تقييم",
-          request_project: "طلب تقييم المشروع",
-          explore_design: "استكشاف تصميم ASRS"
-        },
-        hero: {
-          eyebrow: "تقييم مشروع ASRS",
-          title: "صمّم المستودع الآلي قبل الاستثمار فيه.",
-          description: "<span class=\"hero-positioning\">تصميم ASRS وتخطيط التكلفة وتسليم النظام الكامل.</span> نحول قيود المستودع إلى مفهوم أتمتة عملي ونطاق ميزانية واتجاه واضح للمشروع."
-        },
-        panel: {
-          title: "مدخلات المشروع",
-          ready: "جاهز",
-          input1_title: "قيود المستودع",
-          input1_desc: "الارتفاع، المساحة، هدف التخزين",
-          input2_title: "تدفق المواد",
-          input2_desc: "الوارد، الصادر، سرعة SKU",
-          input3_title: "منطق الاستثمار",
-          input3_desc: "نطاق التكلفة، ROI، مسار التسليم"
-        },
-        capabilities: {
-          kicker: "القدرات",
-          title: "دعم مركز للقرارات التي تشكل مشروع ASRS.",
-          desc: "يجب أن تبقى الصفحة الرئيسية بسيطة: تبني الثقة، تشرح القيمة، وتقود الزائر إلى نموذج التقييم.",
-          design_title: "التصميم",
-          design_desc: "نحوّل حجم المستودع والارتفاع وملف SKU وعدد المنصات وأهداف الإنتاجية إلى مفهوم ASRS قابل للتنفيذ.",
-          cost_title: "التكلفة",
-          cost_desc: "نبني نطاق استثمار أولي حسب نوع المعدات وكثافة التخزين وأنظمة التحكم ونطاق التركيب والمخاطر.",
-          integration_title: "التكامل",
-          integration_desc: "نربط الرفوف والرافعات والمكوكات والناقلات وAGV والروبوتات وWMS وWCS وPLC والسلامة والتشغيل والتسليم."
-        },
-        process: {
-          kicker: "عملية التقييم",
-          title: "ابدأ ببيانات المشروع واحصل على اتجاه أوضح للنظام.",
-          desc: "يجب أن تجعل الصفحة الخطوة التالية واضحة ومهنية.",
-          step1_label: "الخطوة 01",
-          step1_title: "إرسال البيانات",
-          step1_desc: "شارك أبعاد المستودع وهدف التخزين وتدفق المواد وملف SKU وتوقعات الأتمتة.",
-          step2_label: "الخطوة 02",
-          step2_title: "الحصول على مفهوم",
-          step2_desc: "احصل على اتجاه ASRS عملي مع مزيج المعدات وحجم المشروع ومنطق التكلفة.",
-          step3_label: "الخطوة 03",
-          step3_title: "مناقشة الحل",
-          step3_desc: "راجع الفرضيات واضبط الأولويات وانتقل إلى التخطيط للتصميم والتوريد والتكامل والتسليم."
-        },
-        final: {
-          kicker: "تقييم المشروع",
-          title: "أخبرنا بما يجب أن يصبح عليه مستودعك.",
-          desc: "استخدم النموذج لإرسال أساسيات المشروع، وسنساعدك على تحويلها إلى مفهوم ASRS ونطاق تكلفة واتجاه تسليم."
-        },
-        footer: {
-          left: "مفهوم صفحة 13ASRS",
-          right: "تصميم ASRS وتخطيط التكلفة وتسليم النظام الكامل"
-        }
-      }
-    };
-
-    function getLandingValue(lang, key) {
-      return key.split(".").reduce((value, part) => value && value[part], landingTranslations[lang]) ||
-        key.split(".").reduce((value, part) => value && value[part], landingTranslations.en);
-    }
-
-    function translateLandingPage(lang) {
-      const safeLang = landingTranslations[lang] ? lang : "en";
-      document.documentElement.lang = safeLang;
-      document.title = getLandingValue(safeLang, "meta.title");
-      const metaDescription = document.querySelector("meta[name=\"description\"]");
-      if (metaDescription) {
-        metaDescription.setAttribute("content", getLandingValue(safeLang, "meta.description"));
-      }
-      document.querySelectorAll("[data-i18n]").forEach((element) => {
-        const value = getLandingValue(safeLang, element.dataset.i18n);
-        if (value !== undefined) element.textContent = value;
-      });
-      document.querySelectorAll("[data-i18n-html]").forEach((element) => {
-        const value = getLandingValue(safeLang, element.dataset.i18nHtml);
-        if (value !== undefined) element.innerHTML = value;
-      });
-      document.querySelectorAll("#lang-select").forEach((select) => {
-        select.value = safeLang;
-      });
-    }
-
-    function switchLanguage(lang) {
-      const safeLang = landingTranslations[lang] ? lang : "en";
-      localStorage.setItem(LANGUAGE_KEY, safeLang);
-      translateLandingPage(safeLang);
-    }
-
-    window.switchLanguage = switchLanguage;
-
-    function initLanguage() {
-      switchLanguage(localStorage.getItem(LANGUAGE_KEY) || "en");
-    }
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const isMobile = window.innerWidth < 760;
-    const navbar = document.getElementById("navbar");
-    const loader = document.getElementById("scene-loader");
-    const sceneContainer = document.getElementById("three-container");
-
-    function initNavigation() {
-      const onScroll = () => {
-        navbar.classList.toggle("scrolled", window.scrollY > 80);
-      };
-      onScroll();
-      window.addEventListener("scroll", onScroll, { passive: true });
-    }
-
-    function initScrollMotion() {
-      if (!window.gsap || !window.ScrollTrigger || reducedMotion) return;
-      gsap.registerPlugin(ScrollTrigger);
-
-      gsap.from(".eyebrow, .hero-copy h1, .hero-copy p, .hero-actions", {
-        y: 28,
-        opacity: 0,
-        duration: 0.9,
-        stagger: 0.09,
-        ease: "power3.out",
-        delay: 0.15
-      });
-
-      gsap.from(".hero-panel", {
-        y: 28,
-        opacity: 0,
-        duration: 0.95,
-        ease: "power3.out",
-        delay: 0.45
-      });
-
-      gsap.utils.toArray(".section-heading, .capability-card, .process-step, .cta-inner").forEach((element) => {
-        gsap.from(element, {
-          y: 34,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: element,
-            start: "top 84%",
-            once: true
-          }
-        });
-      });
-    }
-
-    function createScene() {
-      if (!window.THREE || !sceneContainer) {
-        if (loader) loader.classList.add("hidden");
-        return;
-      }
-
-      const THREE = window.THREE;
-      const scene = new THREE.Scene();
-      scene.fog = new THREE.Fog(0x080b10, 17, 42);
-
-      const camera = new THREE.PerspectiveCamera(42, sceneContainer.clientWidth / sceneContainer.clientHeight, 0.1, 100);
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true });
-      renderer.setSize(sceneContainer.clientWidth, sceneContainer.clientHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.35 : 1.85));
-      renderer.setClearColor(0x080b10, 1);
-      renderer.shadowMap.enabled = !isMobile;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-      sceneContainer.appendChild(renderer.domElement);
-
-      const world = new THREE.Group();
-      scene.add(world);
-
-      scene.add(new THREE.AmbientLight(0xbad6ff, 0.62));
-
-      const key = new THREE.DirectionalLight(0xffffff, 0.82);
-      key.position.set(7, 12, 8);
-      key.castShadow = !isMobile;
-      scene.add(key);
-
-      const rim = new THREE.DirectionalLight(0x00a3c7, 0.62);
-      rim.position.set(-7, 5, -8);
-      scene.add(rim);
-
-      const signalLight = new THREE.PointLight(0x00a3c7, 1.7, 9);
-      signalLight.position.set(0, 2.6, 0);
-      scene.add(signalLight);
-
-      const materials = {
-        rack: new THREE.MeshStandardMaterial({ color: 0x25313d, roughness: 0.48, metalness: 0.54 }),
-        beam: new THREE.MeshStandardMaterial({ color: 0x1a4c7a, roughness: 0.36, metalness: 0.48 }),
-        pallet: new THREE.MeshStandardMaterial({ color: 0x8b95a1, roughness: 0.6, metalness: 0.12 }),
-        palletBlue: new THREE.MeshStandardMaterial({ color: 0x2f80ed, roughness: 0.44, metalness: 0.22, emissive: 0x0c2648, emissiveIntensity: 0.18 }),
-        palletAmber: new THREE.MeshStandardMaterial({ color: 0xf0a52b, roughness: 0.45, metalness: 0.16, emissive: 0x4a2600, emissiveIntensity: 0.1 }),
-        crane: new THREE.MeshStandardMaterial({ color: 0xd2dbe5, roughness: 0.32, metalness: 0.64 }),
-        craneBlue: new THREE.MeshStandardMaterial({ color: 0x2f80ed, roughness: 0.26, metalness: 0.45, emissive: 0x123a73, emissiveIntensity: 0.2 }),
-        shuttle: new THREE.MeshStandardMaterial({ color: 0x00a3c7, roughness: 0.38, metalness: 0.32, emissive: 0x003b48, emissiveIntensity: 0.22 }),
-        conveyor: new THREE.MeshStandardMaterial({ color: 0x18222d, roughness: 0.52, metalness: 0.46 }),
-        flow: new THREE.MeshBasicMaterial({ color: 0x00a3c7, transparent: true, opacity: 0.72 })
-      };
-
-      const floor = new THREE.Mesh(
-        new THREE.PlaneGeometry(34, 26),
-        new THREE.MeshStandardMaterial({ color: 0x0b1017, roughness: 0.82, metalness: 0.18 })
-      );
-      floor.rotation.x = -Math.PI / 2;
-      floor.receiveShadow = !isMobile;
-      world.add(floor);
-
-      const grid = new THREE.GridHelper(34, 34, 0x1f6fd6, 0x16202b);
-      grid.position.y = 0.012;
-      world.add(grid);
-
-      const rackObjects = [];
-      const flowLights = [];
-      const levels = isMobile ? 4 : 5;
-      const bays = isMobile ? 5 : 7;
-
-      function mesh(geometry, material, position) {
-        const item = new THREE.Mesh(geometry, material);
-        item.position.set(position[0], position[1], position[2]);
-        item.castShadow = !isMobile;
-        item.receiveShadow = !isMobile;
-        return item;
-      }
-
-      function createRackRow(z) {
-        const row = new THREE.Group();
-        const uprightGeo = new THREE.BoxGeometry(0.07, levels * 0.78 + 0.3, 0.07);
-        const beamGeo = new THREE.BoxGeometry(0.88, 0.055, 0.08);
-        for (let b = 0; b <= bays; b++) {
-          const x = (b - bays / 2) * 0.95;
-          [-0.44, 0.44].forEach((depth) => {
-            row.add(mesh(uprightGeo, materials.rack, [x, (levels * 0.78 + 0.3) / 2, z + depth]));
-          });
-        }
-        for (let b = 0; b < bays; b++) {
-          const x = (b - bays / 2) * 0.95 + 0.475;
-          for (let level = 0; level < levels; level++) {
-            const y = 0.24 + level * 0.78;
-            [-0.44, 0.44].forEach((depth) => {
-              const beam = mesh(beamGeo, materials.beam, [x, y, z + depth]);
-              row.add(beam);
-              rackObjects.push(beam);
-            });
-            if ((b + level + Math.round(z * 2)) % 3 !== 0) {
-              row.add(mesh(
-                new THREE.BoxGeometry(0.62, 0.22, 0.48),
-                (b + level) % 4 === 0 ? materials.palletBlue : materials.pallet,
-                [x, y + 0.18, z]
-              ));
+            function hideLoader() {
+                if (loader) {
+                    loader.classList.add("hidden");
+                }
             }
-          }
-        }
-        world.add(row);
-      }
 
-      [-3.8, -1.45, 1.45, 3.8].forEach(createRackRow);
+            function clamp(value, min, max) {
+                return Math.max(min, Math.min(max, value));
+            }
 
-      const conveyor = new THREE.Group();
-      conveyor.add(mesh(new THREE.BoxGeometry(9.2, 0.16, 0.82), materials.conveyor, [0, 0.16, -6.3]));
-      for (let i = 0; i < 15; i++) {
-        const roller = mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.86, 12), materials.rack, [-4.2 + i * 0.6, 0.28, -6.3]);
-        roller.rotation.x = Math.PI / 2;
-        conveyor.add(roller);
-      }
-      world.add(conveyor);
+            function lerp(start, end, progress) {
+                return start + (end - start) * progress;
+            }
 
-      for (let i = 0; i < 9; i++) {
-        const light = mesh(new THREE.BoxGeometry(0.34, 0.025, 0.06), materials.flow, [-4 + i, 0.38, -5.82]);
-        flowLights.push(light);
-        world.add(light);
-      }
+            function mapRange(value, inMin, inMax, outMin, outMax) {
+                var progress = clamp((value - inMin) / (inMax - inMin), 0, 1);
+                return lerp(outMin, outMax, progress);
+            }
 
-      const crane = new THREE.Group();
-      const craneBase = mesh(new THREE.BoxGeometry(0.82, 0.18, 1.14), materials.craneBlue, [0, 0.14, 0]);
-      const mast = mesh(new THREE.BoxGeometry(0.16, 4.8, 0.16), materials.crane, [0, 2.48, 0]);
-      const lift = new THREE.Group();
-      const forkA = mesh(new THREE.BoxGeometry(0.7, 0.04, 0.07), materials.crane, [0.42, -0.08, 0.18]);
-      const forkB = mesh(new THREE.BoxGeometry(0.7, 0.04, 0.07), materials.crane, [0.42, -0.08, -0.18]);
-      lift.add(mesh(new THREE.BoxGeometry(0.9, 0.14, 0.86), materials.craneBlue, [0, 0, 0]), forkA, forkB);
-      lift.position.y = 1;
-      crane.add(craneBase, mast, lift);
-      crane.position.set(-3.4, 0, -0.02);
-      world.add(crane);
+            function initParticleRoutes(THREE, world, materials, isMobile) {
+                var particles = new THREE.Group();
+                var count = isMobile ? 34 : 78;
+                var geometry = new THREE.SphereGeometry(isMobile ? 0.035 : 0.045, 10, 10);
+                var routeMaterial = materials.particle;
+                var points = [];
 
-      const activePallet = mesh(new THREE.BoxGeometry(0.62, 0.22, 0.48), materials.palletAmber, [-4.2, 0.55, -6.3]);
-      activePallet.material.transparent = true;
-      activePallet.material.opacity = 1;
-      world.add(activePallet);
+                for (var i = 0; i < count; i += 1) {
+                    var dot = new THREE.Mesh(geometry, routeMaterial);
+                    dot.userData.offset = i / count;
+                    dot.userData.lane = i % 3;
+                    particles.add(dot);
+                    points.push(dot);
+                }
 
-      const shuttle = new THREE.Group();
-      shuttle.add(mesh(new THREE.BoxGeometry(0.78, 0.18, 0.56), materials.shuttle, [0, 0.18, 0]));
-      shuttle.add(mesh(new THREE.BoxGeometry(0.55, 0.2, 0.42), materials.palletBlue, [0, 0.42, 0]));
-      shuttle.position.set(4.2, 0, 1.45);
-      world.add(shuttle);
+                world.add(particles);
 
-      const cameraTarget = { x: -8.2, y: 6.2, z: 11.8, lookX: 0.2, lookY: 1.9, lookZ: -0.8 };
-      let mouseX = 0;
-      let mouseY = 0;
+                function setRoute(progress, time) {
+                    particles.visible = progress > 0.34;
+                    points.forEach(function(dot) {
+                        var phase = (progress * 1.45 + dot.userData.offset + time * 0.018) % 1;
+                        var laneShift = (dot.userData.lane - 1) * 0.56;
+                        if (phase < 0.38) {
+                            dot.position.set(lerp(-4.4, 2.2, phase / 0.38), 0.56, -5.95 + laneShift * 0.12);
+                        } else if (phase < 0.68) {
+                            dot.position.set(2.2 + laneShift, 0.72, lerp(-5.95, 1.7, (phase - 0.38) / 0.3));
+                        } else {
+                            dot.position.set(lerp(2.2, -2.8, (phase - 0.68) / 0.32), 0.86, 1.7 + laneShift);
+                        }
+                        dot.material.opacity = mapRange(progress, 0.34, 0.48, 0.12, 0.78) * (0.62 + Math.sin(time * 0.004 + dot.userData.offset * 24) * 0.28);
+                        dot.scale.setScalar(0.65 + Math.sin(time * 0.006 + dot.userData.offset * 12) * 0.22);
+                    });
+                }
 
-      if (!isMobile) {
-        sceneContainer.addEventListener("mousemove", (event) => {
-          const rect = sceneContainer.getBoundingClientRect();
-          mouseX = ((event.clientX - rect.left) / rect.width - 0.5) * 0.7;
-          mouseY = ((event.clientY - rect.top) / rect.height - 0.5) * 0.42;
-        }, { passive: true });
-      }
+                return {
+                    group: particles,
+                    update: setRoute
+                };
+            }
 
-      function resize() {
-        const width = sceneContainer.clientWidth;
-        const height = sceneContainer.clientHeight;
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-        renderer.setSize(width, height);
-      }
-      window.addEventListener("resize", resize);
+            function initCinematicScene() {
+                if (!sceneEl || !window.THREE) {
+                    hideLoader();
+                    return null;
+                }
 
-      function playSequence() {
-        if (!window.gsap || reducedMotion) return;
-        gsap.fromTo(world.scale, { x: 0.96, y: 0.96, z: 0.96 }, { x: 1, y: 1, z: 1, duration: 0.9, ease: "power3.out" });
-        gsap.fromTo(rackObjects.map((item) => item.material), { emissiveIntensity: 0 }, { emissiveIntensity: 0.2, duration: 0.6, yoyo: true, repeat: 1, delay: 0.2 });
+                var THREE = window.THREE;
+                var isMobile = window.innerWidth < 768;
+                var scene = new THREE.Scene();
+                scene.background = new THREE.Color(0xf8fbff);
+                scene.fog = new THREE.Fog(0xf8fbff, 16, 46);
 
-        const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.35, defaults: { ease: "power2.inOut" } });
-        tl.set(activePallet.position, { x: -4.2, y: 0.55, z: -6.3 }, 0);
-        tl.set(activePallet.material, { opacity: 1 }, 0);
-        tl.set(crane.position, { x: -3.4 }, 0);
-        tl.set(lift.position, { y: 1 }, 0);
-        tl.set(shuttle.position, { x: 4.2 }, 0);
-        tl.set(materials.flow, { opacity: 0.72 }, 0);
+                var camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+                var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.18 : 1.75));
+                renderer.shadowMap.enabled = !isMobile;
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                sceneEl.appendChild(renderer.domElement);
 
-        tl.to(activePallet.position, { x: -1.2, duration: 1.2 }, 0.45);
-        tl.to(materials.flow, { opacity: 0.18, duration: 0.25, yoyo: true, repeat: 3 }, 0.45);
-        tl.to(crane.position, { x: -1.2, duration: 1.2 }, 1.65);
-        tl.to(lift.position, { y: 2.58, duration: 0.85 }, 2.4);
-        tl.to(activePallet.position, { x: -1.2, y: 2.64, z: -0.08, duration: 0.75 }, 2.62);
-        tl.to([forkA.position, forkB.position], { x: 0.76, duration: 0.42, yoyo: true, repeat: 1 }, 3.28);
-        tl.to(activePallet.position, { x: -2.2, z: -1.45, duration: 0.85 }, 3.82);
-        tl.to(activePallet.material, { opacity: 0, duration: 0.45 }, 4.42);
-        tl.to(shuttle.position, { x: -3.7, duration: 1.6 }, 4.9);
-        tl.to(shuttle.position, { x: 4.2, duration: 1.6 }, 6.5);
-        tl.to(lift.position, { y: 1, duration: 0.72 }, 6.45);
-        tl.to(crane.position, { x: -3.4, duration: 0.9 }, 6.72);
-        tl.set(activePallet.position, { x: -4.2, y: 0.55, z: -6.3 }, 7.62);
-        tl.to(activePallet.material, { opacity: 1, duration: 0.45, ease: "power1.out" }, 7.68);
-      }
+                var world = new THREE.Group();
+                scene.add(world);
 
-      function animate() {
-        requestAnimationFrame(animate);
-        const time = performance.now() * 0.001;
-        world.rotation.y = Math.sin(time * 0.13) * 0.018;
-        signalLight.intensity = 1.1 + Math.sin(time * 2.4) * 0.35;
-        flowLights.forEach((light, index) => {
-          light.position.x = -4 + ((time * 1.2 + index * 0.72) % 8);
-        });
-        if (!reducedMotion) {
-          shuttle.rotation.y = Math.sin(time * 2) * 0.015;
-        }
-        camera.position.set(cameraTarget.x + mouseX, cameraTarget.y - mouseY, cameraTarget.z);
-        camera.lookAt(cameraTarget.lookX, cameraTarget.lookY, cameraTarget.lookZ);
-        renderer.render(scene, camera);
-      }
+                scene.add(new THREE.AmbientLight(0xffffff, 0.72));
+                var key = new THREE.DirectionalLight(0xffffff, 0.9);
+                key.position.set(6, 9, 9);
+                key.castShadow = !isMobile;
+                scene.add(key);
 
-      window.setTimeout(() => {
-        if (loader) loader.classList.add("hidden");
-      }, 600);
-      playSequence();
-      animate();
-    }
+                var rim = new THREE.DirectionalLight(0x7bbcff, 0.62);
+                rim.position.set(-8, 5, -5);
+                scene.add(rim);
 
-    function boot() {
-      initLanguage();
-      initNavigation();
-      createScene();
-      initScrollMotion();
-    }
+                var beacon = new THREE.PointLight(0x00a651, 1.3, 10);
+                beacon.position.set(0, 2.6, -1);
+                scene.add(beacon);
 
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", boot);
-    } else {
-      boot();
-    }
-  })();
-  </script>
+                var materials = {
+                    floor: new THREE.MeshStandardMaterial({ color: 0xf2f8ff, roughness: 0.82, metalness: 0.08 }),
+                    rack: new THREE.MeshStandardMaterial({ color: 0x9dc7ef, roughness: 0.48, metalness: 0.26, transparent: true, opacity: 0 }),
+                    beam: new THREE.MeshStandardMaterial({ color: 0x0066cc, roughness: 0.38, metalness: 0.34, transparent: true, opacity: 0 }),
+                    pallet: new THREE.MeshStandardMaterial({ color: 0xb9c7d4, roughness: 0.55, metalness: 0.12, transparent: true, opacity: 0 }),
+                    blueBox: new THREE.MeshStandardMaterial({ color: 0x2f8ee8, roughness: 0.46, metalness: 0.16, emissive: 0x0a4a8f, emissiveIntensity: 0.03, transparent: true, opacity: 0 }),
+                    redBox: new THREE.MeshStandardMaterial({ color: 0xcc0000, roughness: 0.44, metalness: 0.1, emissive: 0x440000, emissiveIntensity: 0.05, transparent: true, opacity: 0 }),
+                    green: new THREE.MeshStandardMaterial({ color: 0x00a651, roughness: 0.42, metalness: 0.18, emissive: 0x004d25, emissiveIntensity: 0.12, transparent: true, opacity: 0 }),
+                    conveyor: new THREE.MeshStandardMaterial({ color: 0xd7e8f8, roughness: 0.44, metalness: 0.28, transparent: true, opacity: 0 }),
+                    vehicle: new THREE.MeshStandardMaterial({ color: 0x0066cc, roughness: 0.32, metalness: 0.36, transparent: true, opacity: 0 }),
+                    tire: new THREE.MeshStandardMaterial({ color: 0x1f2b36, roughness: 0.62, metalness: 0.16, transparent: true, opacity: 0 }),
+                    line: new THREE.MeshBasicMaterial({ color: 0x0066cc, transparent: true, opacity: 0 }),
+                    particle: new THREE.MeshBasicMaterial({ color: 0xcc0000, transparent: true, opacity: 0 })
+                };
+
+                function mesh(geometry, material, x, y, z) {
+                    var item = new THREE.Mesh(geometry, material);
+                    item.position.set(x, y, z);
+                    item.userData.baseY = y;
+                    item.castShadow = !isMobile;
+                    item.receiveShadow = !isMobile;
+                    return item;
+                }
+
+                var floor = mesh(new THREE.PlaneGeometry(26, 18), materials.floor, 0, 0, 0);
+                floor.rotation.x = -Math.PI / 2;
+                world.add(floor);
+
+                var grid = new THREE.GridHelper(26, 26, 0x7ab5ec, 0xd5e9fb);
+                grid.position.y = 0.015;
+                world.add(grid);
+
+                var rackItems = [];
+                var pallets = [];
+                var levels = isMobile ? 3 : 5;
+                var bays = isMobile ? 4 : 7;
+
+                function addRackRow(z) {
+                    var row = new THREE.Group();
+                    var uprightGeo = new THREE.BoxGeometry(0.07, levels * 0.74 + 0.34, 0.07);
+                    var beamGeo = new THREE.BoxGeometry(0.82, 0.055, 0.08);
+                    for (var b = 0; b <= bays; b += 1) {
+                        var x = (b - bays / 2) * 0.9;
+                        [-0.43, 0.43].forEach(function(depth) {
+                            var upright = mesh(uprightGeo, materials.rack, x, (levels * 0.74 + 0.34) / 2, z + depth);
+                            row.add(upright);
+                            rackItems.push(upright);
+                        });
+                    }
+                    for (var bay = 0; bay < bays; bay += 1) {
+                        var bx = (bay - bays / 2) * 0.9 + 0.45;
+                        for (var level = 0; level < levels; level += 1) {
+                            var y = 0.28 + level * 0.74;
+                            [-0.43, 0.43].forEach(function(depth) {
+                                var beam = mesh(beamGeo, materials.beam, bx, y, z + depth);
+                                row.add(beam);
+                                rackItems.push(beam);
+                            });
+                            if ((bay + level + Math.round(z * 2)) % 3 !== 0) {
+                                var pallet = mesh(new THREE.BoxGeometry(0.56, 0.2, 0.38), (bay + level) % 4 === 0 ? materials.blueBox : materials.pallet, bx, y + 0.18, z);
+                                row.add(pallet);
+                                pallets.push(pallet);
+                            }
+                        }
+                    }
+                    world.add(row);
+                }
+
+                [-3.7, -1.35, 1.35, 3.7].forEach(addRackRow);
+
+                var conveyor = new THREE.Group();
+                conveyor.add(mesh(new THREE.BoxGeometry(9.2, 0.16, 0.82), materials.conveyor, 0, 0.18, -6.25));
+                for (var r = 0; r < 15; r += 1) {
+                    var roller = mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.86, 12), materials.rack, -4.2 + r * 0.6, 0.3, -6.25);
+                    roller.rotation.x = Math.PI / 2;
+                    conveyor.add(roller);
+                }
+                world.add(conveyor);
+
+                var crane = new THREE.Group();
+                var craneBase = mesh(new THREE.BoxGeometry(0.82, 0.18, 1.14), materials.vehicle, 0, 0.14, 0);
+                var mast = mesh(new THREE.BoxGeometry(0.16, 4.8, 0.16), materials.beam, 0, 2.48, 0);
+                var lift = new THREE.Group();
+                lift.add(mesh(new THREE.BoxGeometry(0.9, 0.14, 0.86), materials.vehicle, 0, 0, 0));
+                lift.add(mesh(new THREE.BoxGeometry(0.7, 0.04, 0.07), materials.beam, 0.42, -0.08, 0.18));
+                lift.add(mesh(new THREE.BoxGeometry(0.7, 0.04, 0.07), materials.beam, 0.42, -0.08, -0.18));
+                lift.position.y = 1;
+                crane.add(craneBase, mast, lift);
+                crane.position.set(-3.4, 0, -0.02);
+                world.add(crane);
+
+                var shuttle = new THREE.Group();
+                shuttle.add(mesh(new THREE.BoxGeometry(0.82, 0.18, 0.56), materials.green, 0, 0.18, 0));
+                shuttle.add(mesh(new THREE.BoxGeometry(0.55, 0.2, 0.42), materials.blueBox, 0, 0.42, 0));
+                shuttle.position.set(4.2, 0, 1.45);
+                world.add(shuttle);
+
+                var agv = new THREE.Group();
+                agv.add(mesh(new THREE.BoxGeometry(1, 0.22, 0.64), materials.vehicle, 0, 0.18, 0));
+                agv.add(mesh(new THREE.BoxGeometry(0.58, 0.18, 0.42), materials.redBox, 0, 0.4, 0));
+                [-0.36, 0.36].forEach(function(x) {
+                    [-0.24, 0.24].forEach(function(z) {
+                        var tire = mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.06, 14), materials.tire, x, 0.08, z);
+                        tire.rotation.z = Math.PI / 2;
+                        agv.add(tire);
+                    });
+                });
+                agv.position.set(-4.1, 0, -4.4);
+                world.add(agv);
+
+                var forklift = new THREE.Group();
+                forklift.add(mesh(new THREE.BoxGeometry(0.74, 0.32, 0.62), materials.green, 0, 0.22, 0));
+                forklift.add(mesh(new THREE.BoxGeometry(0.08, 0.86, 0.08), materials.vehicle, 0.43, 0.58, -0.18));
+                forklift.add(mesh(new THREE.BoxGeometry(0.08, 0.86, 0.08), materials.vehicle, 0.43, 0.58, 0.18));
+                forklift.add(mesh(new THREE.BoxGeometry(0.74, 0.035, 0.06), materials.vehicle, 0.76, 0.22, -0.16));
+                forklift.add(mesh(new THREE.BoxGeometry(0.74, 0.035, 0.06), materials.vehicle, 0.76, 0.22, 0.16));
+                forklift.position.set(4.3, 0, -4);
+                world.add(forklift);
+
+                var smartShelves = new THREE.Group();
+                for (var c = 0; c < 5; c += 1) {
+                    var shelf = mesh(new THREE.BoxGeometry(0.52, 0.82, 0.42), c % 2 ? materials.blueBox : materials.conveyor, -1.48 + c * 0.72, 0.43, 4.85);
+                    smartShelves.add(shelf);
+                }
+                world.add(smartShelves);
+
+                var controlTowers = new THREE.Group();
+                ["WMS", "WCS", "PLC"].forEach(function(label, index) {
+                    var tower = mesh(new THREE.BoxGeometry(0.72, 0.08 + index * 0.24, 0.72), index === 0 ? materials.blueBox : (index === 1 ? materials.green : materials.redBox), 2.7 + index * 0.92, 0.22 + index * 0.12, 4.25);
+                    tower.userData.label = label;
+                    controlTowers.add(tower);
+                });
+                world.add(controlTowers);
+
+                var activePallet = mesh(new THREE.BoxGeometry(0.58, 0.22, 0.42), materials.redBox, -4.2, 0.55, -6.25);
+                world.add(activePallet);
+
+                var particleRoutes = initParticleRoutes(THREE, world, materials, isMobile);
+                var mouseX = 0;
+                var mouseY = 0;
+                var target = { x: -9.2, y: 6.4, z: 12.2, lookX: 0, lookY: 1.8, lookZ: -0.8 };
+                var progressState = { value: 0 };
+
+                if (!isMobile) {
+                    sceneEl.addEventListener("mousemove", function(event) {
+                        var rect = sceneEl.getBoundingClientRect();
+                        mouseX = ((event.clientX - rect.left) / rect.width - 0.5) * 0.62;
+                        mouseY = ((event.clientY - rect.top) / rect.height - 0.5) * 0.38;
+                    }, { passive: true });
+                }
+
+                function setMaterialOpacity(material, opacity) {
+                    material.opacity = clamp(opacity, 0, 1);
+                }
+
+                function updateSceneByProgress(progress) {
+                    progressState.value = progress;
+                    var rackReveal = mapRange(progress, 0.02, 0.22, 0, 1);
+                    var machineReveal = mapRange(progress, 0.18, 0.42, 0, 1);
+                    var flowReveal = mapRange(progress, 0.36, 0.62, 0, 1);
+                    var controlReveal = mapRange(progress, 0.58, 0.82, 0, 1);
+
+                    setMaterialOpacity(materials.rack, rackReveal);
+                    setMaterialOpacity(materials.beam, rackReveal);
+                    setMaterialOpacity(materials.pallet, mapRange(progress, 0.1, 0.3, 0, 1));
+                    setMaterialOpacity(materials.blueBox, Math.max(mapRange(progress, 0.1, 0.3, 0, 1), controlReveal * 0.95));
+                    setMaterialOpacity(materials.redBox, Math.max(machineReveal, flowReveal));
+                    setMaterialOpacity(materials.green, Math.max(machineReveal, flowReveal));
+                    setMaterialOpacity(materials.conveyor, Math.max(mapRange(progress, 0.32, 0.56, 0, 1), controlReveal * 0.45));
+                    setMaterialOpacity(materials.vehicle, Math.max(machineReveal, flowReveal));
+                    setMaterialOpacity(materials.tire, flowReveal);
+                    setMaterialOpacity(materials.line, flowReveal);
+
+                    rackItems.forEach(function(item, index) {
+                        item.position.y = item.userData.baseY + Math.sin(progress * Math.PI * 2 + index * 0.12) * 0.0008;
+                    });
+
+                    pallets.forEach(function(item, index) {
+                        item.material.emissiveIntensity = mapRange(progress, 0.2, 0.46, 0.02, 0.18) * (0.5 + Math.sin(progress * 18 + index) * 0.5);
+                    });
+
+                    crane.position.x = lerp(-3.6, 1.7, mapRange(progress, 0.2, 0.45, 0, 1));
+                    lift.position.y = lerp(0.9, 3.1, mapRange(progress, 0.26, 0.45, 0, 1));
+                    shuttle.position.x = lerp(4.2, -3.8, mapRange(progress, 0.3, 0.55, 0, 1));
+                    activePallet.position.x = lerp(-4.2, 1.6, mapRange(progress, 0.34, 0.54, 0, 1));
+                    activePallet.position.z = lerp(-6.25, -0.4, mapRange(progress, 0.42, 0.58, 0, 1));
+                    activePallet.position.y = lerp(0.55, 2.72, mapRange(progress, 0.48, 0.64, 0, 1));
+
+                    agv.position.x = lerp(-4.1, 3.6, mapRange(progress, 0.38, 0.7, 0, 1));
+                    agv.position.z = lerp(-4.4, -2.2, mapRange(progress, 0.52, 0.72, 0, 1));
+                    forklift.position.x = lerp(4.3, -1.3, mapRange(progress, 0.44, 0.68, 0, 1));
+                    smartShelves.position.y = mapRange(progress, 0.62, 0.8, -0.18, 0.18);
+                    controlTowers.position.y = mapRange(progress, 0.62, 0.82, -0.35, 0.42);
+                    beacon.intensity = 1.05 + controlReveal * 1.15;
+
+                    target.x = lerp(-9.4, -4.6, progress);
+                    target.y = lerp(6.6, 5.2, progress);
+                    target.z = lerp(12.5, 9.1, progress);
+                    target.lookX = lerp(-0.1, 0.8, mapRange(progress, 0.15, 0.86, 0, 1));
+                    target.lookY = lerp(1.9, 1.25, progress);
+                    target.lookZ = lerp(-0.9, 0.65, progress);
+                    world.rotation.y = lerp(-0.06, 0.12, progress);
+                    world.position.y = lerp(-0.2, 0.16, mapRange(progress, 0.72, 1, 0, 1));
+                }
+
+                function resize() {
+                    var width = sceneEl.clientWidth || window.innerWidth;
+                    var height = sceneEl.clientHeight || window.innerHeight;
+                    camera.aspect = width / height;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(width, height);
+                }
+
+                function render(timeMs) {
+                    var time = timeMs || 0;
+                    var progress = progressState.value;
+                    particleRoutes.update(progress, time);
+                    shuttle.rotation.y = Math.sin(time * 0.002) * 0.02;
+                    agv.rotation.y = Math.sin(time * 0.0016) * 0.035;
+                    forklift.rotation.y = Math.cos(time * 0.0018) * 0.028;
+                    camera.position.set(target.x + mouseX, target.y - mouseY, target.z);
+                    camera.lookAt(target.lookX, target.lookY, target.lookZ);
+                    renderer.render(scene, camera);
+                    window.requestAnimationFrame(render);
+                }
+
+                window.addEventListener("resize", resize);
+                resize();
+                updateSceneByProgress(0);
+                hideLoader();
+                window.requestAnimationFrame(render);
+
+                return {
+                    updateSceneByProgress: updateSceneByProgress
+                };
+            }
+
+            function setHudValue(id, value) {
+                var bar = document.getElementById("hud-" + id);
+                var label = document.getElementById("hud-" + id + "-value");
+                var rounded = Math.round(value);
+                if (bar) {
+                    bar.style.setProperty("--value", rounded + "%");
+                }
+                if (label) {
+                    label.textContent = rounded + "%";
+                }
+            }
+
+            function setActiveChapter(index) {
+                document.querySelectorAll(".chapter-dot").forEach(function(dot, dotIndex) {
+                    dot.classList.toggle("active", dotIndex === index);
+                });
+                document.querySelectorAll(".story-slide").forEach(function(slide, slideIndex) {
+                    slide.classList.toggle("active", slideIndex === index);
+                });
+            }
+
+            function initScrollyTimeline() {
+                if (!window.gsap || !window.ScrollTrigger || reducedMotion) {
+                    document.querySelectorAll(".story-slide h1, .story-slide h2").forEach(function(title) {
+                        title.style.clipPath = "inset(0 0 0 0)";
+                    });
+                    return;
+                }
+
+                gsap.registerPlugin(ScrollTrigger);
+
+                var slides = gsap.utils.toArray(".story-slide");
+                var dots = gsap.utils.toArray(".chapter-dot");
+                var sceneState = { progress: 0 };
+
+                gsap.set(slides, { autoAlpha: 0, y: 42 });
+                gsap.set(slides[0], { autoAlpha: 1, y: 0 });
+                gsap.set(".story-slide h1, .story-slide h2", { clipPath: "inset(0 0 100% 0)" });
+                gsap.set(slides[0].querySelector("h1"), { clipPath: "inset(0 0 0% 0)" });
+
+                var tl = gsap.timeline({
+                    defaults: { ease: "none" },
+                    scrollTrigger: {
+                        trigger: ".scrolly-stage",
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 1,
+                        pin: ".scrolly-frame",
+                        pinSpacing: false,
+                        snap: {
+                            snapTo: [0, 0.2, 0.4, 0.6, 0.8, 1],
+                            duration: { min: 0.12, max: 0.36 },
+                            ease: "power1.inOut"
+                        },
+                        invalidateOnRefresh: true,
+                        onUpdate: function(self) {
+                            var progress = self.progress;
+                            var chapter = Math.min(5, Math.floor(progress * 5.999));
+                            setActiveChapter(chapter);
+                            setHudValue("storage", lerp(38, 94, clamp(progress / 0.78, 0, 1)));
+                            setHudValue("flow", lerp(42, 91, mapRange(progress, 0.24, 0.82, 0, 1)));
+                            setHudValue("control", lerp(26, 88, mapRange(progress, 0.5, 1, 0, 1)));
+                        }
+                    }
+                });
+
+                tl.to(sceneState, {
+                    progress: 1,
+                    duration: 1,
+                    onUpdate: function() {
+                        if (sceneApi) {
+                            sceneApi.updateSceneByProgress(sceneState.progress);
+                        }
+                    }
+                }, 0);
+
+                slides.forEach(function(slide, index) {
+                    var start = index / 6;
+                    var title = slide.querySelector("h1, h2");
+                    var copy = slide.querySelector("p");
+                    var actions = slide.querySelector(".story-actions");
+                    tl.to(slide, { autoAlpha: 1, y: 0, duration: 0.045 }, start + 0.015);
+                    if (title) {
+                        tl.to(title, { clipPath: "inset(0 0 0% 0)", duration: 0.055, ease: "power2.out" }, start + 0.025);
+                    }
+                    if (copy) {
+                        tl.fromTo(copy, { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.04, ease: "power2.out" }, start + 0.055);
+                    }
+                    if (actions) {
+                        tl.fromTo(actions, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.04, ease: "power2.out" }, start + 0.07);
+                    }
+                    if (index < slides.length - 1) {
+                        tl.to(slide, { autoAlpha: 0, y: -34, duration: 0.05 }, start + 0.135);
+                    }
+                });
+
+                dots.forEach(function(dot, index) {
+                    tl.to(dot, { scale: 1.12, duration: 0.01 }, index / 5);
+                });
+
+                gsap.to(".hud-panel", {
+                    y: -24,
+                    scrollTrigger: {
+                        trigger: ".scrolly-stage",
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 1
+                    }
+                });
+
+                gsap.to(".system-tags", {
+                    y: 28,
+                    scrollTrigger: {
+                        trigger: ".scrolly-stage",
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 1
+                    }
+                });
+            }
+
+            function boot() {
+                sceneApi = initCinematicScene();
+                initScrollyTimeline();
+            }
+
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", boot);
+            } else {
+                boot();
+            }
+        })();
+    </script>
 </body>
 </html>
