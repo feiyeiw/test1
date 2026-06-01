@@ -206,6 +206,17 @@ const blogApi = {
             content: blogData.content.trim(),
             plainText: blogData.plainText || blogData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(),
             date: blogData.date || new Date().toISOString().split('T')[0],
+            coverImage: blogData.coverImage || '',
+            summary: blogData.summary || '',
+            youtubeUrl: blogData.youtubeUrl || '',
+            category: blogData.category || '',
+            author: blogData.author || '1³MACHINE',
+            tocEnabled: blogData.tocEnabled !== false,
+            relatedCase: blogData.relatedCase || '',
+            relatedProjects: blogData.relatedProjects || '',
+            relatedSolutions: blogData.relatedSolutions || '',
+            seoTitle: blogData.seoTitle || '',
+            seoDescription: blogData.seoDescription || '',
         };
 
         try {

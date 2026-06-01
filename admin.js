@@ -612,6 +612,49 @@ window.initAdminPage = async function() {
     initializeApiManagement();
 
     // Blog management
+    let editingBlogId = null;
+
+    function getBlogFormData() {
+        const editorContent = document.getElementById('blogContent');
+        const content = editorContent ? editorContent.innerHTML : '';
+        return {
+            title: document.getElementById('blogTitle').value.trim(),
+            summary: document.getElementById('blogSummary')?.value.trim() || '',
+            coverImage: document.getElementById('blogCoverImage')?.value.trim() || '',
+            youtubeUrl: document.getElementById('blogYoutubeUrl')?.value.trim() || '',
+            category: document.getElementById('blogCategory')?.value.trim() || '',
+            author: document.getElementById('blogAuthor')?.value.trim() || '1³MACHINE',
+            tocEnabled: document.getElementById('blogTocEnabled') ? document.getElementById('blogTocEnabled').checked : true,
+            relatedCase: document.getElementById('blogRelatedCase')?.value.trim() || '',
+            relatedProjects: document.getElementById('blogRelatedProjects')?.value.trim() || '',
+            relatedSolutions: document.getElementById('blogRelatedSolutions')?.value.trim() || '',
+            seoTitle: document.getElementById('blogSeoTitle')?.value.trim() || '',
+            seoDescription: document.getElementById('blogSeoDescription')?.value.trim() || '',
+            content,
+            plainText: editorContent ? editorContent.textContent : '',
+            date: document.getElementById('blogDate').value || new Date().toISOString().split('T')[0]
+        };
+    }
+
+    function setBlogFormData(blog = {}) {
+        document.getElementById('blogTitle').value = blog.title || '';
+        document.getElementById('blogSummary').value = blog.summary || '';
+        document.getElementById('blogCoverImage').value = blog.coverImage || '';
+        document.getElementById('blogYoutubeUrl').value = blog.youtubeUrl || '';
+        document.getElementById('blogCategory').value = blog.category || '';
+        document.getElementById('blogAuthor').value = blog.author || '1³MACHINE';
+        document.getElementById('blogTocEnabled').checked = blog.tocEnabled !== false;
+        document.getElementById('blogRelatedCase').value = blog.relatedCase || '';
+        document.getElementById('blogRelatedProjects').value = blog.relatedProjects || '';
+        document.getElementById('blogRelatedSolutions').value = blog.relatedSolutions || '';
+        document.getElementById('blogSeoTitle').value = blog.seoTitle || '';
+        document.getElementById('blogSeoDescription').value = blog.seoDescription || '';
+        const editorContent = document.getElementById('blogContent');
+        if (editorContent) editorContent.innerHTML = blog.content || '';
+        document.getElementById('blogDate').value = blog.date || '';
+        const saveButton = document.getElementById('addBlog');
+        if (saveButton) saveButton.textContent = editingBlogId ? 'Update Blog' : 'Add Blog';
+    }
 
     // Load blogs from API/localStorage
     async function loadBlogs() {
@@ -658,38 +701,30 @@ window.initAdminPage = async function() {
         }
     }
 
-    // Add blog
+    // Add or update blog
     document.getElementById('addBlog').addEventListener('click', async function() {
-        const title = document.getElementById('blogTitle').value;
-        const editorContent = document.getElementById('blogContent');
-        const content = editorContent ? editorContent.innerHTML : '';
-        const date = document.getElementById('blogDate').value || new Date().toISOString().split('T')[0];
+        const blogPayload = getBlogFormData();
 
-        if (!title || !content.trim()) {
-            alert('Please fill in all fields');
+        if (!blogPayload.title || !blogPayload.content.trim()) {
+            alert('Please fill in title and content');
             return;
         }
 
-        const newBlog = {
-            title: title,
-            content: content,
-            plainText: editorContent ? editorContent.textContent : '',
-            date: date
-        };
-
         try {
-            await blogApi.createBlog(newBlog);
+            if (editingBlogId) {
+                await blogApi.updateBlog(editingBlogId, blogPayload);
+            } else {
+                await blogApi.createBlog(blogPayload);
+            }
 
-            // Clear form
-            document.getElementById('blogTitle').value = '';
-            if (editorContent) editorContent.innerHTML = '';
-            document.getElementById('blogDate').value = '';
+            editingBlogId = null;
+            setBlogFormData();
 
             await loadBlogs();
-            alert('Blog added successfully!');
+            alert('Blog saved successfully!');
         } catch (error) {
-            console.error('Error adding blog:', error);
-            alert(`Error adding blog: ${error.message}`);
+            console.error('Error saving blog:', error);
+            alert(`Error saving blog: ${error.message}`);
         }
     });
 
@@ -702,19 +737,9 @@ window.initAdminPage = async function() {
                 return;
             }
 
-            document.getElementById('blogTitle').value = blog.title;
-            const editorContent = document.getElementById('blogContent');
-            if (editorContent) editorContent.innerHTML = blog.content;
-            document.getElementById('blogDate').value = blog.date;
-
-            // Delete the blog after loading into form
-            try {
-                await blogApi.deleteBlog(id);
-                await loadBlogs();
-            } catch (error) {
-                console.error('Error deleting blog for edit:', error);
-                alert('Error loading blog for editing');
-            }
+            editingBlogId = id;
+            setBlogFormData(blog);
+            document.getElementById('blogTitle').scrollIntoView({ behavior: 'smooth', block: 'center' });
         } catch (error) {
             console.error('Error fetching blog for edit:', error);
             alert('Error loading blog for editing');
@@ -780,6 +805,8 @@ window.initAdminPage = async function() {
             }
         });
     }
+
+    setBlogFormData();
 
     // Load blogs on page load
     loadBlogs();

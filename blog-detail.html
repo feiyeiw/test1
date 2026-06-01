@@ -1,350 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XYWJNXE4Z"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-3XYWJNXE4Z');
-    </script>
-
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-3XYWJNXE4Z');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog - 1³ Machine</title>
+    <title>Blog Detail | 13ASRS</title>
+    <meta name="description" content="13ASRS automation article with project details, YouTube video, and contact CTA.">
     <link rel="stylesheet" href="style.css">
-    <script>
-    (function() {
-        var lang = localStorage.getItem('siteLanguage') || 'en';
-        if (lang !== 'en') {
-            document.documentElement.classList.add('i18n-pending');
-        }
-    })();
-    </script>
-
-    <style>
-        .blog-detail {
-            padding: 60px 0;
-            background-color: #fff;
-        }
-
-        .blog-detail .container {
-            flex-direction: column;
-            align-items: flex-start;
-            max-width: 800px;
-        }
-
-        .blog-header {
-            width: 100%;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .blog-date {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        .blog-title {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #333;
-            line-height: 1.3;
-        }
-
-        .blog-content {
-            width: 100%;
-            font-size: 16px;
-            line-height: 1.8;
-            color: #333;
-        }
-
-        .blog-content h1,
-        .blog-content h2,
-        .blog-content h3 {
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
-            color: #333;
-        }
-
-        .blog-content h1 {
-            font-size: 28px;
-        }
-
-        .blog-content h2 {
-            font-size: 24px;
-        }
-
-        .blog-content h3 {
-            font-size: 20px;
-        }
-
-        .blog-content p {
-            margin-bottom: 1.5em;
-        }
-
-        .blog-content ul,
-        .blog-content ol {
-            margin-left: 20px;
-            margin-bottom: 1.5em;
-        }
-
-        .blog-content li {
-            margin-bottom: 0.5em;
-        }
-
-        .blog-content a {
-            color: #e60000;
-            text-decoration: underline;
-        }
-
-        .blog-content img {
-            max-width: 100%;
-            height: auto;
-            margin: 20px 0;
-            border-radius: 4px;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 40px;
-            padding: 10px 20px;
-            background-color: #f8f8f8;
-            color: #333;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .back-link:hover {
-            background-color: #e0e0e0;
-        }
-
-        @media (max-width: 768px) {
-            .blog-title {
-                font-size: 24px;
-            }
-
-            .blog-content {
-                font-size: 15px;
-            }
-        }
-
-        .blog-navigation {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .blog-nav-link {
-            padding: 10px 20px;
-            background-color: #f8f8f8;
-            color: #333;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-            display: inline-block;
-        }
-
-        .blog-nav-link:hover {
-            background-color: #e0e0e0;
-        }
-
-        .blog-nav-link.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .related-blogs {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .related-blogs h3 {
-            margin-bottom: 20px;
-            color: #333;
-            font-size: 20px;
-        }
-
-        .related-blogs-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .related-blog-item {
-            padding: 20px;
-            background-color: #f8f8f8;
-            border-radius: 4px;
-            transition: transform 0.3s, background-color 0.3s;
-        }
-
-        .related-blog-item:hover {
-            transform: translateY(-5px);
-            background-color: #f0f0f0;
-        }
-
-        .related-blog-item h4 {
-            margin-bottom: 10px;
-            color: #333;
-            font-size: 16px;
-        }
-
-        .related-blog-item p {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
-
-        .related-blog-link {
-            color: #e60000;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .related-blog-link:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .blog-navigation {
-                margin-top: 30px;
-                padding-top: 15px;
-            }
-
-            .blog-nav-link {
-                padding: 8px 16px;
-                font-size: 14px;
-            }
-        }
-    </style>
 </head>
 <body>
     <header>
-
-        <div class="header-main">
-            <div class="container">
-                <div class="logo-brand">
-                <div class="logo">
-                    <a href="index.html">
-                        <img src="logo.jpg" alt="13machine">
-                    </a>
-                </div>
-                <span class="logo-slogan">
-                    <span class="slogan-line1" data-i18n="common.slogan_line1">From system design to project delivery</span>
-                    <span class="slogan-line2" data-i18n="common.slogan_line2">— we make automation work as a whole</span>
-                </span>
-            </div>
-                <div class="header-actions">
-                    <div class="language-selector">
-                        <select id="lang-select" onchange="switchLanguage(this.value)">
-                            <option value="en">English</option>
-                            <option value="zh">中文</option>
-                            <option value="es">Español</option>
-                            <option value="fr">Français</option>
-                            <option value="ja">日本語</option>
-                            <option value="ko">한국어</option>
-                            <option value="ar">العربية</option>
-                        </select>
-                    </div>
-                    <div class="search">
-                        <input type="text" placeholder="Search" data-i18n-placeholder="common.search_placeholder">
-                        <button type="submit">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <path d="m21 21-4.35-4.35"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <nav>
-            <div class="container">
-                <ul>
-                    <li><a href="index.html" data-i18n="common.nav_home">Home</a></li>
-                    <li><a href="asrs-cost.html" data-i18n="common.nav_cost">ASRS Cost</a></li>
-                    <li><a href="asrs-design.html" data-i18n="common.nav_design">ASRS Design</a></li>
-                    <li><a href="solutions.html" data-i18n="common.nav_solutions">Solutions</a></li>
-                    <li><a href="case-studies.html" data-i18n="common.nav_cases">Case Studies</a></li>
-                    <li><a href="contact.html" data-i18n="common.nav_contact">Contact</a></li>
-                </ul>
-            </div>
-        </nav>
+        <div class="header-main"><div class="container"><div class="logo-brand"><div class="logo"><a href="index.html"><img src="logo.jpg" alt="13ASRS"></a></div><span class="logo-slogan"><span class="slogan-line1">Industrial Automation Solutions</span><span class="slogan-line2">Smart warehouse and factory integration</span></span></div><div class="header-actions"><div class="language-selector"><select id="lang-select" onchange="switchLanguage(this.value)"><option value="en">English</option><option value="zh">Chinese</option><option value="es">Spanish</option><option value="fr">French</option><option value="ja">Japanese</option><option value="ko">Korean</option><option value="ar">Arabic</option></select></div></div></div></div>
+        <nav><div class="container"><ul><li><a href="index.html">Home</a></li><li><a href="solutions.html">Solutions</a></li><li><a href="industries.html">Industries</a></li><li><a href="case-studies.html">Case Studies</a></li><li><a href="blog.html">Blog</a></li><li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li></ul></div></nav>
     </header>
-
     <main>
-        <section class="blog-detail">
+        <section class="blog-detail-upgrade">
             <div class="container">
-                <div class="blog-header">
-                    <div class="blog-date" id="blogDate"></div>
-                    <h1 class="blog-title" id="blogTitle"></h1>
-                </div>
-
-                <div class="blog-content" id="blogContent">
-                    <!-- Blog content will be loaded here -->
-                </div>
-
-                <div class="blog-navigation" id="blogNavigation">
-                    <div class="nav-container">
-                        <a href="#" id="prevBlog" class="blog-nav-link" data-i18n="blog_detail.prev">&larr; Previous</a>
-                        <a href="#" id="nextBlog" class="blog-nav-link" data-i18n="blog_detail.next">Next &rarr;</a>
-                    </div>
-                </div>
-
-                <div class="related-blogs" id="relatedBlogs">
-                    <h3 data-i18n="blog_detail.related_title">You Might Also Like</h3>
-                    <div class="related-blogs-container" id="relatedBlogsContainer">
-                        <!-- Related blogs will be loaded here -->
-                    </div>
-                </div>
-
-                <a href="index.html" class="back-link" data-i18n="blog_detail.back_to">&larr; Back to OUR PRODUCTS</a>
+                <article class="blog-shell">
+                    <div class="blog-meta-row"><span id="blogDate"></span><span id="blogCategory"></span><span id="blogAuthor">1³MACHINE</span></div>
+                    <h1 class="blog-title" id="blogTitle">Loading article...</h1>
+                    <p id="blogSummary" style="color:#607286;font-size:18px;"></p>
+                    <img id="blogCover" class="blog-cover" src="system-acr.webp" alt="13ASRS automation article">
+                    <section class="article-section" id="blogTocSection">
+                        <h2>Table of Contents</h2>
+                        <nav class="toc-list" id="blogToc">
+                            <a href="#introduction">Introduction</a>
+                            <a href="#challenges">Challenges</a>
+                            <a href="#solution">Solution</a>
+                            <a href="#technologies">Technologies</a>
+                            <a href="#benefits">Benefits</a>
+                            <a href="#applications">Applications</a>
+                            <a href="#related-projects">Related Projects</a>
+                        </nav>
+                    </section>
+                    <div class="video-frame" id="blogVideo" style="margin-bottom:28px;"><div class="video-placeholder">YouTube project video</div></div>
+                    <section class="article-section"><div class="blog-content" id="blogContent"></div></section>
+                    <section class="article-section" id="related-projects"><h2>Related Case Studies</h2><div class="related-grid" id="relatedCaseStudies"></div></section>
+                    <section class="article-section"><h2>Related Solutions</h2><div class="related-grid" id="relatedSolutions"></div></section>
+                    <div class="cta-panel" style="margin-top:44px;border-radius:8px;padding:34px;"><div class="container" style="width:100%;padding:0;"><div><span class="eyebrow">Business Challenge</span><h2 style="font-size:28px;">Start with Your Business Challenge</h2><p>Tell us about your warehouse, factory, or production requirements. We'll help you explore practical automation solutions and relevant project references.</p></div><a class="btn-industrial" href="contact.html">Discuss Your Project</a></div></div>
+                    <div class="blog-navigation" id="blogNavigation"><div class="nav-container"><a href="#" id="prevBlog" class="blog-nav-link">Previous</a><a href="#" id="nextBlog" class="blog-nav-link">Next</a></div></div>
+                    <div class="related-blogs" id="relatedBlogs"><h3>You Might Also Like</h3><div class="related-blogs-container" id="relatedBlogsContainer"></div></div>
+                    <a href="blog.html" class="back-link">Back to Blog</a>
+                </article>
             </div>
         </section>
     </main>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <img src="logo.jpg" alt="13machine">
-                </div>
-                <div class="footer-links">
-                    <a href="index.html" data-i18n="common.nav_home">Home</a>
-                    <a href="asrs-cost.html" data-i18n="common.nav_cost">ASRS Cost</a>
-                    <a href="asrs-design.html" data-i18n="common.nav_design">ASRS Design</a>
-                    <a href="solutions.html" data-i18n="common.nav_solutions">Solutions</a>
-                    <a href="case-studies.html" data-i18n="common.nav_cases">Case Studies</a>
-                    <a href="contact.html" data-i18n="common.nav_contact">Contact</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p data-i18n="common.footer_rights">&copy; 2026 1³ Machine. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="utils.js" defer></script>
-    <script src="api.js" defer></script>
-    <script src="auth.js" defer></script>
-    <script src="i18n.js" defer></script>
-    <script src="blog.js" defer></script>
-    <script src="app.js" defer></script>
+    <footer><div class="container"><div class="footer-content"><div class="footer-logo"><img src="logo.jpg" alt="13ASRS"></div><div class="footer-links"><a href="solutions.html">Solutions</a><a href="case-studies.html">Case Studies</a><a href="blog.html">Blog</a><a href="contact.html">Contact</a></div></div><div class="footer-bottom"><p>Email: pjm@13asrs.com | Website: 13asrs.com</p><p>&copy; 2026 13ASRS. All rights reserved.</p></div></div></footer>
+    <script src="utils.js" defer></script><script src="api.js" defer></script><script src="auth.js" defer></script><script src="i18n.js" defer></script><script src="site-upgrade.js" defer></script><script src="blog.js" defer></script><script src="app.js" defer></script>
 </body>
 </html>
