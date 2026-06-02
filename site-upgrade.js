@@ -37,6 +37,11 @@ function getBlogSummary(blog, length = 150) {
     return source.length > length ? `${source.substring(0, length)}...` : source;
 }
 
+function isPlaceholderBlog(blog) {
+    const text = `${blog.title || ''} ${blog.summary || ''} ${blog.plainText || ''} ${blog.content || ''}`.toLowerCase();
+    return /tiandikaili|asdascawfq|wwwwww|test blog|测试/.test(text);
+}
+
 function setActiveNavigation() {
     const current = window.location.pathname.split('/').pop() || 'index.html';
     const aliases = {
@@ -52,6 +57,25 @@ function setActiveNavigation() {
     });
 }
 
+function upgradeFooter() {
+    const footer = document.querySelector('footer');
+    if (!footer) return;
+    footer.innerHTML = `
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo"><img src="logo.jpg" alt="13ASRS"></div>
+                <div class="footer-columns">
+                    <div><h3>Solutions</h3><a href="solutions.html#asrs">Warehouse Automation</a><a href="solutions.html#factory">Smart Factory Automation</a><a href="solutions.html#machinery">Industrial Manufacturing</a></div>
+                    <div><h3>Industries</h3><a href="industries.html">Warehousing</a><a href="industries.html#manufacturing">Manufacturing</a><a href="industries.html#food">Food & Beverage</a><a href="industries.html#packaging">Packaging</a><a href="industries.html#automotive">Automotive</a><a href="industries.html#electronics">Electronics</a></div>
+                    <div><h3>Resources</h3><a href="case-studies.html">Case Studies</a><a href="blog.html">Knowledge Center</a><a href="blog.html">Blog</a><a href="blog.html">YouTube Channel</a></div>
+                    <div><h3>Contact</h3><span>Website: 13asrs.com</span><span>Email: pjm@13asrs.com</span><span>Location: China</span></div>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 13ASRS. All rights reserved.</p></div>
+        </div>
+    `;
+}
+
 async function renderLatestBlogs(containerId, limit = 3) {
     const container = document.getElementById(containerId);
     if (!container || typeof blogApi === 'undefined') return;
@@ -59,9 +83,9 @@ async function renderLatestBlogs(containerId, limit = 3) {
     container.innerHTML = '<div class="loading-message">Loading latest blog posts...</div>';
     try {
         const blogs = await blogApi.getAllBlogs();
-        const latest = [...blogs].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, limit);
-        if (!latest.length) {
-            container.innerHTML = '<div class="loading-message">No blog posts yet.</div>';
+        const latest = [...blogs].filter(blog => !isPlaceholderBlog(blog)).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, limit);
+        if (latest.length < 3) {
+            container.innerHTML = '<div class="loading-message"><h3>Knowledge Center</h3><p>New articles, project breakdowns, and industry insights are being added regularly.</p><p>Explore automation technologies, project applications, and practical solutions for warehousing, manufacturing, and industrial operations.</p></div>';
             return;
         }
         container.innerHTML = latest.map(blog => `
@@ -84,5 +108,6 @@ async function renderLatestBlogs(containerId, limit = 3) {
 
 document.addEventListener('DOMContentLoaded', function() {
     setActiveNavigation();
+    upgradeFooter();
     renderLatestBlogs('latestBlogGrid', 3);
 });

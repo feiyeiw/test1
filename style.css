@@ -1591,6 +1591,33 @@ footer .container,
     text-decoration: none;
 }
 
+.footer-columns {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    text-align: left;
+}
+
+.footer-columns h3 {
+    color: #fff;
+    font-size: 15px;
+    margin-bottom: 12px;
+}
+
+.footer-columns a,
+.footer-columns span {
+    display: block;
+    color: #aebdca;
+    text-decoration: none;
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+.footer-columns a:hover {
+    color: #fff;
+}
+
 .footer-bottom {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     padding-top: 20px;
@@ -1636,6 +1663,49 @@ footer .container,
     color: #fff;
     font-weight: 800;
     cursor: pointer;
+}
+
+.proof-list,
+.category-strip {
+    display: grid;
+    width: 100%;
+    gap: 14px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.proof-list span,
+.category-strip span {
+    position: relative;
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    padding: 16px 18px 16px 44px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    font-weight: 800;
+}
+
+.soft .proof-list span,
+.soft .category-strip span,
+.category-strip span {
+    border-color: #dce4ec;
+    background: #f6f9fb;
+    color: #172232;
+}
+
+.proof-list span::before,
+.category-strip span::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: 22px;
+    width: 12px;
+    height: 7px;
+    border-left: 2px solid var(--industrial-signal);
+    border-bottom: 2px solid var(--industrial-signal);
+    transform: rotate(-45deg);
 }
 
 .help-list {
@@ -1810,6 +1880,12 @@ footer .container,
 }
 
 @media (max-width: 980px) {
+    .proof-list,
+    .category-strip,
+    .footer-columns {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .help-list {
         grid-template-columns: 1fr;
     }
@@ -1882,7 +1958,10 @@ footer .container,
     .hero-stat-strip,
     .inquiry-form,
     .toc-list,
-    .related-grid {
+    .related-grid,
+    .proof-list,
+    .category-strip,
+    .footer-columns {
         grid-template-columns: 1fr;
     }
 

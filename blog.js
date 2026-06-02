@@ -303,15 +303,16 @@ async function loadBlogsOnBlog() {
     const container = document.getElementById('blogListContainer');
     if (!container) return;
 
-    container.innerHTML = '<div class="loading-message">Loading blog posts...</div>';
+    container.innerHTML = '<div class="loading-message"><h3>Knowledge Library in Progress</h3><p>New articles and project insights are being added regularly to help manufacturers and logistics operators explore automation technologies and industry solutions.</p></div>';
     try {
         const blogs = await blogApi.getAllBlogs();
-        if (!blogs.length) {
-            container.innerHTML = '<div class="loading-message">No blog posts yet. Create the first article in admin.html.</div>';
+        const filteredBlogs = blogs.filter(blog => !(typeof isPlaceholderBlog === 'function' && isPlaceholderBlog(blog)));
+        if (!filteredBlogs.length) {
+            container.innerHTML = '<div class="loading-message"><h3>Knowledge Library in Progress</h3><p>New articles and project insights are being added regularly to help manufacturers and logistics operators explore automation technologies and industry solutions.</p></div>';
             return;
         }
 
-        const sortedBlogs = [...blogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+        const sortedBlogs = [...filteredBlogs].sort((a, b) => new Date(b.date) - new Date(a.date));
         container.innerHTML = sortedBlogs.map(blog => `
             <article class="content-card media-card">
                 <img src="${typeof getBlogCover === 'function' ? getBlogCover(blog) : 'system-acr.webp'}" alt="${blog.title}">
