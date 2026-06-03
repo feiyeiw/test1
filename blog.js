@@ -15,6 +15,29 @@ function slugifyHeading(text, fallback) {
     return slug || fallback;
 }
 
+function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    }[char]));
+}
+
+function getBlogExcerpt(blog, length = 170) {
+    const html = blog.contentHtml || blog.content || '';
+    const source = blog.summary || blog.plainText || html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    return source.length > length ? `${source.substring(0, length)}...` : source;
+}
+
+function getPublicBlogCover(blog) {
+    if (typeof getBlogCover === 'function') return getBlogCover(blog);
+    if (blog.coverImage) return blog.coverImage;
+    const imgMatch = (blog.content || blog.contentHtml || '').match(/<img[^>]+src=["']([^"']+)["'][^>]*>/i);
+    return imgMatch ? imgMatch[1] : 'system-acr.webp';
+}
+
 function buildArticleToc() {
     const content = document.getElementById('blogContent');
     const toc = document.getElementById('blogToc');
@@ -301,30 +324,73 @@ async function loadBlogsOnInsights() {
 
 async function loadBlogsOnBlog() {
     const container = document.getElementById('blogListContainer');
+    const featuredContainer = document.getElementById('blogFeaturedContainer');
     if (!container) return;
 
-    container.innerHTML = '<div class="loading-message"><h3>Knowledge Library in Progress</h3><p>New articles and project insights are being added regularly to help manufacturers and logistics operators explore automation technologies and industry solutions.</p></div>';
+    container.innerHTML = '<div class="loading-message"><h3>Loading published articles</h3><p>Fetching the latest published blog posts.</p></div>';
+    if (featuredContainer) featuredContainer.innerHTML = '';
+
     try {
         const blogs = await blogApi.getAllBlogs();
-        const filteredBlogs = blogs.filter(blog => !(typeof isPlaceholderBlog === 'function' && isPlaceholderBlog(blog)));
-        if (!filteredBlogs.length) {
+        if (!blogs.length) {
             container.innerHTML = '<div class="loading-message"><h3>Knowledge Library in Progress</h3><p>New articles and project insights are being added regularly to help manufacturers and logistics operators explore automation technologies and industry solutions.</p></div>';
             return;
         }
 
-        const sortedBlogs = [...filteredBlogs].sort((a, b) => new Date(b.date) - new Date(a.date));
-        container.innerHTML = sortedBlogs.map(blog => `
-            <article class="content-card media-card">
-                <img src="${typeof getBlogCover === 'function' ? getBlogCover(blog) : 'system-acr.webp'}" alt="${blog.title}">
-                <div>
-                    <span class="eyebrow">${blog.category || 'Blog'}</span>
-                    <h3>${blog.title}</h3>
-                    <p>${typeof getBlogSummary === 'function' ? getBlogSummary(blog, 160) : (blog.plainText || '').substring(0, 160)}</p>
-                    <div class="mini-video">${typeof renderYouTubeFrame === 'function' ? renderYouTubeFrame(blog.youtubeUrl, blog.title) : '<div class="video-placeholder">YouTube project video</div>'}</div>
-                    <a href="blog-detail.html?id=${encodeURIComponent(blog.id)}" class="text-link">Read article</a>
+        const sortedBlogs = [...blogs].sort((a, b) => new Date(b.publishedAt || b.date || b.updatedAt) - new Date(a.publishedAt || a.date || a.updatedAt));
+        const [featured, ...rest] = sortedBlogs;
+
+        if (featuredContainer && featured) {
+            const href = `blog-detail.html?id=${encodeURIComponent(featured.id)}`;
+            featuredContainer.innerHTML = `
+                <article class="blog-featured-card">
+                    <a class="blog-featured-media" href="${href}">
+                        <img src="${escapeHtml(getPublicBlogCover(featured))}" alt="${escapeHtml(featured.title)}">
+                    </a>
+                    <div class="blog-featured-body">
+                        <span class="eyebrow">${escapeHtml(featured.category || 'Featured Article')}</span>
+                        <h3><a href="${href}">${escapeHtml(featured.title)}</a></h3>
+                        <p>${escapeHtml(getBlogExcerpt(featured, 230))}</p>
+                        <div class="blog-card-meta">
+                            <span>${escapeHtml(featured.date || '')}</span>
+                            <span>${escapeHtml(featured.author || '13ASRS')}</span>
+                        </div>
+                        <a href="${href}" class="text-link">Read article</a>
+                    </div>
+                </article>
+            `;
+        }
+
+        const gridBlogs = rest.length ? rest : [];
+        if (!gridBlogs.length) {
+            container.innerHTML = `
+                <div class="blog-single-note">
+                    <h3>More articles are coming</h3>
+                    <p>This published article is live. New CMS posts will appear here automatically after publishing.</p>
                 </div>
-            </article>
-        `).join('');
+            `;
+            return;
+        }
+
+        container.innerHTML = gridBlogs.map(blog => {
+            const href = `blog-detail.html?id=${encodeURIComponent(blog.id)}`;
+            return `
+                <article class="blog-index-card">
+                    <a class="blog-index-media" href="${href}">
+                        <img src="${escapeHtml(getPublicBlogCover(blog))}" alt="${escapeHtml(blog.title)}">
+                    </a>
+                    <div class="blog-index-body">
+                        <div class="blog-card-meta">
+                            <span>${escapeHtml(blog.category || 'Blog')}</span>
+                            <span>${escapeHtml(blog.date || '')}</span>
+                        </div>
+                        <h3><a href="${href}">${escapeHtml(blog.title)}</a></h3>
+                        <p>${escapeHtml(getBlogExcerpt(blog, 155))}</p>
+                        <a href="${href}" class="text-link">Read article</a>
+                    </div>
+                </article>
+            `;
+        }).join('');
     } catch (error) {
         console.error('Error loading blogs for blog page:', error);
         container.innerHTML = '<div class="loading-message">Unable to load blog posts.</div>';
@@ -332,10 +398,10 @@ async function loadBlogsOnBlog() {
 }
 
 window.initBlogPages = async function() {
-    const pathname = window.location.pathname;
+    const pathname = window.location.pathname.replace(/\/+$/, '');
     if (pathname.includes('blog-detail')) {
         await loadBlogDetail();
-    } else if (pathname.includes('blog.html')) {
+    } else if (pathname.endsWith('/blog') || pathname.includes('blog.html')) {
         await loadBlogsOnBlog();
     } else if (pathname.includes('insights')) {
         await loadBlogsOnInsights();
