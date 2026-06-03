@@ -1,38 +1,17 @@
-// Admin credentials management
+// Admin session management
 const ADMIN_STORAGE_KEY = 'adminCredentials';
 const ADMIN_SESSION_KEY = 'adminSession';
 
-// Reset admin credentials (for debugging/deployment issues)
+// Reset local admin session data only. Credentials are managed server-side.
 window.resetAdminCredentials = async function() {
     localStorage.removeItem(ADMIN_STORAGE_KEY);
     localStorage.removeItem('adminLoggedIn');
     sessionStorage.removeItem(ADMIN_SESSION_KEY);
-    console.log('Admin credentials reset. Reinitializing...');
-    await initializeAdminCredentials();
-    alert('Admin credentials have been reset to default:\nUsername: admin\nPassword: admin123');
+    alert('Local admin session data has been cleared. Server credentials are managed in Cloudflare.');
 };
 
-// Initialize admin credentials if not exists
 async function initializeAdminCredentials() {
-    const savedCredentials = localStorage.getItem(ADMIN_STORAGE_KEY);
-    if (!savedCredentials) {
-        const defaultUsername = 'admin';
-        const defaultPassword = 'admin123';
-        const passwordHash = await sha256Hash(defaultPassword);
-
-        const credentials = {
-            username: defaultUsername,
-            passwordHash: passwordHash,
-            createdAt: new Date().toISOString()
-        };
-
-        localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(credentials));
-        console.log('Default admin credentials created. Username: admin, Password: admin123');
-
-        if (window.location.pathname.includes('admin')) {
-            alert('⚠️ Default admin credentials created.\nUsername: admin\nPassword: admin123\n\nPlease change the password in the admin panel.');
-        }
-    }
+    return null;
 }
 
 // Initialize default site content
@@ -102,7 +81,7 @@ function initializeDefaultSiteContent() {
     }
 }
 
-// Initialize all default data (admin credentials now managed server-side)
+// Initialize all default data. Admin credentials are managed server-side.
 async function initializeAllData() {
     initializeDefaultSiteContent();
 }
