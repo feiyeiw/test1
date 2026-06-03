@@ -304,16 +304,63 @@
             </div>
         </div>
 
-        <div class="admin-section">
-            <h2 data-i18n="blogManagement">Blog Management</h2>
-            <div class="form-group">
-                <label for="blogTitle" data-i18n="blogTitle">Blog Title</label>
-                <input type="text" id="blogTitle" name="blogTitle">
-            </div>
-            <div class="form-group">
-                <label for="blogDate" data-i18n="date">Date</label>
-                <input type="date" id="blogDate" name="blogDate">
-            </div>
+                <div class="admin-section">
+                    <h2 data-i18n="blogManagement">Blog Management</h2>
+                    <div class="form-group">
+                        <label for="blogTitle" data-i18n="blogTitle">Blog Title</label>
+                        <input type="text" id="blogTitle" name="blogTitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="blogSummary">Summary / Excerpt</label>
+                        <textarea id="blogSummary" name="blogSummary" placeholder="Short SEO summary shown on Blog cards"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="blogCoverImage">Cover Image URL</label>
+                        <input type="url" id="blogCoverImage" name="blogCoverImage" placeholder="https://example.com/project-cover.webp">
+                    </div>
+                    <div class="form-group">
+                        <label for="blogYoutubeUrl">YouTube Video URL</label>
+                        <input type="url" id="blogYoutubeUrl" name="blogYoutubeUrl" placeholder="https://www.youtube.com/watch?v=...">
+                    </div>
+                    <div class="form-group">
+                        <label for="blogCategory">Category</label>
+                        <input type="text" id="blogCategory" name="blogCategory" placeholder="ASRS, Smart Factory, AGV Logistics...">
+                    </div>
+                    <div class="form-group">
+                        <label for="blogAuthor">Author</label>
+                        <input type="text" id="blogAuthor" name="blogAuthor" placeholder="1³MACHINE">
+                    </div>
+                    <div class="form-group">
+                        <label for="blogTocEnabled">Table of Contents</label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-weight: normal;">
+                            <input type="checkbox" id="blogTocEnabled" name="blogTocEnabled" checked style="width: auto;">
+                            Auto-generate from article headings
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="blogRelatedCase">Related Case Study</label>
+                        <input type="text" id="blogRelatedCase" name="blogRelatedCase" placeholder="Shuttle ASRS Warehouse for Chemical Industry">
+                    </div>
+                    <div class="form-group">
+                        <label for="blogRelatedProjects">Related Projects</label>
+                        <textarea id="blogRelatedProjects" name="blogRelatedProjects" placeholder="One related project per line, or leave blank for default recommendations"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="blogRelatedSolutions">Related Solutions</label>
+                        <textarea id="blogRelatedSolutions" name="blogRelatedSolutions" placeholder="ASRS Warehouse Solution&#10;AGV Solution&#10;Smart Factory Solution"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="blogSeoTitle">SEO Title</label>
+                        <input type="text" id="blogSeoTitle" name="blogSeoTitle" placeholder="Optional search title">
+                    </div>
+                    <div class="form-group">
+                        <label for="blogSeoDescription">SEO Description</label>
+                        <textarea id="blogSeoDescription" name="blogSeoDescription" placeholder="Optional search description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="blogDate" data-i18n="date">Date</label>
+                        <input type="date" id="blogDate" name="blogDate">
+                    </div>
 
             <div class="form-group">
                 <label data-i18n="blogContent">Blog Content (Rich Text Editor)</label>

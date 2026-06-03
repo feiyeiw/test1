@@ -1,581 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XYWJNXE4Z"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-3XYWJNXE4Z');
-    </script>
-
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-3XYWJNXE4Z');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASRS Solutions by Industry | 13machine</title>
-    <meta name="description" content="ASRS solutions for e-commerce, manufacturing, cold storage, and spare parts warehouses.">
-    <meta name="keywords" content="ASRS solutions, e-commerce warehouse, manufacturing storage, cold storage, spare parts warehouse">
+    <title>Solutions | ASRS, Smart Factory & Industrial Machinery | 13ASRS</title>
+    <meta name="description" content="Explore 13ASRS smart warehouse, ASRS, AGV logistics, smart factory automation, and industrial machinery solutions in one integrated long-form page.">
+    <meta name="keywords" content="ASRS solutions, smart warehouse solutions, smart factory automation, AGV logistics, industrial machinery solutions">
+    <link rel="canonical" href="https://13asrs.com/solutions.html">
     <link rel="stylesheet" href="style.css">
-    <script>
-    (function() {
-        var lang = localStorage.getItem('siteLanguage') || 'en';
-        if (lang !== 'en') {
-            document.documentElement.classList.add('i18n-pending');
-        }
-    })();
-    </script>
-
-    <style>
-        /* Solutions Page Specific Styles */
-        .solutions-hero {
-            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
-            padding: 100px 0;
-            text-align: center;
-            color: #fff;
-        }
-
-        .solutions-hero .container {
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .solutions-hero h1 {
-            font-size: 42px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .solutions-hero p {
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.9);
-            max-width: 600px;
-        }
-
-        /* Application Scenarios Section */
-        .app-scenarios {
-            padding: 80px 0;
-            background-color: #f8f8f8;
-        }
-
-        .app-scenarios .container {
-            flex-direction: column;
-            gap: 50px;
-        }
-
-        .app-scenarios h2 {
-            font-size: 32px;
-            font-weight: bold;
-            color: #333;
-            text-align: center;
-        }
-
-        .scenarios-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
-            width: 100%;
-        }
-
-        .scenario-card {
-            background: #fff;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s;
-        }
-
-        .scenario-card:hover {
-            border-color: #0066cc;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .scenario-image {
-            height: 160px;
-            background-color: #0066cc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 48px;
-        }
-
-        .scenario-content {
-            padding: 25px;
-        }
-
-        .scenario-content h3 {
-            font-size: 20px;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .scenario-content p {
-            color: #666;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .scenario-specs {
-            background: #f8f8f8;
-            border-radius: 8px;
-            padding: 15px;
-        }
-
-        .spec-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #e0e0e0;
-            font-size: 13px;
-        }
-
-        .spec-row:last-child {
-            border-bottom: none;
-        }
-
-        .spec-label {
-            color: #666;
-        }
-
-        .spec-value {
-            color: #0066cc;
-            font-weight: bold;
-        }
-
-        /* Comparison Table Section */
-        .comparison-section {
-            padding: 80px 0;
-            background-color: #fff;
-        }
-
-        .comparison-section .container {
-            flex-direction: column;
-            gap: 50px;
-        }
-
-        .comparison-section h2 {
-            font-size: 32px;
-            font-weight: bold;
-            color: #333;
-            text-align: center;
-        }
-
-        .solutions-table {
-            width: 100%;
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .solutions-table table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .solutions-table th {
-            background-color: #0066cc;
-            color: #fff;
-            padding: 20px;
-            text-align: left;
-            font-weight: bold;
-        }
-
-        .solutions-table td {
-            padding: 20px;
-            border-bottom: 1px solid #f0f0f0;
-            color: #333;
-        }
-
-        .solutions-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .solutions-table tr:hover {
-            background-color: #f8f8f8;
-        }
-
-        .scenario-name {
-            font-weight: bold;
-            color: #333;
-        }
-
-        .system-badge {
-            display: inline-block;
-            padding: 6px 12px;
-            background-color: #e8f4fd;
-            color: #0066cc;
-            border-radius: 4px;
-            font-size: 13px;
-            font-weight: bold;
-        }
-
-        .budget-range {
-            font-weight: bold;
-            color: #0066cc;
-        }
-
-        .scale-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            background-color: #f0f0f0;
-            color: #666;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
-        }
-
-        .cta-section .container {
-            justify-content: center;
-        }
-
-        .cta-box {
-            text-align: center;
-            color: #fff;
-            max-width: 600px;
-        }
-
-        .cta-box h2 {
-            font-size: 36px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .cta-box p {
-            font-size: 18px;
-            margin-bottom: 30px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .btn-cta {
-            display: inline-block;
-            padding: 16px 40px;
-            background-color: #fff;
-            color: #0066cc;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 18px;
-            border-radius: 6px;
-            transition: all 0.3s;
-        }
-
-        .btn-cta:hover {
-            background-color: #f0f0f0;
-            transform: translateY(-2px);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .scenarios-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .solutions-hero {
-                padding: 60px 0;
-            }
-
-            .solutions-hero h1 {
-                font-size: 28px;
-            }
-
-            .scenarios-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .solutions-table {
-                overflow-x: auto;
-            }
-
-            .solutions-table table {
-                min-width: 600px;
-            }
-
-            .app-scenarios h2,
-            .comparison-section h2,
-            .cta-box h2 {
-                font-size: 24px;
-            }
-        }
-    </style>
 </head>
 <body>
     <header>
-        <div class="header-main">
-            <div class="container">
-                <div class="logo-brand">
-                <div class="logo">
-                    <a href="index.html">
-                        <img src="logo.jpg" alt="13machine">
-                    </a>
-                </div>
-                <span class="logo-slogan">
-                    <span class="slogan-line1" data-i18n="common.slogan_line1">From system design to project delivery</span>
-                    <span class="slogan-line2" data-i18n="common.slogan_line2">— we make automation work as a whole</span>
-                </span>
-            </div>
-                <div class="header-actions">
-                    <div class="language-selector">
-                        <select id="lang-select" onchange="switchLanguage(this.value)">
-                            <option value="en">English</option>
-                            <option value="zh">中文</option>
-                            <option value="es">Español</option>
-                            <option value="fr">Français</option>
-                            <option value="ja">日本語</option>
-                            <option value="ko">한국어</option>
-                            <option value="ar">العربية</option>
-                        </select>
-                    </div>
-                    <div class="search">
-                        <input type="text" placeholder="Search" data-i18n-placeholder="common.search_placeholder">
-                        <button type="submit">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <path d="m21 21-4.35-4.35"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <nav>
-            <div class="container">
-                <ul>
-                    <li><a href="index.html" data-i18n="common.nav_home">Home</a></li>
-                    <li><a href="asrs-cost.html" data-i18n="common.nav_cost">ASRS Cost</a></li>
-                    <li><a href="asrs-design.html" data-i18n="common.nav_design">ASRS Design</a></li>
-                    <li><a href="solutions.html" data-i18n="common.nav_solutions">Solutions</a></li>
-                    <li><a href="case-studies.html" data-i18n="common.nav_cases">Case Studies</a></li>
-                    <li><a href="contact.html" data-i18n="common.nav_contact">Contact</a></li>
-                </ul>
-            </div>
-        </nav>
+        <div class="header-main"><div class="container"><div class="logo-brand"><div class="logo"><a href="index.html"><img src="logo.jpg" alt="13ASRS"></a></div><span class="logo-slogan"><span class="slogan-line1">Industrial Automation Solutions</span><span class="slogan-line2">Smart warehouse and factory integration</span></span></div><div class="header-actions"><div class="language-selector"><select id="lang-select" onchange="switchLanguage(this.value)"><option value="en">English</option><option value="zh">Chinese</option><option value="es">Spanish</option><option value="fr">French</option><option value="ja">Japanese</option><option value="ko">Korean</option><option value="ar">Arabic</option></select></div></div></div></div>
+        <nav><div class="container"><ul><li><a href="index.html">Home</a></li><li><a href="solutions.html">Solutions</a></li><li><a href="industries.html">Industries</a></li><li><a href="case-studies.html">Case Studies</a></li><li><a href="blog.html">Blog</a></li><li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li></ul></div></nav>
     </header>
-
     <main>
-        <!-- 区块 1: 页面标题 -->
-        <section class="solutions-hero">
+        <section class="page-hero"><div class="container"><span class="eyebrow">Solutions</span><h1>Automation Solutions for Warehouses, Factories, and Industrial Manufacturing.</h1><p>Explore practical technologies and integrated systems designed to improve storage capacity, material flow, production efficiency, and operational performance.</p></div></section>
+
+        <section class="section-band soft" id="asrs">
             <div class="container">
-                <h1 data-i18n="solutions.hero_title">ASRS Solutions by Application</h1>
-                <p data-i18n="solutions.hero_sub">Tailored automated storage solutions designed for your specific industry requirements</p>
+                <div class="section-header"><span class="eyebrow">01 / ASRS & Smart Warehouse</span><h2>ASRS & Smart Warehouse Solutions</h2><p><strong>Increase Storage Capacity. Improve Throughput. Reduce Manual Operations.</strong></p><p>From shuttle systems and stacker cranes to AGV logistics and warehouse software, our solutions help warehouses operate more efficiently, accurately, and reliably.</p></div>
+                <div class="card-grid two">
+                    <article class="content-card"><img src="system-shuttle.webp" alt="Shuttle ASRS"><div><h3>Typical Technologies</h3><ul><li>Shuttle ASRS and four-way shuttle systems</li><li>Stacker crane, miniload, and cold storage ASRS</li><li>Conveyor systems, AGV logistics, WMS/WES integration</li></ul></div></article>
+                    <article class="content-card"><div class="card-body"><h3>How We Approach Projects</h3><ul><li>Understand operational challenges and business goals</li><li>Evaluate warehouse data and process requirements</li><li>Recommend suitable automation technologies</li><li>Reference similar projects and implementation experience</li><li>Support planning, integration, and delivery</li></ul><div class="video-frame"><div class="video-placeholder">ASRS YouTube showcase</div></div></div></article>
+                </div>
+                <div class="faq-list-upgrade" style="margin-top:32px;"><div class="faq-item"><h3>When should an ASRS system be considered?</h3><p>When storage density, labor availability, throughput, temperature control, or traceability become limiting factors for growth.</p></div><div class="faq-item"><h3>What does 13ASRS provide?</h3><p>System design, equipment coordination, controls, software integration, installation, commissioning, and case-based project planning.</p></div></div>
             </div>
         </section>
 
-        <!-- 区块 2: 应用场景 -->
-        <section class="app-scenarios">
+        <section class="section-band dark" id="factory">
             <div class="container">
-                <h2 data-i18n="solutions.scenarios_title">Industry Solutions</h2>
-                <div class="scenarios-grid">
-                    <div class="scenario-card">
-                        <div class="scenario-image">🛒</div>
-                        <div class="scenario-content">
-                            <h3 data-i18n="solutions.ecommerce_title">E-commerce Warehouse</h3>
-                            <p data-i18n="solutions.ecommerce_desc">High-speed fulfillment with rapid picking and order consolidation for online retail operations.</p>
-                            <div class="scenario-specs">
-                                <div class="spec-row">
-                                    <span class="spec-label" data-i18n="solutions.spec_recommended">Recommended</span>
-                                    <span class="spec-value" data-i18n="solutions.spec_ecommerce_system">Shuttle + ACR</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-label" data-i18n="solutions.spec_budget">Budget</span>
-                                    <span class="spec-value" data-i18n="solutions.spec_ecommerce_budget">$300K-$5M</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-label" data-i18n="solutions.spec_scale">Scale</span>
-                                    <span class="spec-value" data-i18n="solutions.scale_medium">Medium</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="scenario-card">
-                        <div class="scenario-image">🏭</div>
-                        <div class="scenario-content">
-                            <h3 data-i18n="solutions.manufacturing_title">Manufacturing</h3>
-                            <p data-i18n="solutions.manufacturing_desc">Reliable raw material storage and finished goods handling integrated with production lines.</p>
-                            <div class="scenario-specs">
-                                <div class="spec-row">
-                                    <span class="spec-label" data-i18n="solutions.spec_recommended">Recommended</span>
-                                    <span class="spec-value" data-i18n="solutions.spec_manufacturing_system">Stacker Crane</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-label" data-i18n="solutions.spec_budget">Budget</span>
-                                    <span class="spec-value" data-i18n="solutions.spec_manufacturing_budget">$300K-$3M</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-label" data-i18n="solutions.spec_scale">Scale</span>
-                                    <span class="spec-value" data-i18n="solutions.scale_large">Large</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="scenario-card">
-                        <div class="scenario-image">❄️</div>
-                        <div class="scenario-content">
-                            <h3 data-i18n="solutions.cold_storage_title">Cold Storage</h3>
-                            <p data-i18n="solutions.cold_storage_desc">Temperature-controlled automation for frozen and refrigerated goods with minimal heat loss.</p>
-                            <div class="scenario-specs">
-                                <div class="spec-row">
-                                    <span class="spec-label" data-i18n="solutions.spec_recommended">Recommended</span>
-                                    <span class="spec-value" data-i18n="solutions.spec_cold_storage_system">Stacker Crane</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-label" data-i18n="solutions.spec_budget">Budget</span>
-                                    <span class="spec-value" data-i18n="solutions.spec_cold_storage_budget">$300K-$4M</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-label" data-i18n="solutions.spec_scale">Scale</span>
-                                    <span class="spec-value" data-i18n="solutions.scale_med_large">Med-Large</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="scenario-card">
-                        <div class="scenario-image">🔧</div>
-                        <div class="scenario-content">
-                            <h3 data-i18n="solutions.spare_parts_title">Spare Parts</h3>
-                            <p data-i18n="solutions.spare_parts_desc">High-density storage for slow-moving inventory with quick access for maintenance needs.</p>
-                            <div class="scenario-specs">
-                                <div class="spec-row">
-                                    <span class="spec-label" data-i18n="solutions.spec_recommended">Recommended</span>
-                                    <span class="spec-value" data-i18n="solutions.spec_spare_parts_system">Shuttle</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-label" data-i18n="solutions.spec_budget">Budget</span>
-                                    <span class="spec-value" data-i18n="solutions.spec_spare_parts_budget">$300K-$1.5M</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-label" data-i18n="solutions.spec_scale">Scale</span>
-                                    <span class="spec-value" data-i18n="solutions.scale_small_med">Small-Med</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="section-header"><span class="eyebrow">02 / Smart Factory</span><h2>Smart Factory Automation</h2><p>Key application areas for improving production efficiency, material flow, labor stability, and factory operations.</p></div>
+                <div class="card-grid three">
+                    <article class="content-card"><img src="system-agv.webp" alt="Production line automation"><div><h3>Production Line Automation</h3><p>Improve production efficiency and process consistency through integrated manufacturing systems.</p></div></article>
+                    <article class="content-card"><img src="acr-system.jpg" alt="Robotic automation"><div><h3>Robotic Handling & Automation</h3><p>Reduce repetitive labor and increase operational stability.</p></div></article>
+                    <article class="content-card"><img src="system-acr.webp" alt="Material flow and factory upgrade"><div><h3>Material Flow & Logistics</h3><p>Connect production processes through intelligent transportation and line-feeding systems.</p></div></article>
+                    <article class="content-card"><div class="card-body"><h3>Factory Upgrade Programs</h3><p>Implement automation step by step without disrupting existing operations.</p></div></article>
+                </div>
+                <div class="faq-list-upgrade" style="margin-top:32px;"><div class="faq-item"><h3>Can smart factory work be phased?</h3><p>Yes. 13ASRS can begin with material handling, line feeding, or logistics automation, then expand into connected production systems.</p></div></div>
+            </div>
+        </section>
+
+        <section class="section-band soft" id="machinery">
+            <div class="container">
+                <div class="section-header"><span class="eyebrow">03 / Industrial Machinery</span><h2>Industrial Manufacturing Solutions</h2><p>Supporting packaging, printing, converting, processing, and production industries with specialized equipment and integrated manufacturing systems.</p><p>From individual machines to complete production lines, we help manufacturers improve efficiency, consistency, and operational performance.</p></div>
+                <div class="card-grid">
+                    <article class="content-card"><div class="card-body"><h3>Printing & Packaging Systems</h3><p>Printing, converting, packaging, and bag-making technologies for flexible packaging and industrial production.</p></div></article>
+                    <article class="content-card"><div class="card-body"><h3>Filling & Film Blowing Systems</h3><p>Filling lines, film extrusion equipment, and integrated packaging production solutions.</p></div></article>
+                    <article class="content-card"><div class="card-body"><h3>Laser Processing & Industrial Equipment</h3><p>Laser cutting, laser processing, and advanced manufacturing equipment for industrial applications.</p></div></article>
                 </div>
             </div>
         </section>
 
-        <!-- 区块 3: 方案对比表 -->
-        <section class="comparison-section">
-            <div class="container">
-                <h2 data-i18n="solutions.comparison_title">Solution Comparison</h2>
-                <div class="solutions-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th data-i18n="solutions.th_application">Application</th>
-                                <th data-i18n="solutions.th_system">Recommended System</th>
-                                <th data-i18n="solutions.th_budget">Budget Range</th>
-                                <th data-i18n="solutions.th_scale">Scale</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="scenario-name" data-i18n="solutions.scenario_ecommerce">🛒 E-commerce</div>
-                                </td>
-                                <td>
-                                    <span class="system-badge" data-i18n="solutions.badge_ecommerce_system">Shuttle + ACR</span>
-                                </td>
-                                <td>
-                                    <span class="budget-range" data-i18n="solutions.badge_ecommerce_budget">$300K-$5M</span>
-                                </td>
-                                <td>
-                                    <span class="scale-badge" data-i18n="solutions.scale_medium">Medium</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="scenario-name" data-i18n="solutions.scenario_manufacturing">🏭 Manufacturing</div>
-                                </td>
-                                <td>
-                                    <span class="system-badge" data-i18n="solutions.badge_manufacturing_system">Stacker Crane</span>
-                                </td>
-                                <td>
-                                    <span class="budget-range" data-i18n="solutions.badge_manufacturing_budget">$300K-$3M</span>
-                                </td>
-                                <td>
-                                    <span class="scale-badge" data-i18n="solutions.scale_large">Large</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="scenario-name" data-i18n="solutions.scenario_cold_storage">❄️ Cold Storage</div>
-                                </td>
-                                <td>
-                                    <span class="system-badge" data-i18n="solutions.badge_cold_storage_system">Stacker Crane</span>
-                                </td>
-                                <td>
-                                    <span class="budget-range" data-i18n="solutions.badge_cold_storage_budget">$300K-$4M</span>
-                                </td>
-                                <td>
-                                    <span class="scale-badge" data-i18n="solutions.scale_medium_large">Medium-Large</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="scenario-name" data-i18n="solutions.scenario_spare_parts">🔧 Spare Parts</div>
-                                </td>
-                                <td>
-                                    <span class="system-badge" data-i18n="solutions.badge_spare_parts_system">Shuttle</span>
-                                </td>
-                                <td>
-                                    <span class="budget-range" data-i18n="solutions.badge_spare_parts_budget">$300K-$1.5M</span>
-                                </td>
-                                <td>
-                                    <span class="scale-badge" data-i18n="solutions.scale_small_medium">Small-Medium</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
+        <section class="section-band dark"><div class="container"><div class="section-header"><span class="eyebrow">Why Choose 13ASRS</span><h2>Why Companies Work With 13ASRS</h2></div><div class="proof-list"><span>Practical Automation Solutions</span><span>Real Project Experience</span><span>Engineering Integration</span><span>Warehouse & Factory Expertise</span><span>Global Manufacturing Resources</span><span>Long-Term Project Support</span></div></div></section>
 
-        <!-- 区块 4: CTA -->
-        <section class="cta-section">
-            <div class="container">
-                <div class="cta-box">
-                    <h2 data-i18n="solutions.cta_title">Get your customized solution</h2>
-                    <p data-i18n="solutions.cta_desc">Every warehouse is unique. Let our experts design the perfect ASRS solution for your specific requirements.</p>
-                    <a href="contact.html" class="btn-cta" data-i18n="common.cta_contact">Contact Us</a>
-                </div>
-            </div>
-        </section>
+        <section class="cta-panel"><div class="container"><div><span class="eyebrow">Business Challenge</span><h2>Start with Your Business Challenge</h2><p>Whether you're planning a warehouse upgrade, factory automation project, packaging production line, or manufacturing expansion, we can help you explore practical solutions, relevant technologies, and real project references.</p></div><a class="btn-industrial" href="contact.html">Discuss Your Project</a></div></section>
     </main>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <img src="logo.jpg" alt="13machine">
-                </div>
-                <div class="footer-links">
-                    <a href="index.html" data-i18n="common.nav_home">Home</a>
-                    <a href="asrs-cost.html" data-i18n="common.nav_cost">ASRS Cost</a>
-                    <a href="asrs-design.html" data-i18n="common.nav_design">ASRS Design</a>
-                    <a href="solutions.html" data-i18n="common.nav_solutions">Solutions</a>
-                    <a href="case-studies.html" data-i18n="common.nav_cases">Case Studies</a>
-                    <a href="contact.html" data-i18n="common.nav_contact">Contact</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p data-i18n="common.footer_rights">&copy; 2026 1³ Machine. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="utils.js" defer></script>
-    <script src="api.js" defer></script>
-    <script src="auth.js" defer></script>
-    <script src="i18n.js" defer></script>
-    <script src="app.js" defer></script>
+    <footer><div class="container"><div class="footer-content"><div class="footer-logo"><img src="logo.jpg" alt="13ASRS"></div><div class="footer-columns"><div><h3>Core Solutions</h3><a href="solutions.html#asrs">Warehouse Automation</a><a href="solutions.html#factory">Smart Factory Automation</a><a href="solutions.html#machinery">Industrial Manufacturing</a></div><div><h3>Resources</h3><a href="case-studies.html">Case Studies</a><a href="blog.html">Knowledge Center</a><a href="blog.html">Blog</a><a href="blog.html">YouTube Channel</a></div><div><h3>Contact</h3><span>Website: 13asrs.com</span><span>Email: pjm@13asrs.com</span><span>Location: China</span></div></div></div><div class="footer-bottom"><p>&copy; 2026 13ASRS. All rights reserved.</p></div></div></footer>
+    <script src="utils.js" defer></script><script src="api.js" defer></script><script src="auth.js" defer></script><script src="i18n.js" defer></script><script src="site-upgrade.js" defer></script><script src="app.js" defer></script>
 </body>
 </html>

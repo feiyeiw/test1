@@ -1,3 +1,45 @@
+function splitConfiguredList(value) {
+    if (!value) return [];
+    if (Array.isArray(value)) return value.filter(Boolean);
+    return String(value)
+        .split(/\n|,/)
+        .map(item => item.trim())
+        .filter(Boolean);
+}
+
+function slugifyHeading(text, fallback) {
+    const slug = String(text || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+    return slug || fallback;
+}
+
+function buildArticleToc() {
+    const content = document.getElementById('blogContent');
+    const toc = document.getElementById('blogToc');
+    if (!content || !toc) return;
+
+    const headings = Array.from(content.querySelectorAll('h2, h3')).slice(0, 8);
+    if (!headings.length) return;
+
+    toc.innerHTML = headings.map((heading, index) => {
+        if (!heading.id) heading.id = slugifyHeading(heading.textContent, `section-${index + 1}`);
+        return `<a href="#${heading.id}">${heading.textContent}</a>`;
+    }).join('');
+}
+
+function renderRelatedCards(containerId, items, defaults) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const values = items.length ? items : defaults;
+    container.innerHTML = values.slice(0, 3).map(item => {
+        const label = typeof item === 'string' ? item : item.title;
+        const href = typeof item === 'string' ? 'case-studies.html' : item.href;
+        return `<a class="related-card" href="${href}"><span class="eyebrow">Recommended</span><h3>${label}</h3><p>Explore a relevant 13ASRS reference before planning your project.</p></a>`;
+    }).join('');
+}
+
 // Load blog detail page
 async function loadBlogDetail() {
     console.log('loadBlogDetail called, URL:', window.location.href);
@@ -33,7 +75,43 @@ async function loadBlogDetail() {
         // Set blog data
         document.getElementById('blogTitle').textContent = blog.title;
         document.getElementById('blogDate').textContent = blog.date;
+        const blogCategory = document.getElementById('blogCategory');
+        if (blogCategory) blogCategory.textContent = blog.category || '';
+        const blogAuthor = document.getElementById('blogAuthor');
+        if (blogAuthor) blogAuthor.textContent = blog.author || '1³MACHINE';
+        const blogSummary = document.getElementById('blogSummary');
+        if (blogSummary) blogSummary.textContent = blog.summary || '';
+        const blogCover = document.getElementById('blogCover');
+        if (blogCover && typeof getBlogCover === 'function') {
+            blogCover.src = getBlogCover(blog);
+            blogCover.alt = blog.title;
+        }
+        const blogVideo = document.getElementById('blogVideo');
+        if (blogVideo && typeof renderYouTubeFrame === 'function') {
+            blogVideo.innerHTML = renderYouTubeFrame(blog.youtubeUrl, blog.title);
+        }
+        if (blog.seoTitle) document.title = blog.seoTitle;
+        if (blog.seoDescription) {
+            const metaDescription = document.querySelector('meta[name="description"]');
+            if (metaDescription) metaDescription.setAttribute('content', blog.seoDescription);
+        }
         document.getElementById('blogContent').innerHTML = blog.content;
+        const tocSection = document.getElementById('blogTocSection');
+        if (tocSection) tocSection.style.display = blog.tocEnabled === false ? 'none' : '';
+        if (blog.tocEnabled !== false) buildArticleToc();
+
+        const relatedProjectItems = splitConfiguredList(blog.relatedProjects);
+        if (blog.relatedCase) relatedProjectItems.unshift(blog.relatedCase);
+        renderRelatedCards('relatedCaseStudies', relatedProjectItems, [
+            { title: 'ASRS Project', href: 'case-ecommerce.html' },
+            { title: 'AGV Project', href: 'case-automotive.html' },
+            { title: 'Smart Factory Project', href: 'case-studies.html' }
+        ]);
+        renderRelatedCards('relatedSolutions', splitConfiguredList(blog.relatedSolutions), [
+            { title: 'ASRS Warehouse Solution', href: 'solutions.html#asrs' },
+            { title: 'AGV Solution', href: 'solutions.html#factory' },
+            { title: 'Smart Factory Solution', href: 'solutions.html#factory' }
+        ]);
 
         // Setup blog navigation (previous/next)
         await setupBlogNavigation(blog);
@@ -221,10 +299,44 @@ async function loadBlogsOnInsights() {
     }
 }
 
+async function loadBlogsOnBlog() {
+    const container = document.getElementById('blogListContainer');
+    if (!container) return;
+
+    container.innerHTML = '<div class="loading-message"><h3>Knowledge Library in Progress</h3><p>New articles and project insights are being added regularly to help manufacturers and logistics operators explore automation technologies and industry solutions.</p></div>';
+    try {
+        const blogs = await blogApi.getAllBlogs();
+        const filteredBlogs = blogs.filter(blog => !(typeof isPlaceholderBlog === 'function' && isPlaceholderBlog(blog)));
+        if (!filteredBlogs.length) {
+            container.innerHTML = '<div class="loading-message"><h3>Knowledge Library in Progress</h3><p>New articles and project insights are being added regularly to help manufacturers and logistics operators explore automation technologies and industry solutions.</p></div>';
+            return;
+        }
+
+        const sortedBlogs = [...filteredBlogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+        container.innerHTML = sortedBlogs.map(blog => `
+            <article class="content-card media-card">
+                <img src="${typeof getBlogCover === 'function' ? getBlogCover(blog) : 'system-acr.webp'}" alt="${blog.title}">
+                <div>
+                    <span class="eyebrow">${blog.category || 'Blog'}</span>
+                    <h3>${blog.title}</h3>
+                    <p>${typeof getBlogSummary === 'function' ? getBlogSummary(blog, 160) : (blog.plainText || '').substring(0, 160)}</p>
+                    <div class="mini-video">${typeof renderYouTubeFrame === 'function' ? renderYouTubeFrame(blog.youtubeUrl, blog.title) : '<div class="video-placeholder">YouTube project video</div>'}</div>
+                    <a href="blog-detail.html?id=${encodeURIComponent(blog.id)}" class="text-link">Read article</a>
+                </div>
+            </article>
+        `).join('');
+    } catch (error) {
+        console.error('Error loading blogs for blog page:', error);
+        container.innerHTML = '<div class="loading-message">Unable to load blog posts.</div>';
+    }
+}
+
 window.initBlogPages = async function() {
     const pathname = window.location.pathname;
     if (pathname.includes('blog-detail')) {
         await loadBlogDetail();
+    } else if (pathname.includes('blog.html')) {
+        await loadBlogsOnBlog();
     } else if (pathname.includes('insights')) {
         await loadBlogsOnInsights();
     }

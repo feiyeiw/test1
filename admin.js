@@ -615,20 +615,47 @@ window.initAdminPage = async function() {
     let editingBlogId = null;
 
     function getBlogFormData() {
-        const title = document.getElementById('blogTitle').value.trim();
         const editorContent = document.getElementById('blogContent');
         const content = editorContent ? editorContent.innerHTML.trim() : '';
-        const plainText = editorContent ? editorContent.textContent.trim() : '';
-        const date = document.getElementById('blogDate').value || new Date().toISOString().split('T')[0];
+        return {
+            title: document.getElementById('blogTitle').value.trim(),
+            summary: document.getElementById('blogSummary')?.value.trim() || '',
+            coverImage: document.getElementById('blogCoverImage')?.value.trim() || '',
+            youtubeUrl: document.getElementById('blogYoutubeUrl')?.value.trim() || '',
+            category: document.getElementById('blogCategory')?.value.trim() || '',
+            author: document.getElementById('blogAuthor')?.value.trim() || '1³MACHINE',
+            tocEnabled: document.getElementById('blogTocEnabled') ? document.getElementById('blogTocEnabled').checked : true,
+            relatedCase: document.getElementById('blogRelatedCase')?.value.trim() || '',
+            relatedProjects: document.getElementById('blogRelatedProjects')?.value.trim() || '',
+            relatedSolutions: document.getElementById('blogRelatedSolutions')?.value.trim() || '',
+            seoTitle: document.getElementById('blogSeoTitle')?.value.trim() || '',
+            seoDescription: document.getElementById('blogSeoDescription')?.value.trim() || '',
+            content,
+            plainText: editorContent ? editorContent.textContent.trim() : '',
+            date: document.getElementById('blogDate').value || new Date().toISOString().split('T')[0]
+        };
+    }
 
-        return { title, content, plainText, date };
+    function setBlogFormData(blog = {}) {
+        document.getElementById('blogTitle').value = blog.title || '';
+        document.getElementById('blogSummary').value = blog.summary || '';
+        document.getElementById('blogCoverImage').value = blog.coverImage || '';
+        document.getElementById('blogYoutubeUrl').value = blog.youtubeUrl || '';
+        document.getElementById('blogCategory').value = blog.category || '';
+        document.getElementById('blogAuthor').value = blog.author || '1³MACHINE';
+        document.getElementById('blogTocEnabled').checked = blog.tocEnabled !== false;
+        document.getElementById('blogRelatedCase').value = blog.relatedCase || '';
+        document.getElementById('blogRelatedProjects').value = blog.relatedProjects || '';
+        document.getElementById('blogRelatedSolutions').value = blog.relatedSolutions || '';
+        document.getElementById('blogSeoTitle').value = blog.seoTitle || '';
+        document.getElementById('blogSeoDescription').value = blog.seoDescription || '';
+        const editorContent = document.getElementById('blogContent');
+        if (editorContent) editorContent.innerHTML = blog.content || '';
+        document.getElementById('blogDate').value = blog.date || '';
     }
 
     function clearBlogForm() {
-        document.getElementById('blogTitle').value = '';
-        const editorContent = document.getElementById('blogContent');
-        if (editorContent) editorContent.innerHTML = '';
-        document.getElementById('blogDate').value = '';
+        setBlogFormData();
     }
 
     function setBlogEditorMode(blog = null) {
@@ -725,19 +752,19 @@ window.initAdminPage = async function() {
 
     // Publish or update blog
     document.getElementById('addBlog').addEventListener('click', async function() {
-        const formData = getBlogFormData();
+        const blogPayload = getBlogFormData();
 
-        if (!formData.title || !formData.content) {
-            alert('Please fill in all fields');
+        if (!blogPayload.title || !blogPayload.content) {
+            alert('Please fill in title and content');
             return;
         }
 
         try {
             if (editingBlogId) {
-                await blogApi.updateBlog(editingBlogId, formData);
+                await blogApi.updateBlog(editingBlogId, blogPayload);
                 alert('Blog updated successfully!');
             } else {
-                await blogApi.createBlog(formData);
+                await blogApi.createBlog(blogPayload);
                 alert('Blog published successfully!');
             }
 
@@ -760,11 +787,9 @@ window.initAdminPage = async function() {
                 return;
             }
 
-            document.getElementById('blogTitle').value = blog.title;
-            const editorContent = document.getElementById('blogContent');
-            if (editorContent) editorContent.innerHTML = blog.content;
-            document.getElementById('blogDate').value = blog.date;
             setBlogEditorMode(blog);
+            setBlogFormData(blog);
+            document.getElementById('blogTitle').scrollIntoView({ behavior: 'smooth', block: 'center' });
             document.getElementById('blogTitle').focus();
         } catch (error) {
             console.error('Error fetching blog for edit:', error);
@@ -835,6 +860,8 @@ window.initAdminPage = async function() {
             }
         });
     }
+
+    setBlogFormData();
 
     // Load blogs on page load
     loadBlogs();
