@@ -230,5 +230,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     await runPageSpecificScripts();
 
     if (typeof initBlogPages === 'function') await initBlogPages();
-    if (typeof initAdminPage === 'function') await initAdminPage();
+
+    const path = window.location.pathname.replace(/\/+$/, '');
+    const isAdminPage = path.endsWith('/admin') || path.endsWith('/admin.html');
+    if (isAdminPage && typeof initAdminPage === 'function') await initAdminPage();
 });
