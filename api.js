@@ -485,11 +485,21 @@ const blogApi = {
     },
 
     async checkApiStatus() {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
         try {
-            const status = await fetch(`${API_CONFIG.baseUrl}/health`);
+            const status = await fetch(`${API_CONFIG.baseUrl}/health`, {
+                method: 'GET',
+                cache: 'no-store',
+                signal: controller.signal
+            });
             return status.ok;
         } catch (error) {
+            console.warn('API health check failed:', error.message);
             return false;
+        } finally {
+            clearTimeout(timeoutId);
         }
     },
 

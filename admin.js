@@ -466,14 +466,14 @@ window.initAdminPage = async function() {
             blogApi.setApiKey(savedApiKey);
         }
 
-        // Check API status
-        await checkApiStatus();
-
         // Set up event listeners
         document.getElementById('testApi').addEventListener('click', testApiConnection);
         document.getElementById('saveApiKey').addEventListener('click', saveApiKey);
         document.getElementById('syncBlogs').addEventListener('click', syncBlogsToRemote);
         document.getElementById('refreshBlogs').addEventListener('click', refreshBlogsFromRemote);
+
+        // Check API status without blocking the rest of the admin page.
+        checkApiStatus();
     }
 
     async function checkApiStatus() {
@@ -548,8 +548,7 @@ window.initAdminPage = async function() {
         resultDiv.style.color = '#155724';
         resultDiv.innerHTML = '<strong>✅ API密钥已保存!</strong> 管理操作现在将使用此密钥进行远程同步。';
 
-        // Recheck API status
-        setTimeout(() => checkApiStatus(), 1000);
+        // API key correctness is verified only when an authenticated action runs.
     }
 
     async function syncBlogsToRemote() {
