@@ -612,6 +612,54 @@ window.initAdminPage = async function() {
     initializeApiManagement();
 
     // Blog management
+    let editingBlogId = null;
+
+    function getBlogFormData() {
+        const title = document.getElementById('blogTitle').value.trim();
+        const editorContent = document.getElementById('blogContent');
+        const content = editorContent ? editorContent.innerHTML.trim() : '';
+        const plainText = editorContent ? editorContent.textContent.trim() : '';
+        const date = document.getElementById('blogDate').value || new Date().toISOString().split('T')[0];
+
+        return { title, content, plainText, date };
+    }
+
+    function clearBlogForm() {
+        document.getElementById('blogTitle').value = '';
+        const editorContent = document.getElementById('blogContent');
+        if (editorContent) editorContent.innerHTML = '';
+        document.getElementById('blogDate').value = '';
+    }
+
+    function setBlogEditorMode(blog = null) {
+        editingBlogId = blog ? String(blog.id) : null;
+
+        const submitButton = document.getElementById('addBlog');
+        const cancelButton = document.getElementById('cancelEditBlog');
+        const status = document.getElementById('blogEditorStatus');
+
+        if (blog) {
+            submitButton.textContent = 'Update Blog';
+            cancelButton.style.display = 'inline-block';
+            status.style.display = 'block';
+            status.textContent = `Editing: ${blog.title}`;
+        } else {
+            submitButton.textContent = 'Publish Blog';
+            cancelButton.style.display = 'none';
+            status.style.display = 'none';
+            status.textContent = '';
+        }
+    }
+
+    function escapeHtml(value) {
+        return String(value || '').replace(/[&<>"']/g, (char) => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[char]));
+    }
 
     // Load blogs from API/localStorage
     async function loadBlogs() {
@@ -641,13 +689,13 @@ window.initAdminPage = async function() {
                     blog.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 
                 blogItem.innerHTML = `
-                    <h4>${blog.title}</h4>
-                    <p style="font-size: 14px; color: #666;">${blog.date}</p>
+                    <h4>${escapeHtml(blog.title)}</h4>
+                    <p style="font-size: 14px; color: #666;">${escapeHtml(blog.date)}</p>
                     <div style="margin: 10px 0; color: #666; line-height: 1.4;">
-                        ${previewText.substring(0, 100)}${previewText.length > 100 ? '...' : ''}
+                        ${escapeHtml(previewText.substring(0, 100))}${previewText.length > 100 ? '...' : ''}
                     </div>
-                    <button onclick="editBlog('${blog.id}')" style="margin-right: 10px; padding: 5px 10px; background-color: #e60000; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Edit</button>
-                    <button onclick="deleteBlog('${blog.id}')" style="padding: 5px 10px; background-color: #666; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Delete</button>
+                    <button type="button" data-blog-action="edit" data-blog-id="${escapeHtml(blog.id)}" style="margin-right: 10px; padding: 5px 10px; background-color: #e60000; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Edit</button>
+                    <button type="button" data-blog-action="delete" data-blog-id="${escapeHtml(blog.id)}" style="padding: 5px 10px; background-color: #666; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Delete</button>
                 `;
 
                 blogsContainer.appendChild(blogItem);
@@ -658,38 +706,48 @@ window.initAdminPage = async function() {
         }
     }
 
-    // Add blog
-    document.getElementById('addBlog').addEventListener('click', async function() {
-        const title = document.getElementById('blogTitle').value;
-        const editorContent = document.getElementById('blogContent');
-        const content = editorContent ? editorContent.innerHTML : '';
-        const date = document.getElementById('blogDate').value || new Date().toISOString().split('T')[0];
+    document.getElementById('blogsContainer').addEventListener('click', function(event) {
+        const button = event.target.closest('[data-blog-action]');
+        if (!button) return;
 
-        if (!title || !content.trim()) {
+        const id = button.getAttribute('data-blog-id');
+        if (button.getAttribute('data-blog-action') === 'edit') {
+            window.editBlog(id);
+        } else if (button.getAttribute('data-blog-action') === 'delete') {
+            window.deleteBlog(id);
+        }
+    });
+
+    document.getElementById('cancelEditBlog').addEventListener('click', function() {
+        clearBlogForm();
+        setBlogEditorMode(null);
+    });
+
+    // Publish or update blog
+    document.getElementById('addBlog').addEventListener('click', async function() {
+        const formData = getBlogFormData();
+
+        if (!formData.title || !formData.content) {
             alert('Please fill in all fields');
             return;
         }
 
-        const newBlog = {
-            title: title,
-            content: content,
-            plainText: editorContent ? editorContent.textContent : '',
-            date: date
-        };
-
         try {
-            await blogApi.createBlog(newBlog);
+            if (editingBlogId) {
+                await blogApi.updateBlog(editingBlogId, formData);
+                alert('Blog updated successfully!');
+            } else {
+                await blogApi.createBlog(formData);
+                alert('Blog published successfully!');
+            }
 
-            // Clear form
-            document.getElementById('blogTitle').value = '';
-            if (editorContent) editorContent.innerHTML = '';
-            document.getElementById('blogDate').value = '';
+            clearBlogForm();
+            setBlogEditorMode(null);
 
             await loadBlogs();
-            alert('Blog added successfully!');
         } catch (error) {
-            console.error('Error adding blog:', error);
-            alert(`Error adding blog: ${error.message}`);
+            console.error('Error saving blog:', error);
+            alert(`Error saving blog: ${error.message}`);
         }
     });
 
@@ -706,15 +764,8 @@ window.initAdminPage = async function() {
             const editorContent = document.getElementById('blogContent');
             if (editorContent) editorContent.innerHTML = blog.content;
             document.getElementById('blogDate').value = blog.date;
-
-            // Delete the blog after loading into form
-            try {
-                await blogApi.deleteBlog(id);
-                await loadBlogs();
-            } catch (error) {
-                console.error('Error deleting blog for edit:', error);
-                alert('Error loading blog for editing');
-            }
+            setBlogEditorMode(blog);
+            document.getElementById('blogTitle').focus();
         } catch (error) {
             console.error('Error fetching blog for edit:', error);
             alert('Error loading blog for editing');
@@ -730,6 +781,10 @@ window.initAdminPage = async function() {
         try {
             await blogApi.deleteBlog(id);
             await loadBlogs();
+            if (editingBlogId === String(id)) {
+                clearBlogForm();
+                setBlogEditorMode(null);
+            }
             alert('Blog deleted successfully!');
         } catch (error) {
             console.error('Error deleting blog:', error);
@@ -1207,4 +1262,3 @@ function translateAdminPage() {
     };
     document.title = adminTitles[currentLanguage] || adminTitles.en;
 }
-
