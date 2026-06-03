@@ -331,7 +331,11 @@
                 <textarea id="blogContentPlain" style="display:none;"></textarea>
             </div>
 
-            <button id="addBlog" class="save-btn" data-i18n="addBlog">Add Blog</button>
+            <div id="blogEditorStatus" style="display: none; margin-bottom: 12px; padding: 10px; border-radius: 4px; background-color: #fff3cd; border: 1px solid #ffeaa7; color: #856404;"></div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button id="addBlog" class="save-btn" data-i18n="addBlog">Publish Blog</button>
+                <button id="cancelEditBlog" class="save-btn" style="display: none; background-color: #666;">Cancel Edit</button>
+            </div>
 
             <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
                 <button id="exportBlogs" class="save-btn" style="background-color: #28a745;" data-i18n="exportBlogs">Export Blogs JSON</button>
