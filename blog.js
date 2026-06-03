@@ -41,10 +41,17 @@ function getPublicBlogCover(blog) {
 function buildArticleToc() {
     const content = document.getElementById('blogContent');
     const toc = document.getElementById('blogToc');
+    const tocSection = document.getElementById('blogTocSection');
     if (!content || !toc) return;
 
     const headings = Array.from(content.querySelectorAll('h2, h3')).slice(0, 8);
-    if (!headings.length) return;
+    if (!headings.length) {
+        toc.innerHTML = '';
+        if (tocSection) tocSection.style.display = 'none';
+        return;
+    }
+
+    if (tocSection) tocSection.style.display = '';
 
     toc.innerHTML = headings.map((heading, index) => {
         if (!heading.id) heading.id = slugifyHeading(heading.textContent, `section-${index + 1}`);
@@ -101,7 +108,13 @@ async function loadBlogDetail() {
         const blogCategory = document.getElementById('blogCategory');
         if (blogCategory) blogCategory.textContent = blog.category || '';
         const blogAuthor = document.getElementById('blogAuthor');
-        if (blogAuthor) blogAuthor.textContent = blog.author || '1³MACHINE';
+        if (blogAuthor) blogAuthor.textContent = blog.author || '13ASRS';
+        const blogDateSide = document.getElementById('blogDateSide');
+        if (blogDateSide) blogDateSide.textContent = blog.date || '-';
+        const blogAuthorSide = document.getElementById('blogAuthorSide');
+        if (blogAuthorSide) blogAuthorSide.textContent = blog.author || '13ASRS';
+        const blogCategorySide = document.getElementById('blogCategorySide');
+        if (blogCategorySide) blogCategorySide.textContent = blog.category || 'Blog';
         const blogSummary = document.getElementById('blogSummary');
         if (blogSummary) blogSummary.textContent = blog.summary || '';
         const blogCover = document.getElementById('blogCover');
@@ -111,7 +124,13 @@ async function loadBlogDetail() {
         }
         const blogVideo = document.getElementById('blogVideo');
         if (blogVideo && typeof renderYouTubeFrame === 'function') {
-            blogVideo.innerHTML = renderYouTubeFrame(blog.youtubeUrl, blog.title);
+            if (blog.youtubeUrl) {
+                blogVideo.innerHTML = renderYouTubeFrame(blog.youtubeUrl, blog.title);
+                blogVideo.style.display = '';
+            } else {
+                blogVideo.innerHTML = '';
+                blogVideo.style.display = 'none';
+            }
         }
         if (blog.seoTitle) document.title = blog.seoTitle;
         if (blog.seoDescription) {
