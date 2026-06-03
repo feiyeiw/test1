@@ -1,435 +1,590 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XYWJNXE4Z"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-3XYWJNXE4Z');
-    </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - 1³ Machine</title>
+    <title>后台管理 - 13ASRS</title>
     <link rel="stylesheet" href="style.css">
-    <script>
-    (function() {
-        var lang = localStorage.getItem('siteLanguage') || 'en';
-        if (lang !== 'en') {
-            document.documentElement.classList.add('i18n-pending');
-        }
-    })();
-    </script>
-
     <style>
-        .admin-container {
-            padding: 40px 0;
+        :root {
+            --admin-bg: #f4f6f8;
+            --admin-panel: #ffffff;
+            --admin-ink: #17202a;
+            --admin-muted: #667085;
+            --admin-line: #d9e1ea;
+            --admin-accent: #0b67d1;
+            --admin-good: #11845b;
+            --admin-warn: #b7791f;
+            --admin-danger: #c9342f;
         }
-        
-        .admin-container .container {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 30px;
+
+        body {
+            margin: 0;
+            background: var(--admin-bg);
+            color: var(--admin-ink);
         }
-        
+
         .admin-header {
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            background: #fff;
+            border-bottom: 1px solid var(--admin-line);
+        }
+
+        .admin-header a {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--admin-ink);
+            text-decoration: none;
+            font-weight: 800;
+        }
+
+        .admin-header img {
+            width: 48px;
+            height: 34px;
+            object-fit: contain;
+        }
+
+        .admin-shell {
+            min-height: calc(100vh - 72px);
+            display: grid;
+            grid-template-columns: 240px minmax(0, 1fr);
+        }
+
+        .admin-sidebar {
+            background: #101820;
+            color: #fff;
+            padding: 24px 18px;
+            position: sticky;
+            top: 0;
+            height: calc(100vh - 72px);
+        }
+
+        .admin-brand {
+            display: grid;
+            gap: 4px;
+            margin-bottom: 28px;
+        }
+
+        .admin-brand strong {
+            font-size: 18px;
+        }
+
+        .admin-brand span {
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 13px;
+        }
+
+        .admin-nav {
+            display: grid;
+            gap: 8px;
+        }
+
+        .admin-nav button {
+            border: 0;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.72);
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .admin-nav button.active {
+            background: #fff;
+            color: #101820;
+        }
+
+        .admin-main {
+            padding: 28px;
+        }
+
+        .admin-topbar {
             display: flex;
             justify-content: space-between;
+            gap: 18px;
             align-items: center;
-            width: 100%;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .admin-header h1 {
-            color: #333;
-        }
-        
-        .logout-btn {
-            padding: 8px 20px;
-            background-color: #0066cc;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .logout-btn:hover {
-            background-color: #0052a3;
-        }
-        
-        .admin-section {
-            width: 100%;
-            background-color: #f8f8f8;
-            padding: 30px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-        }
-        
-        .admin-section h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        
-        .form-group textarea {
-            height: 100px;
-            resize: vertical;
-        }
-        
-        .service-forms {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        
-        .save-btn {
-            padding: 12px 30px;
-            background-color: #0066cc;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .save-btn:hover {
-            background-color: #0052a3;
+            margin-bottom: 22px;
         }
 
-        /* Rich Text Editor Styles */
-        .editor-toolbar {
+        .admin-topbar h1 {
+            margin: 0 0 4px;
+            font-size: 28px;
+            letter-spacing: 0;
+        }
+
+        .admin-topbar p {
+            margin: 0;
+            color: var(--admin-muted);
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .cms-layout {
+            display: grid;
+            grid-template-columns: minmax(280px, 380px) minmax(0, 1fr);
+            gap: 18px;
+            align-items: start;
+        }
+
+        .panel {
+            background: var(--admin-panel);
+            border: 1px solid var(--admin-line);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--admin-line);
             display: flex;
-            gap: 5px;
-            margin-bottom: 10px;
-            padding: 10px;
-            background-color: #f0f0f0;
-            border-radius: 4px;
-            border: 1px solid #e0e0e0;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .panel-header h2,
+        .panel-header h3 {
+            margin: 0;
+            font-size: 18px;
+            letter-spacing: 0;
+        }
+
+        .panel-body {
+            padding: 16px;
+        }
+
+        .blog-toolbar {
+            display: grid;
+            grid-template-columns: 1fr 132px;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .blog-toolbar input,
+        .blog-toolbar select,
+        .form-grid input,
+        .form-grid textarea,
+        .form-grid select {
+            width: 100%;
+            border: 1px solid var(--admin-line);
+            border-radius: 6px;
+            padding: 10px 12px;
+            font: inherit;
+            background: #fff;
+            color: var(--admin-ink);
+            box-sizing: border-box;
+        }
+
+        .blog-list {
+            display: grid;
+            gap: 10px;
+            max-height: calc(100vh - 270px);
+            overflow: auto;
+        }
+
+        .blog-list-item {
+            border: 1px solid var(--admin-line);
+            border-radius: 8px;
+            padding: 12px;
+            background: #fff;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .blog-list-item.active {
+            border-color: var(--admin-accent);
+            box-shadow: 0 0 0 2px rgba(11, 103, 209, 0.14);
+        }
+
+        .blog-list-item h3 {
+            margin: 0 0 8px;
+            font-size: 16px;
+            letter-spacing: 0;
+        }
+
+        .blog-meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            color: var(--admin-muted);
+            font-size: 13px;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 3px 8px;
+            font-size: 12px;
+            font-weight: 800;
+            background: #edf2f7;
+            color: #344054;
+        }
+
+        .status-pill.published {
+            background: #dcfce7;
+            color: var(--admin-good);
+        }
+
+        .status-pill.draft {
+            background: #fef3c7;
+            color: var(--admin-warn);
+        }
+
+        .editor-actions {
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            background: var(--admin-panel);
+            border-bottom: 1px solid var(--admin-line);
+            padding: 12px 16px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
             flex-wrap: wrap;
         }
 
-        .editor-btn {
-            padding: 8px 12px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        .btn {
+            border: 0;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-weight: 800;
             cursor: pointer;
-            font-size: 14px;
-            min-width: 36px;
-            text-align: center;
+            background: #e7edf4;
+            color: var(--admin-ink);
+            text-decoration: none;
         }
 
-        .editor-btn:hover {
-            background-color: #f5f5f5;
-            border-color: #999;
+        .btn.primary {
+            background: var(--admin-accent);
+            color: #fff;
         }
 
-        .editor-content {
-            width: 100%;
-            min-height: 300px;
-            padding: 12px;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            background-color: #fff;
-            font-size: 16px;
-            line-height: 1.6;
-            overflow-y: auto;
+        .btn.success {
+            background: var(--admin-good);
+            color: #fff;
         }
 
-        .editor-content:focus {
-            outline: none;
-            border-color: #0066cc;
+        .btn.danger {
+            background: var(--admin-danger);
+            color: #fff;
         }
 
-        .editor-content h1, .editor-content h2, .editor-content h3 {
-            margin-top: 1em;
-            margin-bottom: 0.5em;
-            color: #333;
+        .btn.ghost {
+            background: transparent;
+            border: 1px solid var(--admin-line);
         }
 
-        .editor-content ul, .editor-content ol {
-            margin-left: 20px;
-            margin-bottom: 1em;
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
         }
 
-        .editor-content a {
-            color: #0066cc;
-            text-decoration: underline;
+        .form-group {
+            display: grid;
+            gap: 6px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 800;
+            color: #344054;
+        }
+
+        .form-group small {
+            color: var(--admin-muted);
+        }
+
+        .rich-toolbar {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            padding: 10px;
+            border: 1px solid var(--admin-line);
+            border-bottom: 0;
+            border-radius: 6px 6px 0 0;
+            background: #f8fafc;
+        }
+
+        .rich-toolbar button {
+            min-width: 38px;
+            height: 34px;
+            border: 1px solid var(--admin-line);
+            background: #fff;
+            border-radius: 5px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .rich-editor {
+            min-height: 360px;
+            padding: 16px;
+            border: 1px solid var(--admin-line);
+            border-radius: 0 0 6px 6px;
+            background: #fff;
+            line-height: 1.7;
+            overflow: auto;
+        }
+
+        .rich-editor:focus {
+            outline: 2px solid rgba(11, 103, 209, 0.22);
+            outline-offset: 2px;
+        }
+
+        .notice {
+            padding: 12px 14px;
+            border-radius: 6px;
+            background: #eef6ff;
+            color: #1d4f91;
+            margin-bottom: 14px;
+            display: none;
+        }
+
+        .notice.show {
+            display: block;
+        }
+
+        .notice.success {
+            background: #ecfdf3;
+            color: var(--admin-good);
+        }
+
+        .notice.error {
+            background: #fef3f2;
+            color: var(--admin-danger);
+        }
+
+        .page-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .settings-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--admin-line);
+        }
+
+        .setting-row span {
+            color: var(--admin-muted);
+            text-align: right;
+        }
+
+        @media (max-width: 980px) {
+            .admin-shell,
+            .cms-layout,
+            .page-grid,
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-sidebar {
+                position: static;
+                height: auto;
+            }
+
+            .admin-main {
+                padding: 18px;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-main">
-            <div class="container">
-                <div class="logo">
-                    <a href="index.html">
-                        <img src="logo.jpg" alt="13machine">
-                        <span>1³ MACHINE</span>
-                    </a>
-                </div>
-                <div class="header-actions">
-                    <div class="language-selector">
-                        <select id="lang-select" onchange="switchLanguage(this.value)">
-                            <option value="en">English</option>
-                            <option value="zh">中文</option>
-                            <option value="ja">日本語</option>
-                            <option value="fr">Français</option>
-                            <option value="es">Español</option>
-                            <option value="ar">العربية</option>
-                            <option value="ko">한국어</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <header class="admin-header">
+        <a href="index.html" aria-label="13ASRS 首页">
+            <img src="logo.jpg" alt="13ASRS">
+            <span>13ASRS</span>
+        </a>
+        <button class="btn ghost" type="button" onclick="logout()">退出登录</button>
     </header>
-    
-    <main id="adminDashboard">
-        <div class="admin-container">
-            <div class="container">
-                <div class="admin-header">
-                    <h1 data-i18n="adminDashboard">Admin Dashboard</h1>
-                    <button class="logout-btn" onclick="logout()" data-i18n="logout">Logout</button>
-                </div>
 
-                <div class="admin-section">
-                    <h2 data-i18n="accountSettings">Account Settings</h2>
-                    <div class="form-group">
-                        <label for="currentPassword" data-i18n="currentPassword">Current Password</label>
-                        <input type="password" id="currentPassword" name="currentPassword">
-                    </div>
-                    <div class="form-group">
-                        <label for="newPassword" data-i18n="newPassword">New Password</label>
-                        <input type="password" id="newPassword" name="newPassword">
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmPassword" data-i18n="confirmPassword">Confirm New Password</label>
-                        <input type="password" id="confirmPassword" name="confirmPassword">
-                    </div>
-                    <button id="changePassword" class="save-btn" style="background-color: #333;" data-i18n="changePassword">Change Password</button>
-                </div>
+    <main id="adminDashboard" class="admin-shell">
+        <aside class="admin-sidebar">
+            <div class="admin-brand">
+                <strong>CMS Console</strong>
+                <span>Blog v2 / Cloudflare KV</span>
+            </div>
+            <nav class="admin-nav" aria-label="后台栏目">
+                <button type="button" class="active" data-admin-tab="blogs">Blog 管理</button>
+                <button type="button" data-admin-tab="pages">页面内容</button>
+                <button type="button" data-admin-tab="settings">设置</button>
+            </nav>
+        </aside>
 
-                <div class="admin-section">
-                    <h2 data-i18n="heroSection">Hero Section</h2>
-                    <div class="form-group">
-                        <label for="heroTitle" data-i18n="title">Title</label>
-                        <input type="text" id="heroTitle" name="heroTitle">
-                    </div>
-                    <div class="form-group">
-                        <label for="heroDescription" data-i18n="description">Description</label>
-                        <textarea id="heroDescription" name="heroDescription"></textarea>
-                    </div>
-                </div>
-                
-                <div class="admin-section">
-                    <h2 data-i18n="servicesSection">Services Section</h2>
-                    <div class="service-forms">
-                        <div class="form-group">
-                            <label for="service1Title" data-i18n="service1Title">Service 1 Title</label>
-                            <input type="text" id="service1Title" name="service1Title">
-                            <label for="service1Description" data-i18n="service1Description">Service 1 Description</label>
-                            <textarea id="service1Description" name="service1Description"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="service2Title" data-i18n="service2Title">Service 2 Title</label>
-                            <input type="text" id="service2Title" name="service2Title">
-                            <label for="service2Description" data-i18n="service2Description">Service 2 Description</label>
-                            <textarea id="service2Description" name="service2Description"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="service3Title" data-i18n="service3Title">Service 3 Title</label>
-                            <input type="text" id="service3Title" name="service3Title">
-                            <label for="service3Description" data-i18n="service3Description">Service 3 Description</label>
-                            <textarea id="service3Description" name="service3Description"></textarea>
-                        </div>
-                    </div>
-                </div>
-                
-                <button id="saveContent" class="save-btn" data-i18n="saveContent">Save Content</button>
-
-                <div class="admin-section">
-                    <h2 data-i18n="otherPagesManagement">Other Pages Management</h2>
-                    <div class="service-forms">
-                        <div class="form-group">
-                            <h3 data-i18n="servicesPage">Services Page</h3>
-                            <label for="servicesTitle" data-i18n="pageTitle">Page Title</label>
-                            <input type="text" id="servicesTitle" name="servicesTitle">
-                            <label for="servicesDescription" data-i18n="pageDescription">Page Description</label>
-                            <textarea id="servicesDescription" name="servicesDescription"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <h3 data-i18n="solutionsPage">Solutions Page</h3>
-                            <label for="solutionsTitle">Page Title</label>
-                            <input type="text" id="solutionsTitle" name="solutionsTitle">
-                            <label for="solutionsDescription">Page Description</label>
-                            <textarea id="solutionsDescription" name="solutionsDescription"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <h3 data-i18n="aboutPage">About Page</h3>
-                            <label for="aboutTitle">Page Title</label>
-                            <input type="text" id="aboutTitle" name="aboutTitle">
-                            <label for="aboutDescription">Page Description</label>
-                            <textarea id="aboutDescription" name="aboutDescription"></textarea>
-                        </div>
-                    </div>
-                    <button id="savePages" class="save-btn" data-i18n="savePagesContent">Save Pages Content</button>
+        <section class="admin-main">
+            <div class="admin-topbar">
+                <div>
+                    <h1>13ASRS 后台管理</h1>
+                    <p>发布、编辑和管理网站博客内容。</p>
                 </div>
             </div>
-        </div>
 
-                <div class="admin-section">
-                    <h2 data-i18n="blogManagement">Blog Management</h2>
-                    <div class="form-group">
-                        <label for="blogTitle" data-i18n="blogTitle">Blog Title</label>
-                        <input type="text" id="blogTitle" name="blogTitle">
-                    </div>
-                    <div class="form-group">
-                        <label for="blogSummary">Summary / Excerpt</label>
-                        <textarea id="blogSummary" name="blogSummary" placeholder="Short SEO summary shown on Blog cards"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="blogCoverImage">Cover Image URL</label>
-                        <input type="url" id="blogCoverImage" name="blogCoverImage" placeholder="https://example.com/project-cover.webp">
-                    </div>
-                    <div class="form-group">
-                        <label for="blogYoutubeUrl">YouTube Video URL</label>
-                        <input type="url" id="blogYoutubeUrl" name="blogYoutubeUrl" placeholder="https://www.youtube.com/watch?v=...">
-                    </div>
-                    <div class="form-group">
-                        <label for="blogCategory">Category</label>
-                        <input type="text" id="blogCategory" name="blogCategory" placeholder="ASRS, Smart Factory, AGV Logistics...">
-                    </div>
-                    <div class="form-group">
-                        <label for="blogAuthor">Author</label>
-                        <input type="text" id="blogAuthor" name="blogAuthor" placeholder="1³MACHINE">
-                    </div>
-                    <div class="form-group">
-                        <label for="blogTocEnabled">Table of Contents</label>
-                        <label style="display: flex; align-items: center; gap: 8px; font-weight: normal;">
-                            <input type="checkbox" id="blogTocEnabled" name="blogTocEnabled" checked style="width: auto;">
-                            Auto-generate from article headings
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label for="blogRelatedCase">Related Case Study</label>
-                        <input type="text" id="blogRelatedCase" name="blogRelatedCase" placeholder="Shuttle ASRS Warehouse for Chemical Industry">
-                    </div>
-                    <div class="form-group">
-                        <label for="blogRelatedProjects">Related Projects</label>
-                        <textarea id="blogRelatedProjects" name="blogRelatedProjects" placeholder="One related project per line, or leave blank for default recommendations"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="blogRelatedSolutions">Related Solutions</label>
-                        <textarea id="blogRelatedSolutions" name="blogRelatedSolutions" placeholder="ASRS Warehouse Solution&#10;AGV Solution&#10;Smart Factory Solution"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="blogSeoTitle">SEO Title</label>
-                        <input type="text" id="blogSeoTitle" name="blogSeoTitle" placeholder="Optional search title">
-                    </div>
-                    <div class="form-group">
-                        <label for="blogSeoDescription">SEO Description</label>
-                        <textarea id="blogSeoDescription" name="blogSeoDescription" placeholder="Optional search description"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="blogDate" data-i18n="date">Date</label>
-                        <input type="date" id="blogDate" name="blogDate">
+            <section id="blogsSection" class="admin-section active">
+                <div class="cms-layout">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h2>文章列表</h2>
+                            <button type="button" id="newBlog" class="btn primary">新建</button>
+                        </div>
+                        <div class="panel-body">
+                            <div class="blog-toolbar">
+                                <input type="search" id="blogSearch" placeholder="搜索标题、摘要、分类">
+                                <select id="blogStatusFilter">
+                                    <option value="all">全部</option>
+                                    <option value="draft">草稿</option>
+                                    <option value="published">已发布</option>
+                                </select>
+                            </div>
+                            <div id="blogList" class="blog-list"></div>
+                        </div>
                     </div>
 
-            <div class="form-group">
-                <label data-i18n="blogContent">Blog Content (Rich Text Editor)</label>
-                <div class="editor-toolbar">
-                    <button type="button" class="editor-btn" onclick="formatText('bold')" title="Bold" data-i18n-title="bold"><b>B</b></button>
-                    <button type="button" class="editor-btn" onclick="formatText('italic')" title="Italic" data-i18n-title="italic"><i>I</i></button>
-                    <button type="button" class="editor-btn" onclick="formatText('underline')" title="Underline" data-i18n-title="underline"><u>U</u></button>
-                    <button type="button" class="editor-btn" onclick="formatText('heading')" title="Heading" data-i18n-title="heading">H</button>
-                    <button type="button" class="editor-btn" onclick="formatText('unorderedlist')" title="Bullet List" data-i18n-title="bulletList">•</button>
-                    <button type="button" class="editor-btn" onclick="formatText('orderedlist')" title="Numbered List" data-i18n-title="numberedList">1.</button>
-                    <button type="button" class="editor-btn" onclick="formatText('link')" title="Insert Link" data-i18n-title="insertLink">🔗</button>
-                    <button type="button" class="editor-btn" onclick="formatText('image')" title="Insert Image" data-i18n-title="insertImage">🖼️</button>
-                </div>
-                <div id="blogContent" class="editor-content" contenteditable="true"></div>
-                <textarea id="blogContentPlain" style="display:none;"></textarea>
-            </div>
-
-            <div id="blogEditorStatus" style="display: none; margin-bottom: 12px; padding: 10px; border-radius: 4px; background-color: #fff3cd; border: 1px solid #ffeaa7; color: #856404;"></div>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <button id="addBlog" class="save-btn" data-i18n="addBlog">Publish Blog</button>
-                <button id="cancelEditBlog" class="save-btn" style="display: none; background-color: #666;">Cancel Edit</button>
-            </div>
-
-            <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-                <button id="exportBlogs" class="save-btn" style="background-color: #28a745;" data-i18n="exportBlogs">Export Blogs JSON</button>
-                <button id="importBlogs" class="save-btn" style="background-color: #17a2b8;" data-i18n="importBlogs">Import Blogs JSON</button>
-                <input type="file" id="importFile" accept=".json" style="display: none;">
-            </div>
-
-            <!-- API Management Section -->
-            <div id="apiManagement" style="margin-top: 30px; padding: 20px; background-color: #f5f5f5; border-radius: 8px; border: 1px solid #ddd;">
-                <h3 style="margin-top: 0; color: #333;">跨设备同步设置 (Cloudflare KV)</h3>
-
-                <div style="margin-bottom: 15px;">
-                    <label for="apiKey" style="display: block; margin-bottom: 5px; font-weight: bold;">API密钥:</label>
-                    <input type="password" id="apiKey" placeholder="输入API密钥以启用远程同步" style="width: 100%; max-width: 400px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                    <div style="margin-top: 5px; font-size: 12px; color: #666;">
-                        API密钥用于认证管理操作。部署Cloudflare Workers时设置的环境变量。
+                    <div class="panel">
+                        <div class="editor-actions">
+                            <button type="button" id="previewBlog" class="btn ghost">预览</button>
+                            <button type="button" id="saveDraft" class="btn">保存草稿</button>
+                            <button type="button" id="publishBlog" class="btn success">发布</button>
+                            <button type="button" id="unpublishBlog" class="btn ghost">转为草稿</button>
+                            <button type="button" id="deleteBlog" class="btn danger">删除</button>
+                        </div>
+                        <div class="panel-body">
+                            <div id="editorNotice" class="notice"></div>
+                            <form id="blogForm" class="form-grid">
+                                <div class="form-group full">
+                                    <label for="blogTitle">标题</label>
+                                    <input id="blogTitle" type="text" required>
+                                </div>
+                                <div class="form-group full">
+                                    <label for="blogSummary">摘要</label>
+                                    <textarea id="blogSummary" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="blogCoverImage">封面图片 URL</label>
+                                    <input id="blogCoverImage" type="url" placeholder="https://example.com/image.webp">
+                                </div>
+                                <div class="form-group">
+                                    <label for="blogCategory">分类</label>
+                                    <input id="blogCategory" type="text" placeholder="ASRS / AGV / Smart Factory">
+                                </div>
+                                <div class="form-group">
+                                    <label for="blogAuthor">作者</label>
+                                    <input id="blogAuthor" type="text" value="13ASRS">
+                                </div>
+                                <div class="form-group">
+                                    <label for="blogDate">日期</label>
+                                    <input id="blogDate" type="date">
+                                </div>
+                                <div class="form-group">
+                                    <label for="blogSeoTitle">SEO Title</label>
+                                    <input id="blogSeoTitle" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="blogSeoDescription">SEO Description</label>
+                                    <input id="blogSeoDescription" type="text">
+                                </div>
+                                <div class="form-group full">
+                                    <label>正文</label>
+                                    <div class="rich-toolbar" aria-label="编辑器工具栏">
+                                        <button type="button" data-command="bold" title="粗体">B</button>
+                                        <button type="button" data-command="italic" title="斜体">I</button>
+                                        <button type="button" data-command="underline" title="下划线">U</button>
+                                        <button type="button" data-command="heading" title="标题">H</button>
+                                        <button type="button" data-command="insertUnorderedList" title="无序列表">•</button>
+                                        <button type="button" data-command="insertOrderedList" title="有序列表">1.</button>
+                                        <button type="button" data-command="link" title="链接">Ln</button>
+                                        <button type="button" data-command="image" title="图片 URL">Img</button>
+                                    </div>
+                                    <div id="blogContentEditor" class="rich-editor" contenteditable="true"></div>
+                                    <small>图片请使用外链 URL，不保存 base64 图片。</small>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
+            </section>
 
-                <div style="margin-bottom: 15px;">
-                    <div id="apiStatus" style="padding: 10px; border-radius: 4px; background-color: #fff; border: 1px solid #ddd;">
-                        <strong>API状态:</strong> <span id="apiStatusText">检查中...</span>
+            <section id="pagesSection" class="admin-section">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>页面内容</h2>
+                        <button type="button" id="savePages" class="btn primary">保存页面内容</button>
+                    </div>
+                    <div class="panel-body page-grid">
+                        <div class="form-group">
+                            <label for="heroTitle">首页标题</label>
+                            <input id="heroTitle" type="text">
+                            <label for="heroDescription">首页描述</label>
+                            <textarea id="heroDescription" rows="5"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="servicesTitle">Services 标题</label>
+                            <input id="servicesTitle" type="text">
+                            <label for="servicesDescription">Services 描述</label>
+                            <textarea id="servicesDescription" rows="5"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="solutionsTitle">Solutions 标题</label>
+                            <input id="solutionsTitle" type="text">
+                            <label for="solutionsDescription">Solutions 描述</label>
+                            <textarea id="solutionsDescription" rows="5"></textarea>
+                            <label for="aboutTitle">About 标题</label>
+                            <input id="aboutTitle" type="text">
+                            <label for="aboutDescription">About 描述</label>
+                            <textarea id="aboutDescription" rows="5"></textarea>
+                        </div>
                     </div>
                 </div>
+            </section>
 
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button id="testApi" class="save-btn" style="background-color: #6f42c1;">测试API连接</button>
-                    <button id="saveApiKey" class="save-btn" style="background-color: #20c997;">保存API密钥</button>
-                    <button id="syncBlogs" class="save-btn" style="background-color: #fd7e14;">同步到远程</button>
-                    <button id="refreshBlogs" class="save-btn" style="background-color: #6610f2;">从远程刷新</button>
+            <section id="settingsSection" class="admin-section">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>设置</h2>
+                    </div>
+                    <div class="panel-body settings-list">
+                        <div class="setting-row">
+                            <strong>认证方式</strong>
+                            <span>JWT 登录，会话存储在当前浏览器 Session。</span>
+                        </div>
+                        <div class="setting-row">
+                            <strong>存储</strong>
+                            <span>Cloudflare KV: BLOG_DATA / blog_v2</span>
+                        </div>
+                        <div>
+                            <button type="button" class="btn danger" onclick="logout()">退出登录</button>
+                        </div>
+                    </div>
                 </div>
-
-                <div id="apiResult" style="margin-top: 15px; padding: 10px; border-radius: 4px; display: none;"></div>
-            </div>
-
-            <div id="blogList" style="margin-top: 30px;">
-                <h3 data-i18n="blogList">Blog List</h3>
-                <div id="blogsContainer"></div>
-            </div>
-        </div>
+            </section>
+        </section>
     </main>
-    
-    <script src="utils.js" defer></script>
+
     <script src="api.js" defer></script>
     <script src="auth.js" defer></script>
-    <script src="i18n.js" defer></script>
     <script src="admin.js" defer></script>
-    <script src="app.js" defer></script>
 </body>
 </html>

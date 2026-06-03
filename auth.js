@@ -89,9 +89,8 @@ async function initializeAllData() {
 // Check if user is logged in for admin pages
 async function checkAdminLogin() {
     const jwtToken = getJwtToken();
-    const legacyLogin = localStorage.getItem('adminLoggedIn') === 'true';
 
-    if (!jwtToken && !legacyLogin) {
+    if (!jwtToken) {
         window.location.href = 'login.html';
         return false;
     }
@@ -112,6 +111,10 @@ async function checkAdminLogin() {
             }
         } catch (error) {
             console.warn('Could not verify token server-side:', error.message);
+            sessionStorage.removeItem(ADMIN_SESSION_KEY);
+            localStorage.removeItem('adminLoggedIn');
+            window.location.href = 'login.html';
+            return false;
         }
     }
 

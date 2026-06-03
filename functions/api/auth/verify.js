@@ -16,7 +16,7 @@ function base64UrlEncode(str) {
 }
 
 function base64UrlDecode(str) {
-    str += new Array(5 - (str.length % 4)).join('=');
+    str += '='.repeat((4 - (str.length % 4)) % 4);
     str = str.replace(/\-/g, '+').replace(/\_/g, '/');
     const bytes = atob(str).split('').map(c => c.charCodeAt(0));
     return new Uint8Array(bytes);
