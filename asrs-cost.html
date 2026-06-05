@@ -1143,6 +1143,8 @@
             btn.disabled = true;
             
             const formData = {
+                requestTitle: 'New Cost Estimate Request',
+                sourcePage: '13machine ASRS Cost Page',
                 company: document.getElementById('company').value,
                 location: document.getElementById('location').value,
                 contactName: document.getElementById('contactName').value,
@@ -1155,7 +1157,31 @@
                 skuCount: document.getElementById('skuCount').value,
                 throughput: document.getElementById('frequency').value,
                 timeline: datePicker.value,
-                additionalInfo: document.getElementById('additionalInfo').value
+                additionalInfo: document.getElementById('additionalInfo').value || 'Optional / not provided',
+                field1Label: 'Company Name',
+                field1Value: document.getElementById('company').value,
+                field2Label: 'Country & City',
+                field2Value: document.getElementById('location').value,
+                field3Label: 'Contact Name',
+                field3Value: document.getElementById('contactName').value,
+                field4Label: 'Email',
+                field4Value: document.getElementById('contactEmail').value,
+                field5Label: 'WhatsApp / WeChat',
+                field5Value: document.getElementById('contactPhone').value || 'Optional / not provided',
+                field6Label: 'Warehouse Size',
+                field6Value: document.getElementById('warehouseSize').value,
+                field7Label: 'Storage Locations',
+                field7Value: document.getElementById('storageLocations').value,
+                field8Label: 'Unit Weight/Volume',
+                field8Value: document.getElementById('unitWeight').value,
+                field9Label: 'Number of SKUs',
+                field9Value: document.getElementById('skuCount').value,
+                field10Label: 'Required Throughput',
+                field10Value: `${document.getElementById('frequency').value} pallets/hour`,
+                field11Label: 'Planner Order Time',
+                field11Value: datePicker.value,
+                field12Label: 'Additional Requirements',
+                field12Value: document.getElementById('additionalInfo').value || 'Optional / not provided'
             };
 
             // Send via EmailJS
