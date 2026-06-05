@@ -84,8 +84,14 @@ async function renderLatestBlogs(containerId, limit = 3) {
     try {
         const blogs = await blogApi.getAllBlogs();
         const latest = [...blogs].filter(blog => !isPlaceholderBlog(blog)).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, limit);
-        if (latest.length < 3) {
-            container.innerHTML = '<div class="loading-message"><h3>Knowledge Center</h3><p>New articles, project breakdowns, and industry insights are being added regularly.</p><p>Explore automation technologies, project applications, and practical solutions for warehousing, manufacturing, and industrial operations.</p></div>';
+        if (!latest.length) {
+            container.innerHTML = `
+                <div class="knowledge-empty-grid">
+                    <a class="knowledge-topic-card" href="solutions.html#asrs"><span>01</span><h3>Warehouse Automation</h3><p>ASRS, shuttle systems, WMS/WES, and high-density storage planning.</p></a>
+                    <a class="knowledge-topic-card" href="solutions.html#factory"><span>02</span><h3>Smart Factory</h3><p>AGV logistics, robotic handling, line feeding, and production flow.</p></a>
+                    <a class="knowledge-topic-card" href="case-studies.html"><span>03</span><h3>Project References</h3><p>Review case examples before planning your next automation project.</p></a>
+                </div>
+            `;
             return;
         }
         container.innerHTML = latest.map(blog => `

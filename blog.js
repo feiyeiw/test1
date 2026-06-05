@@ -352,7 +352,20 @@ async function loadBlogsOnBlog() {
     try {
         const blogs = await blogApi.getAllBlogs();
         if (!blogs.length) {
-            container.innerHTML = '<div class="loading-message"><h3>Knowledge Library in Progress</h3><p>New articles and project insights are being added regularly to help manufacturers and logistics operators explore automation technologies and industry solutions.</p></div>';
+            container.innerHTML = `
+                <div class="blog-empty-panel">
+                    <div>
+                        <span class="eyebrow">Publishing Queue</span>
+                        <h3>Knowledge Library in Progress</h3>
+                        <p>New articles and project insights will appear here as soon as they are published from the CMS.</p>
+                    </div>
+                    <div class="knowledge-empty-grid">
+                        <a class="knowledge-topic-card" href="solutions.html#asrs"><span>01</span><h3>ASRS Planning</h3><p>Storage density, shuttle systems, stacker cranes, and WMS/WES integration.</p></a>
+                        <a class="knowledge-topic-card" href="solutions.html#factory"><span>02</span><h3>Factory Flow</h3><p>AGV logistics, robotic handling, line feeding, and production automation.</p></a>
+                        <a class="knowledge-topic-card" href="case-studies.html"><span>03</span><h3>Case Studies</h3><p>Explore project references while the article library is being built.</p></a>
+                    </div>
+                </div>
+            `;
             return;
         }
 

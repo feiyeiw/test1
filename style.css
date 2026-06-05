@@ -1838,6 +1838,83 @@ footer .container,
     gap: 20px;
 }
 
+.home-process-section {
+    padding-bottom: 50px;
+}
+
+.home-knowledge-section {
+    padding: 58px 0 62px;
+}
+
+.home-knowledge-section .container {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.86fr) minmax(420px, 1.14fr);
+    gap: 34px;
+    align-items: start;
+}
+
+.home-knowledge-section .section-header {
+    margin-bottom: 0;
+}
+
+.home-knowledge-section .section-header h2 {
+    font-size: clamp(30px, 4vw, 48px);
+}
+
+.home-knowledge-section .section-header .text-link {
+    margin-top: 20px;
+}
+
+.home-knowledge-section #latestBlogGrid {
+    width: 100%;
+    grid-template-columns: 1fr;
+}
+
+.knowledge-empty-grid {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.knowledge-topic-card {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    column-gap: 16px;
+    align-items: start;
+    padding: 20px;
+    border: 1px solid #dce4ec;
+    border-radius: 8px;
+    background: #fff;
+    color: #172232;
+    text-decoration: none;
+}
+
+.knowledge-topic-card:hover {
+    border-color: #aebdca;
+    transform: translateY(-2px);
+}
+
+.knowledge-topic-card span {
+    color: var(--industrial-accent);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.knowledge-topic-card h3 {
+    margin: 0 0 6px;
+    color: #172232;
+    letter-spacing: 0;
+    line-height: 1.2;
+}
+
+.knowledge-topic-card p {
+    grid-column: 2;
+    margin: 0;
+    color: #607286;
+}
+
 .blog-index-card,
 .blog-single-note {
     border: 1px solid #dce4ec;
@@ -1865,6 +1942,31 @@ footer .container,
 .blog-single-note {
     grid-column: 1 / -1;
     padding: 28px;
+}
+
+.blog-empty-panel {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(260px, 0.72fr) minmax(360px, 1fr);
+    gap: 24px;
+    align-items: start;
+    padding: 28px;
+    border: 1px solid #dce4ec;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.blog-empty-panel h3 {
+    margin: 0 0 10px;
+    color: #172232;
+    letter-spacing: 0;
+    font-size: 28px;
+    line-height: 1.12;
+}
+
+.blog-empty-panel p {
+    color: #607286;
+    line-height: 1.7;
 }
 
 .help-list {
@@ -2234,7 +2336,9 @@ footer .container,
     }
 
     .industrial-hero .container,
-    .cta-panel .container {
+    .cta-panel .container,
+    .home-knowledge-section .container,
+    .blog-empty-panel {
         grid-template-columns: 1fr;
     }
 
@@ -2348,6 +2452,18 @@ footer .container,
     .blog-sidebar,
     .related-grid {
         grid-template-columns: 1fr;
+    }
+
+    .home-knowledge-section {
+        padding: 44px 0 48px !important;
+    }
+
+    .knowledge-topic-card {
+        grid-template-columns: 1fr;
+    }
+
+    .knowledge-topic-card p {
+        grid-column: 1;
     }
 
     .blog-title {
