@@ -41,6 +41,10 @@ Thumbs.db
 # Temp files
 tmp/
 temp/
+docx_extracted_images/
+20260603网站图片替换.docx
+new_assets_contact_sheet.jpg
+hero-contact-automation.webp
 
 # Claude Code memory files
 .claude/

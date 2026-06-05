@@ -44,7 +44,10 @@ const excludeFiles = [
   'package-lock.json',
   'yarn.lock',
   'README.md',
-  'DEPLOYMENT.md'
+  'DEPLOYMENT.md',
+  'new_assets_contact_sheet.jpg',
+  'hero-contact-automation.webp',
+  'acr-system.jpg'
 ];
 
 // Directories to exclude
