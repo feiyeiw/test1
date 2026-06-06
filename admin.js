@@ -71,6 +71,9 @@ window.initAdminPage = async function() {
             seoDescription: document.getElementById('blogSeoDescription'),
             content: document.getElementById('blogContentEditor'),
         },
+        chooseCoverImage: document.getElementById('chooseCoverImage'),
+        coverImageFile: document.getElementById('coverImageFile'),
+        coverImagePreview: document.getElementById('coverImagePreview'),
         savePages: document.getElementById('savePages'),
     };
 
@@ -94,6 +97,123 @@ window.initAdminPage = async function() {
 
     function today() {
         return new Date().toISOString().slice(0, 10);
+    }
+
+    function updateCoverPreview(src) {
+        const preview = els.coverImagePreview;
+        if (!preview) return;
+        const img = preview.querySelector('img');
+        if (src) {
+            img.src = src;
+            preview.classList.add('show');
+            preview.setAttribute('aria-hidden', 'false');
+        } else {
+            img.removeAttribute('src');
+            preview.classList.remove('show');
+            preview.setAttribute('aria-hidden', 'true');
+        }
+    }
+
+    function loadImageFromFile(file) {
+        return new Promise((resolve, reject) => {
+            const image = new Image();
+            const url = URL.createObjectURL(file);
+            image.onload = () => {
+                URL.revokeObjectURL(url);
+                resolve(image);
+            };
+            image.onerror = () => {
+                URL.revokeObjectURL(url);
+                reject(new Error('Could not read the selected image.'));
+            };
+            image.src = url;
+        });
+    }
+
+    function canvasToBlob(canvas, type = 'image/webp', quality = 0.84) {
+        return new Promise((resolve, reject) => {
+            canvas.toBlob(blob => {
+                if (blob) resolve(blob);
+                else reject(new Error('Could not process image.'));
+            }, type, quality);
+        });
+    }
+
+    function blobToDataUrl(blob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(new Error('Could not prepare image upload.'));
+            reader.readAsDataURL(blob);
+        });
+    }
+
+    async function prepareSixteenNineImage(file) {
+        const image = await loadImageFromFile(file);
+        const targetWidth = 1280;
+        const targetHeight = 720;
+        const targetRatio = targetWidth / targetHeight;
+        let sourceWidth = image.naturalWidth || image.width;
+        let sourceHeight = image.naturalHeight || image.height;
+        let sourceX = 0;
+        let sourceY = 0;
+
+        if (sourceWidth / sourceHeight > targetRatio) {
+            const croppedWidth = Math.round(sourceHeight * targetRatio);
+            sourceX = Math.round((sourceWidth - croppedWidth) / 2);
+            sourceWidth = croppedWidth;
+        } else {
+            const croppedHeight = Math.round(sourceWidth / targetRatio);
+            sourceY = Math.round((sourceHeight - croppedHeight) / 2);
+            sourceHeight = croppedHeight;
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        const context = canvas.getContext('2d');
+        context.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, targetWidth, targetHeight);
+
+        const blob = await canvasToBlob(canvas);
+        return {
+            dataUrl: await blobToDataUrl(blob),
+            width: targetWidth,
+            height: targetHeight,
+            contentType: blob.type || 'image/webp',
+        };
+    }
+
+    async function uploadCoverImage(file) {
+        if (!file) return;
+        if (!/^image\/(png|jpe?g|webp)$/i.test(file.type)) {
+            showNotice('Please choose a JPG, PNG, or WebP image.', 'error');
+            return;
+        }
+
+        const oldLabel = els.chooseCoverImage.textContent;
+        els.chooseCoverImage.disabled = true;
+        els.chooseCoverImage.textContent = '上传中...';
+
+        try {
+            const image = await prepareSixteenNineImage(file);
+            updateCoverPreview(image.dataUrl);
+            const uploaded = await blogApi.uploadMedia({
+                filename: file.name,
+                dataUrl: image.dataUrl,
+                width: image.width,
+                height: image.height,
+            });
+            els.fields.coverImage.value = uploaded.url;
+            updateCoverPreview(uploaded.url);
+            showNotice('Image uploaded and cropped to 16:9.', 'success');
+        } catch (error) {
+            console.error('Image upload failed:', error);
+            showNotice(error.message || 'Image upload failed.', 'error');
+        } finally {
+            els.chooseCoverImage.disabled = false;
+            els.chooseCoverImage.textContent = oldLabel;
+            els.coverImageFile.value = '';
+        }
     }
 
     function setActiveTab(tab) {
@@ -139,6 +259,7 @@ window.initAdminPage = async function() {
         els.fields.author.value = '13ASRS';
         els.fields.date.value = today();
         els.fields.content.innerHTML = '';
+        updateCoverPreview('');
         renderBlogList();
     }
 
@@ -153,6 +274,7 @@ window.initAdminPage = async function() {
         els.fields.seoTitle.value = blog.seoTitle || '';
         els.fields.seoDescription.value = blog.seoDescription || '';
         els.fields.content.innerHTML = blog.contentHtml || blog.content || '';
+        updateCoverPreview(blog.coverImage || '');
         renderBlogList();
     }
 
@@ -346,6 +468,9 @@ window.initAdminPage = async function() {
     });
 
     els.newBlog.addEventListener('click', clearBlogForm);
+    els.chooseCoverImage.addEventListener('click', () => els.coverImageFile.click());
+    els.coverImageFile.addEventListener('change', event => uploadCoverImage(event.target.files?.[0]));
+    els.fields.coverImage.addEventListener('input', event => updateCoverPreview(event.target.value.trim()));
     els.saveDraft.addEventListener('click', () => saveBlog('draft').catch(error => showNotice(error.message, 'error')));
     els.publishBlog.addEventListener('click', () => saveBlog('published').catch(error => showNotice(error.message, 'error')));
     els.unpublishBlog.addEventListener('click', () => unpublishCurrentBlog().catch(error => showNotice(error.message, 'error')));

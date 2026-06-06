@@ -122,6 +122,13 @@ const blogApi = {
         return normalizeClientBlog(await apiRequest(`/admin/blogs/${encodeURIComponent(id)}/unpublish`, { method: 'POST' }));
     },
 
+    async uploadMedia(mediaData) {
+        return apiRequest('/admin/uploads', {
+            method: 'POST',
+            body: JSON.stringify(mediaData),
+        });
+    },
+
     async checkApiStatus() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);

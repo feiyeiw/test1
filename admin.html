@@ -311,6 +311,33 @@
             color: var(--admin-muted);
         }
 
+        .image-input-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 8px;
+        }
+
+        .cover-preview {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border: 1px dashed var(--admin-line);
+            border-radius: 6px;
+            background: #f8fafc;
+            overflow: hidden;
+            display: none;
+        }
+
+        .cover-preview.show {
+            display: block;
+        }
+
+        .cover-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
         .rich-toolbar {
             display: flex;
             gap: 6px;
@@ -484,7 +511,13 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="blogCoverImage">封面图片 URL</label>
-                                    <input id="blogCoverImage" type="url" placeholder="https://example.com/image.webp">
+                                    <div class="image-input-row">
+                                        <input id="blogCoverImage" type="text" placeholder="https://example.com/image.webp">
+                                        <button type="button" id="chooseCoverImage" class="btn ghost">本地图片</button>
+                                    </div>
+                                    <input id="coverImageFile" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+                                    <div id="coverImagePreview" class="cover-preview" aria-hidden="true"><img alt=""></div>
+                                    <small id="coverImageHelp">本地图片会自动裁成 16:9 并压缩上传。</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="blogCategory">分类</label>
