@@ -588,6 +588,15 @@ window.initAdminPage = async function() {
         `).join('');
     }
 
+    function clearModuleEditorFields() {
+        Object.values(els.moduleFields).forEach(field => {
+            if (field) field.value = '';
+        });
+        if (els.moduleFields.type) els.moduleFields.type.value = 'hero';
+        if (els.moduleItems) els.moduleItems.innerHTML = '';
+        if (els.moduleItemsField) els.moduleItemsField.hidden = true;
+    }
+
     function renderModuleEditor() {
         const module = getCurrentModule();
         const hasModule = Boolean(module);
@@ -598,7 +607,10 @@ window.initAdminPage = async function() {
         els.moveModuleDown.disabled = !hasModule;
         els.deletePageModule.disabled = !hasModule;
 
-        if (!module) return;
+        if (!module) {
+            clearModuleEditorFields();
+            return;
+        }
 
         els.moduleFields.type.value = module.type || 'text';
         els.moduleFields.label.value = module.label || '';
@@ -621,9 +633,14 @@ window.initAdminPage = async function() {
     async function loadPageModules(page = state.currentPage) {
         if (!els.pageSelector || typeof pageApi === 'undefined') return;
         state.currentPage = page;
+        state.pageModules = [];
         state.currentModuleId = null;
         els.pageSelector.value = page;
+        renderPageBuilder();
         els.pageModuleList.innerHTML = '<div class="empty-builder-note">Loading modules...</div>';
+        if (els.pageBuilderStatus) {
+            els.pageBuilderStatus.textContent = `${page} / loading modules...`;
+        }
 
         try {
             const pageData = await pageApi.getAdminPage(page);

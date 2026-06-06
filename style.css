@@ -1847,7 +1847,6 @@ footer .container,
     min-height: 0;
     align-self: stretch;
     overflow: hidden;
-    border-right: 1px solid #dce4ec;
 }
 
 .blog-featured-body {
@@ -2461,7 +2460,6 @@ footer .container,
     }
 
     .blog-featured-media {
-        border-right: 0;
         border-bottom: 1px solid #dce4ec;
     }
 
