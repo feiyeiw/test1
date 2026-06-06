@@ -128,8 +128,8 @@ async function loadBlogDetail() {
                 blogVideo.innerHTML = renderYouTubeFrame(blog.youtubeUrl, blog.title);
                 blogVideo.style.display = '';
             } else {
-                blogVideo.innerHTML = '';
-                blogVideo.style.display = 'none';
+                blogVideo.innerHTML = renderYouTubeFrame('', blog.title);
+                blogVideo.style.display = '';
             }
         }
         if (blog.seoTitle) document.title = blog.seoTitle;

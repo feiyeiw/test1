@@ -65,6 +65,7 @@ window.initAdminPage = async function() {
             summary: document.getElementById('blogSummary'),
             coverImage: document.getElementById('blogCoverImage'),
             category: document.getElementById('blogCategory'),
+            youtubeUrl: document.getElementById('blogYoutubeUrl'),
             author: document.getElementById('blogAuthor'),
             date: document.getElementById('blogDate'),
             seoTitle: document.getElementById('blogSeoTitle'),
@@ -269,6 +270,7 @@ window.initAdminPage = async function() {
         els.fields.summary.value = blog.summary || '';
         els.fields.coverImage.value = blog.coverImage || '';
         els.fields.category.value = blog.category || '';
+        els.fields.youtubeUrl.value = blog.youtubeUrl || '';
         els.fields.author.value = blog.author || '13ASRS';
         els.fields.date.value = blog.date || today();
         els.fields.seoTitle.value = blog.seoTitle || '';
@@ -284,6 +286,7 @@ window.initAdminPage = async function() {
             summary: els.fields.summary.value.trim(),
             coverImage: els.fields.coverImage.value.trim(),
             category: els.fields.category.value.trim(),
+            youtubeUrl: els.fields.youtubeUrl.value.trim(),
             author: els.fields.author.value.trim() || '13ASRS',
             date: els.fields.date.value || today(),
             seoTitle: els.fields.seoTitle.value.trim(),
@@ -381,6 +384,7 @@ window.initAdminPage = async function() {
                 <style>
                     body { font-family: Arial, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px; line-height: 1.7; color: #17202a; }
                     img { max-width: 100%; height: auto; }
+                    iframe { width: 100%; height: 100%; border: 0; }
                     .meta { color: #667085; margin-bottom: 24px; }
                 </style>
             </head>
@@ -389,6 +393,9 @@ window.initAdminPage = async function() {
                 <div class="meta">${escapeHtml(payload.date)} ${payload.category ? ' / ' + escapeHtml(payload.category) : ''}</div>
                 <p>${escapeHtml(payload.summary)}</p>
                 ${payload.coverImage ? `<img src="${escapeHtml(payload.coverImage)}" alt="${escapeHtml(payload.title)}">` : ''}
+                <div style="margin: 24px 0; aspect-ratio: 16 / 9; background: #07111f; color: #c8d6e2; display: flex; align-items: center; justify-content: center; border-radius: 8px; overflow: hidden;">
+                    ${payload.youtubeUrl && typeof renderYouTubeFrame === 'function' ? renderYouTubeFrame(payload.youtubeUrl, payload.title) : 'YouTube project video'}
+                </div>
                 <article>${payload.contentHtml}</article>
             </body>
             </html>
