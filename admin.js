@@ -50,6 +50,7 @@ window.initAdminPage = async function() {
             settings: document.getElementById('settingsSection'),
         },
         blogList: document.getElementById('blogList'),
+        blogOrderCounter: document.getElementById('blogOrderCounter'),
         blogSearch: document.getElementById('blogSearch'),
         blogStatusFilter: document.getElementById('blogStatusFilter'),
         newBlog: document.getElementById('newBlog'),
@@ -98,6 +99,37 @@ window.initAdminPage = async function() {
 
     function today() {
         return new Date().toISOString().slice(0, 10);
+    }
+
+    function getBlogSortTime(blog) {
+        const value = blog.publishedAt || blog.date || blog.updatedAt || blog.createdAt || '';
+        const time = new Date(value).getTime();
+        return Number.isFinite(time) ? time : 0;
+    }
+
+    function getBlogsByPublishOrder() {
+        return [...state.blogs].sort((a, b) => {
+            const timeDiff = getBlogSortTime(b) - getBlogSortTime(a);
+            if (timeDiff) return timeDiff;
+            return String(b.updatedAt || b.id || '').localeCompare(String(a.updatedAt || a.id || ''));
+        });
+    }
+
+    function updateBlogOrderCounter() {
+        if (!els.blogOrderCounter) return;
+        if (!state.currentBlogId) {
+            els.blogOrderCounter.textContent = '-/100';
+            els.blogOrderCounter.title = 'Select a blog to show its publish-order number.';
+            return;
+        }
+
+        const orderedBlogs = getBlogsByPublishOrder();
+        const index = orderedBlogs.findIndex(blog => blog.id === state.currentBlogId);
+        const position = index >= 0 ? index + 1 : '-';
+        els.blogOrderCounter.textContent = `${position}/100`;
+        els.blogOrderCounter.title = index >= 0
+            ? `This blog is number ${position} by publish date.`
+            : 'Selected blog is not in the current list.';
     }
 
     function updateCoverPreview(src) {
@@ -228,7 +260,7 @@ window.initAdminPage = async function() {
 
     function getFilteredBlogs() {
         const query = state.search.trim().toLowerCase();
-        return state.blogs.filter(blog => {
+        return getBlogsByPublishOrder().filter(blog => {
             const statusOk = state.filter === 'all' || blog.status === state.filter;
             const text = `${blog.title || ''} ${blog.summary || ''} ${blog.category || ''}`.toLowerCase();
             return statusOk && (!query || text.includes(query));
@@ -237,6 +269,7 @@ window.initAdminPage = async function() {
 
     function renderBlogList() {
         const blogs = getFilteredBlogs();
+        updateBlogOrderCounter();
         if (!blogs.length) {
             els.blogList.innerHTML = '<div class="blog-list-item"><h3>No blog posts yet</h3><div class="blog-meta">Create a draft to start.</div></div>';
             return;

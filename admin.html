@@ -161,6 +161,27 @@
             letter-spacing: 0;
         }
 
+        .panel-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .blog-count-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            padding: 4px 10px;
+            border: 1px solid #cfe0f3;
+            border-radius: 999px;
+            background: #eef6ff;
+            color: var(--admin-accent);
+            font-size: 13px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
         .panel-body {
             padding: 16px;
         }
@@ -474,7 +495,10 @@
                 <div class="cms-layout">
                     <div class="panel">
                         <div class="panel-header">
-                            <h2>文章列表</h2>
+                            <div class="panel-title-row">
+                                <h2>文章列表</h2>
+                                <span id="blogOrderCounter" class="blog-count-badge">-/100</span>
+                            </div>
                             <button type="button" id="newBlog" class="btn primary">新建</button>
                         </div>
                         <div class="panel-body">

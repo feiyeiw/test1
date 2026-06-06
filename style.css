@@ -2254,7 +2254,11 @@ footer .container,
 
 .toc-list {
     display: grid;
-    gap: 10px;
+    gap: 0;
+    overflow: hidden;
+    border: 1px solid #dce4ec;
+    border-radius: 8px;
+    background: #fff;
 }
 
 .toc-list a,
@@ -2264,13 +2268,38 @@ footer .container,
 }
 
 .toc-list a {
-    padding: 11px 12px;
-    border: 1px solid #dce4ec;
-    border-radius: 6px;
-    background: #f6f9fb;
-    font-weight: 800;
-    font-size: 14px;
+    position: relative;
+    display: block;
+    padding: 12px 12px 12px 34px;
+    border: 0;
+    border-bottom: 1px solid #e7eef5;
+    border-radius: 0;
+    background: #fff;
+    color: #33465c;
+    font-weight: 750;
+    font-size: 13px;
     line-height: 1.35;
+}
+
+.toc-list a:last-child {
+    border-bottom: 0;
+}
+
+.toc-list a::before {
+    content: "";
+    position: absolute;
+    left: 14px;
+    top: 17px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--industrial-accent);
+    box-shadow: 0 0 0 4px rgba(24, 183, 214, 0.12);
+}
+
+.toc-list a:hover {
+    background: #f6f9fb;
+    color: #07111f;
 }
 
 .related-grid {
