@@ -490,7 +490,7 @@ window.initAdminPage = async function() {
         }
     }
 
-    function makeModule(type = 'text') {
+    function getModuleTypeName(type = 'text') {
         const labels = {
             hero: 'Hero section',
             text: 'Text block',
@@ -498,10 +498,14 @@ window.initAdminPage = async function() {
             media: 'Media block',
             cta: 'CTA',
         };
+        return labels[type] || 'Module';
+    }
+
+    function makeModule(type = 'text') {
         return {
             id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
             type,
-            label: labels[type] || 'Module',
+            label: getModuleTypeName(type),
             eyebrow: '',
             title: '',
             text: '',
@@ -597,6 +601,14 @@ window.initAdminPage = async function() {
         if (els.moduleItemsField) els.moduleItemsField.hidden = true;
     }
 
+    function renderEmptyModuleEditor() {
+        const typeName = getModuleTypeName(els.addModuleType?.value || 'hero');
+        els.moduleEditorEmpty.innerHTML = `
+            <div>No module selected on this page yet.</div>
+            <button type="button" class="btn primary" data-empty-add-module>Add ${escapeHtml(typeName)}</button>
+        `;
+    }
+
     function renderModuleEditor() {
         const module = getCurrentModule();
         const hasModule = Boolean(module);
@@ -609,6 +621,7 @@ window.initAdminPage = async function() {
 
         if (!module) {
             clearModuleEditorFields();
+            renderEmptyModuleEditor();
             return;
         }
 
@@ -755,12 +768,18 @@ window.initAdminPage = async function() {
 
     els.pageSelector.addEventListener('change', event => loadPageModules(event.target.value));
     els.addPageModule.addEventListener('click', addPageModule);
+    els.addModuleType.addEventListener('change', () => {
+        if (!getCurrentModule()) renderModuleEditor();
+    });
     els.savePageModules.addEventListener('click', savePageModules);
     els.duplicatePageModule.addEventListener('click', duplicatePageModule);
     els.moveModuleUp.addEventListener('click', () => moveCurrentModule(-1));
     els.moveModuleDown.addEventListener('click', () => moveCurrentModule(1));
     els.deletePageModule.addEventListener('click', deleteCurrentModule);
     els.addModuleItem.addEventListener('click', addModuleItem);
+    els.moduleEditorEmpty.addEventListener('click', event => {
+        if (event.target.closest('[data-empty-add-module]')) addPageModule();
+    });
     els.pageModuleList.addEventListener('click', event => {
         const item = event.target.closest('[data-module-id]');
         if (!item) return;
