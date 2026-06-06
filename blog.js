@@ -382,11 +382,7 @@ async function loadBlogsOnBlog() {
                     <div class="blog-featured-body">
                         <span class="eyebrow">${escapeHtml(featured.category || 'Featured Article')}</span>
                         <h3><a href="${href}">${escapeHtml(featured.title)}</a></h3>
-                        <p>${escapeHtml(getBlogExcerpt(featured, 230))}</p>
-                        <div class="blog-card-meta">
-                            <span>${escapeHtml(featured.date || '')}</span>
-                            <span>${escapeHtml(featured.author || '13ASRS')}</span>
-                        </div>
+                        <p>${escapeHtml(getBlogExcerpt(featured, 150))}</p>
                         <a href="${href}" class="text-link">Read article</a>
                     </div>
                 </article>
