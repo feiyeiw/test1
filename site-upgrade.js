@@ -76,7 +76,7 @@ function upgradeFooter() {
     `;
 }
 
-async function renderLatestBlogs(containerId, limit = 3) {
+async function renderLatestBlogs(containerId, limit = 1) {
     const container = document.getElementById(containerId);
     if (!container || typeof blogApi === 'undefined') return;
 
@@ -115,5 +115,5 @@ async function renderLatestBlogs(containerId, limit = 3) {
 document.addEventListener('DOMContentLoaded', function() {
     setActiveNavigation();
     upgradeFooter();
-    renderLatestBlogs('latestBlogGrid', 3);
+    renderLatestBlogs('latestBlogGrid', 1);
 });
