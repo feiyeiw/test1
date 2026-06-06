@@ -26,6 +26,7 @@ function cleanUrl(value) {
     const url = cleanText(value, 900);
     if (!url) return '';
     if (/^(https?:\/\/|\/|#|mailto:)/i.test(url)) return url;
+    if (!url.includes(':') && !url.startsWith('//')) return url;
     return '';
 }
 
@@ -34,7 +35,9 @@ function normalizeCardItem(item = {}) {
         id: cleanText(item.id, 120) || makeId(),
         title: cleanText(item.title, 220),
         text: cleanText(item.text, 1000),
-        href: cleanUrl(item.href)
+        href: cleanUrl(item.href),
+        image: cleanUrl(item.image),
+        alt: cleanText(item.alt, 260)
     };
 }
 
@@ -47,6 +50,10 @@ function normalizeModule(input = {}) {
         eyebrow: cleanText(input.eyebrow, 180),
         title: cleanText(input.title, 260),
         text: cleanText(input.text, 5000),
+        anchor: cleanText(input.anchor, 80).replace(/[^a-z0-9-]/gi, ''),
+        theme: ['soft', 'dark'].includes(input.theme) ? input.theme : '',
+        grid: ['one', 'two', 'three', 'four'].includes(input.grid) ? input.grid : '',
+        variant: cleanText(input.variant, 80).replace(/[^a-z0-9-]/gi, ''),
         image: cleanUrl(input.image),
         youtubeUrl: cleanUrl(input.youtubeUrl),
         ctaText: cleanText(input.ctaText, 120),

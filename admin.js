@@ -509,6 +509,10 @@ window.initAdminPage = async function() {
             eyebrow: '',
             title: '',
             text: '',
+            anchor: '',
+            theme: '',
+            grid: '',
+            variant: '',
             image: '',
             youtubeUrl: '',
             ctaText: '',
@@ -523,7 +527,194 @@ window.initAdminPage = async function() {
             title: '',
             text: '',
             href: '',
+            image: '',
+            alt: '',
         };
+    }
+
+    function getDefaultPageModules(page) {
+        if (page !== 'solutions') return [];
+        return [
+            {
+                id: 'solutions-hero',
+                type: 'hero',
+                label: 'Hero / Solutions intro',
+                variant: 'page-hero',
+                eyebrow: 'Solutions',
+                title: 'Automation Solutions for Warehouses, Factories, and Industrial Manufacturing.',
+                text: 'Explore practical technologies and integrated systems designed to improve storage capacity, material flow, production efficiency, and operational performance.',
+                image: '',
+                youtubeUrl: '',
+                ctaText: '',
+                ctaHref: '',
+                items: [],
+            },
+            {
+                id: 'solutions-asrs',
+                type: 'cards',
+                label: '01 / ASRS & Smart Warehouse',
+                anchor: 'asrs',
+                theme: 'soft',
+                grid: 'two',
+                eyebrow: '01 / ASRS & Smart Warehouse',
+                title: 'ASRS & Smart Warehouse Solutions',
+                text: 'Increase Storage Capacity. Improve Throughput. Reduce Manual Operations.\n\nFrom shuttle systems and stacker cranes to AGV logistics and warehouse software, our solutions help warehouses operate more efficiently, accurately, and reliably.',
+                image: '',
+                youtubeUrl: '',
+                ctaText: '',
+                ctaHref: '',
+                items: [
+                    {
+                        id: 'solutions-asrs-tech',
+                        title: 'Typical Technologies',
+                        text: 'Shuttle ASRS and four-way shuttle systems\nStacker crane, miniload, and cold storage ASRS\nConveyor systems, AGV logistics, WMS/WES integration',
+                        href: '',
+                        image: 'solutions-asrs-technology.webp',
+                        alt: 'Shuttle ASRS and warehouse automation technologies',
+                    },
+                    {
+                        id: 'solutions-asrs-planning',
+                        title: 'How We Approach Projects',
+                        text: 'Understand operational challenges and business goals\nEvaluate warehouse data and process requirements\nRecommend suitable automation technologies\nReference similar projects and implementation experience\nSupport planning, integration, and delivery',
+                        href: '',
+                        image: 'solutions-project-planning.webp',
+                        alt: 'Automation project planning and warehouse layout review',
+                    },
+                ],
+            },
+            {
+                id: 'solutions-asrs-faq',
+                type: 'cards',
+                label: 'ASRS FAQ',
+                variant: 'faq-list',
+                theme: 'soft',
+                eyebrow: '',
+                title: '',
+                text: '',
+                image: '',
+                youtubeUrl: '',
+                ctaText: '',
+                ctaHref: '',
+                items: [
+                    {
+                        id: 'solutions-asrs-faq-1',
+                        title: 'When should an ASRS system be considered?',
+                        text: 'When storage density, labor availability, throughput, temperature control, or traceability become limiting factors for growth.',
+                        href: '',
+                        image: '',
+                        alt: '',
+                    },
+                    {
+                        id: 'solutions-asrs-faq-2',
+                        title: 'What does 13ASRS provide?',
+                        text: 'System design, equipment coordination, controls, software integration, installation, commissioning, and case-based project planning.',
+                        href: '',
+                        image: '',
+                        alt: '',
+                    },
+                ],
+            },
+            {
+                id: 'solutions-factory',
+                type: 'cards',
+                label: '02 / Smart Factory',
+                anchor: 'factory',
+                theme: 'dark',
+                grid: 'two',
+                eyebrow: '02 / Smart Factory',
+                title: 'Smart Factory Automation',
+                text: 'Key application areas for improving production efficiency, material flow, labor stability, and factory operations.',
+                image: '',
+                youtubeUrl: '',
+                ctaText: '',
+                ctaHref: '',
+                items: [
+                    { id: 'solutions-factory-production', title: 'Production Line Automation', text: 'Improve production efficiency and process consistency through integrated manufacturing systems.', href: '', image: 'solutions-production-line.webp', alt: 'Production line automation' },
+                    { id: 'solutions-factory-robotic', title: 'Robotic Handling & Automation', text: 'Reduce repetitive labor and increase operational stability.', href: '', image: 'solutions-robotic-handling.webp', alt: 'Robotic handling and automation' },
+                    { id: 'solutions-factory-flow', title: 'Material Flow & Logistics', text: 'Connect production processes through intelligent transportation and line-feeding systems.', href: '', image: 'solutions-material-flow.webp', alt: 'Material flow and logistics automation' },
+                    { id: 'solutions-factory-upgrade', title: 'Factory Upgrade Programs', text: 'Implement automation step by step without disrupting existing operations.', href: '', image: 'solutions-factory-upgrade.webp', alt: 'Factory upgrade automation program' },
+                ],
+            },
+            {
+                id: 'solutions-factory-faq',
+                type: 'cards',
+                label: 'Factory FAQ',
+                variant: 'faq-list',
+                theme: 'dark',
+                eyebrow: '',
+                title: '',
+                text: '',
+                image: '',
+                youtubeUrl: '',
+                ctaText: '',
+                ctaHref: '',
+                items: [
+                    {
+                        id: 'solutions-factory-faq-1',
+                        title: 'Can smart factory work be phased?',
+                        text: 'Yes. 13ASRS can begin with material handling, line feeding, or logistics automation, then expand into connected production systems.',
+                        href: '',
+                        image: '',
+                        alt: '',
+                    },
+                ],
+            },
+            {
+                id: 'solutions-machinery',
+                type: 'cards',
+                label: '03 / Industrial Machinery',
+                anchor: 'machinery',
+                theme: 'soft',
+                grid: 'three',
+                eyebrow: '03 / Industrial Machinery',
+                title: 'Industrial Manufacturing Solutions',
+                text: 'Supporting packaging, printing, converting, processing, and production industries with specialized equipment and integrated manufacturing systems.\n\nFrom individual machines to complete production lines, we help manufacturers improve efficiency, consistency, and operational performance.',
+                image: '',
+                youtubeUrl: '',
+                ctaText: '',
+                ctaHref: '',
+                items: [
+                    { id: 'solutions-machinery-printing', title: 'Printing & Packaging Systems', text: 'Printing, converting, packaging, and bag-making technologies for flexible packaging and industrial production.', href: '', image: '', alt: '' },
+                    { id: 'solutions-machinery-filling', title: 'Filling & Film Blowing Systems', text: 'Filling lines, film extrusion equipment, and integrated packaging production solutions.', href: '', image: '', alt: '' },
+                    { id: 'solutions-machinery-laser', title: 'Laser Processing & Industrial Equipment', text: 'Laser cutting, laser processing, and advanced manufacturing equipment for industrial applications.', href: '', image: '', alt: '' },
+                ],
+            },
+            {
+                id: 'solutions-proof',
+                type: 'cards',
+                label: 'Why Choose 13ASRS',
+                variant: 'proof-list',
+                theme: 'dark',
+                eyebrow: 'Why Choose 13ASRS',
+                title: 'Why Companies Work With 13ASRS',
+                text: '',
+                image: '',
+                youtubeUrl: '',
+                ctaText: '',
+                ctaHref: '',
+                items: [
+                    { id: 'proof-1', title: 'Practical Automation Solutions', text: '', href: '', image: '', alt: '' },
+                    { id: 'proof-2', title: 'Real Project Experience', text: '', href: '', image: '', alt: '' },
+                    { id: 'proof-3', title: 'Engineering Integration', text: '', href: '', image: '', alt: '' },
+                    { id: 'proof-4', title: 'Warehouse & Factory Expertise', text: '', href: '', image: '', alt: '' },
+                    { id: 'proof-5', title: 'Global Manufacturing Resources', text: '', href: '', image: '', alt: '' },
+                    { id: 'proof-6', title: 'Long-Term Project Support', text: '', href: '', image: '', alt: '' },
+                ],
+            },
+            {
+                id: 'solutions-cta',
+                type: 'cta',
+                label: 'Business Challenge CTA',
+                eyebrow: 'Business Challenge',
+                title: 'Start with Your Business Challenge',
+                text: "Whether you're planning a warehouse upgrade, factory automation project, packaging production line, or manufacturing expansion, we can help you explore practical solutions, relevant technologies, and real project references.",
+                image: '',
+                youtubeUrl: '',
+                ctaText: 'Discuss Your Project',
+                ctaHref: 'contact.html',
+                items: [],
+            },
+        ];
     }
 
     function getCurrentModule() {
@@ -548,6 +739,8 @@ window.initAdminPage = async function() {
             title: row.querySelector('[data-item-field="title"]').value.trim(),
             text: row.querySelector('[data-item-field="text"]').value.trim(),
             href: row.querySelector('[data-item-field="href"]').value.trim(),
+            image: row.querySelector('[data-item-field="image"]').value.trim(),
+            alt: row.querySelector('[data-item-field="alt"]').value.trim(),
         }));
     }
 
@@ -586,6 +779,8 @@ window.initAdminPage = async function() {
             <div class="module-item-row" data-module-item-id="${escapeHtml(item.id)}">
                 <input type="text" data-item-field="title" placeholder="Card title" value="${escapeHtml(item.title)}">
                 <textarea rows="2" data-item-field="text" placeholder="Card text">${escapeHtml(item.text)}</textarea>
+                <input type="text" data-item-field="image" placeholder="Image URL" value="${escapeHtml(item.image)}">
+                <input type="text" data-item-field="alt" placeholder="Image alt" value="${escapeHtml(item.alt)}">
                 <input type="text" data-item-field="href" placeholder="Link" value="${escapeHtml(item.href)}">
                 <button type="button" class="btn danger" data-remove-module-item="${escapeHtml(item.id)}">Delete</button>
             </div>
@@ -657,9 +852,14 @@ window.initAdminPage = async function() {
 
         try {
             const pageData = await pageApi.getAdminPage(page);
-            state.pageModules = Array.isArray(pageData.modules) ? pageData.modules : [];
+            const modules = Array.isArray(pageData.modules) ? pageData.modules : [];
+            const defaultModules = getDefaultPageModules(page);
+            state.pageModules = modules.length ? modules : defaultModules;
             state.currentModuleId = state.pageModules[0]?.id || null;
             renderPageBuilder();
+            if (!modules.length && state.pageModules.length) {
+                showPageNotice('Loaded the default editable Solutions template. Click Save to publish your edits.', 'info');
+            }
         } catch (error) {
             console.error('Could not load page modules:', error);
             state.pageModules = [];

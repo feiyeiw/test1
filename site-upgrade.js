@@ -128,15 +128,43 @@ function getCurrentPageKey() {
     return file;
 }
 
+function renderModuleText(value) {
+    const blocks = String(value || '')
+        .split(/\n{2,}/)
+        .map(block => block.trim())
+        .filter(Boolean);
+    return blocks.map(block => `<p>${escapeHtml(block).replace(/\n/g, '<br>')}</p>`).join('');
+}
+
+function renderCardText(value) {
+    const lines = String(value || '')
+        .split(/\n+/)
+        .map(line => line.trim())
+        .filter(Boolean);
+    if (lines.length > 1) {
+        return `<ul>${lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>`;
+    }
+    return lines.length ? `<p>${escapeHtml(lines[0])}</p>` : '';
+}
+
 function renderPageModule(module) {
     const eyebrow = module.eyebrow ? `<span class="eyebrow">${escapeHtml(module.eyebrow)}</span>` : '';
     const title = module.title ? `<h2>${escapeHtml(module.title)}</h2>` : '';
-    const text = module.text ? `<p>${escapeHtml(module.text)}</p>` : '';
+    const text = renderModuleText(module.text);
     const cta = module.ctaText && module.ctaHref
         ? `<a class="btn-industrial" href="${escapeHtml(module.ctaHref)}">${escapeHtml(module.ctaText)}</a>`
         : '';
+    const sectionTheme = module.theme === 'dark' ? 'dark' : 'soft';
+    const sectionId = module.anchor ? ` id="${escapeHtml(module.anchor)}"` : '';
 
     if (module.type === 'hero') {
+        if (module.variant === 'page-hero') {
+            return `
+                <section class="page-hero cms-module">
+                    <div class="container">${eyebrow}${module.title ? `<h1>${escapeHtml(module.title)}</h1>` : ''}${text}</div>
+                </section>
+            `;
+        }
         return `
             <section class="cms-module cms-hero-module">
                 <div class="container">
@@ -148,20 +176,55 @@ function renderPageModule(module) {
     }
 
     if (module.type === 'cards') {
+        if (module.variant === 'proof-list') {
+            const proofItems = (module.items || [])
+                .map(item => item.title || item.text)
+                .filter(Boolean)
+                .map(item => `<span>${escapeHtml(item)}</span>`)
+                .join('');
+            return `
+                <section class="section-band ${sectionTheme} cms-module"${sectionId}>
+                    <div class="container">
+                        <div class="section-header">${eyebrow}${title}${text}</div>
+                        <div class="proof-list">${proofItems}</div>
+                    </div>
+                </section>
+            `;
+        }
+
+        if (module.variant === 'faq-list') {
+            const faqs = (module.items || []).map(item => `
+                <div class="faq-item">
+                    <h3>${escapeHtml(item.title || 'Question')}</h3>
+                    ${renderModuleText(item.text)}
+                </div>
+            `).join('');
+            return `
+                <section class="section-band ${sectionTheme} cms-module"${sectionId}>
+                    <div class="container">
+                        ${(module.eyebrow || module.title || module.text) ? `<div class="section-header">${eyebrow}${title}${text}</div>` : ''}
+                        <div class="faq-list-upgrade">${faqs}</div>
+                    </div>
+                </section>
+            `;
+        }
+
+        const gridClass = module.grid === 'two' ? 'card-grid two' : module.grid === 'four' ? 'card-grid four' : 'card-grid';
         const cards = (module.items || []).map(item => `
             <article class="content-card">
-                <div class="card-body">
+                ${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.alt || item.title || 'Solution image')}">` : ''}
+                <div class="${item.image ? '' : 'card-body'}">
                     <h3>${escapeHtml(item.title || 'Card')}</h3>
-                    <p>${escapeHtml(item.text)}</p>
+                    ${renderCardText(item.text)}
                     ${item.href ? `<a class="text-link" href="${escapeHtml(item.href)}">Learn more</a>` : ''}
                 </div>
             </article>
         `).join('');
         return `
-            <section class="section-band soft cms-module">
+            <section class="section-band ${sectionTheme} cms-module"${sectionId}>
                 <div class="container">
                     <div class="section-header">${eyebrow}${title}${text}</div>
-                    <div class="card-grid">${cards}</div>
+                    <div class="${gridClass}">${cards}</div>
                 </div>
             </section>
         `;
@@ -193,7 +256,7 @@ function renderPageModule(module) {
     }
 
     return `
-        <section class="section-band soft cms-module">
+        <section class="section-band ${sectionTheme} cms-module"${sectionId}>
             <div class="container">
                 <div class="section-header">${eyebrow}${title}${text}</div>
             </div>
@@ -211,6 +274,11 @@ async function renderPageModules() {
 
         const main = document.querySelector('main');
         if (!main) return;
+
+        if (page === 'solutions' && modules.some(module => module.variant === 'page-hero')) {
+            main.innerHTML = modules.map(renderPageModule).join('');
+            return;
+        }
 
         const wrapper = document.createElement('div');
         wrapper.id = 'dynamicPageModules';
