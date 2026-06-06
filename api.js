@@ -150,3 +150,25 @@ const blogApi = {
         _setAdminJwtToken(token);
     },
 };
+
+const pageApi = {
+    async getAdminPages() {
+        const pages = await apiRequest('/admin/pages', { method: 'GET' });
+        return Array.isArray(pages) ? pages : [];
+    },
+
+    async getAdminPage(page) {
+        return apiRequest(`/admin/pages/${encodeURIComponent(page)}`, { method: 'GET' });
+    },
+
+    async saveAdminPage(page, pageData) {
+        return apiRequest(`/admin/pages/${encodeURIComponent(page)}`, {
+            method: 'PUT',
+            body: JSON.stringify(pageData),
+        });
+    },
+
+    async getPublicPage(page) {
+        return apiRequest(`/pages/${encodeURIComponent(page)}`, { method: 'GET' });
+    },
+};

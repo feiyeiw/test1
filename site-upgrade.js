@@ -26,6 +26,16 @@ function renderYouTubeFrame(url, title = '13ASRS project video') {
     return `<iframe src="${embedUrl}" title="${title}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
 }
 
+function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    }[char]));
+}
+
 function getBlogCover(blog) {
     if (blog.coverImage) return blog.coverImage;
     const imgMatch = (blog.content || '').match(/<img[^>]+src=["']([^"']+)["'][^>]*>/i);
@@ -112,8 +122,114 @@ async function renderLatestBlogs(containerId, limit = 1) {
     }
 }
 
+function getCurrentPageKey() {
+    const file = (window.location.pathname.split('/').pop() || 'index.html').replace(/\.html$/i, '');
+    if (!file || file === 'index') return 'home';
+    return file;
+}
+
+function renderPageModule(module) {
+    const eyebrow = module.eyebrow ? `<span class="eyebrow">${escapeHtml(module.eyebrow)}</span>` : '';
+    const title = module.title ? `<h2>${escapeHtml(module.title)}</h2>` : '';
+    const text = module.text ? `<p>${escapeHtml(module.text)}</p>` : '';
+    const cta = module.ctaText && module.ctaHref
+        ? `<a class="btn-industrial" href="${escapeHtml(module.ctaHref)}">${escapeHtml(module.ctaText)}</a>`
+        : '';
+
+    if (module.type === 'hero') {
+        return `
+            <section class="cms-module cms-hero-module">
+                <div class="container">
+                    <div class="cms-module-copy">${eyebrow}${title}${text}<div class="btn-row">${cta}</div></div>
+                    ${module.image ? `<img src="${escapeHtml(module.image)}" alt="${escapeHtml(module.title || module.label || 'Page image')}">` : ''}
+                </div>
+            </section>
+        `;
+    }
+
+    if (module.type === 'cards') {
+        const cards = (module.items || []).map(item => `
+            <article class="content-card">
+                <div class="card-body">
+                    <h3>${escapeHtml(item.title || 'Card')}</h3>
+                    <p>${escapeHtml(item.text)}</p>
+                    ${item.href ? `<a class="text-link" href="${escapeHtml(item.href)}">Learn more</a>` : ''}
+                </div>
+            </article>
+        `).join('');
+        return `
+            <section class="section-band soft cms-module">
+                <div class="container">
+                    <div class="section-header">${eyebrow}${title}${text}</div>
+                    <div class="card-grid">${cards}</div>
+                </div>
+            </section>
+        `;
+    }
+
+    if (module.type === 'media') {
+        const media = module.youtubeUrl
+            ? `<div class="video-frame">${renderYouTubeFrame(module.youtubeUrl, module.title || '13ASRS video')}</div>`
+            : (module.image ? `<img src="${escapeHtml(module.image)}" alt="${escapeHtml(module.title || module.label || 'Page image')}">` : '<div class="video-frame"><div class="video-placeholder">Media placeholder</div></div>');
+        return `
+            <section class="section-band soft cms-module cms-media-module">
+                <div class="container">
+                    <div class="cms-module-copy">${eyebrow}${title}${text}${cta}</div>
+                    <div class="cms-module-media">${media}</div>
+                </div>
+            </section>
+        `;
+    }
+
+    if (module.type === 'cta') {
+        return `
+            <section class="cta-panel cms-module">
+                <div class="container">
+                    <div>${eyebrow}${title}${text}</div>
+                    ${cta}
+                </div>
+            </section>
+        `;
+    }
+
+    return `
+        <section class="section-band soft cms-module">
+            <div class="container">
+                <div class="section-header">${eyebrow}${title}${text}</div>
+            </div>
+        </section>
+    `;
+}
+
+async function renderPageModules() {
+    if (typeof pageApi === 'undefined') return;
+    const page = getCurrentPageKey();
+    try {
+        const pageData = await pageApi.getPublicPage(page);
+        const modules = Array.isArray(pageData.modules) ? pageData.modules : [];
+        if (!modules.length) return;
+
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const wrapper = document.createElement('div');
+        wrapper.id = 'dynamicPageModules';
+        wrapper.innerHTML = modules.map(renderPageModule).join('');
+
+        const hero = main.querySelector('.industrial-hero, .page-hero');
+        if (hero && hero.nextSibling) {
+            main.insertBefore(wrapper, hero.nextSibling);
+        } else {
+            main.prepend(wrapper);
+        }
+    } catch (error) {
+        console.warn('Page modules not loaded:', error);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     setActiveNavigation();
     upgradeFooter();
     renderLatestBlogs('latestBlogGrid', 1);
+    renderPageModules();
 });

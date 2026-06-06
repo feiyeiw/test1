@@ -424,6 +424,143 @@
             gap: 16px;
         }
 
+        .page-builder-layout {
+            display: grid;
+            grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+            gap: 18px;
+            align-items: start;
+        }
+
+        .module-add-row,
+        .page-select-row,
+        .module-actions-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .module-add-row select,
+        .page-select-row select,
+        .module-field input,
+        .module-field textarea,
+        .module-field select,
+        .module-item-row input,
+        .module-item-row textarea {
+            width: 100%;
+            border: 1px solid var(--admin-line);
+            border-radius: 6px;
+            padding: 10px 12px;
+            font: inherit;
+            background: #fff;
+            color: var(--admin-ink);
+            box-sizing: border-box;
+        }
+
+        .module-add-row select,
+        .page-select-row select {
+            flex: 1 1 220px;
+        }
+
+        .module-list {
+            display: grid;
+            gap: 10px;
+            max-height: calc(100vh - 320px);
+            overflow: auto;
+        }
+
+        .module-list-item {
+            display: grid;
+            gap: 6px;
+            width: 100%;
+            text-align: left;
+            border: 1px solid var(--admin-line);
+            border-radius: 8px;
+            padding: 12px;
+            background: #fff;
+            color: var(--admin-ink);
+            cursor: pointer;
+        }
+
+        .module-list-item.active {
+            border-color: var(--admin-accent);
+            box-shadow: 0 0 0 2px rgba(11, 103, 209, 0.14);
+        }
+
+        .module-list-item strong {
+            font-size: 15px;
+        }
+
+        .module-list-item span {
+            color: var(--admin-muted);
+            font-size: 13px;
+        }
+
+        .page-builder-editor {
+            display: grid;
+            gap: 14px;
+        }
+
+        .page-builder-top {
+            display: grid;
+            grid-template-columns: minmax(220px, 360px) minmax(0, 1fr);
+            gap: 14px;
+            align-items: end;
+            padding: 16px;
+            border-bottom: 1px solid var(--admin-line);
+            background: #f8fafc;
+        }
+
+        .page-status {
+            color: var(--admin-muted);
+            font-size: 13px;
+            text-align: right;
+        }
+
+        .module-editor-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .module-field {
+            display: grid;
+            gap: 6px;
+        }
+
+        .module-field.full {
+            grid-column: 1 / -1;
+        }
+
+        .module-field label {
+            font-weight: 800;
+            color: #344054;
+        }
+
+        .module-items {
+            display: grid;
+            gap: 10px;
+        }
+
+        .module-item-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr) auto;
+            gap: 8px;
+            align-items: start;
+        }
+
+        .empty-builder-note {
+            border: 1px dashed var(--admin-line);
+            border-radius: 8px;
+            padding: 18px;
+            color: var(--admin-muted);
+            background: #fbfdff;
+        }
+
+        #pagesSection > .panel {
+            display: none;
+        }
+
         .settings-list {
             display: grid;
             gap: 12px;
@@ -445,9 +582,17 @@
         @media (max-width: 980px) {
             .admin-shell,
             .cms-layout,
+            .page-builder-layout,
+            .page-builder-top,
+            .module-editor-grid,
+            .module-item-row,
             .page-grid,
             .form-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .page-status {
+                text-align: left;
             }
 
             .admin-sidebar {
@@ -590,6 +735,109 @@
             </section>
 
             <section id="pagesSection" class="admin-section">
+                <div class="page-builder-layout">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h2>Page Modules</h2>
+                            <span id="pageModuleCount" class="blog-count-badge">0</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="module-add-row">
+                                <select id="addModuleType" aria-label="Module type">
+                                    <option value="hero">Hero</option>
+                                    <option value="text">Text block</option>
+                                    <option value="cards">Card grid</option>
+                                    <option value="media">Media block</option>
+                                    <option value="cta">CTA</option>
+                                </select>
+                                <button type="button" id="addPageModule" class="btn primary">Add</button>
+                            </div>
+                            <div id="pageModuleList" class="module-list" style="margin-top: 14px;"></div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="page-builder-top">
+                            <div class="module-field">
+                                <label for="pageSelector">Select page</label>
+                                <div class="page-select-row">
+                                    <select id="pageSelector">
+                                        <option value="home">Home</option>
+                                        <option value="solutions">Solutions</option>
+                                        <option value="industries">Industries</option>
+                                        <option value="case-studies">Case Studies</option>
+                                        <option value="blog">Blog</option>
+                                        <option value="about">About</option>
+                                        <option value="contact">Contact</option>
+                                    </select>
+                                    <button type="button" id="savePageModules" class="btn primary">Save</button>
+                                </div>
+                            </div>
+                            <div id="pageBuilderStatus" class="page-status">Select a page, add modules, then save to KV.</div>
+                        </div>
+                        <div class="panel-body page-builder-editor">
+                            <div id="pageBuilderNotice" class="notice"></div>
+                            <div class="module-actions-row">
+                                <button type="button" id="duplicatePageModule" class="btn ghost">Duplicate</button>
+                                <button type="button" id="moveModuleUp" class="btn ghost">Up</button>
+                                <button type="button" id="moveModuleDown" class="btn ghost">Down</button>
+                                <button type="button" id="deletePageModule" class="btn danger">Delete</button>
+                            </div>
+                            <div id="moduleEditorEmpty" class="empty-builder-note">No module selected. Add a module on the left, then edit its fields here.</div>
+                            <form id="pageModuleForm" class="module-editor-grid" hidden>
+                                <div class="module-field">
+                                    <label for="moduleType">Type</label>
+                                    <select id="moduleType">
+                                        <option value="hero">Hero</option>
+                                        <option value="text">Text block</option>
+                                        <option value="cards">Card grid</option>
+                                        <option value="media">Media block</option>
+                                        <option value="cta">CTA</option>
+                                    </select>
+                                </div>
+                                <div class="module-field">
+                                    <label for="moduleLabel">Admin label</label>
+                                    <input id="moduleLabel" type="text" placeholder="Internal name">
+                                </div>
+                                <div class="module-field">
+                                    <label for="moduleEyebrow">Eyebrow</label>
+                                    <input id="moduleEyebrow" type="text" placeholder="Small heading">
+                                </div>
+                                <div class="module-field">
+                                    <label for="moduleTitle">Title</label>
+                                    <input id="moduleTitle" type="text">
+                                </div>
+                                <div class="module-field full">
+                                    <label for="moduleText">Text</label>
+                                    <textarea id="moduleText" rows="5"></textarea>
+                                </div>
+                                <div class="module-field">
+                                    <label for="moduleImage">Image URL</label>
+                                    <input id="moduleImage" type="url" placeholder="https://...">
+                                </div>
+                                <div class="module-field">
+                                    <label for="moduleYoutubeUrl">YouTube URL</label>
+                                    <input id="moduleYoutubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=...">
+                                </div>
+                                <div class="module-field">
+                                    <label for="moduleCtaText">Button text</label>
+                                    <input id="moduleCtaText" type="text">
+                                </div>
+                                <div class="module-field">
+                                    <label for="moduleCtaHref">Button link</label>
+                                    <input id="moduleCtaHref" type="text" placeholder="contact.html">
+                                </div>
+                                <div class="module-field full" id="moduleItemsField">
+                                    <div class="module-actions-row" style="justify-content: space-between;">
+                                        <label>Cards</label>
+                                        <button type="button" id="addModuleItem" class="btn ghost">Add card</button>
+                                    </div>
+                                    <div id="moduleItems" class="module-items"></div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <div class="panel">
                     <div class="panel-header">
                         <h2>页面内容</h2>
@@ -634,7 +882,7 @@
                         </div>
                         <div class="setting-row">
                             <strong>存储</strong>
-                            <span>Cloudflare KV: BLOG_DATA / blog_v2</span>
+                            <span>Cloudflare KV: BLOG_DATA / blog_v2 + page_v1</span>
                         </div>
                         <div>
                             <button type="button" class="btn danger" onclick="logout()">退出登录</button>

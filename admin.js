@@ -40,6 +40,9 @@ window.initAdminPage = async function() {
         currentBlogId: null,
         filter: 'all',
         search: '',
+        currentPage: 'home',
+        pageModules: [],
+        currentModuleId: null,
     };
 
     const els = {
@@ -76,7 +79,34 @@ window.initAdminPage = async function() {
         chooseCoverImage: document.getElementById('chooseCoverImage'),
         coverImageFile: document.getElementById('coverImageFile'),
         coverImagePreview: document.getElementById('coverImagePreview'),
-        savePages: document.getElementById('savePages'),
+        pageSelector: document.getElementById('pageSelector'),
+        pageModuleCount: document.getElementById('pageModuleCount'),
+        pageModuleList: document.getElementById('pageModuleList'),
+        addModuleType: document.getElementById('addModuleType'),
+        addPageModule: document.getElementById('addPageModule'),
+        savePageModules: document.getElementById('savePageModules'),
+        pageBuilderNotice: document.getElementById('pageBuilderNotice'),
+        pageBuilderStatus: document.getElementById('pageBuilderStatus'),
+        moduleEditorEmpty: document.getElementById('moduleEditorEmpty'),
+        pageModuleForm: document.getElementById('pageModuleForm'),
+        duplicatePageModule: document.getElementById('duplicatePageModule'),
+        moveModuleUp: document.getElementById('moveModuleUp'),
+        moveModuleDown: document.getElementById('moveModuleDown'),
+        deletePageModule: document.getElementById('deletePageModule'),
+        addModuleItem: document.getElementById('addModuleItem'),
+        moduleItems: document.getElementById('moduleItems'),
+        moduleItemsField: document.getElementById('moduleItemsField'),
+        moduleFields: {
+            type: document.getElementById('moduleType'),
+            label: document.getElementById('moduleLabel'),
+            eyebrow: document.getElementById('moduleEyebrow'),
+            title: document.getElementById('moduleTitle'),
+            text: document.getElementById('moduleText'),
+            image: document.getElementById('moduleImage'),
+            youtubeUrl: document.getElementById('moduleYoutubeUrl'),
+            ctaText: document.getElementById('moduleCtaText'),
+            ctaHref: document.getElementById('moduleCtaHref'),
+        },
     };
 
     function showNotice(message, tone = 'info') {
@@ -84,6 +114,15 @@ window.initAdminPage = async function() {
         els.notice.className = `notice show ${tone}`;
         window.setTimeout(() => {
             els.notice.classList.remove('show');
+        }, 3200);
+    }
+
+    function showPageNotice(message, tone = 'info') {
+        if (!els.pageBuilderNotice) return;
+        els.pageBuilderNotice.textContent = message;
+        els.pageBuilderNotice.className = `notice show ${tone}`;
+        window.setTimeout(() => {
+            els.pageBuilderNotice.classList.remove('show');
         }, 3200);
     }
 
@@ -451,41 +490,221 @@ window.initAdminPage = async function() {
         }
     }
 
-    function loadPageContent() {
-        const content = JSON.parse(localStorage.getItem('siteContent') || '{}');
-        const pages = content.pages || {};
-        document.getElementById('heroTitle').value = content.hero?.title || '';
-        document.getElementById('heroDescription').value = content.hero?.description || '';
-        document.getElementById('servicesTitle').value = pages.services?.title || '';
-        document.getElementById('servicesDescription').value = pages.services?.description || '';
-        document.getElementById('solutionsTitle').value = pages.solutions?.title || '';
-        document.getElementById('solutionsDescription').value = pages.solutions?.description || '';
-        document.getElementById('aboutTitle').value = pages.about?.title || '';
-        document.getElementById('aboutDescription').value = pages.about?.description || '';
+    function makeModule(type = 'text') {
+        const labels = {
+            hero: 'Hero section',
+            text: 'Text block',
+            cards: 'Card grid',
+            media: 'Media block',
+            cta: 'CTA',
+        };
+        return {
+            id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+            type,
+            label: labels[type] || 'Module',
+            eyebrow: '',
+            title: '',
+            text: '',
+            image: '',
+            youtubeUrl: '',
+            ctaText: '',
+            ctaHref: '',
+            items: type === 'cards' ? [makeModuleItem(), makeModuleItem()] : [],
+        };
     }
 
-    function savePageContent() {
-        const content = JSON.parse(localStorage.getItem('siteContent') || '{}');
-        content.hero = {
-            title: document.getElementById('heroTitle').value.trim(),
-            description: document.getElementById('heroDescription').value.trim(),
+    function makeModuleItem() {
+        return {
+            id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+            title: '',
+            text: '',
+            href: '',
         };
-        content.pages = {
-            services: {
-                title: document.getElementById('servicesTitle').value.trim(),
-                description: document.getElementById('servicesDescription').value.trim(),
-            },
-            solutions: {
-                title: document.getElementById('solutionsTitle').value.trim(),
-                description: document.getElementById('solutionsDescription').value.trim(),
-            },
-            about: {
-                title: document.getElementById('aboutTitle').value.trim(),
-                description: document.getElementById('aboutDescription').value.trim(),
-            },
-        };
-        localStorage.setItem('siteContent', JSON.stringify(content));
-        alert('Page content saved in this browser.');
+    }
+
+    function getCurrentModule() {
+        return state.pageModules.find(module => module.id === state.currentModuleId) || null;
+    }
+
+    function updateModuleFromForm() {
+        const module = getCurrentModule();
+        if (!module || !els.pageModuleForm || els.pageModuleForm.hidden) return;
+
+        module.type = els.moduleFields.type.value;
+        module.label = els.moduleFields.label.value.trim();
+        module.eyebrow = els.moduleFields.eyebrow.value.trim();
+        module.title = els.moduleFields.title.value.trim();
+        module.text = els.moduleFields.text.value.trim();
+        module.image = els.moduleFields.image.value.trim();
+        module.youtubeUrl = els.moduleFields.youtubeUrl.value.trim();
+        module.ctaText = els.moduleFields.ctaText.value.trim();
+        module.ctaHref = els.moduleFields.ctaHref.value.trim();
+        module.items = [...els.moduleItems.querySelectorAll('[data-module-item-id]')].map(row => ({
+            id: row.dataset.moduleItemId,
+            title: row.querySelector('[data-item-field="title"]').value.trim(),
+            text: row.querySelector('[data-item-field="text"]').value.trim(),
+            href: row.querySelector('[data-item-field="href"]').value.trim(),
+        }));
+    }
+
+    function renderPageModuleList() {
+        if (!els.pageModuleList) return;
+        els.pageModuleCount.textContent = String(state.pageModules.length);
+        if (els.pageBuilderStatus) {
+            els.pageBuilderStatus.textContent = `${state.currentPage} / ${state.pageModules.length} module${state.pageModules.length === 1 ? '' : 's'} loaded`;
+        }
+
+        if (!state.pageModules.length) {
+            els.pageModuleList.innerHTML = '<div class="empty-builder-note">This page has no modules yet. Add a module above.</div>';
+            return;
+        }
+
+        els.pageModuleList.innerHTML = state.pageModules.map((module, index) => {
+            const name = module.label || module.title || module.type;
+            return `
+                <button type="button" class="module-list-item ${module.id === state.currentModuleId ? 'active' : ''}" data-module-id="${escapeHtml(module.id)}">
+                    <strong>${index + 1}. ${escapeHtml(name)}</strong>
+                    <span>${escapeHtml(module.type)}${module.title ? ' / ' + escapeHtml(module.title) : ''}</span>
+                </button>
+            `;
+        }).join('');
+    }
+
+    function renderModuleItems(module) {
+        if (!els.moduleItems) return;
+        const items = Array.isArray(module.items) ? module.items : [];
+        if (!items.length) {
+            els.moduleItems.innerHTML = '<div class="empty-builder-note">No cards yet.</div>';
+            return;
+        }
+
+        els.moduleItems.innerHTML = items.map(item => `
+            <div class="module-item-row" data-module-item-id="${escapeHtml(item.id)}">
+                <input type="text" data-item-field="title" placeholder="Card title" value="${escapeHtml(item.title)}">
+                <textarea rows="2" data-item-field="text" placeholder="Card text">${escapeHtml(item.text)}</textarea>
+                <input type="text" data-item-field="href" placeholder="Link" value="${escapeHtml(item.href)}">
+                <button type="button" class="btn danger" data-remove-module-item="${escapeHtml(item.id)}">Delete</button>
+            </div>
+        `).join('');
+    }
+
+    function renderModuleEditor() {
+        const module = getCurrentModule();
+        const hasModule = Boolean(module);
+        els.moduleEditorEmpty.hidden = hasModule;
+        els.pageModuleForm.hidden = !hasModule;
+        els.duplicatePageModule.disabled = !hasModule;
+        els.moveModuleUp.disabled = !hasModule;
+        els.moveModuleDown.disabled = !hasModule;
+        els.deletePageModule.disabled = !hasModule;
+
+        if (!module) return;
+
+        els.moduleFields.type.value = module.type || 'text';
+        els.moduleFields.label.value = module.label || '';
+        els.moduleFields.eyebrow.value = module.eyebrow || '';
+        els.moduleFields.title.value = module.title || '';
+        els.moduleFields.text.value = module.text || '';
+        els.moduleFields.image.value = module.image || '';
+        els.moduleFields.youtubeUrl.value = module.youtubeUrl || '';
+        els.moduleFields.ctaText.value = module.ctaText || '';
+        els.moduleFields.ctaHref.value = module.ctaHref || '';
+        els.moduleItemsField.hidden = module.type !== 'cards';
+        renderModuleItems(module);
+    }
+
+    function renderPageBuilder() {
+        renderPageModuleList();
+        renderModuleEditor();
+    }
+
+    async function loadPageModules(page = state.currentPage) {
+        if (!els.pageSelector || typeof pageApi === 'undefined') return;
+        state.currentPage = page;
+        state.currentModuleId = null;
+        els.pageSelector.value = page;
+        els.pageModuleList.innerHTML = '<div class="empty-builder-note">Loading modules...</div>';
+
+        try {
+            const pageData = await pageApi.getAdminPage(page);
+            state.pageModules = Array.isArray(pageData.modules) ? pageData.modules : [];
+            state.currentModuleId = state.pageModules[0]?.id || null;
+            renderPageBuilder();
+        } catch (error) {
+            console.error('Could not load page modules:', error);
+            state.pageModules = [];
+            renderPageBuilder();
+            showPageNotice(error.message || 'Could not load page modules.', 'error');
+        }
+    }
+
+    async function savePageModules() {
+        updateModuleFromForm();
+        try {
+            const saved = await pageApi.saveAdminPage(state.currentPage, {
+                page: state.currentPage,
+                modules: state.pageModules,
+            });
+            state.pageModules = Array.isArray(saved.modules) ? saved.modules : [];
+            state.currentModuleId = state.currentModuleId && state.pageModules.some(module => module.id === state.currentModuleId)
+                ? state.currentModuleId
+                : state.pageModules[0]?.id || null;
+            renderPageBuilder();
+            showPageNotice('Page modules saved to KV.', 'success');
+        } catch (error) {
+            console.error('Could not save page modules:', error);
+            showPageNotice(error.message || 'Could not save page modules.', 'error');
+        }
+    }
+
+    function addPageModule() {
+        updateModuleFromForm();
+        const module = makeModule(els.addModuleType.value);
+        state.pageModules.push(module);
+        state.currentModuleId = module.id;
+        renderPageBuilder();
+    }
+
+    function duplicatePageModule() {
+        updateModuleFromForm();
+        const module = getCurrentModule();
+        if (!module) return;
+        const copy = JSON.parse(JSON.stringify(module));
+        copy.id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        copy.label = `${copy.label || copy.title || copy.type} copy`;
+        copy.items = (copy.items || []).map(item => ({ ...item, id: `${Date.now()}-${Math.random().toString(36).slice(2)}` }));
+        const index = state.pageModules.findIndex(item => item.id === module.id);
+        state.pageModules.splice(index + 1, 0, copy);
+        state.currentModuleId = copy.id;
+        renderPageBuilder();
+    }
+
+    function moveCurrentModule(direction) {
+        updateModuleFromForm();
+        const index = state.pageModules.findIndex(module => module.id === state.currentModuleId);
+        const nextIndex = index + direction;
+        if (index < 0 || nextIndex < 0 || nextIndex >= state.pageModules.length) return;
+        const [module] = state.pageModules.splice(index, 1);
+        state.pageModules.splice(nextIndex, 0, module);
+        renderPageBuilder();
+    }
+
+    function deleteCurrentModule() {
+        const index = state.pageModules.findIndex(module => module.id === state.currentModuleId);
+        if (index < 0) return;
+        if (!confirm('Delete this page module?')) return;
+        state.pageModules.splice(index, 1);
+        state.currentModuleId = state.pageModules[Math.min(index, state.pageModules.length - 1)]?.id || null;
+        renderPageBuilder();
+    }
+
+    function addModuleItem() {
+        updateModuleFromForm();
+        const module = getCurrentModule();
+        if (!module) return;
+        module.items = Array.isArray(module.items) ? module.items : [];
+        module.items.push(makeModuleItem());
+        renderModuleEditor();
     }
 
     els.navButtons.forEach(button => {
@@ -516,14 +735,50 @@ window.initAdminPage = async function() {
     els.unpublishBlog.addEventListener('click', () => unpublishCurrentBlog().catch(error => showNotice(error.message, 'error')));
     els.deleteBlog.addEventListener('click', () => deleteCurrentBlog().catch(error => showNotice(error.message, 'error')));
     els.previewBlog.addEventListener('click', previewCurrentBlog);
-    els.savePages.addEventListener('click', savePageContent);
+
+    els.pageSelector.addEventListener('change', event => loadPageModules(event.target.value));
+    els.addPageModule.addEventListener('click', addPageModule);
+    els.savePageModules.addEventListener('click', savePageModules);
+    els.duplicatePageModule.addEventListener('click', duplicatePageModule);
+    els.moveModuleUp.addEventListener('click', () => moveCurrentModule(-1));
+    els.moveModuleDown.addEventListener('click', () => moveCurrentModule(1));
+    els.deletePageModule.addEventListener('click', deleteCurrentModule);
+    els.addModuleItem.addEventListener('click', addModuleItem);
+    els.pageModuleList.addEventListener('click', event => {
+        const item = event.target.closest('[data-module-id]');
+        if (!item) return;
+        updateModuleFromForm();
+        state.currentModuleId = item.dataset.moduleId;
+        renderPageBuilder();
+    });
+    els.pageModuleForm.addEventListener('input', () => {
+        updateModuleFromForm();
+        renderPageModuleList();
+        if (getCurrentModule()) {
+            els.moduleItemsField.hidden = getCurrentModule().type !== 'cards';
+        }
+    });
+    els.moduleFields.type.addEventListener('change', () => {
+        updateModuleFromForm();
+        renderModuleEditor();
+        renderPageModuleList();
+    });
+    els.moduleItems.addEventListener('click', event => {
+        const button = event.target.closest('[data-remove-module-item]');
+        if (!button) return;
+        updateModuleFromForm();
+        const module = getCurrentModule();
+        if (!module) return;
+        module.items = (module.items || []).filter(item => item.id !== button.dataset.removeModuleItem);
+        renderModuleEditor();
+    });
 
     document.querySelectorAll('[data-command]').forEach(button => {
         button.addEventListener('click', () => runEditorCommand(button.dataset.command));
     });
 
     await initializeAllData();
-    loadPageContent();
+    await loadPageModules(state.currentPage);
     clearBlogForm();
     await refreshBlogs(null);
 };
