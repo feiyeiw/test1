@@ -156,18 +156,19 @@ window.initAdminPage = async function() {
 
     function updateBlogOrderCounter() {
         if (!els.blogOrderCounter) return;
+        const orderedBlogs = getBlogsByPublishOrder();
+        const total = orderedBlogs.length;
         if (!state.currentBlogId) {
-            els.blogOrderCounter.textContent = '-/100';
-            els.blogOrderCounter.title = 'Select a blog to show its publish-order number.';
+            els.blogOrderCounter.textContent = `-/${total}`;
+            els.blogOrderCounter.title = 'Select a blog to show its reverse publish-order number.';
             return;
         }
 
-        const orderedBlogs = getBlogsByPublishOrder();
         const index = orderedBlogs.findIndex(blog => blog.id === state.currentBlogId);
-        const position = index >= 0 ? index + 1 : '-';
-        els.blogOrderCounter.textContent = `${position}/100`;
+        const position = index >= 0 ? total - index : '-';
+        els.blogOrderCounter.textContent = `${position}/${total}`;
         els.blogOrderCounter.title = index >= 0
-            ? `This blog is number ${position} by publish date.`
+            ? `This blog is number ${position} of ${total} by reverse publish date.`
             : 'Selected blog is not in the current list.';
     }
 
