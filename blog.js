@@ -380,7 +380,6 @@ async function loadBlogsOnBlog() {
                         <img src="${escapeHtml(getPublicBlogCover(featured))}" alt="${escapeHtml(featured.title)}">
                     </a>
                     <div class="blog-featured-body">
-                        <span class="eyebrow">${escapeHtml(featured.category || 'Featured Article')}</span>
                         <h3><a href="${href}">${escapeHtml(featured.title)}</a></h3>
                         <p>${escapeHtml(getBlogExcerpt(featured, 150))}</p>
                         <a href="${href}" class="text-link">Read article</a>
