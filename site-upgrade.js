@@ -173,12 +173,12 @@ function renderLatestCaseSlider(caseItems) {
         <div class="latest-case-slider" data-latest-case-slider>
             <div class="latest-case-controls">
                 <a class="text-link" href="case-studies.html">Browse all case studies</a>
-                <div>
-                    <button class="slider-btn" type="button" data-slider-prev aria-label="Previous case">&lsaquo;</button>
-                    <button class="slider-btn" type="button" data-slider-next aria-label="Next case">&rsaquo;</button>
-                </div>
             </div>
-            <div class="latest-case-track" tabindex="0">${cards}</div>
+            <div class="latest-case-frame">
+                <button class="slider-btn slider-btn-prev" type="button" data-slider-prev aria-label="Previous case">&lsaquo;</button>
+                <div class="latest-case-track" tabindex="0">${cards}</div>
+                <button class="slider-btn slider-btn-next" type="button" data-slider-next aria-label="Next case">&rsaquo;</button>
+            </div>
         </div>
     `;
 }
@@ -191,8 +191,7 @@ function hydrateLatestCaseSliders(root = document) {
         const prev = slider.querySelector('[data-slider-prev]');
         const next = slider.querySelector('[data-slider-next]');
         const scrollByCard = direction => {
-            const card = track?.querySelector('.latest-case-card');
-            const amount = card ? card.getBoundingClientRect().width + 18 : 360;
+            const amount = track?.clientWidth || 360;
             track?.scrollBy({ left: direction * amount, behavior: 'smooth' });
         };
         prev?.addEventListener('click', () => scrollByCard(-1));

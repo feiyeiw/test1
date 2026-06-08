@@ -1985,14 +1985,14 @@ footer .container,
 .latest-case-controls {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+    justify-content: flex-start;
     margin-bottom: 14px;
 }
 
-.latest-case-controls > div {
-    display: flex;
-    gap: 8px;
+.latest-case-frame {
+    position: relative;
+    min-width: 0;
+    padding: 0 48px;
 }
 
 .slider-btn {
@@ -2006,6 +2006,7 @@ footer .container,
     font-size: 28px;
     line-height: 1;
     transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    z-index: 2;
 }
 
 .slider-btn:hover {
@@ -2014,16 +2015,40 @@ footer .container,
     transform: translateY(-1px);
 }
 
+.slider-btn-prev,
+.slider-btn-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.slider-btn-prev:hover,
+.slider-btn-next:hover {
+    transform: translateY(-50%) scale(1.04);
+}
+
+.slider-btn-prev {
+    left: 0;
+}
+
+.slider-btn-next {
+    right: 0;
+}
+
 .latest-case-track {
     display: grid;
-    grid-auto-columns: minmax(300px, 74%);
+    grid-auto-columns: 100%;
     grid-auto-flow: column;
-    gap: 18px;
-    overflow-x: auto;
-    padding: 2px 2px 14px;
+    gap: 0;
+    overflow-x: hidden;
+    padding: 2px 0 8px;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
-    scrollbar-width: thin;
+    scrollbar-width: none;
+}
+
+.latest-case-track::-webkit-scrollbar {
+    display: none;
 }
 
 .latest-case-card {
@@ -2634,7 +2659,7 @@ footer .container,
     }
 
     .latest-case-track {
-        grid-auto-columns: minmax(280px, 64%);
+        grid-auto-columns: 100%;
     }
 
     .header-main .container {
@@ -2656,8 +2681,18 @@ footer .container,
         flex-direction: column;
     }
 
+    .latest-case-frame {
+        padding: 0 36px;
+    }
+
+    .slider-btn {
+        width: 34px;
+        height: 34px;
+        font-size: 24px;
+    }
+
     .latest-case-track {
-        grid-auto-columns: minmax(260px, 88%);
+        grid-auto-columns: 100%;
     }
 
     .latest-case-body {
