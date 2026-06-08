@@ -1798,6 +1798,7 @@ footer .container,
 }
 
 .proof-list span,
+.proof-list a,
 .category-strip span {
     position: relative;
     min-height: 58px;
@@ -1809,9 +1810,11 @@ footer .container,
     background: rgba(255, 255, 255, 0.06);
     color: #fff;
     font-weight: 800;
+    text-decoration: none;
 }
 
 .soft .proof-list span,
+.soft .proof-list a,
 .soft .category-strip span,
 .category-strip span {
     border-color: #dce4ec;
@@ -1820,6 +1823,7 @@ footer .container,
 }
 
 .proof-list span::before,
+.proof-list a::before,
 .category-strip span::before {
     content: "";
     position: absolute;
@@ -1830,6 +1834,11 @@ footer .container,
     border-left: 2px solid var(--industrial-signal);
     border-bottom: 2px solid var(--industrial-signal);
     transform: rotate(-45deg);
+}
+
+.proof-list a:hover {
+    border-color: rgba(25, 184, 213, 0.5);
+    transform: translateY(-2px);
 }
 
 .blog-index-section {

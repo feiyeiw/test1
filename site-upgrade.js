@@ -77,7 +77,7 @@ function upgradeFooter() {
                 <div class="footer-columns">
                     <div><h3>Solutions</h3><a href="solutions.html#asrs">Warehouse Automation</a><a href="asrs-cost.html">ASRS Cost Guide</a><a href="asrs-design.html">ASRS Design Guide</a><a href="solutions.html#factory">Smart Factory Automation</a><a href="solutions.html#machinery">Industrial Manufacturing</a></div>
                     <div><h3>Industries</h3><a href="industries.html">Warehousing</a><a href="industries.html#manufacturing">Manufacturing</a><a href="industries.html#food">Food & Beverage</a><a href="industries.html#packaging">Packaging</a><a href="industries.html#automotive">Automotive</a><a href="industries.html#electronics">Electronics</a></div>
-                    <div><h3>Resources</h3><a href="case-studies.html">Case Studies</a><a href="blog.html">Knowledge Center</a><a href="blog.html">Blog</a><a href="blog.html">YouTube Channel</a></div>
+                    <div><h3>Resources</h3><a href="case-studies.html">Case Studies</a><a href="blog.html">Knowledge Center</a><a href="blog.html">Blog</a><a href="https://www.youtube.com/channel/UCg4UaJdHvit-Ny9QNRPD7Mw" target="_blank" rel="noopener">YouTube Channel</a></div>
                     <div><h3>Contact</h3><span>Website: 13asrs.com</span><span>Email: pjm@13asrs.com</span><span>Location: China</span></div>
                 </div>
             </div>
@@ -268,9 +268,53 @@ const HOME_CASE_LINKS = {
     'home-case-agv': 'case-studies.html?industry=manufacturing-industrial&solution=conveyor-transport#caseGrid',
 };
 
+const SOLUTIONS_CASE_LINKS = {
+    'solutions-factory-production': 'case-studies.html?solution=production-line#caseGrid',
+    'solutions-factory-robotic': 'case-studies.html?solution=robotics-integration#caseGrid',
+    'solutions-factory-flow': 'case-studies.html?solution=conveyor-transport#caseGrid',
+    'solutions-factory-upgrade': 'case-studies.html?solution=smart-factory#caseGrid',
+    'solutions-machinery-printing': 'case-studies.html?industry=packaging-printing&solution=printing-inkjet-flexo-ci#caseGrid',
+    'solutions-machinery-filling': 'case-studies.html?industry=packaging-printing&solution=film-blowing-extrusion#caseGrid',
+    'solutions-machinery-laser': 'case-studies.html?solution=laser-industrial-machining#caseGrid',
+};
+
+const INDUSTRIES_CASE_LINKS = {
+    'industries-proof-1': 'case-studies.html#caseGrid',
+    'industries-proof-2': 'case-studies.html#caseGrid',
+    'industries-proof-3': 'case-studies.html?solution=asrs#caseGrid',
+    'industries-proof-4': 'case-studies.html?solution=smart-factory#caseGrid',
+    'industries-proof-5': 'case-studies.html?industry=manufacturing-industrial#caseGrid',
+    'industry-chemical': 'case-studies.html?industry=chemical-petrochemical#caseGrid',
+    'industry-food': 'case-studies.html?industry=food-beverage#caseGrid',
+    'industry-packaging': 'case-studies.html?industry=packaging-printing#caseGrid',
+    'industry-cold': 'case-studies.html?industry=cold-chain-frozen-food#caseGrid',
+    'industry-pharma': 'case-studies.html?industry=pharmaceutical-biotech#caseGrid',
+    'industry-printing': 'case-studies.html?industry=packaging-printing&solution=printing-inkjet-flexo-ci#caseGrid',
+    'industry-manufacturing': 'case-studies.html?industry=manufacturing-industrial#caseGrid',
+    'industry-logistics': 'case-studies.html?industry=logistics-distribution#caseGrid',
+    'industry-electronics': 'case-studies.html?industry=electronics-semiconductors#caseGrid',
+    'industry-automotive': 'case-studies.html?industry=automotive-transportation#caseGrid',
+    'industry-building-materials': 'case-studies.html?solution=material-pallet-handling#caseGrid',
+    'tech-asrs': 'case-studies.html?solution=asrs#caseGrid',
+    'tech-shuttle': 'case-studies.html?solution=asrs#caseGrid',
+    'tech-stacker': 'case-studies.html?solution=asrs#caseGrid',
+    'tech-agv': 'case-studies.html?solution=conveyor-transport#caseGrid',
+    'tech-smart-factory': 'case-studies.html?solution=smart-factory#caseGrid',
+    'tech-printing': 'case-studies.html?industry=packaging-printing#caseGrid',
+    'tech-filling': 'case-studies.html?solution=filling-bottling#caseGrid',
+    'tech-film': 'case-studies.html?solution=film-blowing-extrusion#caseGrid',
+    'tech-laser': 'case-studies.html?solution=laser-industrial-machining#caseGrid',
+};
+
 function getModuleItemHref(item = {}) {
     if (getCurrentPageKey() === 'home' && HOME_CASE_LINKS[item.id]) {
         return HOME_CASE_LINKS[item.id];
+    }
+    if (getCurrentPageKey() === 'solutions' && SOLUTIONS_CASE_LINKS[item.id]) {
+        return SOLUTIONS_CASE_LINKS[item.id];
+    }
+    if (getCurrentPageKey() === 'industries' && INDUSTRIES_CASE_LINKS[item.id]) {
+        return INDUSTRIES_CASE_LINKS[item.id];
     }
     return item.href || '';
 }
@@ -416,9 +460,12 @@ function renderPageModule(module) {
 
         if (module.variant === 'proof-list') {
             const proofItems = (module.items || [])
-                .map(item => item.title || item.text)
-                .filter(Boolean)
-                .map(item => `<span>${escapeHtml(item)}</span>`)
+                .filter(item => item.title || item.text)
+                .map(item => {
+                    const label = escapeHtml(item.title || item.text);
+                    const href = getModuleItemHref(item);
+                    return href ? `<a href="${escapeHtml(href)}">${label}</a>` : `<span>${label}</span>`;
+                })
                 .join('');
             return `
                 <section class="section-band ${sectionTheme} cms-module"${sectionId}>
