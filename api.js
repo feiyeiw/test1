@@ -68,6 +68,11 @@ function normalizeClientBlog(blog = {}) {
         contentHtml,
         content: contentHtml,
         plainText: blog.plainText || contentHtml.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(),
+        industry: blog.industry || '',
+        industryLabel: blog.industryLabel || '',
+        solution: blog.solution || '',
+        solutionLabel: blog.solutionLabel || blog.category || '',
+        category: blog.category || blog.solutionLabel || '',
         status: blog.status === 'published' ? 'published' : 'draft',
     };
 }

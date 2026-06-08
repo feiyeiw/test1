@@ -68,7 +68,8 @@ window.initAdminPage = async function() {
             title: document.getElementById('blogTitle'),
             summary: document.getElementById('blogSummary'),
             coverImage: document.getElementById('blogCoverImage'),
-            category: document.getElementById('blogCategory'),
+            industry: document.getElementById('blogIndustry'),
+            solution: document.getElementById('blogSolution'),
             youtubeUrl: document.getElementById('blogYoutubeUrl'),
             author: document.getElementById('blogAuthor'),
             date: document.getElementById('blogDate'),
@@ -138,6 +139,20 @@ window.initAdminPage = async function() {
 
     function today() {
         return new Date().toISOString().slice(0, 10);
+    }
+
+    function getSelectedOptionText(select) {
+        if (!select?.value) return '';
+        return select?.selectedOptions?.[0]?.textContent.trim() || '';
+    }
+
+    function coerceSelectValue(select, value, label) {
+        if (!select) return '';
+        const options = [...select.options];
+        const exactValue = options.find(option => option.value === value);
+        if (exactValue) return exactValue.value;
+        const exactLabel = options.find(option => option.textContent.trim() === label || option.textContent.trim() === value);
+        return exactLabel ? exactLabel.value : '';
     }
 
     function getBlogSortTime(blog) {
@@ -302,7 +317,7 @@ window.initAdminPage = async function() {
         const query = state.search.trim().toLowerCase();
         return getBlogsByPublishOrder().filter(blog => {
             const statusOk = state.filter === 'all' || blog.status === state.filter;
-            const text = `${blog.title || ''} ${blog.summary || ''} ${blog.category || ''}`.toLowerCase();
+            const text = `${blog.title || ''} ${blog.summary || ''} ${blog.category || ''} ${blog.industryLabel || ''} ${blog.solutionLabel || ''}`.toLowerCase();
             return statusOk && (!query || text.includes(query));
         });
     }
@@ -321,7 +336,8 @@ window.initAdminPage = async function() {
                 <div class="blog-meta">
                     <span class="status-pill ${escapeHtml(blog.status)}">${blog.status === 'published' ? 'Published' : 'Draft'}</span>
                     <span>${escapeHtml(blog.date || '')}</span>
-                    <span>${escapeHtml(blog.category || 'Uncategorized')}</span>
+                    <span>${escapeHtml(blog.industryLabel || 'No industry')}</span>
+                    <span>${escapeHtml(blog.solutionLabel || blog.category || 'No solution')}</span>
                 </div>
             </button>
         `).join('');
@@ -342,7 +358,8 @@ window.initAdminPage = async function() {
         els.fields.title.value = blog.title || '';
         els.fields.summary.value = blog.summary || '';
         els.fields.coverImage.value = blog.coverImage || '';
-        els.fields.category.value = blog.category || '';
+        els.fields.industry.value = coerceSelectValue(els.fields.industry, blog.industry, blog.industryLabel);
+        els.fields.solution.value = coerceSelectValue(els.fields.solution, blog.solution, blog.solutionLabel || blog.category);
         els.fields.youtubeUrl.value = blog.youtubeUrl || '';
         els.fields.author.value = blog.author || '13ASRS';
         els.fields.date.value = blog.date || today();
@@ -354,11 +371,17 @@ window.initAdminPage = async function() {
     }
 
     function collectBlogData(status) {
+        const industryLabel = getSelectedOptionText(els.fields.industry);
+        const solutionLabel = getSelectedOptionText(els.fields.solution);
         return {
             title: els.fields.title.value.trim(),
             summary: els.fields.summary.value.trim(),
             coverImage: els.fields.coverImage.value.trim(),
-            category: els.fields.category.value.trim(),
+            industry: els.fields.industry.value,
+            industryLabel,
+            solution: els.fields.solution.value,
+            solutionLabel,
+            category: solutionLabel,
             youtubeUrl: els.fields.youtubeUrl.value.trim(),
             author: els.fields.author.value.trim() || '13ASRS',
             date: els.fields.date.value || today(),
@@ -379,6 +402,21 @@ window.initAdminPage = async function() {
         if (!payload.contentHtml) {
             showNotice('Content is required.', 'error');
             els.fields.content.focus();
+            return false;
+        }
+        if (payload.status === 'published' && !payload.industry) {
+            showNotice('Industry is required before publishing.', 'error');
+            els.fields.industry.focus();
+            return false;
+        }
+        if (payload.status === 'published' && !payload.solution) {
+            showNotice('Solution is required before publishing.', 'error');
+            els.fields.solution.focus();
+            return false;
+        }
+        if (payload.status === 'published' && !payload.coverImage && !payload.youtubeUrl) {
+            showNotice('Add a local image, image URL, or video URL before publishing.', 'error');
+            els.fields.coverImage.focus();
             return false;
         }
         return true;
@@ -463,7 +501,7 @@ window.initAdminPage = async function() {
             </head>
             <body>
                 <h1>${escapeHtml(payload.title || 'Untitled')}</h1>
-                <div class="meta">${escapeHtml(payload.date)} ${payload.category ? ' / ' + escapeHtml(payload.category) : ''}</div>
+                <div class="meta">${escapeHtml(payload.date)} ${payload.industryLabel ? ' / ' + escapeHtml(payload.industryLabel) : ''}${payload.solutionLabel ? ' / ' + escapeHtml(payload.solutionLabel) : ''}</div>
                 <p>${escapeHtml(payload.summary)}</p>
                 ${payload.coverImage ? `<img src="${escapeHtml(payload.coverImage)}" alt="${escapeHtml(payload.title)}">` : ''}
                 <div style="margin: 24px 0; aspect-ratio: 16 / 9; background: #07111f; color: #c8d6e2; display: flex; align-items: center; justify-content: center; border-radius: 8px; overflow: hidden;">

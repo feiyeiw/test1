@@ -683,23 +683,60 @@
                                     <textarea id="blogSummary" rows="3"></textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label for="blogCoverImage">封面图片 URL</label>
+                                    <label for="blogCoverImage">案例展示图片 URL / 本地上传</label>
                                     <div class="image-input-row">
                                         <input id="blogCoverImage" type="text" placeholder="https://example.com/image.webp">
                                         <button type="button" id="chooseCoverImage" class="btn ghost">本地图片</button>
                                     </div>
                                     <input id="coverImageFile" type="file" accept="image/png,image/jpeg,image/webp" hidden>
                                     <div id="coverImagePreview" class="cover-preview" aria-hidden="true"><img alt=""></div>
-                                    <small id="coverImageHelp">本地图片会自动裁成 16:9 并压缩上传。</small>
+                                    <small id="coverImageHelp">用于 Case Studies 卡片展示；可填写图片 URL，或上传本地图片，系统会自动裁成 16:9。</small>
                                 </div>
                                 <div class="form-group">
-                                    <label for="blogCategory">分类</label>
-                                    <input id="blogCategory" type="text" placeholder="ASRS / AGV / Smart Factory">
+                                    <label for="blogIndustry">Industry</label>
+                                    <select id="blogIndustry" required>
+                                        <option value="">Select industry</option>
+                                        <option value="food-beverage">Food & Beverage</option>
+                                        <option value="pharmaceutical-biotech">Pharmaceutical & Biotech</option>
+                                        <option value="packaging-printing">Packaging & Printing</option>
+                                        <option value="cold-chain-frozen-food">Cold Chain / Frozen Food</option>
+                                        <option value="logistics-distribution">Logistics & Distribution</option>
+                                        <option value="ecommerce-fulfillment">E-commerce Fulfillment</option>
+                                        <option value="manufacturing-industrial">Manufacturing / Industrial</option>
+                                        <option value="chemical-petrochemical">Chemical & Petrochemical</option>
+                                        <option value="agriculture-grain-processing">Agriculture & Grain Processing</option>
+                                        <option value="automotive-transportation">Automotive & Transportation</option>
+                                        <option value="electronics-semiconductors">Electronics & Semiconductors</option>
+                                        <option value="health-personal-care">Health & Personal Care</option>
+                                        <option value="household-products">Household Products</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="blogSolution">Solution</label>
+                                    <select id="blogSolution" required>
+                                        <option value="">Select solution</option>
+                                        <option value="asrs">ASRS / Automated Storage & Retrieval Systems</option>
+                                        <option value="conveyor-transport">Conveyor Systems / Automated Transport</option>
+                                        <option value="smart-factory">Smart Factory / Factory Automation</option>
+                                        <option value="production-line">Production Line Automation</option>
+                                        <option value="packaging-automation">Packaging Automation</option>
+                                        <option value="filling-bottling">Filling & Bottling Systems</option>
+                                        <option value="printing-inkjet-flexo-ci">Printing / Inkjet / Flexo / CI Printing</option>
+                                        <option value="film-blowing-extrusion">Film Blowing / Film Extrusion</option>
+                                        <option value="cold-storage-automation">Cold Storage / Low-Temperature Automation</option>
+                                        <option value="material-pallet-handling">Material Handling / Pallet Handling</option>
+                                        <option value="wms-wes">Intelligent WMS / WES Integration</option>
+                                        <option value="erp-mes-monitoring">ERP / MES / Production Monitoring</option>
+                                        <option value="robotics-integration">Robotics Integration</option>
+                                        <option value="laser-industrial-machining">Laser Processing / Industrial Machining</option>
+                                        <option value="other-industrial-automation">Other Industrial Automation Solutions</option>
+                                    </select>
                                 </div>
                                 <div class="form-group full">
-                                    <label for="blogYoutubeUrl">YouTube 视频链接</label>
+                                    <label for="blogYoutubeUrl">案例展示视频 URL</label>
                                     <input id="blogYoutubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=...">
-                                    <small>填入 YouTube 链接后，首页和文章详情页的视频框会自动显示播放器；不填则保留占位框。</small>
+                                    <small>可填写 YouTube 视频 URL；Case Studies 卡片会优先展示视频，否则展示上方图片。</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="blogAuthor">作者</label>

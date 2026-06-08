@@ -107,7 +107,11 @@ function normalizeBlog(input = {}, existing = null) {
         title,
         summary: String(input.summary || '').trim(),
         coverImage: String(input.coverImage || '').trim(),
-        category: String(input.category || '').trim(),
+        industry: String(input.industry ?? existing?.industry ?? '').trim(),
+        industryLabel: String(input.industryLabel ?? existing?.industryLabel ?? '').trim(),
+        solution: String(input.solution ?? existing?.solution ?? '').trim(),
+        solutionLabel: String(input.solutionLabel ?? existing?.solutionLabel ?? '').trim(),
+        category: String(input.category ?? existing?.category ?? input.solutionLabel ?? existing?.solutionLabel ?? '').trim(),
         author: String(input.author || '13ASRS').trim(),
         youtubeUrl: String(input.youtubeUrl || existing?.youtubeUrl || '').trim(),
         contentHtml,
@@ -125,6 +129,11 @@ function normalizeBlog(input = {}, existing = null) {
 function validateBlog(blog) {
     if (!blog.title) return 'Title is required';
     if (!blog.contentHtml) return 'Content is required';
+    if (blog.status === 'published' && !blog.industry) return 'Industry is required before publishing';
+    if (blog.status === 'published' && !blog.solution) return 'Solution is required before publishing';
+    if (blog.status === 'published' && !blog.coverImage && !blog.youtubeUrl) {
+        return 'A local image, image URL, or video URL is required before publishing';
+    }
     return null;
 }
 
@@ -135,6 +144,10 @@ function toIndexEntry(blog) {
         title: blog.title,
         summary: blog.summary,
         coverImage: blog.coverImage,
+        industry: blog.industry,
+        industryLabel: blog.industryLabel,
+        solution: blog.solution,
+        solutionLabel: blog.solutionLabel,
         category: blog.category,
         author: blog.author,
         youtubeUrl: blog.youtubeUrl,
