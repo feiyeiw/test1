@@ -91,6 +91,7 @@ async function renderLatestBlogs(containerId, limit = 1) {
     if (!container || typeof blogApi === 'undefined') return;
 
     container.innerHTML = '<div class="loading-message">Loading latest blog posts...</div>';
+    if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
     try {
         const blogs = await blogApi.getAllBlogs();
         const latest = [...blogs].filter(blog => !isPlaceholderBlog(blog)).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, limit);
@@ -102,6 +103,7 @@ async function renderLatestBlogs(containerId, limit = 1) {
                     <a class="knowledge-topic-card" href="case-studies.html"><span>03</span><h3>Project References</h3><p>Review case examples before planning your next automation project.</p></a>
                 </div>
             `;
+            if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
             return;
         }
         container.innerHTML = latest.map(blog => `
@@ -116,9 +118,11 @@ async function renderLatestBlogs(containerId, limit = 1) {
                 </div>
             </article>
         `).join('');
+        if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
     } catch (error) {
         console.error('Error rendering latest blogs:', error);
         container.innerHTML = '<div class="loading-message">Unable to load blog posts.</div>';
+        if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
     }
 }
 
@@ -447,6 +451,7 @@ function applyPageHeroModule(main, module) {
             textHost.appendChild(paragraph);
         }
     });
+    if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations(main);
 }
 
 async function hydrateCaseLibrary() {
@@ -496,10 +501,12 @@ async function hydrateCaseLibrary() {
             }).join('');
         }
         filterCases();
+        if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
     } catch (error) {
         console.warn('Could not hydrate case library:', error);
         filterCases();
     }
+    if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
 }
 
 function hydrateContactForm() {
@@ -507,6 +514,7 @@ function hydrateContactForm() {
     if (!form || form.dataset.bound === 'true') return;
     form.dataset.bound = 'true';
 
+    if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
     form.addEventListener('submit', function(event) {
         event.preventDefault();
         const button = form.querySelector('.submit-industrial');
@@ -573,6 +581,7 @@ async function hydrateDynamicModules(page) {
     }
     await hydrateCaseLibrary();
     hydrateContactForm();
+    if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
 }
 
 async function renderPageModules() {
@@ -590,17 +599,22 @@ async function renderPageModules() {
         if (modules.length === 1 && pageHeroModule) {
             applyPageHeroModule(main, pageHeroModule);
             await hydrateDynamicModules(page);
+            if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
             return;
         }
 
         if (pageHeroModule) {
             main.innerHTML = modules.map(renderPageModule).join('');
             await hydrateDynamicModules(page);
+            if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
             return;
         }
 
         const renderableModules = modules.filter(module => module !== pageHeroModule);
-        if (!renderableModules.length) return;
+        if (!renderableModules.length) {
+            if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
+            return;
+        }
 
         const wrapper = document.createElement('div');
         wrapper.id = 'dynamicPageModules';
@@ -613,6 +627,7 @@ async function renderPageModules() {
             main.prepend(wrapper);
         }
         await hydrateDynamicModules(page);
+        if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
     } catch (error) {
         console.warn('Page modules not loaded:', error);
     }

@@ -235,6 +235,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     if (typeof initBlogPages === 'function' && !window.blogPageHydratedFromModules) await initBlogPages();
 
+    translatePage();
+
     const path = window.location.pathname.replace(/\/+$/, '');
     const isAdminPage = path.endsWith('/admin') || path.endsWith('/admin.html');
     if (isAdminPage && typeof initAdminPage === 'function') await initAdminPage();
