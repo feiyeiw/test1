@@ -75,7 +75,7 @@ function upgradeFooter() {
             <div class="footer-content">
                 <div class="footer-logo"><img src="logo.jpg" alt="13ASRS"></div>
                 <div class="footer-columns">
-                    <div><h3>Solutions</h3><a href="solutions.html#asrs">Warehouse Automation</a><a href="solutions.html#factory">Smart Factory Automation</a><a href="solutions.html#machinery">Industrial Manufacturing</a></div>
+                    <div><h3>Solutions</h3><a href="solutions.html#asrs">Warehouse Automation</a><a href="asrs-cost.html">ASRS Cost Guide</a><a href="asrs-design.html">ASRS Design Guide</a><a href="solutions.html#factory">Smart Factory Automation</a><a href="solutions.html#machinery">Industrial Manufacturing</a></div>
                     <div><h3>Industries</h3><a href="industries.html">Warehousing</a><a href="industries.html#manufacturing">Manufacturing</a><a href="industries.html#food">Food & Beverage</a><a href="industries.html#packaging">Packaging</a><a href="industries.html#automotive">Automotive</a><a href="industries.html#electronics">Electronics</a></div>
                     <div><h3>Resources</h3><a href="case-studies.html">Case Studies</a><a href="blog.html">Knowledge Center</a><a href="blog.html">Blog</a><a href="blog.html">YouTube Channel</a></div>
                     <div><h3>Contact</h3><span>Website: 13asrs.com</span><span>Email: pjm@13asrs.com</span><span>Location: China</span></div>
@@ -86,42 +86,147 @@ function upgradeFooter() {
     `;
 }
 
-async function renderLatestBlogs(containerId, limit = 1) {
-    const container = document.getElementById(containerId);
-    if (!container || typeof blogApi === 'undefined') return;
+const HOME_FALLBACK_CASES = [
+    {
+        id: 'fallback-chemical-asrs',
+        title: 'Shuttle ASRS Warehouse for Chemical Industry',
+        industryLabel: 'Chemical & Petrochemical',
+        solutionLabel: 'ASRS / Automated Storage & Retrieval Systems',
+        summary: '18m shuttle ASRS with WMS integration improves storage density, throughput, and material handling safety.',
+        coverImage: 'solutions-asrs-technology.webp',
+        href: 'case-ecommerce.html',
+    },
+    {
+        id: 'fallback-pharma-asrs',
+        title: 'Stacker Crane ASRS for Pharmaceutical Storage',
+        industryLabel: 'Pharmaceutical & Biotech',
+        solutionLabel: 'ASRS / Automated Storage & Retrieval Systems',
+        summary: 'Crane ASRS supports controlled storage, batch visibility, traceability, and reliable 24/7 handling.',
+        coverImage: 'system-crane.webp',
+        href: 'case-pharma.html',
+    },
+    {
+        id: 'fallback-ecommerce-miniload',
+        title: 'Miniload Automation for E-commerce Fulfillment',
+        industryLabel: 'E-commerce Fulfillment',
+        solutionLabel: 'ASRS / Automated Storage & Retrieval Systems',
+        summary: 'Dense miniload automation helps handle high SKU mix, order waves, and labor-intensive picking.',
+        coverImage: 'system-shuttle.webp',
+        href: 'case-miniload.html',
+    },
+    {
+        id: 'fallback-manufacturing-agv',
+        title: 'AGV Logistics for Smart Factory Material Flow',
+        industryLabel: 'Manufacturing / Industrial',
+        solutionLabel: 'Conveyor Systems / Automated Transport',
+        summary: 'AGV routes connect storage, production, and assembly flow to reduce manual line feeding.',
+        coverImage: 'system-agv.webp',
+        href: 'case-automotive.html',
+    },
+    {
+        id: 'fallback-packaging-line',
+        title: 'Packaging Automation Case Library',
+        industryLabel: 'Packaging & Printing',
+        solutionLabel: 'Packaging Automation',
+        summary: 'Browse packaging, filling, labeling, cartoning, printing, and production line automation references.',
+        coverImage: 'solutions-production-line.webp',
+        href: 'case-studies.html?industry=packaging-printing&solution=packaging-automation#caseGrid',
+    },
+    {
+        id: 'fallback-cold-storage',
+        title: 'Cold Storage Automation Case Library',
+        industryLabel: 'Cold Chain / Frozen Food',
+        solutionLabel: 'Cold Storage / Low-Temperature Automation',
+        summary: 'Explore low-temperature automation references for cold chain storage and frozen food operations.',
+        coverImage: 'hero-case-studies-automation.webp',
+        href: 'case-studies.html?industry=cold-chain-frozen-food&solution=cold-storage-automation#caseGrid',
+    },
+];
 
-    container.innerHTML = '<div class="loading-message">Loading latest blog posts...</div>';
-    if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
-    try {
-        const blogs = await blogApi.getAllBlogs();
-        const latest = [...blogs].filter(blog => !isPlaceholderBlog(blog)).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, limit);
-        if (!latest.length) {
-            container.innerHTML = `
-                <div class="knowledge-empty-grid">
-                    <a class="knowledge-topic-card" href="solutions.html#asrs"><span>01</span><h3>Warehouse Automation</h3><p>ASRS, shuttle systems, WMS/WES, and high-density storage planning.</p></a>
-                    <a class="knowledge-topic-card" href="solutions.html#factory"><span>02</span><h3>Smart Factory</h3><p>AGV logistics, robotic handling, line feeding, and production flow.</p></a>
-                    <a class="knowledge-topic-card" href="case-studies.html"><span>03</span><h3>Project References</h3><p>Review case examples before planning your next automation project.</p></a>
-                </div>
-            `;
-            if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
-            return;
-        }
-        container.innerHTML = latest.map(blog => `
-            <article class="content-card media-card">
-                <img src="${getBlogCover(blog)}" alt="${blog.title}">
-                <div>
-                    <span class="eyebrow">${blog.category || 'Blog'}</span>
-                    <h3>${blog.title}</h3>
-                    <p>${getBlogSummary(blog, 130)}</p>
-                    <div class="mini-video">${renderYouTubeFrame(blog.youtubeUrl, blog.title)}</div>
-                    <a class="text-link" href="blog-detail.html?id=${encodeURIComponent(blog.id)}">Read article</a>
+function getCaseLink(caseItem) {
+    return caseItem.href || `blog-detail.html?id=${encodeURIComponent(caseItem.id)}`;
+}
+
+function renderLatestCaseSlider(caseItems) {
+    const cards = caseItems.map((caseItem, index) => {
+        const href = getCaseLink(caseItem);
+        const title = escapeHtml(caseItem.title || 'Automation Case Study');
+        const image = escapeHtml(getBlogCover(caseItem));
+        const industry = escapeHtml(caseItem.industryLabel || caseItem.category || 'Case Study');
+        const solution = escapeHtml(caseItem.solutionLabel || 'Automation Solution');
+        const summary = escapeHtml(getBlogSummary(caseItem, 125));
+        return `
+            <article class="latest-case-card">
+                <a class="latest-case-media" href="${escapeHtml(href)}"><img src="${image}" alt="${title}"></a>
+                <div class="latest-case-body">
+                    <span class="eyebrow">${industry}</span>
+                    <h3><a href="${escapeHtml(href)}">${title}</a></h3>
+                    <p>${summary}</p>
+                    <div class="latest-case-meta"><span>${solution}</span><span>${String(index + 1).padStart(2, '0')}</span></div>
+                    <a class="text-link" href="${escapeHtml(href)}">View complete case and video</a>
                 </div>
             </article>
-        `).join('');
+        `;
+    }).join('');
+
+    return `
+        <div class="latest-case-slider" data-latest-case-slider>
+            <div class="latest-case-controls">
+                <a class="text-link" href="case-studies.html">Browse all case studies</a>
+                <div>
+                    <button class="slider-btn" type="button" data-slider-prev aria-label="Previous case">&lsaquo;</button>
+                    <button class="slider-btn" type="button" data-slider-next aria-label="Next case">&rsaquo;</button>
+                </div>
+            </div>
+            <div class="latest-case-track" tabindex="0">${cards}</div>
+        </div>
+    `;
+}
+
+function hydrateLatestCaseSliders(root = document) {
+    root.querySelectorAll('[data-latest-case-slider]').forEach(slider => {
+        if (slider.dataset.bound === 'true') return;
+        slider.dataset.bound = 'true';
+        const track = slider.querySelector('.latest-case-track');
+        const prev = slider.querySelector('[data-slider-prev]');
+        const next = slider.querySelector('[data-slider-next]');
+        const scrollByCard = direction => {
+            const card = track?.querySelector('.latest-case-card');
+            const amount = card ? card.getBoundingClientRect().width + 18 : 360;
+            track?.scrollBy({ left: direction * amount, behavior: 'smooth' });
+        };
+        prev?.addEventListener('click', () => scrollByCard(-1));
+        next?.addEventListener('click', () => scrollByCard(1));
+    });
+}
+
+async function renderLatestCases(containerId, limit = 6) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    if (typeof blogApi === 'undefined') {
+        container.innerHTML = renderLatestCaseSlider(HOME_FALLBACK_CASES.slice(0, limit));
+        hydrateLatestCaseSliders(container);
+        if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
+        return;
+    }
+
+    container.innerHTML = '<div class="loading-message">Loading latest case studies...</div>';
+    if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
+    try {
+        const cases = typeof blogApi.getAllCases === 'function' ? await blogApi.getAllCases() : [];
+        const latest = [...cases]
+            .filter(caseItem => !isPlaceholderBlog(caseItem))
+            .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
+            .slice(0, limit);
+        const caseItems = latest.length ? latest : HOME_FALLBACK_CASES.slice(0, limit);
+        container.innerHTML = renderLatestCaseSlider(caseItems);
+        hydrateLatestCaseSliders(container);
         if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
     } catch (error) {
-        console.error('Error rendering latest blogs:', error);
-        container.innerHTML = '<div class="loading-message">Unable to load blog posts.</div>';
+        console.error('Error rendering latest cases:', error);
+        container.innerHTML = renderLatestCaseSlider(HOME_FALLBACK_CASES.slice(0, limit));
+        hydrateLatestCaseSliders(container);
         if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
     }
 }
@@ -155,9 +260,25 @@ function renderModuleHeader(eyebrow, title, text) {
     return (eyebrow || title || text) ? `<div class="section-header">${eyebrow}${title}${text}</div>` : '';
 }
 
+const HOME_CASE_LINKS = {
+    'home-core-asrs': 'case-studies.html?solution=asrs#caseGrid',
+    'home-core-factory': 'case-studies.html?industry=manufacturing-industrial&solution=conveyor-transport#caseGrid',
+    'home-core-machinery': 'case-studies.html?industry=manufacturing-industrial#caseGrid',
+    'home-case-chemical': 'case-studies.html?industry=chemical-petrochemical&solution=asrs#caseGrid',
+    'home-case-pharma': 'case-studies.html?industry=pharmaceutical-biotech&solution=asrs#caseGrid',
+    'home-case-agv': 'case-studies.html?industry=manufacturing-industrial&solution=conveyor-transport#caseGrid',
+};
+
+function getModuleItemHref(item = {}) {
+    if (getCurrentPageKey() === 'home' && HOME_CASE_LINKS[item.id]) {
+        return HOME_CASE_LINKS[item.id];
+    }
+    return item.href || '';
+}
+
 function renderChipGrid(items = []) {
     return `<div class="industry-chip-grid">${items.map(item => {
-        const href = item.href || '#';
+        const href = getModuleItemHref(item) || '#';
         return `<a class="industry-chip" href="${escapeHtml(href)}">${escapeHtml(item.title || item.text || 'Link')}</a>`;
     }).join('')}</div>`;
 }
@@ -328,16 +449,19 @@ function renderPageModule(module) {
         }
 
         const gridClass = module.grid === 'two' ? 'card-grid two' : module.grid === 'four' ? 'card-grid four' : 'card-grid';
-        const cards = (module.items || []).map(item => `
-            <article class="content-card">
-                ${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.alt || item.title || 'Solution image')}">` : ''}
-                <div class="${item.image ? '' : 'card-body'}">
-                    <h3>${escapeHtml(item.title || 'Card')}</h3>
-                    ${renderCardText(item.text)}
-                    ${item.href ? `<a class="text-link" href="${escapeHtml(item.href)}">Learn more</a>` : ''}
-                </div>
-            </article>
-        `).join('');
+        const cards = (module.items || []).map(item => {
+            const href = getModuleItemHref(item);
+            return `
+                <article class="content-card">
+                    ${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.alt || item.title || 'Solution image')}">` : ''}
+                    <div class="${item.image ? '' : 'card-body'}">
+                        <h3>${escapeHtml(item.title || 'Card')}</h3>
+                        ${renderCardText(item.text)}
+                        ${href ? `<a class="text-link" href="${escapeHtml(href)}">Learn more</a>` : ''}
+                    </div>
+                </article>
+            `;
+        }).join('');
         return `
             <section class="section-band ${sectionTheme} cms-module"${sectionId}>
                 <div class="container">
@@ -350,11 +474,27 @@ function renderPageModule(module) {
 
     if (module.type === 'dynamic') {
         if (module.variant === 'latest-blog') {
+            const isHomeLatest = getCurrentPageKey() === 'home';
+            const latestSectionClass = isHomeLatest ? 'section-band soft home-knowledge-section cms-module' : `section-band ${sectionTheme} cms-module`;
+            const latestEyebrow = isHomeLatest ? '<span class="eyebrow">Latest Case Studies</span>' : eyebrow;
+            const latestTitle = isHomeLatest ? '<h2>Recently published automation cases from real warehouse and factory projects.</h2>' : title;
+            const latestText = isHomeLatest
+                ? '<p>Browse the newest ASRS, smart factory, packaging automation, cold storage, and industrial manufacturing cases published from the CMS.</p>'
+                : text;
+            const caseLinks = `
+                <div class="case-link-stack">
+                    <a class="text-link" href="case-studies.html?solution=asrs#caseGrid">ASRS cases</a>
+                    <a class="text-link" href="case-studies.html?industry=manufacturing-industrial#caseGrid">Manufacturing cases</a>
+                    <a class="text-link" href="case-studies.html?industry=packaging-printing#caseGrid">Packaging cases</a>
+                </div>
+            `;
             return `
-                <section class="section-band ${sectionTheme} cms-module">
+                <section class="${latestSectionClass}">
                     <div class="container">
-                        ${renderModuleHeader(eyebrow, title, text)}
-                        ${module.ctaText && module.ctaHref ? `<a class="text-link" href="${escapeHtml(module.ctaHref)}">${escapeHtml(module.ctaText)}</a>` : ''}
+                        <div class="section-header">
+                            ${latestEyebrow}${latestTitle}${latestText}
+                            ${isHomeLatest ? caseLinks : (module.ctaText && module.ctaHref ? `<a class="text-link" href="${escapeHtml(module.ctaHref)}">${escapeHtml(module.ctaText)}</a>` : '')}
+                        </div>
                         <div class="card-grid" id="latestBlogGrid"></div>
                     </div>
                 </section>
@@ -469,6 +609,19 @@ async function hydrateCaseLibrary() {
         });
     }
 
+    function setFilterFromParam(select, value) {
+        if (!value) return;
+        const hasOption = Array.from(select.options).some(option => option.value === value);
+        if (hasOption) select.value = value;
+    }
+
+    function applyUrlFilters() {
+        const params = new URLSearchParams(window.location.search);
+        setFilterFromParam(industry, params.get('industry'));
+        setFilterFromParam(solution, params.get('solution'));
+    }
+
+    applyUrlFilters();
     industry.addEventListener('change', filterCases);
     solution.addEventListener('change', filterCases);
 
@@ -574,7 +727,7 @@ function hydrateContactForm() {
 }
 
 async function hydrateDynamicModules(page) {
-    if (document.getElementById('latestBlogGrid')) await renderLatestBlogs('latestBlogGrid', 1);
+    if (document.getElementById('latestBlogGrid')) await renderLatestCases('latestBlogGrid', 6);
     if (page === 'blog' && typeof initBlogPages === 'function') {
         await initBlogPages();
         window.blogPageHydratedFromModules = true;
@@ -636,5 +789,5 @@ async function renderPageModules() {
 document.addEventListener('DOMContentLoaded', function() {
     setActiveNavigation();
     upgradeFooter();
-    window.pageModulesReady = renderPageModules().then(() => renderLatestBlogs('latestBlogGrid', 1));
+    window.pageModulesReady = renderPageModules().then(() => renderLatestCases('latestBlogGrid', 6));
 });

@@ -52,6 +52,18 @@
                 });
             }
 
+            function setFilterFromParam(select, value) {
+                if (!value) return;
+                const hasOption = Array.from(select.options).some(option => option.value === value);
+                if (hasOption) select.value = value;
+            }
+
+            function applyUrlFilters() {
+                const params = new URLSearchParams(window.location.search);
+                setFilterFromParam(industry, params.get('industry'));
+                setFilterFromParam(solution, params.get('solution'));
+            }
+
             function getCaseMedia(blog, href) {
                 const title = escapeHtml(blog.title || 'Automation case study');
                 const image = typeof getBlogCover === 'function' ? getBlogCover(blog) : (blog.coverImage || 'system-acr.webp');
@@ -87,8 +99,10 @@
                 }
             }
 
+            applyUrlFilters();
             industry.addEventListener('change', filterCases);
             solution.addEventListener('change', filterCases);
+            filterCases();
             loadPublishedCases();
         });
     </script>

@@ -644,9 +644,9 @@ window.initAdminPage = async function() {
                     title: 'Automation technologies designed to solve real warehouse, production, and material handling challenges.',
                     text: 'Explore integrated solutions across warehousing, manufacturing, packaging, and industrial processing.',
                     items: [
-                        cardItem('home-core-asrs', 'ASRS & Smart Warehouse Solutions', 'Shuttle ASRS, stacker crane, miniload, cold storage, conveyors, WMS/WES, and AGV logistics.', 'solutions.html#asrs'),
-                        cardItem('home-core-factory', 'Smart Factory Automation', 'Automated production lines, robotic automation, intelligent material handling, factory upgrades, and multi-machine systems.', 'solutions.html#factory'),
-                        cardItem('home-core-machinery', 'Industrial Machinery Solutions', 'Printing, packaging, filling, film blowing, bag making, laser equipment, and supporting manufacturing systems.', 'solutions.html#machinery'),
+                        cardItem('home-core-asrs', 'ASRS & Smart Warehouse Solutions', 'Shuttle ASRS, stacker crane, miniload, cold storage, conveyors, WMS/WES, and AGV logistics.', 'case-studies.html?solution=asrs#caseGrid'),
+                        cardItem('home-core-factory', 'Smart Factory Automation', 'Automated production lines, robotic automation, intelligent material handling, factory upgrades, and multi-machine systems.', 'case-studies.html?industry=manufacturing-industrial&solution=conveyor-transport#caseGrid'),
+                        cardItem('home-core-machinery', 'Industrial Machinery Solutions', 'Printing, packaging, filling, film blowing, bag making, laser equipment, and supporting manufacturing systems.', 'case-studies.html?industry=manufacturing-industrial#caseGrid'),
                     ],
                 },
                 {
@@ -659,9 +659,9 @@ window.initAdminPage = async function() {
                     title: 'Real Projects. Practical Solutions.',
                     text: 'Explore how manufacturers and logistics operators improve storage capacity, production efficiency, and operational performance through automation technologies.',
                     items: [
-                        cardItem('home-case-chemical', 'Shuttle ASRS Warehouse for Chemical Industry', 'Height: 18m\nCapacity: +300%\nThroughput: +60%\nLabor: Reduced', 'case-ecommerce.html'),
-                        cardItem('home-case-pharma', 'Stacker Crane ASRS for Pharmaceutical Storage', 'System: Crane ASRS\nTraceability: WMS\nQuality: Controlled\nOperation: 24/7', 'case-pharma.html'),
-                        cardItem('home-case-agv', 'AGV Logistics for Smart Factory Material Flow', 'AGV: Multi-route\nLine Feed: Automated\nSafety: Improved\nHandling: Reduced', 'case-automotive.html'),
+                        cardItem('home-case-chemical', 'Shuttle ASRS Warehouse for Chemical Industry', 'Height: 18m\nCapacity: +300%\nThroughput: +60%\nLabor: Reduced', 'case-studies.html?industry=chemical-petrochemical&solution=asrs#caseGrid'),
+                        cardItem('home-case-pharma', 'Stacker Crane ASRS for Pharmaceutical Storage', 'System: Crane ASRS\nTraceability: WMS\nQuality: Controlled\nOperation: 24/7', 'case-studies.html?industry=pharmaceutical-biotech&solution=asrs#caseGrid'),
+                        cardItem('home-case-agv', 'AGV Logistics for Smart Factory Material Flow', 'AGV: Multi-route\nLine Feed: Automated\nSafety: Improved\nHandling: Reduced', 'case-studies.html?industry=manufacturing-industrial&solution=conveyor-transport#caseGrid'),
                     ],
                 },
                 {
@@ -684,14 +684,14 @@ window.initAdminPage = async function() {
                 {
                     id: 'home-knowledge',
                     type: 'dynamic',
-                    label: 'Knowledge Center / Latest Blog',
+                    label: 'Latest Case Studies',
                     variant: 'latest-blog',
                     theme: 'soft',
-                    eyebrow: 'Knowledge Center',
-                    title: 'Practical automation insights, without the empty waiting room.',
-                    text: 'Explore warehouse automation, smart factory planning, AGV logistics, and industrial machinery topics. Published CMS articles appear here automatically.',
-                    ctaText: 'Visit Knowledge Center',
-                    ctaHref: 'blog.html',
+                    eyebrow: 'Latest Case Studies',
+                    title: 'Recently published automation cases from real warehouse and factory projects.',
+                    text: 'Browse the newest ASRS, smart factory, packaging automation, cold storage, and industrial manufacturing cases published from the CMS.',
+                    ctaText: 'Browse all case studies',
+                    ctaHref: 'case-studies.html',
                     items: [],
                 },
                 {
