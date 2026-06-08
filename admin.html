@@ -327,6 +327,28 @@
             grid-column: 1 / -1;
         }
 
+        .field-section {
+            grid-column: 1 / -1;
+            border: 1px solid var(--admin-line);
+            border-radius: 8px;
+            padding: 16px;
+            background: #fbfdff;
+        }
+
+        .field-section-title {
+            margin: 0 0 14px;
+            color: #17202a;
+            font-size: 16px;
+            letter-spacing: 0;
+        }
+
+        .field-section-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            align-items: start;
+        }
+
         .form-group label {
             font-weight: 800;
             color: #344054;
@@ -591,7 +613,8 @@
             .module-editor-grid,
             .module-item-row,
             .page-grid,
-            .form-grid {
+            .form-grid,
+            .field-section-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -627,6 +650,7 @@
             </div>
             <nav class="admin-nav" aria-label="后台栏目">
                 <button type="button" class="active" data-admin-tab="blogs">Blog 管理</button>
+                <button type="button" data-admin-tab="cases">Case Studies 管理</button>
                 <button type="button" data-admin-tab="pages">页面内容</button>
                 <button type="button" data-admin-tab="settings">设置</button>
             </nav>
@@ -645,7 +669,7 @@
                     <div class="panel">
                         <div class="panel-header">
                             <div class="panel-title-row">
-                                <h2>文章列表</h2>
+                                <h2 id="contentListTitle">文章列表</h2>
                                 <span id="blogOrderCounter" class="blog-count-badge">-/0</span>
                             </div>
                             <button type="button" id="newBlog" class="btn primary">新建</button>
@@ -682,61 +706,73 @@
                                     <label for="blogSummary">摘要</label>
                                     <textarea id="blogSummary" rows="3"></textarea>
                                 </div>
-                                <div class="form-group">
-                                    <label for="blogCoverImage">案例展示图片 URL / 本地上传</label>
-                                    <div class="image-input-row">
-                                        <input id="blogCoverImage" type="text" placeholder="https://example.com/image.webp">
-                                        <button type="button" id="chooseCoverImage" class="btn ghost">本地图片</button>
+                                <div class="field-section">
+                                    <h3 class="field-section-title">分类</h3>
+                                    <div class="field-section-grid">
+                                        <div class="form-group">
+                                            <label for="blogIndustry">Industry</label>
+                                            <select id="blogIndustry" required>
+                                                <option value="">Select industry</option>
+                                                <option value="all-industries">All Industries</option>
+                                                <option value="food-beverage">Food & Beverage</option>
+                                                <option value="pharmaceutical-biotech">Pharmaceutical & Biotech</option>
+                                                <option value="packaging-printing">Packaging & Printing</option>
+                                                <option value="cold-chain-frozen-food">Cold Chain / Frozen Food</option>
+                                                <option value="logistics-distribution">Logistics & Distribution</option>
+                                                <option value="ecommerce-fulfillment">E-commerce Fulfillment</option>
+                                                <option value="manufacturing-industrial">Manufacturing / Industrial</option>
+                                                <option value="chemical-petrochemical">Chemical & Petrochemical</option>
+                                                <option value="agriculture-grain-processing">Agriculture & Grain Processing</option>
+                                                <option value="automotive-transportation">Automotive & Transportation</option>
+                                                <option value="electronics-semiconductors">Electronics & Semiconductors</option>
+                                                <option value="health-personal-care">Health & Personal Care</option>
+                                                <option value="household-products">Household Products</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="blogSolution">Solution</label>
+                                            <select id="blogSolution" required>
+                                                <option value="">Select solution</option>
+                                                <option value="all-solutions">All Solutions</option>
+                                                <option value="asrs">ASRS / Automated Storage & Retrieval Systems</option>
+                                                <option value="conveyor-transport">Conveyor Systems / Automated Transport</option>
+                                                <option value="smart-factory">Smart Factory / Factory Automation</option>
+                                                <option value="production-line">Production Line Automation</option>
+                                                <option value="packaging-automation">Packaging Automation</option>
+                                                <option value="filling-bottling">Filling & Bottling Systems</option>
+                                                <option value="printing-inkjet-flexo-ci">Printing / Inkjet / Flexo / CI Printing</option>
+                                                <option value="film-blowing-extrusion">Film Blowing / Film Extrusion</option>
+                                                <option value="cold-storage-automation">Cold Storage / Low-Temperature Automation</option>
+                                                <option value="material-pallet-handling">Material Handling / Pallet Handling</option>
+                                                <option value="wms-wes">Intelligent WMS / WES Integration</option>
+                                                <option value="erp-mes-monitoring">ERP / MES / Production Monitoring</option>
+                                                <option value="robotics-integration">Robotics Integration</option>
+                                                <option value="laser-industrial-machining">Laser Processing / Industrial Machining</option>
+                                                <option value="other-industrial-automation">Other Industrial Automation Solutions</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <input id="coverImageFile" type="file" accept="image/png,image/jpeg,image/webp" hidden>
-                                    <div id="coverImagePreview" class="cover-preview" aria-hidden="true"><img alt=""></div>
-                                    <small id="coverImageHelp">用于 Case Studies 卡片展示；可填写图片 URL，或上传本地图片，系统会自动裁成 16:9。</small>
                                 </div>
-                                <div class="form-group">
-                                    <label for="blogIndustry">Industry</label>
-                                    <select id="blogIndustry" required>
-                                        <option value="">Select industry</option>
-                                        <option value="food-beverage">Food & Beverage</option>
-                                        <option value="pharmaceutical-biotech">Pharmaceutical & Biotech</option>
-                                        <option value="packaging-printing">Packaging & Printing</option>
-                                        <option value="cold-chain-frozen-food">Cold Chain / Frozen Food</option>
-                                        <option value="logistics-distribution">Logistics & Distribution</option>
-                                        <option value="ecommerce-fulfillment">E-commerce Fulfillment</option>
-                                        <option value="manufacturing-industrial">Manufacturing / Industrial</option>
-                                        <option value="chemical-petrochemical">Chemical & Petrochemical</option>
-                                        <option value="agriculture-grain-processing">Agriculture & Grain Processing</option>
-                                        <option value="automotive-transportation">Automotive & Transportation</option>
-                                        <option value="electronics-semiconductors">Electronics & Semiconductors</option>
-                                        <option value="health-personal-care">Health & Personal Care</option>
-                                        <option value="household-products">Household Products</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="blogSolution">Solution</label>
-                                    <select id="blogSolution" required>
-                                        <option value="">Select solution</option>
-                                        <option value="asrs">ASRS / Automated Storage & Retrieval Systems</option>
-                                        <option value="conveyor-transport">Conveyor Systems / Automated Transport</option>
-                                        <option value="smart-factory">Smart Factory / Factory Automation</option>
-                                        <option value="production-line">Production Line Automation</option>
-                                        <option value="packaging-automation">Packaging Automation</option>
-                                        <option value="filling-bottling">Filling & Bottling Systems</option>
-                                        <option value="printing-inkjet-flexo-ci">Printing / Inkjet / Flexo / CI Printing</option>
-                                        <option value="film-blowing-extrusion">Film Blowing / Film Extrusion</option>
-                                        <option value="cold-storage-automation">Cold Storage / Low-Temperature Automation</option>
-                                        <option value="material-pallet-handling">Material Handling / Pallet Handling</option>
-                                        <option value="wms-wes">Intelligent WMS / WES Integration</option>
-                                        <option value="erp-mes-monitoring">ERP / MES / Production Monitoring</option>
-                                        <option value="robotics-integration">Robotics Integration</option>
-                                        <option value="laser-industrial-machining">Laser Processing / Industrial Machining</option>
-                                        <option value="other-industrial-automation">Other Industrial Automation Solutions</option>
-                                    </select>
-                                </div>
-                                <div class="form-group full">
-                                    <label for="blogYoutubeUrl">案例展示视频 URL</label>
-                                    <input id="blogYoutubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=...">
-                                    <small>可填写 YouTube 视频 URL；Case Studies 卡片会优先展示视频，否则展示上方图片。</small>
+                                <div class="field-section">
+                                    <h3 class="field-section-title">案例展示媒体</h3>
+                                    <div class="field-section-grid">
+                                        <div class="form-group">
+                                            <label for="blogCoverImage">图片 URL / 本地上传</label>
+                                            <div class="image-input-row">
+                                                <input id="blogCoverImage" type="text" placeholder="https://example.com/image.webp">
+                                                <button type="button" id="chooseCoverImage" class="btn ghost">本地图片</button>
+                                            </div>
+                                            <input id="coverImageFile" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+                                            <div id="coverImagePreview" class="cover-preview" aria-hidden="true"><img alt=""></div>
+                                            <small id="coverImageHelp">用于 Case Studies 卡片展示；可填写图片 URL，或上传本地图片，系统会自动裁成 16:9。</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="blogYoutubeUrl">视频 URL</label>
+                                            <input id="blogYoutubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=...">
+                                            <small>可填写 YouTube 视频 URL；列表页显示图片，详情页展示视频。</small>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="blogAuthor">作者</label>
@@ -779,19 +815,19 @@
                 <div class="page-builder-layout">
                     <div class="panel">
                         <div class="panel-header">
-                            <h2>Page Modules</h2>
+                            <h2>页面模块</h2>
                             <span id="pageModuleCount" class="blog-count-badge">0</span>
                         </div>
                         <div class="panel-body">
                             <div class="module-add-row">
-                                <select id="addModuleType" aria-label="Module type">
-                                    <option value="hero">Hero</option>
-                                    <option value="text">Text block</option>
-                                    <option value="cards">Card grid</option>
-                                    <option value="media">Media block</option>
+                                <select id="addModuleType" aria-label="模块类型">
+                                    <option value="hero">首屏 Hero</option>
+                                    <option value="text">文本区块</option>
+                                    <option value="cards">卡片网格</option>
+                                    <option value="media">媒体区块</option>
                                     <option value="cta">CTA</option>
                                 </select>
-                                <button type="button" id="addPageModule" class="btn primary">Add</button>
+                                <button type="button" id="addPageModule" class="btn primary">新增模块</button>
                             </div>
                             <div id="pageModuleList" class="module-list" style="margin-top: 14px;"></div>
                         </div>
@@ -800,7 +836,7 @@
                     <div class="panel">
                         <div class="page-builder-top">
                             <div class="module-field">
-                                <label for="pageSelector">Select page</label>
+                                <label for="pageSelector">选择页面</label>
                                 <div class="page-select-row">
                                     <select id="pageSelector">
                                         <option value="home">Home</option>
@@ -811,67 +847,67 @@
                                         <option value="about">About</option>
                                         <option value="contact">Contact</option>
                                     </select>
-                                    <button type="button" id="savePageModules" class="btn primary">Save</button>
+                                    <button type="button" id="savePageModules" class="btn primary">保存</button>
                                 </div>
                             </div>
-                            <div id="pageBuilderStatus" class="page-status">Select a page, add modules, then save to KV.</div>
+                            <div id="pageBuilderStatus" class="page-status">选择页面后可编辑首屏文字，也可新增模块并保存。</div>
                         </div>
                         <div class="panel-body page-builder-editor">
                             <div id="pageBuilderNotice" class="notice"></div>
                             <div class="module-actions-row">
-                                <button type="button" id="duplicatePageModule" class="btn ghost">Duplicate</button>
-                                <button type="button" id="moveModuleUp" class="btn ghost">Up</button>
-                                <button type="button" id="moveModuleDown" class="btn ghost">Down</button>
-                                <button type="button" id="deletePageModule" class="btn danger">Delete</button>
+                                <button type="button" id="duplicatePageModule" class="btn ghost">复制</button>
+                                <button type="button" id="moveModuleUp" class="btn ghost">上移</button>
+                                <button type="button" id="moveModuleDown" class="btn ghost">下移</button>
+                                <button type="button" id="deletePageModule" class="btn danger">删除</button>
                             </div>
-                            <div id="moduleEditorEmpty" class="empty-builder-note">No module selected. Add a module on the left, then edit its fields here.</div>
+                            <div id="moduleEditorEmpty" class="empty-builder-note">请选择左侧模块，或新增模块后编辑内容。</div>
                             <form id="pageModuleForm" class="module-editor-grid" hidden>
                                 <div class="module-field">
-                                    <label for="moduleType">Type</label>
+                                    <label for="moduleType">模块类型</label>
                                     <select id="moduleType">
-                                        <option value="hero">Hero</option>
-                                        <option value="text">Text block</option>
-                                        <option value="cards">Card grid</option>
-                                        <option value="media">Media block</option>
+                                        <option value="hero">首屏 Hero</option>
+                                        <option value="text">文本区块</option>
+                                        <option value="cards">卡片网格</option>
+                                        <option value="media">媒体区块</option>
                                         <option value="cta">CTA</option>
                                     </select>
                                 </div>
                                 <div class="module-field">
-                                    <label for="moduleLabel">Admin label</label>
-                                    <input id="moduleLabel" type="text" placeholder="Internal name">
+                                    <label for="moduleLabel">后台标签</label>
+                                    <input id="moduleLabel" type="text" placeholder="仅后台识别使用">
                                 </div>
                                 <div class="module-field">
-                                    <label for="moduleEyebrow">Eyebrow</label>
-                                    <input id="moduleEyebrow" type="text" placeholder="Small heading">
+                                    <label for="moduleEyebrow">小标题</label>
+                                    <input id="moduleEyebrow" type="text" placeholder="首屏上方小字">
                                 </div>
                                 <div class="module-field">
-                                    <label for="moduleTitle">Title</label>
+                                    <label for="moduleTitle">标题</label>
                                     <input id="moduleTitle" type="text">
                                 </div>
                                 <div class="module-field full">
-                                    <label for="moduleText">Text</label>
+                                    <label for="moduleText">正文内容</label>
                                     <textarea id="moduleText" rows="5"></textarea>
                                 </div>
                                 <div class="module-field">
-                                    <label for="moduleImage">Image URL</label>
+                                    <label for="moduleImage">图片 URL</label>
                                     <input id="moduleImage" type="url" placeholder="https://...">
                                 </div>
                                 <div class="module-field">
-                                    <label for="moduleYoutubeUrl">YouTube URL</label>
+                                    <label for="moduleYoutubeUrl">视频 URL</label>
                                     <input id="moduleYoutubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=...">
                                 </div>
                                 <div class="module-field">
-                                    <label for="moduleCtaText">Button text</label>
+                                    <label for="moduleCtaText">按钮文字</label>
                                     <input id="moduleCtaText" type="text">
                                 </div>
                                 <div class="module-field">
-                                    <label for="moduleCtaHref">Button link</label>
+                                    <label for="moduleCtaHref">按钮链接</label>
                                     <input id="moduleCtaHref" type="text" placeholder="contact.html">
                                 </div>
                                 <div class="module-field full" id="moduleItemsField">
                                     <div class="module-actions-row" style="justify-content: space-between;">
-                                        <label>Cards</label>
-                                        <button type="button" id="addModuleItem" class="btn ghost">Add card</button>
+                                        <label>卡片</label>
+                                        <button type="button" id="addModuleItem" class="btn ghost">新增卡片</button>
                                     </div>
                                     <div id="moduleItems" class="module-items"></div>
                                 </div>

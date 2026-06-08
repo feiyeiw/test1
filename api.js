@@ -73,6 +73,7 @@ function normalizeClientBlog(blog = {}) {
         solution: blog.solution || '',
         solutionLabel: blog.solutionLabel || blog.category || '',
         category: blog.category || blog.solutionLabel || '',
+        contentType: blog.contentType === 'case' ? 'case' : 'blog',
         status: blog.status === 'published' ? 'published' : 'draft',
     };
 }
@@ -83,7 +84,13 @@ function normalizeBlogList(blogs) {
 
 const blogApi = {
     async getAllBlogs() {
-        return normalizeBlogList(await apiRequest('/blogs', { method: 'GET' }));
+        return normalizeBlogList(await apiRequest('/blogs', { method: 'GET' }))
+            .filter(blog => blog.contentType !== 'case');
+    },
+
+    async getAllCases() {
+        return normalizeBlogList(await apiRequest('/blogs', { method: 'GET' }))
+            .filter(blog => blog.contentType === 'case');
     },
 
     async getBlogById(id) {
@@ -91,8 +98,9 @@ const blogApi = {
         return normalizeClientBlog(await apiRequest(`/blogs/${encodeURIComponent(id)}`, { method: 'GET' }));
     },
 
-    async getAdminBlogs() {
-        return normalizeBlogList(await apiRequest('/admin/blogs', { method: 'GET' }));
+    async getAdminBlogs(contentType = 'blog') {
+        return normalizeBlogList(await apiRequest('/admin/blogs', { method: 'GET' }))
+            .filter(blog => blog.contentType === contentType);
     },
 
     async getAdminBlogById(id) {

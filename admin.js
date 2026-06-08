@@ -40,6 +40,7 @@ window.initAdminPage = async function() {
         currentBlogId: null,
         filter: 'all',
         search: '',
+        contentType: 'blog',
         currentPage: 'home',
         pageModules: [],
         currentModuleId: null,
@@ -53,6 +54,7 @@ window.initAdminPage = async function() {
             settings: document.getElementById('settingsSection'),
         },
         blogList: document.getElementById('blogList'),
+        contentListTitle: document.getElementById('contentListTitle'),
         blogOrderCounter: document.getElementById('blogOrderCounter'),
         blogSearch: document.getElementById('blogSearch'),
         blogStatusFilter: document.getElementById('blogStatusFilter'),
@@ -144,6 +146,20 @@ window.initAdminPage = async function() {
     function getSelectedOptionText(select) {
         if (!select?.value) return '';
         return select?.selectedOptions?.[0]?.textContent.trim() || '';
+    }
+
+    function isCaseMode() {
+        return state.contentType === 'case';
+    }
+
+    function updateContentModeLabels() {
+        if (els.contentListTitle) els.contentListTitle.textContent = isCaseMode() ? 'Case Studies 列表' : '文章列表';
+        if (els.newBlog) els.newBlog.textContent = isCaseMode() ? '新建案例' : '新建';
+        if (els.blogSearch) {
+            els.blogSearch.placeholder = isCaseMode()
+                ? '搜索案例标题、摘要、行业、方案'
+                : '搜索标题、摘要、分类';
+        }
     }
 
     function coerceSelectValue(select, value, label) {
@@ -305,17 +321,26 @@ window.initAdminPage = async function() {
     }
 
     function setActiveTab(tab) {
+        if (tab === 'blogs' || tab === 'cases') {
+            state.contentType = tab === 'cases' ? 'case' : 'blog';
+            updateContentModeLabels();
+            clearBlogForm();
+            refreshBlogs(null).catch(error => showNotice(error.message || 'Could not load content.', 'error'));
+        }
+
         els.navButtons.forEach(button => {
             button.classList.toggle('active', button.dataset.adminTab === tab);
         });
         Object.entries(els.sections).forEach(([key, section]) => {
-            if (section) section.classList.toggle('active', key === tab);
+            if (section) section.classList.toggle('active', key === (tab === 'cases' ? 'blogs' : tab));
         });
     }
 
     function getFilteredBlogs() {
         const query = state.search.trim().toLowerCase();
         return getBlogsByPublishOrder().filter(blog => {
+            const contentType = blog.contentType || 'blog';
+            if (contentType !== state.contentType) return false;
             const statusOk = state.filter === 'all' || blog.status === state.filter;
             const text = `${blog.title || ''} ${blog.summary || ''} ${blog.category || ''} ${blog.industryLabel || ''} ${blog.solutionLabel || ''}`.toLowerCase();
             return statusOk && (!query || text.includes(query));
@@ -326,7 +351,7 @@ window.initAdminPage = async function() {
         const blogs = getFilteredBlogs();
         updateBlogOrderCounter();
         if (!blogs.length) {
-            els.blogList.innerHTML = '<div class="blog-list-item"><h3>No blog posts yet</h3><div class="blog-meta">Create a draft to start.</div></div>';
+            els.blogList.innerHTML = `<div class="blog-list-item"><h3>No ${isCaseMode() ? 'case studies' : 'blog posts'} yet</h3><div class="blog-meta">Create a draft to start.</div></div>`;
             return;
         }
 
@@ -346,6 +371,8 @@ window.initAdminPage = async function() {
     function clearBlogForm() {
         state.currentBlogId = null;
         els.form.reset();
+        els.fields.industry.value = isCaseMode() ? '' : 'all-industries';
+        els.fields.solution.value = isCaseMode() ? '' : 'all-solutions';
         els.fields.author.value = '13ASRS';
         els.fields.date.value = today();
         els.fields.content.innerHTML = '';
@@ -390,6 +417,7 @@ window.initAdminPage = async function() {
             contentHtml: els.fields.content.innerHTML.trim(),
             plainText: els.fields.content.textContent.trim(),
             status,
+            contentType: state.contentType,
         };
     }
 
@@ -414,7 +442,12 @@ window.initAdminPage = async function() {
             els.fields.solution.focus();
             return false;
         }
-        if (payload.status === 'published' && !payload.coverImage && !payload.youtubeUrl) {
+        if (payload.status === 'published' && payload.contentType === 'case' && (payload.industry === 'all-industries' || payload.solution === 'all-solutions')) {
+            showNotice('Choose a specific Industry and Solution before publishing a case study.', 'error');
+            (payload.industry === 'all-industries' ? els.fields.industry : els.fields.solution).focus();
+            return false;
+        }
+        if (payload.status === 'published' && payload.contentType === 'case' && !payload.coverImage && !payload.youtubeUrl) {
             showNotice('Add a local image, image URL, or video URL before publishing.', 'error');
             els.fields.coverImage.focus();
             return false;
@@ -424,7 +457,7 @@ window.initAdminPage = async function() {
 
     async function refreshBlogs(selectId = state.currentBlogId) {
         els.blogList.innerHTML = '<div class="blog-list-item"><h3>Loading...</h3></div>';
-        state.blogs = await blogApi.getAdminBlogs();
+        state.blogs = await blogApi.getAdminBlogs(state.contentType);
         state.currentBlogId = selectId;
         renderBlogList();
     }
@@ -440,7 +473,7 @@ window.initAdminPage = async function() {
         state.currentBlogId = saved.id;
         await refreshBlogs(saved.id);
         setBlogForm(saved);
-        showNotice(status === 'published' ? 'Blog published.' : 'Draft saved.');
+            showNotice(status === 'published' ? (isCaseMode() ? '案例已发布。' : 'Blog 已发布。') : '草稿已保存。');
         return saved;
     }
 
@@ -531,13 +564,13 @@ window.initAdminPage = async function() {
 
     function getModuleTypeName(type = 'text') {
         const labels = {
-            hero: 'Hero section',
-            text: 'Text block',
-            cards: 'Card grid',
-            media: 'Media block',
+            hero: '首屏 Hero',
+            text: '文本区块',
+            cards: '卡片网格',
+            media: '媒体区块',
             cta: 'CTA',
         };
-        return labels[type] || 'Module';
+        return labels[type] || '模块';
     }
 
     function makeModule(type = 'text') {
@@ -572,7 +605,55 @@ window.initAdminPage = async function() {
     }
 
     function getDefaultPageModules(page) {
-        if (page !== 'solutions') return [];
+        const simplePageDefaults = {
+            home: {
+                eyebrow: 'Industrial Automation Solutions',
+                title: 'Automation Solutions for Warehouses and Factories',
+                text: 'Smart warehouse and factory integration for storage, handling, production, and logistics automation.'
+            },
+            industries: {
+                eyebrow: 'Industries',
+                title: 'Automation Solutions Designed Around Real Operational Challenges.',
+                text: 'Explore how manufacturers, warehouses, and logistics operators improve storage capacity, production efficiency, material flow, and operational performance through practical automation technologies.'
+            },
+            'case-studies': {
+                eyebrow: 'Case Studies',
+                title: 'Learn from Real Automation Projects.',
+                text: 'Explore warehouse automation systems, smart factory solutions, packaging production lines, and industrial manufacturing projects from around the world.'
+            },
+            blog: {
+                eyebrow: 'Knowledge Center',
+                title: 'Industrial Knowledge for Better Automation Decisions.',
+                text: 'Explore technology insights, project breakdowns, industry trends, and practical automation solutions covering warehouse automation, smart manufacturing, packaging technologies, and industrial machinery.'
+            },
+            about: {
+                eyebrow: 'About 13ASRS',
+                title: 'Global Industrial Automation Solutions Partner.',
+                text: 'We help manufacturers and logistics operators explore practical automation technologies, project references, and implementation approaches.'
+            },
+            contact: {
+                eyebrow: 'Contact',
+                title: 'Start with Your Business Challenge',
+                text: "Whether you're planning a warehouse automation project, smart factory upgrade, packaging production line, or manufacturing expansion, we're here to help."
+            }
+        };
+        if (page !== 'solutions') {
+            const defaults = simplePageDefaults[page];
+            return defaults ? [{
+                id: `${page}-hero`,
+                type: 'hero',
+            label: '首屏文字',
+                variant: 'page-hero',
+                eyebrow: defaults.eyebrow,
+                title: defaults.title,
+                text: defaults.text,
+                image: '',
+                youtubeUrl: '',
+                ctaText: '',
+                ctaHref: '',
+                items: [],
+            }] : [];
+        }
         return [
             {
                 id: 'solutions-hero',
@@ -787,11 +868,11 @@ window.initAdminPage = async function() {
         if (!els.pageModuleList) return;
         els.pageModuleCount.textContent = String(state.pageModules.length);
         if (els.pageBuilderStatus) {
-            els.pageBuilderStatus.textContent = `${state.currentPage} / ${state.pageModules.length} module${state.pageModules.length === 1 ? '' : 's'} loaded`;
+            els.pageBuilderStatus.textContent = `${state.currentPage} / 已加载 ${state.pageModules.length} 个模块`;
         }
 
         if (!state.pageModules.length) {
-            els.pageModuleList.innerHTML = '<div class="empty-builder-note">This page has no modules yet. Add a module above.</div>';
+            els.pageModuleList.innerHTML = '<div class="empty-builder-note">当前页面还没有模块，可在上方新增模块。</div>';
             return;
         }
 
@@ -800,7 +881,7 @@ window.initAdminPage = async function() {
             return `
                 <button type="button" class="module-list-item ${module.id === state.currentModuleId ? 'active' : ''}" data-module-id="${escapeHtml(module.id)}">
                     <strong>${index + 1}. ${escapeHtml(name)}</strong>
-                    <span>${escapeHtml(module.type)}${module.title ? ' / ' + escapeHtml(module.title) : ''}</span>
+                    <span>${escapeHtml(getModuleTypeName(module.type))}${module.title ? ' / ' + escapeHtml(module.title) : ''}</span>
                 </button>
             `;
         }).join('');
@@ -810,18 +891,18 @@ window.initAdminPage = async function() {
         if (!els.moduleItems) return;
         const items = Array.isArray(module.items) ? module.items : [];
         if (!items.length) {
-            els.moduleItems.innerHTML = '<div class="empty-builder-note">No cards yet.</div>';
+            els.moduleItems.innerHTML = '<div class="empty-builder-note">还没有卡片。</div>';
             return;
         }
 
         els.moduleItems.innerHTML = items.map(item => `
             <div class="module-item-row" data-module-item-id="${escapeHtml(item.id)}">
-                <input type="text" data-item-field="title" placeholder="Card title" value="${escapeHtml(item.title)}">
-                <textarea rows="2" data-item-field="text" placeholder="Card text">${escapeHtml(item.text)}</textarea>
-                <input type="text" data-item-field="image" placeholder="Image URL" value="${escapeHtml(item.image)}">
-                <input type="text" data-item-field="alt" placeholder="Image alt" value="${escapeHtml(item.alt)}">
-                <input type="text" data-item-field="href" placeholder="Link" value="${escapeHtml(item.href)}">
-                <button type="button" class="btn danger" data-remove-module-item="${escapeHtml(item.id)}">Delete</button>
+                <input type="text" data-item-field="title" placeholder="卡片标题" value="${escapeHtml(item.title)}">
+                <textarea rows="2" data-item-field="text" placeholder="卡片正文">${escapeHtml(item.text)}</textarea>
+                <input type="text" data-item-field="image" placeholder="图片 URL" value="${escapeHtml(item.image)}">
+                <input type="text" data-item-field="alt" placeholder="图片说明" value="${escapeHtml(item.alt)}">
+                <input type="text" data-item-field="href" placeholder="链接" value="${escapeHtml(item.href)}">
+                <button type="button" class="btn danger" data-remove-module-item="${escapeHtml(item.id)}">删除</button>
             </div>
         `).join('');
     }
@@ -838,8 +919,8 @@ window.initAdminPage = async function() {
     function renderEmptyModuleEditor() {
         const typeName = getModuleTypeName(els.addModuleType?.value || 'hero');
         els.moduleEditorEmpty.innerHTML = `
-            <div>No module selected on this page yet.</div>
-            <button type="button" class="btn primary" data-empty-add-module>Add ${escapeHtml(typeName)}</button>
+            <div>当前页面还没有选中模块。</div>
+            <button type="button" class="btn primary" data-empty-add-module>新增${escapeHtml(typeName)}</button>
         `;
     }
 
@@ -884,9 +965,9 @@ window.initAdminPage = async function() {
         state.currentModuleId = null;
         els.pageSelector.value = page;
         renderPageBuilder();
-        els.pageModuleList.innerHTML = '<div class="empty-builder-note">Loading modules...</div>';
+        els.pageModuleList.innerHTML = '<div class="empty-builder-note">正在加载模块...</div>';
         if (els.pageBuilderStatus) {
-            els.pageBuilderStatus.textContent = `${page} / loading modules...`;
+            els.pageBuilderStatus.textContent = `${page} / 正在加载模块...`;
         }
 
         try {
@@ -897,7 +978,7 @@ window.initAdminPage = async function() {
             state.currentModuleId = state.pageModules[0]?.id || null;
             renderPageBuilder();
             if (!modules.length && state.pageModules.length) {
-                showPageNotice('Loaded the default editable Solutions template. Click Save to publish your edits.', 'info');
+                showPageNotice('已加载默认可编辑页面模板，修改后点击保存发布。', 'info');
             }
         } catch (error) {
             console.error('Could not load page modules:', error);
@@ -919,7 +1000,7 @@ window.initAdminPage = async function() {
                 ? state.currentModuleId
                 : state.pageModules[0]?.id || null;
             renderPageBuilder();
-            showPageNotice('Page modules saved to KV.', 'success');
+            showPageNotice('页面内容已保存。', 'success');
         } catch (error) {
             console.error('Could not save page modules:', error);
             showPageNotice(error.message || 'Could not save page modules.', 'error');
@@ -940,7 +1021,7 @@ window.initAdminPage = async function() {
         if (!module) return;
         const copy = JSON.parse(JSON.stringify(module));
         copy.id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-        copy.label = `${copy.label || copy.title || copy.type} copy`;
+        copy.label = `${copy.label || copy.title || copy.type} 复制`;
         copy.items = (copy.items || []).map(item => ({ ...item, id: `${Date.now()}-${Math.random().toString(36).slice(2)}` }));
         const index = state.pageModules.findIndex(item => item.id === module.id);
         state.pageModules.splice(index + 1, 0, copy);
@@ -961,7 +1042,7 @@ window.initAdminPage = async function() {
     function deleteCurrentModule() {
         const index = state.pageModules.findIndex(module => module.id === state.currentModuleId);
         if (index < 0) return;
-        if (!confirm('Delete this page module?')) return;
+        if (!confirm('确定删除这个页面模块吗？')) return;
         state.pageModules.splice(index, 1);
         state.currentModuleId = state.pageModules[Math.min(index, state.pageModules.length - 1)]?.id || null;
         renderPageBuilder();
@@ -1054,6 +1135,7 @@ window.initAdminPage = async function() {
 
     await initializeAllData();
     await loadPageModules(state.currentPage);
+    updateContentModeLabels();
     clearBlogForm();
     await refreshBlogs(null);
 };

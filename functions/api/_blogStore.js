@@ -89,12 +89,17 @@ function normalizeStatus(status) {
     return status === 'published' ? 'published' : 'draft';
 }
 
+function normalizeContentType(contentType) {
+    return contentType === 'case' ? 'case' : 'blog';
+}
+
 function normalizeBlog(input = {}, existing = null) {
     const now = new Date().toISOString();
     const id = existing?.id || input.id || makeId();
     const title = String(input.title || existing?.title || '').trim();
     const contentHtml = String(input.contentHtml ?? input.content ?? existing?.contentHtml ?? existing?.content ?? '').trim();
     const status = normalizeStatus(input.status || existing?.status);
+    const contentType = normalizeContentType(input.contentType || existing?.contentType);
     const date = input.date || existing?.date || now.split('T')[0];
     const previousPublishedAt = existing?.status === 'published' ? existing.publishedAt : null;
     const publishedAt = status === 'published'
@@ -104,6 +109,7 @@ function normalizeBlog(input = {}, existing = null) {
     return {
         id,
         slug: slugify(input.slug || title, id),
+        contentType,
         title,
         summary: String(input.summary || '').trim(),
         coverImage: String(input.coverImage || '').trim(),
@@ -131,7 +137,10 @@ function validateBlog(blog) {
     if (!blog.contentHtml) return 'Content is required';
     if (blog.status === 'published' && !blog.industry) return 'Industry is required before publishing';
     if (blog.status === 'published' && !blog.solution) return 'Solution is required before publishing';
-    if (blog.status === 'published' && !blog.coverImage && !blog.youtubeUrl) {
+    if (blog.status === 'published' && blog.contentType === 'case' && (blog.industry === 'all-industries' || blog.solution === 'all-solutions')) {
+        return 'Choose a specific Industry and Solution before publishing a case study';
+    }
+    if (blog.status === 'published' && blog.contentType === 'case' && !blog.coverImage && !blog.youtubeUrl) {
         return 'A local image, image URL, or video URL is required before publishing';
     }
     return null;
@@ -141,6 +150,7 @@ function toIndexEntry(blog) {
     return {
         id: blog.id,
         slug: blog.slug,
+        contentType: blog.contentType,
         title: blog.title,
         summary: blog.summary,
         coverImage: blog.coverImage,

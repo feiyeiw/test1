@@ -264,6 +264,42 @@ function renderPageModule(module) {
     `;
 }
 
+function applyPageHeroModule(main, module) {
+    const hero = main.querySelector('.industrial-hero, .page-hero');
+    if (!hero) return;
+
+    const title = hero.querySelector('h1, h2');
+    const textHost = title?.parentElement || hero.querySelector('.container') || hero;
+    const eyebrow = textHost.querySelector('.eyebrow') || hero.querySelector('.eyebrow');
+
+    if (eyebrow && module.eyebrow) eyebrow.textContent = module.eyebrow;
+    if (title && module.title) title.textContent = module.title;
+
+    const paragraphs = String(module.text || '')
+        .split(/\n{2,}/)
+        .map(block => block.trim())
+        .filter(Boolean);
+    const existingParagraphs = [...textHost.querySelectorAll('p')];
+    existingParagraphs.forEach((paragraph, index) => {
+        if (paragraphs[index]) {
+            paragraph.innerHTML = escapeHtml(paragraphs[index]).replace(/\n/g, '<br>');
+        } else {
+            paragraph.remove();
+        }
+    });
+
+    const anchor = title || eyebrow;
+    paragraphs.slice(existingParagraphs.length).forEach(text => {
+        const paragraph = document.createElement('p');
+        paragraph.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+        if (anchor?.nextSibling) {
+            textHost.insertBefore(paragraph, anchor.nextSibling);
+        } else {
+            textHost.appendChild(paragraph);
+        }
+    });
+}
+
 async function renderPageModules() {
     if (typeof pageApi === 'undefined') return;
     const page = getCurrentPageKey();
@@ -280,9 +316,14 @@ async function renderPageModules() {
             return;
         }
 
+        const pageHeroModule = modules.find(module => module.variant === 'page-hero');
+        if (pageHeroModule) applyPageHeroModule(main, pageHeroModule);
+        const renderableModules = modules.filter(module => module !== pageHeroModule);
+        if (!renderableModules.length) return;
+
         const wrapper = document.createElement('div');
         wrapper.id = 'dynamicPageModules';
-        wrapper.innerHTML = modules.map(renderPageModule).join('');
+        wrapper.innerHTML = renderableModules.map(renderPageModule).join('');
 
         const hero = main.querySelector('.industrial-hero, .page-hero');
         if (hero && hero.nextSibling) {

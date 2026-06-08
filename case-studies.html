@@ -61,7 +61,9 @@
             async function loadPublishedCases() {
                 if (!caseGrid || typeof blogApi === 'undefined') return;
                 try {
-                    const blogs = await blogApi.getAllBlogs();
+                    const blogs = typeof blogApi.getAllCases === 'function'
+                        ? await blogApi.getAllCases()
+                        : await blogApi.getAllBlogs();
                     const cases = blogs.filter(blog => blog.industry && blog.solution);
                     if (!cases.length) return;
                     caseGrid.innerHTML = cases.map(blog => {
