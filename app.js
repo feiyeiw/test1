@@ -227,9 +227,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     initSmoothScroll();
     initPagePrefetch();
 
+    if (window.pageModulesReady && typeof window.pageModulesReady.then === 'function') {
+        await window.pageModulesReady;
+    }
+
     await runPageSpecificScripts();
 
-    if (typeof initBlogPages === 'function') await initBlogPages();
+    if (typeof initBlogPages === 'function' && !window.blogPageHydratedFromModules) await initBlogPages();
 
     const path = window.location.pathname.replace(/\/+$/, '');
     const isAdminPage = path.endsWith('/admin') || path.endsWith('/admin.html');

@@ -568,9 +568,14 @@ window.initAdminPage = async function() {
             text: '文本区块',
             cards: '卡片网格',
             media: '媒体区块',
+            dynamic: '动态区块',
             cta: 'CTA',
         };
         return labels[type] || '模块';
+    }
+
+    function moduleUsesItems(module) {
+        return module?.type === 'cards' || ['blog-index', 'case-library'].includes(module?.variant);
     }
 
     function makeModule(type = 'text') {
@@ -584,7 +589,7 @@ window.initAdminPage = async function() {
             anchor: '',
             theme: '',
             grid: '',
-            variant: '',
+            variant: type === 'dynamic' ? 'latest-blog' : '',
             image: '',
             youtubeUrl: '',
             ctaText: '',
@@ -604,7 +609,487 @@ window.initAdminPage = async function() {
         };
     }
 
+    function pageHero(id, label, eyebrow, title, text) {
+        return {
+            id,
+            type: 'hero',
+            label,
+            variant: 'page-hero',
+            eyebrow,
+            title,
+            text,
+            image: '',
+            youtubeUrl: '',
+            ctaText: '',
+            ctaHref: '',
+            items: [],
+        };
+    }
+
+    function cardItem(id, title, text, href = '', image = '', alt = '') {
+        return { id, title, text, href, image, alt };
+    }
+
     function getDefaultPageModules(page) {
+        if (page === 'home') {
+            return [
+                pageHero('home-hero', 'Hero / Home intro', '13ASRS Industrial Automation', 'Industrial Automation Solutions for Warehouses and Factories', 'Warehouse automation, smart factory systems, packaging technologies, and industrial manufacturing solutions designed to improve efficiency, productivity, and operational performance.'),
+                {
+                    id: 'home-core-solutions',
+                    type: 'cards',
+                    label: 'Core Solutions',
+                    theme: 'soft',
+                    grid: 'three',
+                    eyebrow: 'Core Solutions',
+                    title: 'Automation technologies designed to solve real warehouse, production, and material handling challenges.',
+                    text: 'Explore integrated solutions across warehousing, manufacturing, packaging, and industrial processing.',
+                    items: [
+                        cardItem('home-core-asrs', 'ASRS & Smart Warehouse Solutions', 'Shuttle ASRS, stacker crane, miniload, cold storage, conveyors, WMS/WES, and AGV logistics.', 'solutions.html#asrs'),
+                        cardItem('home-core-factory', 'Smart Factory Automation', 'Automated production lines, robotic automation, intelligent material handling, factory upgrades, and multi-machine systems.', 'solutions.html#factory'),
+                        cardItem('home-core-machinery', 'Industrial Machinery Solutions', 'Printing, packaging, filling, film blowing, bag making, laser equipment, and supporting manufacturing systems.', 'solutions.html#machinery'),
+                    ],
+                },
+                {
+                    id: 'home-featured-cases',
+                    type: 'cards',
+                    label: 'Featured Case Studies',
+                    theme: 'soft',
+                    grid: 'three',
+                    eyebrow: 'Featured Case Studies',
+                    title: 'Real Projects. Practical Solutions.',
+                    text: 'Explore how manufacturers and logistics operators improve storage capacity, production efficiency, and operational performance through automation technologies.',
+                    items: [
+                        cardItem('home-case-chemical', 'Shuttle ASRS Warehouse for Chemical Industry', 'Height: 18m\nCapacity: +300%\nThroughput: +60%\nLabor: Reduced', 'case-ecommerce.html'),
+                        cardItem('home-case-pharma', 'Stacker Crane ASRS for Pharmaceutical Storage', 'System: Crane ASRS\nTraceability: WMS\nQuality: Controlled\nOperation: 24/7', 'case-pharma.html'),
+                        cardItem('home-case-agv', 'AGV Logistics for Smart Factory Material Flow', 'AGV: Multi-route\nLine Feed: Automated\nSafety: Improved\nHandling: Reduced', 'case-automotive.html'),
+                    ],
+                },
+                {
+                    id: 'home-process',
+                    type: 'cards',
+                    label: 'Why Automation Projects Succeed',
+                    variant: 'process-strip',
+                    theme: 'dark',
+                    eyebrow: 'Why Automation Projects Succeed',
+                    title: 'Project success depends on planning, integration, delivery, reliability, and handover.',
+                    text: '13ASRS focuses on practical automation systems that can be planned, integrated, commissioned, and operated with long-term stability.',
+                    items: [
+                        cardItem('home-process-design', 'Engineering Design', 'Practical system planning and layout optimization.'),
+                        cardItem('home-process-integration', 'Technology Integration', 'Equipment, software, and controls working together.'),
+                        cardItem('home-process-delivery', 'Project Delivery', 'Installation, commissioning, and acceptance support.'),
+                        cardItem('home-process-reliability', 'Operational Reliability', 'Designed for long-term performance and scalability.'),
+                        cardItem('home-process-transfer', 'Knowledge Transfer', 'Training and operational handover.'),
+                    ],
+                },
+                {
+                    id: 'home-knowledge',
+                    type: 'dynamic',
+                    label: 'Knowledge Center / Latest Blog',
+                    variant: 'latest-blog',
+                    theme: 'soft',
+                    eyebrow: 'Knowledge Center',
+                    title: 'Practical automation insights, without the empty waiting room.',
+                    text: 'Explore warehouse automation, smart factory planning, AGV logistics, and industrial machinery topics. Published CMS articles appear here automatically.',
+                    ctaText: 'Visit Knowledge Center',
+                    ctaHref: 'blog.html',
+                    items: [],
+                },
+                {
+                    id: 'home-proof',
+                    type: 'cards',
+                    label: 'Why Choose 13ASRS',
+                    variant: 'proof-list',
+                    theme: 'dark',
+                    eyebrow: 'Why Choose 13ASRS',
+                    title: 'Why Companies Work With 13ASRS',
+                    text: '',
+                    items: [
+                        cardItem('home-proof-1', 'Real Project Experience', ''),
+                        cardItem('home-proof-2', 'Engineering Integration', ''),
+                        cardItem('home-proof-3', 'Global Manufacturing Resources', ''),
+                        cardItem('home-proof-4', 'Warehouse & Factory Automation Expertise', ''),
+                        cardItem('home-proof-5', 'Practical Automation Solutions', ''),
+                        cardItem('home-proof-6', 'Long-Term Project Support', ''),
+                    ],
+                },
+                {
+                    id: 'home-cta',
+                    type: 'cta',
+                    label: 'Business Challenge CTA',
+                    eyebrow: 'Business Challenge',
+                    title: 'Start with Your Business Challenge',
+                    text: "Whether you're planning a warehouse upgrade, factory automation project, packaging production line, or manufacturing expansion, we can help you explore practical solutions and relevant project references.",
+                    ctaText: 'Discuss Your Project',
+                    ctaHref: 'contact.html',
+                    items: [],
+                },
+            ];
+        }
+
+        if (page === 'industries') {
+            return [
+                pageHero('industries-hero', 'Hero / Industries intro', 'Industries', 'Automation Solutions Designed Around Real Operational Challenges.', 'Explore how manufacturers, warehouses, and logistics operators improve storage capacity, production efficiency, material flow, and operational performance through practical automation technologies.'),
+                {
+                    id: 'industries-proof',
+                    type: 'cards',
+                    label: 'Industries We Support',
+                    variant: 'proof-list',
+                    theme: 'dark',
+                    eyebrow: 'Industries We Support',
+                    title: 'Automation experience across production, warehousing, logistics, packaging, and industrial processing.',
+                    text: '',
+                    items: [
+                        cardItem('industries-proof-1', '10+ Industries', ''),
+                        cardItem('industries-proof-2', '100+ Project References', ''),
+                        cardItem('industries-proof-3', 'Warehouse Automation', ''),
+                        cardItem('industries-proof-4', 'Smart Factory Solutions', ''),
+                        cardItem('industries-proof-5', 'Industrial Manufacturing Systems', ''),
+                    ],
+                },
+                {
+                    id: 'industries-list',
+                    type: 'cards',
+                    label: 'Industry Cards',
+                    theme: 'soft',
+                    grid: 'two',
+                    eyebrow: '',
+                    title: '',
+                    text: '',
+                    items: [
+                        cardItem('industry-chemical', 'Chemical Industry', 'Safe, dense, and traceable warehouse automation for palletized chemicals and production materials.\nKey Challenges: hazardous material handling, inventory accuracy, throughput pressure, traceability requirements\nTypical Solutions: Shuttle ASRS, stacker crane systems, WMS integration, automated conveyors', '', '', 'Chemical'),
+                        cardItem('industry-food', 'Food & Beverage', 'Clean, reliable automation for food storage, packaging lines, and high-frequency logistics centers.\nTypical Solutions: ASRS, conveyors, AGV transfer, pallet handling', '', '', 'Food & Beverage'),
+                        cardItem('industry-packaging', 'Packaging & Converting', 'Automation solutions for packaging, bag making, filling, film blowing, converting, and finished goods storage.\nTypical Solutions: production line automation, conveyors, AGV logistics, packaging systems', '', '', 'Packaging & Converting'),
+                        cardItem('industry-cold', 'Cold Storage', 'Automated cold warehouses reduce manual exposure and improve storage density in low-temperature environments.\nTypical Solutions: cold storage ASRS, stacker crane, shuttle, WMS', '', '', 'Cold Storage'),
+                        cardItem('industry-pharma', 'Pharmaceutical', 'Traceable and controlled storage systems for pharmaceutical materials and finished goods.\nTypical Solutions: ASRS, WMS, controlled handling, validated workflows', '', '', 'Pharmaceutical'),
+                        cardItem('industry-printing', 'Printing Industry', 'Automation solutions for printing, converting, flexible packaging, and production material handling.\nRelated Technologies: printing equipment, AGV, conveyors, WMS, ASRS', '', '', 'Printing'),
+                        cardItem('industry-manufacturing', 'Industrial Manufacturing', 'Smart factory upgrades for material flow, robotic handling, and multi-machine coordination.\nTypical Solutions: AGV logistics, automated lines, robotic automation', '', '', 'Industrial Manufacturing'),
+                        cardItem('industry-logistics', 'Logistics & Distribution', 'High-throughput automation for fulfillment centers, order waves, and dense storage operations.\nTypical Solutions: shuttle ASRS, conveyor sorting, WES, AGV transfer', '', '', 'Logistics & Distribution'),
+                        cardItem('industry-electronics', 'Electronics Manufacturing', 'Material flow, line feeding, and storage automation for electronics production environments.', '', '', 'Electronics'),
+                        cardItem('industry-automotive', 'Automotive Manufacturing', 'Automation for line-side logistics, parts storage, production handling, and factory upgrades.', '', '', 'Automotive'),
+                    ],
+                },
+                {
+                    id: 'industries-tech',
+                    type: 'cards',
+                    label: 'Explore Solutions by Technology',
+                    variant: 'chip-list',
+                    theme: 'soft',
+                    eyebrow: 'Explore Solutions by Technology',
+                    title: 'Connect industry challenges with practical automation technologies.',
+                    text: '',
+                    items: [
+                        cardItem('tech-asrs', 'ASRS Systems', '', 'solutions.html#asrs'),
+                        cardItem('tech-smart-factory', 'Smart Factory Automation', '', 'solutions.html#factory'),
+                        cardItem('tech-printing', 'Printing & Packaging', '', 'solutions.html#machinery'),
+                        cardItem('tech-filling', 'Filling Systems', '', 'solutions.html#machinery'),
+                        cardItem('tech-film', 'Film Blowing', '', 'solutions.html#machinery'),
+                        cardItem('tech-laser', 'Laser Processing', '', 'solutions.html#machinery'),
+                    ],
+                },
+                {
+                    id: 'industries-cta',
+                    type: 'cta',
+                    label: 'Business Challenge CTA',
+                    eyebrow: 'Business Challenge',
+                    title: 'Start with Your Business Challenge',
+                    text: "Whether you're planning a warehouse upgrade, factory automation project, packaging production line, or manufacturing expansion, we can help you explore practical solutions, relevant technologies, and real project references.",
+                    ctaText: 'Discuss Your Project',
+                    ctaHref: 'contact.html',
+                    items: [],
+                },
+            ];
+        }
+
+        if (page === 'case-studies') {
+            return [
+                pageHero('case-studies-hero', 'Hero / Case Studies intro', 'Case Studies', 'Learn from Real Automation Projects.', 'Explore warehouse automation systems, smart factory solutions, packaging production lines, and industrial manufacturing projects from around the world. Discover how businesses improve storage capacity, production efficiency, material flow, and operational performance through practical automation technologies.'),
+                {
+                    id: 'case-studies-proof',
+                    type: 'cards',
+                    label: 'Project Reference Library',
+                    variant: 'proof-list',
+                    theme: 'dark',
+                    eyebrow: 'Project Reference Library',
+                    title: 'Real project references for warehouse, factory, and industrial automation planning.',
+                    text: '',
+                    items: [
+                        cardItem('case-proof-1', '100+ Automation Projects', ''),
+                        cardItem('case-proof-2', '20+ Industries', ''),
+                        cardItem('case-proof-3', 'Warehouse Automation', ''),
+                        cardItem('case-proof-4', 'Smart Factory Solutions', ''),
+                        cardItem('case-proof-5', 'Industrial Manufacturing Systems', ''),
+                    ],
+                },
+                {
+                    id: 'case-library',
+                    type: 'dynamic',
+                    label: 'Case Library',
+                    variant: 'case-library',
+                    theme: 'soft',
+                    eyebrow: '',
+                    title: '',
+                    text: '',
+                    items: [
+                        cardItem('case-chemical', 'Shuttle ASRS Warehouse', 'Challenge: Manual pallet handling and limited storage density.\nSolution: 18m Shuttle ASRS with WMS integration.', 'case-ecommerce.html', 'solutions-asrs-technology.webp', 'Chemical & Petrochemical'),
+                        cardItem('case-pharma', 'Stacker Crane ASRS for Pharmaceutical Storage', 'Challenge: Controlled storage, batch visibility, and reliable handling.\nSolution: Stacker crane ASRS with WMS traceability.', 'case-pharma.html', 'system-crane.webp', 'Pharmaceutical & Biotech'),
+                        cardItem('case-miniload', 'Miniload Automation for E-commerce Fulfillment', 'Challenge: High SKU mix, peak order waves, and labor-intensive picking.\nSolution: Dense miniload automation for small-item fulfillment.', 'case-miniload.html', 'system-shuttle.webp', 'E-commerce Fulfillment'),
+                        cardItem('case-agv', 'AGV Logistics for Smart Factory Material Flow', 'Challenge: Manual line feeding and disconnected production logistics.\nSolution: AGV routes connecting storage, production, and assembly flow.', 'case-automotive.html', 'system-agv.webp', 'Manufacturing / Industrial'),
+                    ],
+                },
+                {
+                    id: 'case-solutions',
+                    type: 'cards',
+                    label: 'Explore Related Solutions',
+                    variant: 'chip-list',
+                    theme: 'soft',
+                    eyebrow: 'Explore Solutions Related to These Projects',
+                    title: 'Move from project examples to practical automation planning.',
+                    text: '',
+                    items: [
+                        cardItem('case-chip-warehouse', 'Warehouse Automation', '', 'solutions.html#asrs'),
+                        cardItem('case-chip-agv', 'AGV Logistics', '', 'solutions.html#factory'),
+                        cardItem('case-chip-factory', 'Smart Factory', '', 'solutions.html#factory'),
+                        cardItem('case-chip-machinery', 'Industrial Manufacturing', '', 'solutions.html#machinery'),
+                    ],
+                },
+                {
+                    id: 'case-browse',
+                    type: 'cards',
+                    label: 'Browse Project Library',
+                    variant: 'chip-list',
+                    theme: 'dark',
+                    eyebrow: 'Browse Project Library',
+                    title: 'Browse by Industry and Technology',
+                    text: '',
+                    items: [
+                        cardItem('browse-chemical', 'Chemical', '', 'industries.html#chemical'),
+                        cardItem('browse-food', 'Food & Beverage', '', 'industries.html#food'),
+                        cardItem('browse-pharma', 'Pharmaceutical', '', 'industries.html#pharmaceutical'),
+                        cardItem('browse-manufacturing', 'Manufacturing', '', 'industries.html#manufacturing'),
+                        cardItem('browse-printing', 'Printing', '', 'industries.html#printing'),
+                        cardItem('browse-packaging', 'Packaging', '', 'industries.html#packaging'),
+                        cardItem('browse-cold', 'Cold Storage', '', 'industries.html#cold-storage'),
+                        cardItem('browse-ecommerce', 'E-commerce', '', 'industries.html#ecommerce'),
+                        cardItem('browse-asrs', 'ASRS', '', 'solutions.html#asrs'),
+                        cardItem('browse-wms', 'WMS/WES', '', 'solutions.html#asrs'),
+                        cardItem('browse-smart-factory', 'Smart Factory', '', 'solutions.html#factory'),
+                        cardItem('browse-production', 'Production Line Automation', '', 'solutions.html#factory'),
+                    ],
+                },
+                {
+                    id: 'case-cta',
+                    type: 'cta',
+                    label: 'Business Challenge CTA',
+                    eyebrow: 'Business Challenge',
+                    title: 'Start with Your Business Challenge',
+                    text: "Whether you're planning a warehouse upgrade, factory automation project, packaging production line, or manufacturing expansion, we can help you explore practical solutions, relevant technologies, and real project references.",
+                    ctaText: 'Discuss Your Project',
+                    ctaHref: 'contact.html',
+                    items: [],
+                },
+            ];
+        }
+
+        if (page === 'blog') {
+            return [
+                pageHero('blog-hero', 'Hero / Knowledge Center intro', 'Knowledge Center', 'Industrial Knowledge for Better Automation Decisions.', 'Explore technology insights, project breakdowns, industry trends, and practical automation solutions covering warehouse automation, smart manufacturing, packaging technologies, and industrial machinery.\n\nLearn from real-world applications and discover ideas that help improve efficiency, productivity, and operational performance.'),
+                {
+                    id: 'blog-index',
+                    type: 'dynamic',
+                    label: 'Published Articles',
+                    variant: 'blog-index',
+                    theme: 'soft',
+                    eyebrow: 'Published Articles',
+                    title: 'Latest Blog Posts',
+                    text: 'Browse published automation articles from the CMS. Drafts stay hidden until they are published from the admin panel.',
+                    items: [
+                        cardItem('blog-topic-warehouse', 'Warehouse Automation', '', 'solutions.html#asrs'),
+                        cardItem('blog-topic-factory', 'Smart Factory', '', 'solutions.html#factory'),
+                        cardItem('blog-topic-robotics', 'AGV & Robotics', '', 'solutions.html#factory'),
+                        cardItem('blog-topic-packaging', 'Packaging & Printing', '', 'solutions.html#machinery'),
+                        cardItem('blog-topic-filling', 'Filling & Film Blowing', '', 'solutions.html#machinery'),
+                        cardItem('blog-topic-machinery', 'Industrial Machinery', '', 'solutions.html#machinery'),
+                    ],
+                },
+                {
+                    id: 'blog-cta',
+                    type: 'cta',
+                    label: 'Business Challenge CTA',
+                    eyebrow: 'Business Challenge',
+                    title: 'Start with Your Business Challenge',
+                    text: "Whether you're planning a warehouse upgrade, factory automation project, packaging production line, or manufacturing expansion, we can help you explore practical solutions, relevant technologies, and real project references.",
+                    ctaText: 'Discuss Your Project',
+                    ctaHref: 'contact.html',
+                    items: [],
+                },
+            ];
+        }
+
+        if (page === 'about') {
+            return [
+                pageHero('about-hero', 'Hero / About intro', 'About 13ASRS', 'Global Industrial Automation Solutions Partner', 'Helping manufacturers and logistics operators improve storage, production, and material flow through practical automation solutions.\n\n13ASRS combines engineering expertise, project integration, and global manufacturing resources to support automation projects from concept to operation.'),
+                {
+                    id: 'about-what-we-do',
+                    type: 'cards',
+                    label: 'What We Do',
+                    theme: 'soft',
+                    grid: 'three',
+                    eyebrow: 'What We Do',
+                    title: 'We help businesses solve real operational challenges through practical automation solutions.',
+                    text: 'We connect warehouse automation, smart factory technologies, and industrial manufacturing systems into practical solutions that support long-term business growth.',
+                    items: [
+                        cardItem('about-warehouse', 'Warehouse Automation', 'ASRS systems, shuttle solutions, stacker cranes, AGV logistics, warehouse software, and material handling technologies.'),
+                        cardItem('about-factory', 'Smart Factory Solutions', 'Automated production lines, robotic systems, process automation, quality control, and intelligent manufacturing technologies.'),
+                        cardItem('about-machinery', 'Industrial Manufacturing Systems', 'Printing and packaging equipment, film blowing systems, filling solutions, laser processing equipment, and specialized industrial machinery.'),
+                    ],
+                },
+                {
+                    id: 'about-industries',
+                    type: 'cards',
+                    label: 'Industries We Support',
+                    variant: 'chip-list',
+                    theme: 'dark',
+                    eyebrow: 'Industries We Support',
+                    title: 'Automation experience across manufacturing, warehousing, logistics, packaging, and industrial processing sectors.',
+                    text: '',
+                    items: [
+                        cardItem('about-chip-logistics', 'Warehousing & Logistics', '', 'industries.html'),
+                        cardItem('about-chip-food', 'Food & Beverage', '', 'industries.html#food'),
+                        cardItem('about-chip-packaging', 'Printing & Packaging', '', 'industries.html#packaging'),
+                        cardItem('about-chip-manufacturing', 'Manufacturing', '', 'industries.html#manufacturing'),
+                        cardItem('about-chip-automotive', 'Automotive', '', 'industries.html#automotive'),
+                        cardItem('about-chip-electronics', 'Electronics', '', 'industries.html#electronics'),
+                        cardItem('about-chip-pharma', 'Pharmaceutical', '', 'industries.html#pharmaceutical'),
+                        cardItem('about-chip-chemical', 'Industrial Processing', '', 'industries.html#chemical'),
+                    ],
+                },
+                {
+                    id: 'about-process',
+                    type: 'cards',
+                    label: 'How We Work',
+                    variant: 'process-strip',
+                    theme: 'soft',
+                    eyebrow: 'How We Work',
+                    title: 'From Concept to Operational Performance.',
+                    text: '',
+                    items: [
+                        cardItem('about-discover', 'Discover', 'Understand operational goals, project requirements, and business challenges.'),
+                        cardItem('about-design', 'Design', 'Develop practical automation concepts, layouts, and system architecture.'),
+                        cardItem('about-integrate', 'Integrate', 'Coordinate equipment, controls, software, and engineering resources into a complete solution.'),
+                        cardItem('about-deliver', 'Deliver', 'Support installation, commissioning, testing, and project acceptance.'),
+                        cardItem('about-optimize', 'Optimize', 'Assist with operational handover, training, and long-term performance improvement.'),
+                    ],
+                },
+                {
+                    id: 'about-difference',
+                    type: 'cards',
+                    label: 'What Makes Us Different',
+                    theme: 'dark',
+                    grid: 'four',
+                    eyebrow: 'What Makes Us Different',
+                    title: 'Focused on business outcomes, not equipment listings.',
+                    text: '',
+                    items: [
+                        cardItem('about-engineering', 'Engineering-Oriented', 'We focus on project outcomes, not product catalogs.'),
+                        cardItem('about-solution', 'Solution-Focused', 'Every recommendation starts with the business challenge, not a machine.'),
+                        cardItem('about-project', 'Project-Based', 'Real project references, implementation experience, and practical automation knowledge guide every solution.'),
+                        cardItem('about-global', 'Global Perspective', 'Supporting industrial projects across manufacturing, warehousing, logistics, and processing industries.'),
+                    ],
+                },
+                {
+                    id: 'about-focus',
+                    type: 'cards',
+                    label: 'Our Focus Areas',
+                    variant: 'chip-list',
+                    theme: 'soft',
+                    eyebrow: 'Our Focus Areas',
+                    title: 'What We Support',
+                    text: '',
+                    items: [
+                        cardItem('about-focus-warehouse', 'Warehouse Automation', '', 'solutions.html#asrs'),
+                        cardItem('about-focus-factory', 'Smart Factory Automation', '', 'solutions.html#factory'),
+                        cardItem('about-focus-machinery', 'Industrial Manufacturing Systems', '', 'solutions.html#machinery'),
+                        cardItem('about-focus-manufacturing', 'Manufacturing', '', 'industries.html#manufacturing'),
+                        cardItem('about-focus-packaging', 'Packaging', '', 'industries.html#packaging'),
+                        cardItem('about-focus-food', 'Food Processing', '', 'industries.html#food'),
+                        cardItem('about-focus-electronics', 'Electronics', '', 'industries.html#electronics'),
+                        cardItem('about-focus-pharma', 'Pharmaceutical', '', 'industries.html#pharmaceutical'),
+                    ],
+                },
+                {
+                    id: 'about-locations',
+                    type: 'text',
+                    label: 'Locations',
+                    theme: 'soft',
+                    eyebrow: 'Locations',
+                    title: 'Supported by engineering, manufacturing, and integration resources across China.',
+                    text: 'Shenzhen · Foshan · Nanjing · Wenzhou · Jining\n\nServing customers worldwide.',
+                    items: [],
+                },
+                {
+                    id: 'about-cta',
+                    type: 'cta',
+                    label: 'Business Challenge CTA',
+                    eyebrow: 'Business Challenge',
+                    title: 'Start with Your Business Challenge',
+                    text: "Whether you're planning a warehouse upgrade, factory automation project, production line expansion, or manufacturing investment, we can help you explore practical solutions and relevant project references.",
+                    ctaText: 'Discuss Your Project',
+                    ctaHref: 'contact.html',
+                    items: [],
+                },
+            ];
+        }
+
+        if (page === 'contact') {
+            return [
+                pageHero('contact-hero', 'Hero / Contact intro', 'Contact', 'Start with Your Business Challenge', "Whether you're planning a warehouse automation project, smart factory upgrade, packaging production line, or manufacturing expansion, we're here to help.\n\nShare your goals, requirements, or operational challenges, and we'll recommend relevant technologies, project references, and practical automation approaches.\n\nAfter reviewing your requirements, we can recommend relevant technologies, project references, implementation approaches, and next-step recommendations tailored to your application."),
+                {
+                    id: 'contact-help',
+                    type: 'cards',
+                    label: 'How We Can Help',
+                    variant: 'proof-list',
+                    theme: 'dark',
+                    eyebrow: 'How We Can Help',
+                    title: 'Practical guidance for automation planning and project evaluation.',
+                    text: '',
+                    items: [
+                        cardItem('contact-help-1', 'Explore suitable automation solutions', ''),
+                        cardItem('contact-help-2', 'Review similar project references', ''),
+                        cardItem('contact-help-3', 'Evaluate technology options', ''),
+                        cardItem('contact-help-4', 'Discuss system layouts and workflows', ''),
+                        cardItem('contact-help-5', 'Estimate project scope and investment range', ''),
+                        cardItem('contact-help-6', 'Connect with relevant engineering resources', ''),
+                    ],
+                },
+                {
+                    id: 'contact-form',
+                    type: 'dynamic',
+                    label: 'Project Information Form',
+                    variant: 'contact-form',
+                    theme: 'soft',
+                    eyebrow: 'Project Information',
+                    title: 'Tell Us About Your Project',
+                    text: 'The more information you provide, the better we can understand your requirements and recommend relevant solutions.',
+                    items: [],
+                },
+                {
+                    id: 'contact-direct',
+                    type: 'cards',
+                    label: 'Other Ways to Reach Us',
+                    variant: 'proof-list',
+                    theme: 'dark',
+                    eyebrow: 'Other Ways to Reach Us',
+                    title: 'Prefer direct contact?',
+                    text: '',
+                    items: [
+                        cardItem('contact-email', 'Email: pjm@13asrs.com', ''),
+                        cardItem('contact-wechat', 'WeChat: b1805339953', ''),
+                        cardItem('contact-response', 'Response Time: Typically within 12 hours', ''),
+                    ],
+                },
+            ];
+        }
+
         const simplePageDefaults = {
             home: {
                 eyebrow: 'Industrial Automation Solutions',
@@ -949,7 +1434,7 @@ window.initAdminPage = async function() {
         els.moduleFields.youtubeUrl.value = module.youtubeUrl || '';
         els.moduleFields.ctaText.value = module.ctaText || '';
         els.moduleFields.ctaHref.value = module.ctaHref || '';
-        els.moduleItemsField.hidden = module.type !== 'cards';
+        els.moduleItemsField.hidden = !moduleUsesItems(module);
         renderModuleItems(module);
     }
 
@@ -974,10 +1459,19 @@ window.initAdminPage = async function() {
             const pageData = await pageApi.getAdminPage(page);
             const modules = Array.isArray(pageData.modules) ? pageData.modules : [];
             const defaultModules = getDefaultPageModules(page);
-            state.pageModules = modules.length ? modules : defaultModules;
+            if (
+                modules.length === 1 &&
+                modules[0]?.variant === 'page-hero' &&
+                defaultModules.length > 1 &&
+                defaultModules[0]?.variant === 'page-hero'
+            ) {
+                state.pageModules = [{ ...defaultModules[0], ...modules[0] }, ...defaultModules.slice(1)];
+            } else {
+                state.pageModules = modules.length ? modules : defaultModules;
+            }
             state.currentModuleId = state.pageModules[0]?.id || null;
             renderPageBuilder();
-            if (!modules.length && state.pageModules.length) {
+            if ((!modules.length || modules.length < state.pageModules.length) && state.pageModules.length) {
                 showPageNotice('已加载默认可编辑页面模板，修改后点击保存发布。', 'info');
             }
         } catch (error) {
@@ -1111,7 +1605,7 @@ window.initAdminPage = async function() {
         updateModuleFromForm();
         renderPageModuleList();
         if (getCurrentModule()) {
-            els.moduleItemsField.hidden = getCurrentModule().type !== 'cards';
+            els.moduleItemsField.hidden = !moduleUsesItems(getCurrentModule());
         }
     });
     els.moduleFields.type.addEventListener('change', () => {

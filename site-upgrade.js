@@ -147,6 +147,91 @@ function renderCardText(value) {
     return lines.length ? `<p>${escapeHtml(lines[0])}</p>` : '';
 }
 
+function renderModuleHeader(eyebrow, title, text) {
+    return (eyebrow || title || text) ? `<div class="section-header">${eyebrow}${title}${text}</div>` : '';
+}
+
+function renderChipGrid(items = []) {
+    return `<div class="industry-chip-grid">${items.map(item => {
+        const href = item.href || '#';
+        return `<a class="industry-chip" href="${escapeHtml(href)}">${escapeHtml(item.title || item.text || 'Link')}</a>`;
+    }).join('')}</div>`;
+}
+
+function renderCaseLibraryModule(module, eyebrow, title, text, sectionTheme) {
+    const fallbackCases = (module.items || []).map(item => `
+        <article class="content-card media-card case-card-filter" data-industry="${escapeHtml(item.industry || '')}" data-solution="${escapeHtml(item.solution || '')}">
+            ${item.image ? `<a class="case-card-media" href="${escapeHtml(item.href || '#')}"><img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.alt || item.title || 'Case study')}"></a>` : ''}
+            <div>
+                ${item.alt ? `<span class="eyebrow">${escapeHtml(item.alt)}</span>` : ''}
+                <h3>${escapeHtml(item.title || 'Automation Case Study')}</h3>
+                ${renderModuleText(item.text)}
+                ${item.href ? `<a class="text-link" href="${escapeHtml(item.href)}">View complete case and video</a>` : ''}
+            </div>
+        </article>
+    `).join('');
+
+    return `
+        <section class="section-band ${sectionTheme} cms-module">
+            <div class="container">
+                ${renderModuleHeader(eyebrow, title, text)}
+                <div class="filter-bar-upgrade">
+                    <select id="industryFilter" aria-label="Industry filter">
+                        <option value="all">Industry: All</option>
+                        <option value="food-beverage">Food & Beverage</option>
+                        <option value="pharmaceutical-biotech">Pharmaceutical & Biotech</option>
+                        <option value="packaging-printing">Packaging & Printing</option>
+                        <option value="cold-chain-frozen-food">Cold Chain / Frozen Food</option>
+                        <option value="logistics-distribution">Logistics & Distribution</option>
+                        <option value="ecommerce-fulfillment">E-commerce Fulfillment</option>
+                        <option value="manufacturing-industrial">Manufacturing / Industrial</option>
+                        <option value="chemical-petrochemical">Chemical & Petrochemical</option>
+                        <option value="automotive-transportation">Automotive & Transportation</option>
+                        <option value="electronics-semiconductors">Electronics & Semiconductors</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <select id="solutionFilter" aria-label="Solution filter">
+                        <option value="all">Solution: All</option>
+                        <option value="asrs">ASRS / Automated Storage & Retrieval Systems</option>
+                        <option value="conveyor-transport">Conveyor Systems / Automated Transport</option>
+                        <option value="smart-factory">Smart Factory / Factory Automation</option>
+                        <option value="production-line">Production Line Automation</option>
+                        <option value="packaging-automation">Packaging Automation</option>
+                        <option value="wms-wes">Intelligent WMS / WES Integration</option>
+                        <option value="robotics-integration">Robotics Integration</option>
+                        <option value="other-industrial-automation">Other Industrial Automation Solutions</option>
+                    </select>
+                </div>
+                <div class="card-grid two" id="caseGrid">${fallbackCases}</div>
+            </div>
+        </section>
+    `;
+}
+
+function renderContactFormModule(module, eyebrow, title, text, sectionTheme) {
+    return `
+        <section class="section-band ${sectionTheme} cms-module">
+            <div class="container">
+                ${renderModuleHeader(eyebrow, title, text)}
+                <form class="inquiry-form" id="contactInquiryForm">
+                    <div class="form-group"><label for="company">Company Name</label><input id="company" name="company" type="text" required></div>
+                    <div class="form-group"><label for="industry">Industry</label><select id="industry" name="industry" required><option value="">Select industry</option><option>Warehousing & Logistics</option><option>Manufacturing</option><option>Food & Beverage</option><option>Pharmaceutical</option><option>Chemical</option><option>Printing</option><option>Packaging</option><option>Electronics</option><option>Automotive</option><option>Building Materials</option><option>Other</option></select></div>
+                    <div class="form-group"><label for="countryCity">Country / Region</label><input id="countryCity" name="countryCity" type="text" placeholder="Country / Region" required></div>
+                    <div class="form-group"><label for="contactPerson">Contact Person</label><input id="contactPerson" name="contactPerson" type="text" required></div>
+                    <div class="form-group"><label for="email">Email</label><input id="email" name="email" type="email" required></div>
+                    <div class="form-group"><label for="phone">Phone</label><input id="phone" name="phone" type="tel" required></div>
+                    <div class="form-group"><label for="whatsapp">WhatsApp</label><input id="whatsapp" name="whatsapp" type="text"></div>
+                    <div class="form-group"><label for="wechat">WeChat (Optional)</label><input id="wechat" name="wechat" type="text"></div>
+                    <div class="form-group"><label for="projectType">Automation Interest</label><select id="projectType" name="projectType" required><option value="">Select automation interest</option><option>ASRS & Smart Warehouse</option><option>Shuttle System</option><option>Stacker Crane ASRS</option><option>AGV / AMR Logistics</option><option>Smart Factory Automation</option><option>Production Line Automation</option><option>Printing & Packaging Systems</option><option>Filling Systems</option><option>Film Blowing Systems</option><option>Laser Processing Equipment</option><option>Not Sure Yet</option></select></div>
+                    <div class="form-group"><label for="budgetRange">Estimated Project Budget</label><select id="budgetRange" name="budgetRange" required><option value="">Select estimated project budget</option><option>Under USD 300K</option><option>USD 300K - 800K</option><option>USD 800K - 2M</option><option>USD 2M - 5M</option><option>USD 5M+</option><option>Not decided yet</option></select></div>
+                    <div class="form-group full"><label for="detailedRequirements">Detailed Requirements</label><textarea id="detailedRequirements" name="detailedRequirements" placeholder="Project goals, operational challenges, storage requirements, production capacity targets, preferred technologies, site information, or reference projects." required></textarea></div>
+                    <button class="submit-industrial" type="submit">Request Project Consultation</button>
+                </form>
+            </div>
+        </section>
+    `;
+}
+
 function renderPageModule(module) {
     const eyebrow = module.eyebrow ? `<span class="eyebrow">${escapeHtml(module.eyebrow)}</span>` : '';
     const title = module.title ? `<h2>${escapeHtml(module.title)}</h2>` : '';
@@ -176,6 +261,35 @@ function renderPageModule(module) {
     }
 
     if (module.type === 'cards') {
+        if (module.variant === 'chip-list') {
+            return `
+                <section class="section-band ${sectionTheme} cms-module"${sectionId}>
+                    <div class="container">
+                        ${renderModuleHeader(eyebrow, title, text)}
+                        ${renderChipGrid(module.items || [])}
+                    </div>
+                </section>
+            `;
+        }
+
+        if (module.variant === 'process-strip') {
+            const steps = (module.items || []).map((item, index) => `
+                <div class="process-step">
+                    <span>${String(index + 1).padStart(2, '0')}</span>
+                    <h3>${escapeHtml(item.title || 'Step')}</h3>
+                    ${renderModuleText(item.text)}
+                </div>
+            `).join('');
+            return `
+                <section class="section-band ${sectionTheme} cms-module"${sectionId}>
+                    <div class="container">
+                        ${renderModuleHeader(eyebrow, title, text)}
+                        <div class="process-strip">${steps}</div>
+                    </div>
+                </section>
+            `;
+        }
+
         if (module.variant === 'proof-list') {
             const proofItems = (module.items || [])
                 .map(item => item.title || item.text)
@@ -223,11 +337,46 @@ function renderPageModule(module) {
         return `
             <section class="section-band ${sectionTheme} cms-module"${sectionId}>
                 <div class="container">
-                    <div class="section-header">${eyebrow}${title}${text}</div>
+                    ${renderModuleHeader(eyebrow, title, text)}
                     <div class="${gridClass}">${cards}</div>
                 </div>
             </section>
         `;
+    }
+
+    if (module.type === 'dynamic') {
+        if (module.variant === 'latest-blog') {
+            return `
+                <section class="section-band ${sectionTheme} cms-module">
+                    <div class="container">
+                        ${renderModuleHeader(eyebrow, title, text)}
+                        ${module.ctaText && module.ctaHref ? `<a class="text-link" href="${escapeHtml(module.ctaHref)}">${escapeHtml(module.ctaText)}</a>` : ''}
+                        <div class="card-grid" id="latestBlogGrid"></div>
+                    </div>
+                </section>
+            `;
+        }
+
+        if (module.variant === 'blog-index') {
+            return `
+                <section class="section-band ${sectionTheme} blog-index-section cms-module">
+                    <div class="container">
+                        <div class="section-header blog-index-header">${eyebrow}${title}${text}</div>
+                        ${renderChipGrid(module.items || [])}
+                        <div id="blogFeaturedContainer" class="blog-featured-slot"></div>
+                        <div class="blog-index-grid" id="blogListContainer"><div class="loading-message"><h3>Loading published articles</h3><p>Fetching the latest published blog posts.</p></div></div>
+                    </div>
+                </section>
+            `;
+        }
+
+        if (module.variant === 'case-library') {
+            return renderCaseLibraryModule(module, eyebrow, title, text, sectionTheme);
+        }
+
+        if (module.variant === 'contact-form') {
+            return renderContactFormModule(module, eyebrow, title, text, sectionTheme);
+        }
     }
 
     if (module.type === 'media') {
@@ -300,6 +449,132 @@ function applyPageHeroModule(main, module) {
     });
 }
 
+async function hydrateCaseLibrary() {
+    const industry = document.getElementById('industryFilter');
+    const solution = document.getElementById('solutionFilter');
+    const caseGrid = document.getElementById('caseGrid');
+    if (!industry || !solution || !caseGrid) return;
+
+    function filterCases() {
+        document.querySelectorAll('.case-card-filter').forEach(card => {
+            const industryMatch = industry.value === 'all' || card.dataset.industry === industry.value;
+            const solutionValues = (card.dataset.solution || '').split(/\s+/);
+            const solutionMatch = solution.value === 'all' || solutionValues.includes(solution.value);
+            card.style.display = industryMatch && solutionMatch ? '' : 'none';
+        });
+    }
+
+    industry.addEventListener('change', filterCases);
+    solution.addEventListener('change', filterCases);
+
+    if (typeof blogApi === 'undefined') {
+        filterCases();
+        return;
+    }
+
+    try {
+        const blogs = typeof blogApi.getAllCases === 'function'
+            ? await blogApi.getAllCases()
+            : await blogApi.getAllBlogs();
+        const cases = blogs.filter(blog => blog.industry && blog.solution);
+        if (cases.length) {
+            caseGrid.innerHTML = cases.map(blog => {
+                const href = `blog-detail.html?id=${encodeURIComponent(blog.id)}`;
+                const image = getBlogCover(blog);
+                return `
+                    <article class="content-card media-card case-card-filter" data-industry="${escapeHtml(blog.industry)}" data-solution="${escapeHtml(blog.solution)}">
+                        <a class="case-card-media" href="${href}"><img src="${escapeHtml(image)}" alt="${escapeHtml(blog.title || 'Automation case study')}"></a>
+                        <div>
+                            <span class="eyebrow">${escapeHtml(blog.industryLabel || 'Case Study')}</span>
+                            <h3>${escapeHtml(blog.title || 'Automation Case Study')}</h3>
+                            <p>${escapeHtml(blog.summary || blog.plainText || '')}</p>
+                            <div class="case-meta-grid"><span>${escapeHtml(blog.solutionLabel || blog.category || 'Automation Solution')}</span><span>${escapeHtml(blog.date || '')}</span></div>
+                            <a class="text-link" href="${href}">View complete case and video</a>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+        filterCases();
+    } catch (error) {
+        console.warn('Could not hydrate case library:', error);
+        filterCases();
+    }
+}
+
+function hydrateContactForm() {
+    const form = document.getElementById('contactInquiryForm');
+    if (!form || form.dataset.bound === 'true') return;
+    form.dataset.bound = 'true';
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const button = form.querySelector('.submit-industrial');
+        const originalText = button?.textContent || 'Request Project Consultation';
+        if (button) {
+            button.textContent = 'Sending...';
+            button.disabled = true;
+        }
+
+        const value = id => document.getElementById(id)?.value || '';
+        const formData = {
+            to_email: 'pjm@13asrs.com',
+            requestTitle: 'New Project Consultation Request',
+            sourcePage: '13ASRS Contact Page',
+            company: value('company'),
+            address: value('countryCity'),
+            industry: value('industry'),
+            contact_person: value('contactPerson'),
+            contactName: value('contactPerson'),
+            phone: value('phone'),
+            email: value('email'),
+            reply_to: value('email'),
+            whatsapp: value('whatsapp') || 'Optional / not provided',
+            wechat: value('wechat') || 'Optional / not provided',
+            project_type: value('projectType'),
+            automation_interest: value('projectType'),
+            detailed_requirements: value('detailedRequirements'),
+            budget_range: value('budgetRange'),
+            estimated_investment_range: value('budgetRange'),
+            message: `13ASRS inquiry from ${value('company')}`
+        };
+
+        if (typeof emailjs === 'undefined') {
+            alert('Failed to send. Please contact pjm@13asrs.com directly.');
+            if (button) {
+                button.textContent = originalText;
+                button.disabled = false;
+            }
+            return;
+        }
+
+        emailjs.send('service_yp6on5e', 'template_66p84u8', formData)
+            .then(function() {
+                alert('Thank you. Your inquiry has been sent to 13ASRS.');
+                form.reset();
+            }, function(error) {
+                console.log('EmailJS error:', error);
+                alert('Failed to send. Please try again or contact pjm@13asrs.com directly.');
+            })
+            .finally(function() {
+                if (button) {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }
+            });
+    });
+}
+
+async function hydrateDynamicModules(page) {
+    if (document.getElementById('latestBlogGrid')) await renderLatestBlogs('latestBlogGrid', 1);
+    if (page === 'blog' && typeof initBlogPages === 'function') {
+        await initBlogPages();
+        window.blogPageHydratedFromModules = true;
+    }
+    await hydrateCaseLibrary();
+    hydrateContactForm();
+}
+
 async function renderPageModules() {
     if (typeof pageApi === 'undefined') return;
     const page = getCurrentPageKey();
@@ -311,13 +586,19 @@ async function renderPageModules() {
         const main = document.querySelector('main');
         if (!main) return;
 
-        if (page === 'solutions' && modules.some(module => module.variant === 'page-hero')) {
-            main.innerHTML = modules.map(renderPageModule).join('');
+        const pageHeroModule = modules.find(module => module.variant === 'page-hero');
+        if (modules.length === 1 && pageHeroModule) {
+            applyPageHeroModule(main, pageHeroModule);
+            await hydrateDynamicModules(page);
             return;
         }
 
-        const pageHeroModule = modules.find(module => module.variant === 'page-hero');
-        if (pageHeroModule) applyPageHeroModule(main, pageHeroModule);
+        if (pageHeroModule) {
+            main.innerHTML = modules.map(renderPageModule).join('');
+            await hydrateDynamicModules(page);
+            return;
+        }
+
         const renderableModules = modules.filter(module => module !== pageHeroModule);
         if (!renderableModules.length) return;
 
@@ -331,6 +612,7 @@ async function renderPageModules() {
         } else {
             main.prepend(wrapper);
         }
+        await hydrateDynamicModules(page);
     } catch (error) {
         console.warn('Page modules not loaded:', error);
     }
@@ -339,6 +621,5 @@ async function renderPageModules() {
 document.addEventListener('DOMContentLoaded', function() {
     setActiveNavigation();
     upgradeFooter();
-    renderLatestBlogs('latestBlogGrid', 1);
-    renderPageModules();
+    window.pageModulesReady = renderPageModules().then(() => renderLatestBlogs('latestBlogGrid', 1));
 });
