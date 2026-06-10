@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "build": "node build.js",
-    "snapshot:pages": "node tools/snapshot-page-modules.js"
+    "snapshot:pages": "node tools/snapshot-page-modules.js",
+    "bake:pages": "node tools/bake-page-modules.js"
   },
   "devDependencies": {
     "clean-css": "^5.3.3",

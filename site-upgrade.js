@@ -787,12 +787,18 @@ async function renderPageModules() {
     if (typeof pageApi === 'undefined') return;
     const page = getCurrentPageKey();
     try {
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        if (main.dataset.staticPageModules === 'true') {
+            await hydrateDynamicModules(page);
+            if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
+            return;
+        }
+
         const pageData = await pageApi.getPublicPage(page);
         const modules = Array.isArray(pageData.modules) ? pageData.modules : [];
         if (!modules.length) return;
-
-        const main = document.querySelector('main');
-        if (!main) return;
 
         const pageHeroModule = modules.find(module => module.variant === 'page-hero');
         if (modules.length === 1 && pageHeroModule) {

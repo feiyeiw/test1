@@ -17,10 +17,17 @@
         <div class="header-main"><div class="container"><div class="logo-brand"><div class="logo"><a href="index.html"><img src="logo.jpg" alt="13ASRS"></a></div><span class="logo-slogan"><span class="slogan-line1">Industrial Automation Solutions</span><span class="slogan-line2">Smart warehouse and factory integration</span></span></div><div class="header-actions"><div class="language-selector"><select id="lang-select" onchange="switchLanguage(this.value)"><option value="en">English</option><option value="zh">Chinese</option><option value="es">Spanish</option><option value="fr">French</option><option value="ja">Japanese</option><option value="ko">Korean</option><option value="ar">Arabic</option></select></div></div></div></div>
         <nav><div class="container"><ul><li><a href="index.html">Home</a></li><li><a href="solutions.html">Solutions</a></li><li><a href="industries.html">Industries</a></li><li><a href="case-studies.html">Case Studies</a></li><li><a href="blog.html">Blog</a></li><li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li></ul></div></nav>
     </header>
-    <main>
-        <section class="page-hero"><div class="container"><span class="eyebrow">Contact</span><h1>Start with Your Business Challenge</h1><p>Whether you're planning a warehouse automation project, smart factory upgrade, packaging production line, or manufacturing expansion, we're here to help.</p><p>Share your goals, requirements, or operational challenges, and we'll recommend relevant technologies, project references, and practical automation approaches.</p><p>After reviewing your requirements, we can recommend relevant technologies, project references, implementation approaches, and next-step recommendations tailored to your application.</p></div></section>
-        <section class="section-band dark"><div class="container"><div class="section-header"><span class="eyebrow">How We Can Help</span><h2>Practical guidance for automation planning and project evaluation.</h2></div><ul class="help-list"><li>Explore suitable automation solutions</li><li>Review similar project references</li><li>Evaluate technology options</li><li>Discuss system layouts and workflows</li><li>Estimate project scope and investment range</li><li>Connect with relevant engineering resources</li></ul></div></section>
-        <section class="section-band soft">
+    <main data-static-page-modules="true">
+        <section class="page-hero cms-module">
+            <div class="container"><span class="eyebrow">Contact</span><h1>Start with Your Business Challenge</h1><p>Whether you&#39;re planning a warehouse automation project, smart factory upgrade, packaging production line, or manufacturing expansion, we&#39;re here to help.</p><p>Share your goals, requirements, or operational challenges, and we&#39;ll recommend relevant technologies, project references, and practical automation approaches.</p><p>After reviewing your requirements, we can recommend relevant technologies, project references, implementation approaches, and next-step recommendations tailored to your application.</p></div>
+        </section>
+        <section class="section-band dark cms-module">
+            <div class="container">
+                <div class="section-header"><span class="eyebrow">How We Can Help</span><h2>Practical guidance for automation planning and project evaluation.</h2></div>
+                <div class="proof-list"><span>Explore suitable automation solutions</span><span>Review similar project references</span><span>Evaluate technology options</span><span>Discuss system layouts and workflows</span><span>Estimate project scope and investment range</span><span>Turnkey projects with lifelong responsibility</span></div>
+            </div>
+        </section>
+        <section class="section-band soft cms-module">
             <div class="container">
                 <div class="section-header"><span class="eyebrow">Project Information</span><h2>Tell Us About Your Project</h2><p>The more information you provide, the better we can understand your requirements and recommend relevant solutions.</p></div>
                 <form class="inquiry-form" id="contactInquiryForm">
@@ -39,77 +46,14 @@
                 </form>
             </div>
         </section>
-        <section class="section-band dark"><div class="container"><div class="section-header"><span class="eyebrow">Other Ways to Reach Us</span><h2>Prefer direct contact?</h2></div><div class="proof-list"><span>Email: pjm@13asrs.com</span><span>WeChat: b1805339953</span><span>Response Time: Typically within 12 hours</span></div></div></section>
+        <section class="section-band dark cms-module">
+            <div class="container">
+                <div class="section-header"><span class="eyebrow">Other Ways to Reach Us</span><h2>Prefer direct contact?</h2></div>
+                <div class="proof-list"><span>Email: pjm@13asrs.com</span><span>WeChat: b1805339953</span><span>Response Time: Typically within 12 hours</span></div>
+            </div>
+        </section>
     </main>
     <footer><div class="container"><div class="footer-content"><div class="footer-logo"><img src="logo.jpg" alt="13ASRS"></div><div class="footer-links"><a href="solutions.html">Solutions</a><a href="industries.html">Industries</a><a href="case-studies.html">Case Studies</a><a href="blog.html">Blog</a></div></div><div class="footer-bottom"><p>Email: pjm@13asrs.com | Website: 13asrs.com | Locations: Shenzhen, Foshan, Nanjing, Wenzhou, Jining</p><p>&copy; 2026 13ASRS. All rights reserved.</p></div></div></footer>
     <script src="utils.js" defer></script><script src="api.js" defer></script><script src="auth.js" defer></script><script src="i18n.js" defer></script><script src="site-upgrade.js" defer></script><script src="app.js" defer></script>
-    <script>
-        document.getElementById('contactInquiryForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = this.querySelector('.submit-industrial');
-            const originalText = btn.textContent;
-            btn.textContent = 'Sending...';
-            btn.disabled = true;
-
-            const formData = {
-                to_email: 'pjm@13asrs.com',
-                requestTitle: 'New Project Consultation Request',
-                sourcePage: '13ASRS Contact Page',
-                company: document.getElementById('company').value,
-                address: document.getElementById('countryCity').value,
-                industry: document.getElementById('industry').value,
-                contact_person: document.getElementById('contactPerson').value,
-                contactName: document.getElementById('contactPerson').value,
-                phone: document.getElementById('phone').value,
-                email: document.getElementById('email').value,
-                reply_to: document.getElementById('email').value,
-                whatsapp: document.getElementById('whatsapp').value || 'Optional / not provided',
-                wechat: document.getElementById('wechat').value || 'Optional / not provided',
-                project_type: document.getElementById('projectType').value,
-                automation_interest: document.getElementById('projectType').value,
-                detailed_requirements: document.getElementById('detailedRequirements').value,
-                budget_range: document.getElementById('budgetRange').value,
-                estimated_investment_range: document.getElementById('budgetRange').value,
-                field1Label: 'Company Name',
-                field1Value: document.getElementById('company').value,
-                field2Label: 'Industry',
-                field2Value: document.getElementById('industry').value,
-                field3Label: 'Country / Region',
-                field3Value: document.getElementById('countryCity').value,
-                field4Label: 'Contact Person',
-                field4Value: document.getElementById('contactPerson').value,
-                field5Label: 'Email',
-                field5Value: document.getElementById('email').value,
-                field6Label: 'Phone',
-                field6Value: document.getElementById('phone').value,
-                field7Label: 'WhatsApp',
-                field7Value: document.getElementById('whatsapp').value || 'Optional / not provided',
-                field8Label: 'WeChat',
-                field8Value: document.getElementById('wechat').value || 'Optional / not provided',
-                field9Label: 'Automation Interest',
-                field9Value: document.getElementById('projectType').value,
-                field10Label: 'Estimated Project Budget',
-                field10Value: document.getElementById('budgetRange').value,
-                field11Label: 'Detailed Requirements',
-                field11Value: document.getElementById('detailedRequirements').value,
-                field12Label: 'Submitted From',
-                field12Value: '13ASRS Contact Page',
-                message: `13ASRS inquiry from ${document.getElementById('company').value}`
-            };
-
-            emailjs.send('service_yp6on5e', 'template_66p84u8', formData)
-                .then(function() {
-                    alert('Thank you. Your inquiry has been sent to 13ASRS.');
-                    document.getElementById('contactInquiryForm').reset();
-                }, function(error) {
-                    console.log('EmailJS error:', error);
-                    alert('Failed to send. Please try again or contact pjm@13asrs.com directly.');
-                })
-                .finally(function() {
-                    btn.textContent = originalText;
-                    btn.disabled = false;
-                });
-        });
-    </script>
 </body>
 </html>
