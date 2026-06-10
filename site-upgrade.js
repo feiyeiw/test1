@@ -334,11 +334,11 @@ function renderChipGrid(items = []) {
 
 function renderCaseLibraryModule(module, eyebrow, title, text, sectionTheme) {
     const fallbackCases = (module.items || []).map(item => `
-        <article class="content-card media-card case-card-filter" data-industry="${escapeHtml(item.industry || '')}" data-solution="${escapeHtml(item.solution || '')}">
-            ${item.image ? `<a class="case-card-media" href="${escapeHtml(item.href || '#')}"><img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.alt || item.title || 'Case study')}"></a>` : ''}
-            <div>
-                ${item.alt ? `<span class="eyebrow">${escapeHtml(item.alt)}</span>` : ''}
-                <h3>${escapeHtml(item.title || 'Automation Case Study')}</h3>
+        <article class="blog-index-card case-card-filter" data-industry="${escapeHtml(item.industry || '')}" data-solution="${escapeHtml(item.solution || '')}">
+            ${item.image ? `<a class="blog-index-media" href="${escapeHtml(item.href || '#')}"><img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.alt || item.title || 'Case study')}" onerror="this.onerror=null;this.src='system-acr.webp';"></a>` : ''}
+            <div class="blog-index-body">
+                <div class="blog-card-meta"><span>${escapeHtml(item.alt || 'Case Study')}</span></div>
+                <h3>${item.href ? `<a href="${escapeHtml(item.href)}">${escapeHtml(item.title || 'Automation Case Study')}</a>` : escapeHtml(item.title || 'Automation Case Study')}</h3>
                 ${renderModuleText(item.text)}
                 ${item.href ? `<a class="text-link" href="${escapeHtml(item.href)}">View complete case and video</a>` : ''}
             </div>
@@ -376,7 +376,7 @@ function renderCaseLibraryModule(module, eyebrow, title, text, sectionTheme) {
                         <option value="other-industrial-automation">Other Industrial Automation Solutions</option>
                     </select>
                 </div>
-                <div class="card-grid two" id="caseGrid">${fallbackCases}</div>
+                <div class="blog-index-grid case-index-grid" id="caseGrid">${fallbackCases}</div>
             </div>
         </section>
     `;
@@ -693,13 +693,13 @@ async function hydrateCaseLibrary() {
                 const href = `blog-detail.html?id=${encodeURIComponent(blog.id)}`;
                 const image = getBlogCover(blog);
                 return `
-                    <article class="content-card media-card case-card-filter" data-industry="${escapeHtml(blog.industry)}" data-solution="${escapeHtml(blog.solution)}">
-                        <a class="case-card-media" href="${href}"><img src="${escapeHtml(image)}" alt="${escapeHtml(blog.title || 'Automation case study')}"></a>
-                        <div>
-                            <span class="eyebrow">${escapeHtml(blog.industryLabel || 'Case Study')}</span>
-                            <h3>${escapeHtml(blog.title || 'Automation Case Study')}</h3>
+                    <article class="blog-index-card case-card-filter" data-industry="${escapeHtml(blog.industry)}" data-solution="${escapeHtml(blog.solution)}">
+                        <a class="blog-index-media" href="${href}"><img src="${escapeHtml(image)}" alt="${escapeHtml(blog.title || 'Automation case study')}" onerror="this.onerror=null;this.src='system-acr.webp';"></a>
+                        <div class="blog-index-body">
+                            <div class="blog-card-meta"><span>${escapeHtml(blog.industryLabel || 'Case Study')}</span><span>${escapeHtml(blog.date || '')}</span></div>
+                            <h3><a href="${href}">${escapeHtml(blog.title || 'Automation Case Study')}</a></h3>
                             <p>${escapeHtml(blog.summary || blog.plainText || '')}</p>
-                            <div class="case-meta-grid"><span>${escapeHtml(blog.solutionLabel || blog.category || 'Automation Solution')}</span><span>${escapeHtml(blog.date || '')}</span></div>
+                            <div class="blog-card-meta"><span>${escapeHtml(blog.solutionLabel || blog.category || 'Automation Solution')}</span></div>
                             <a class="text-link" href="${href}">View complete case and video</a>
                         </div>
                     </article>

@@ -1947,6 +1947,26 @@ footer .container,
     gap: 20px;
 }
 
+.case-index-grid {
+    align-items: stretch;
+}
+
+.case-index-grid .blog-index-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.case-index-grid .blog-index-body {
+    flex: 1;
+}
+
+.case-index-grid .blog-index-body p {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
 .home-process-section {
     padding-bottom: 50px;
 }
