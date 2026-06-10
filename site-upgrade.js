@@ -147,17 +147,23 @@ function getCaseLink(caseItem) {
     return caseItem.href || `blog-detail.html?id=${encodeURIComponent(caseItem.id)}`;
 }
 
+function getFallbackCaseCover(index = 0) {
+    const fallback = HOME_FALLBACK_CASES[index % HOME_FALLBACK_CASES.length];
+    return fallback?.coverImage || 'system-acr.webp';
+}
+
 function renderLatestCaseSlider(caseItems) {
     const cards = caseItems.map((caseItem, index) => {
         const href = getCaseLink(caseItem);
         const title = escapeHtml(caseItem.title || 'Automation Case Study');
         const image = escapeHtml(getBlogCover(caseItem));
+        const fallbackImage = escapeHtml(getFallbackCaseCover(index));
         const industry = escapeHtml(caseItem.industryLabel || caseItem.category || 'Case Study');
         const solution = escapeHtml(caseItem.solutionLabel || 'Automation Solution');
         const summary = escapeHtml(getBlogSummary(caseItem, 125));
         return `
             <article class="latest-case-card">
-                <a class="latest-case-media" href="${escapeHtml(href)}"><img src="${image}" alt="${title}"></a>
+                <a class="latest-case-media" href="${escapeHtml(href)}"><img src="${image}" alt="${title}" onerror="this.onerror=null;this.src='${fallbackImage}';"></a>
                 <div class="latest-case-body">
                     <span class="eyebrow">${industry}</span>
                     <h3><a href="${escapeHtml(href)}">${title}</a></h3>
@@ -484,10 +490,11 @@ function renderPageModule(module) {
                     ${renderModuleText(item.text)}
                 </div>
             `).join('');
+            const hasHeader = module.eyebrow || module.title || module.text;
             return `
-                <section class="section-band ${sectionTheme} cms-module"${sectionId}>
+                <section class="section-band ${sectionTheme} cms-module ${hasHeader ? '' : 'compact-faq-module'}"${sectionId}>
                     <div class="container">
-                        ${(module.eyebrow || module.title || module.text) ? `<div class="section-header">${eyebrow}${title}${text}</div>` : ''}
+                        ${hasHeader ? `<div class="section-header">${eyebrow}${title}${text}</div>` : ''}
                         <div class="faq-list-upgrade">${faqs}</div>
                     </div>
                 </section>

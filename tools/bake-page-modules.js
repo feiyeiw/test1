@@ -184,10 +184,11 @@ function renderPageModule(module, page) {
                     <h3>${escapeHtml(item.title || 'Question')}</h3>
                     ${renderModuleText(item.text)}
                 </div>`).join('');
+      const hasHeader = module.eyebrow || module.title || module.text;
       return `
-        <section class="section-band ${sectionTheme} cms-module"${sectionId}>
+        <section class="section-band ${sectionTheme} cms-module ${hasHeader ? '' : 'compact-faq-module'}"${sectionId}>
             <div class="container">
-                ${(module.eyebrow || module.title || module.text) ? `<div class="section-header">${eyebrow}${title}${text}</div>` : ''}
+                ${hasHeader ? `<div class="section-header">${eyebrow}${title}${text}</div>` : ''}
                 <div class="faq-list-upgrade">${faqs}
                 </div>
             </div>

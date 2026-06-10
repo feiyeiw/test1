@@ -1279,6 +1279,10 @@ nav ul li a.active {
     background: #fff;
 }
 
+.section-band.compact-faq-module {
+    padding-top: 18px;
+}
+
 .section-header {
     max-width: 820px;
     margin-bottom: 38px;
@@ -2076,6 +2080,7 @@ footer .container,
     aspect-ratio: 16 / 9;
     overflow: hidden;
     border-bottom: 1px solid #dce4ec;
+    background: #eef4f8 url("system-acr.webp") center / cover no-repeat;
 }
 
 .latest-case-media img {
