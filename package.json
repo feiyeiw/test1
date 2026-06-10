@@ -6,7 +6,9 @@
   "scripts": {
     "build": "node build.js",
     "snapshot:pages": "node tools/snapshot-page-modules.js",
-    "bake:pages": "node tools/bake-page-modules.js"
+    "snapshot:cases": "node tools/snapshot-case-posts.js",
+    "bake:pages": "node tools/bake-page-modules.js",
+    "bake:cases": "node tools/bake-case-studies.js"
   },
   "devDependencies": {
     "clean-css": "^5.3.3",
