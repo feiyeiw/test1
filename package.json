@@ -8,7 +8,9 @@
     "snapshot:pages": "node tools/snapshot-page-modules.js",
     "snapshot:cases": "node tools/snapshot-case-posts.js",
     "bake:pages": "node tools/bake-page-modules.js",
-    "bake:cases": "node tools/bake-case-studies.js"
+    "bake:cases": "node tools/bake-case-studies.js",
+    "generate:post": "node tools/generate-static-post.js",
+    "studio:posts": "node tools/static-post-studio.js"
   },
   "devDependencies": {
     "clean-css": "^5.3.3",

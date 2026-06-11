@@ -93,6 +93,12 @@ function normalizeContentType(contentType) {
     return contentType === 'case' ? 'case' : 'blog';
 }
 
+function normalizeFileName(fileName) {
+    const value = String(fileName || '').trim();
+    if (!value) return '';
+    return value.toLowerCase().endsWith('.html') ? value : `${value}.html`;
+}
+
 function normalizeBlog(input = {}, existing = null) {
     const now = new Date().toISOString();
     const id = existing?.id || input.id || makeId();
@@ -119,6 +125,7 @@ function normalizeBlog(input = {}, existing = null) {
         solutionLabel: String(input.solutionLabel ?? existing?.solutionLabel ?? '').trim(),
         category: String(input.category ?? existing?.category ?? input.solutionLabel ?? existing?.solutionLabel ?? '').trim(),
         author: String(input.author || '13ASRS').trim(),
+        fileName: normalizeFileName(input.fileName ?? existing?.fileName),
         youtubeUrl: String(input.youtubeUrl || existing?.youtubeUrl || '').trim(),
         contentHtml,
         plainText: String(input.plainText || stripHtml(contentHtml)).trim(),
@@ -135,6 +142,9 @@ function normalizeBlog(input = {}, existing = null) {
 function validateBlog(blog) {
     if (!blog.title) return 'Title is required';
     if (!blog.contentHtml) return 'Content is required';
+    if (blog.fileName && (blog.fileName.includes('/') || blog.fileName.includes('\\') || blog.fileName.includes('..') || !/^[a-z0-9][a-z0-9._-]*\.html$/i.test(blog.fileName))) {
+        return 'Static HTML file name may only contain letters, numbers, dots, dashes, and underscores';
+    }
     if (blog.status === 'published' && !blog.industry) return 'Industry is required before publishing';
     if (blog.status === 'published' && !blog.solution) return 'Solution is required before publishing';
     if (blog.status === 'published' && blog.contentType === 'case' && (blog.industry === 'all-industries' || blog.solution === 'all-solutions')) {
@@ -160,6 +170,7 @@ function toIndexEntry(blog) {
         solutionLabel: blog.solutionLabel,
         category: blog.category,
         author: blog.author,
+        fileName: blog.fileName,
         youtubeUrl: blog.youtubeUrl,
         status: blog.status,
         date: blog.date,

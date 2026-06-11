@@ -1,0 +1,30 @@
+{
+  "fileName": "example-static-blog.html",
+  "contentType": "blog",
+  "title": "Example Static Blog Title",
+  "summary": "Write the short summary shown below the title and used for SEO description fallback.",
+  "coverImage": "system-acr.webp",
+  "industry": "all-industries",
+  "industryLabel": "All Industries",
+  "solution": "all-solutions",
+  "solutionLabel": "All Solutions",
+  "category": "All Solutions",
+  "youtubeUrl": "",
+  "author": "13ASRS",
+  "date": "2026-06-11",
+  "seoTitle": "Example Static Blog Title | 13ASRS",
+  "seoDescription": "Write the SEO description for this static article page.",
+  "relatedProjects": [
+    {
+      "title": "Automation Case Studies",
+      "href": "case-studies.html"
+    }
+  ],
+  "relatedSolutions": [
+    {
+      "title": "ASRS Warehouse Solution",
+      "href": "solutions.html#asrs"
+    }
+  ],
+  "contentHtml": "<h2>Project Overview</h2><p>Write the article or case study body here. You can paste HTML from the current editor, including headings, paragraphs, lists, tables, and images.</p><h2>Solution</h2><p>Describe the solution, equipment, workflow, and customer value.</p>"
+}

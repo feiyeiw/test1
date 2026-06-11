@@ -75,6 +75,7 @@ window.initAdminPage = async function() {
             youtubeUrl: document.getElementById('blogYoutubeUrl'),
             author: document.getElementById('blogAuthor'),
             date: document.getElementById('blogDate'),
+            fileName: document.getElementById('blogFileName'),
             seoTitle: document.getElementById('blogSeoTitle'),
             seoDescription: document.getElementById('blogSeoDescription'),
             content: document.getElementById('blogContentEditor'),
@@ -375,6 +376,7 @@ window.initAdminPage = async function() {
         els.fields.solution.value = isCaseMode() ? '' : 'all-solutions';
         els.fields.author.value = '13ASRS';
         els.fields.date.value = today();
+        els.fields.fileName.value = '';
         els.fields.content.innerHTML = '';
         updateCoverPreview('');
         renderBlogList();
@@ -390,6 +392,7 @@ window.initAdminPage = async function() {
         els.fields.youtubeUrl.value = blog.youtubeUrl || '';
         els.fields.author.value = blog.author || '13ASRS';
         els.fields.date.value = blog.date || today();
+        els.fields.fileName.value = blog.fileName || '';
         els.fields.seoTitle.value = blog.seoTitle || '';
         els.fields.seoDescription.value = blog.seoDescription || '';
         els.fields.content.innerHTML = blog.contentHtml || blog.content || '';
@@ -412,6 +415,7 @@ window.initAdminPage = async function() {
             youtubeUrl: els.fields.youtubeUrl.value.trim(),
             author: els.fields.author.value.trim() || '13ASRS',
             date: els.fields.date.value || today(),
+            fileName: els.fields.fileName.value.trim(),
             seoTitle: els.fields.seoTitle.value.trim(),
             seoDescription: els.fields.seoDescription.value.trim(),
             contentHtml: els.fields.content.innerHTML.trim(),

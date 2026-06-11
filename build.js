@@ -52,6 +52,7 @@ const excludeFiles = [
 
 // Directories to exclude
 const excludeDirs = ['.git', 'node_modules', '.claude', 'dist'];
+const preservedStaticDirs = ['blog', 'cases'];
 
 // Function to generate hash from file content
 function generateFileHash(filePath) {
@@ -111,7 +112,11 @@ async function copyFiles(srcDir, destDir) {
         console.log(`Copying directory: ${entry.name}`);
         copyDir(srcPath, destPath);
       }
-      // Skip other directories (static site, no subdirectories expected)
+      if (preservedStaticDirs.includes(entry.name)) {
+        console.log(`Copying static content directory: ${entry.name}`);
+        copyDir(srcPath, destPath);
+      }
+      // Skip other directories.
     } else {
       // Check if file matches any pattern
       let shouldCopy = false;
@@ -187,25 +192,36 @@ function escapeRegExp(string) {
 }
 
 // Function to update HTML, CSS, and JS files with hashed file names
+function getFilesRecursive(dir, extensions) {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const entryPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...getFilesRecursive(entryPath, extensions));
+    } else if (extensions.includes(path.extname(entry.name))) {
+      files.push(entryPath);
+    }
+  }
+  return files;
+}
+
 function updateHtmlFiles(distDir, fileMap) {
   const extensions = ['.html', '.css', '.js'];
+  const files = getFilesRecursive(distDir, extensions);
 
-  for (const ext of extensions) {
-    const files = fs.readdirSync(distDir).filter(file => file.endsWith(ext));
-
-    for (const file of files) {
-      const filePath = path.join(distDir, file);
+  for (const filePath of files) {
       let content = fs.readFileSync(filePath, 'utf8');
       let updated = false;
 
       // Replace all references to hashed files
       for (const [originalName, hashedName] of Object.entries(fileMap)) {
         // Create regex to match references to original file name
-        // This matches src="originalName", href="originalName", url("originalName") etc.
+        // This matches src="originalName", src="../originalName", href="originalName", url("originalName") etc.
         const escapedName = escapeRegExp(originalName);
         // Match patterns like: href="file", src="file", url("file"), url('file')
-        const regex = new RegExp(`(["'\\(])\\s*${escapedName}\\s*(["'\\s>])`, 'g');
-        const newContent = content.replace(regex, `$1${hashedName}$2`);
+        const regex = new RegExp(`(["'\\(])\\s*((?:\\.\\./)*)${escapedName}\\s*(["'\\s>])`, 'g');
+        const newContent = content.replace(regex, `$1$2${hashedName}$3`);
 
         if (newContent !== content) {
           content = newContent;
@@ -215,9 +231,8 @@ function updateHtmlFiles(distDir, fileMap) {
 
       if (updated) {
         fs.writeFileSync(filePath, content, 'utf8');
-        console.log(`Updated references in ${file}`);
+        console.log(`Updated references in ${path.relative(distDir, filePath)}`);
       }
-    }
   }
 }
 
