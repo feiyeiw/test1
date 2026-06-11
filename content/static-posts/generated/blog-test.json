@@ -1,0 +1,24 @@
+{
+  "fileName": "test.html",
+  "contentType": "blog",
+  "title": "asd",
+  "summary": "asdfa",
+  "coverImage": "",
+  "industry": "all-industries",
+  "industryLabel": "All Industries",
+  "solution": "all-solutions",
+  "solutionLabel": "All Solutions",
+  "category": "All Solutions",
+  "youtubeUrl": "",
+  "author": "13ASRS",
+  "date": "2026-06-11",
+  "seoTitle": "asdf",
+  "seoDescription": "asdf",
+  "relatedProjects": [
+    "asgxzcz"
+  ],
+  "relatedSolutions": [
+    "zxcvzx"
+  ],
+  "contentHtml": "<h2>Project Overview</h2>\n<p>Write the article or case study body here.</p>\n<h2>Solution</h2>\n<p>Describe the solution, equipment, workflow, and customer value.</p>"
+}
