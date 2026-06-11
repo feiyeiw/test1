@@ -652,6 +652,12 @@ function renderApp() {
     <section class="panel">
       <h2 data-i18n="postFields">文章字段</h2>
       <form id="postForm">
+        <label><span data-i18n="contentType">内容类型</span>
+          <select name="contentType" id="contentType">
+            <option value="blog">Blog</option>
+            <option value="case">Case</option>
+          </select>
+        </label>
         <div class="manage-box">
           <label><span data-i18n="existingPages">已有 Blog / Case 页面</span>
             <select id="existingPostSelect">
@@ -665,13 +671,7 @@ function renderApp() {
             <button class="danger" type="button" id="deletePost" data-i18n="deleteSelected">删除选中</button>
           </div>
         </div>
-        <div class="row">
-          <label><span data-i18n="contentType">内容类型</span>
-            <select name="contentType" id="contentType">
-              <option value="blog">Blog</option>
-              <option value="case">Case</option>
-            </select>
-          </label>
+        <div>
           <label><span data-i18n="fileName">文件名</span>
             <input name="fileName" id="fileName" placeholder="my-article.html" data-i18n-placeholder="fileNamePlaceholder" required>
             <span class="hint" data-i18n="fileNameHint">只填文件名。路径会自动变成 blog/my-article.html 或 cases/my-article.html。</span>
@@ -788,6 +788,7 @@ function renderApp() {
         preview: '预览',
         previewFrameTitle: '生成页面预览',
         noGeneratedPages: '没有找到已生成页面',
+        noGeneratedPagesForType: '当前内容类型还没有已生成页面',
         editable: '可编辑',
         htmlOnly: '仅 HTML',
         missingHtml: ' / HTML 缺失',
@@ -863,6 +864,7 @@ function renderApp() {
         preview: 'Preview',
         previewFrameTitle: 'Generated page preview',
         noGeneratedPages: 'No generated pages found',
+        noGeneratedPagesForType: 'No generated pages found for the selected content type',
         editable: 'editable',
         htmlOnly: 'html only',
         missingHtml: ' / missing HTML',
@@ -996,7 +998,10 @@ function renderApp() {
       pathPreview.textContent = dir + '/' + normalizedFileName();
     }
 
-    contentType.addEventListener('change', updatePathPreview);
+    contentType.addEventListener('change', () => {
+      updatePathPreview();
+      renderPostList();
+    });
     fileName.addEventListener('input', updatePathPreview);
     updatePathPreview();
     studioLanguage.addEventListener('change', async () => {
@@ -1029,6 +1034,24 @@ function renderApp() {
       return existingPosts.find(post => post.id === existingPostSelect.value);
     }
 
+    function renderPostList() {
+      const selectedId = existingPostSelect.value;
+      const selectedType = contentType.value === 'case' ? 'case' : 'blog';
+      const visiblePosts = existingPosts.filter(post => post.contentType === selectedType);
+      if (!visiblePosts.length) {
+        existingPostSelect.innerHTML = '<option value="">' + tr('noGeneratedPagesForType') + '</option>';
+        return;
+      }
+      existingPostSelect.innerHTML = visiblePosts.map(post => {
+        const state = post.hasDraft ? tr('editable') : tr('htmlOnly');
+        const missing = post.htmlExists ? '' : tr('missingHtml');
+        return '<option value="' + post.id + '">' + post.contentType.toUpperCase() + ' - ' + post.outputPath + ' - ' + state + missing + '</option>';
+      }).join('');
+      if (visiblePosts.some(post => post.id === selectedId)) {
+        existingPostSelect.value = selectedId;
+      }
+    }
+
     async function refreshPostList() {
       const response = await fetch('/api/posts');
       const result = await response.json();
@@ -1038,11 +1061,7 @@ function renderApp() {
         existingPostSelect.innerHTML = '<option value="">' + tr('noGeneratedPages') + '</option>';
         return;
       }
-      existingPostSelect.innerHTML = existingPosts.map(post => {
-        const state = post.hasDraft ? tr('editable') : tr('htmlOnly');
-        const missing = post.htmlExists ? '' : tr('missingHtml');
-        return '<option value="' + post.id + '">' + post.contentType.toUpperCase() + ' - ' + post.outputPath + ' - ' + state + missing + '</option>';
-      }).join('');
+      renderPostList();
     }
 
     async function loadSelectedPost() {
@@ -1072,6 +1091,7 @@ function renderApp() {
       form.contentHtml.value = post.contentHtml || '';
       form.force.checked = true;
       updatePathPreview();
+      renderPostList();
       frame.src = selected.outputPath ? '/' + selected.outputPath + '?t=' + Date.now() : '';
       statusBox.className = 'status';
       statusBox.textContent = tr('loaded') + selected.outputPath;
