@@ -139,16 +139,26 @@ function getYouTubeEmbedUrl(url) {
   return '';
 }
 
-function renderYouTubeFrame(url, title) {
+function isVideoFile(value) {
+  return /\.(?:mp4|webm|ogg)(?:[?#].*)?$/i.test(String(value || '').trim());
+}
+
+function renderVideoFrame(url, title, prefix) {
+  const raw = String(url || '').trim();
+  if (!raw) return '';
   const embedUrl = getYouTubeEmbedUrl(url);
-  if (!embedUrl) return '<div class="video-placeholder">YouTube project video</div>';
-  return `<iframe src="${escapeHtml(embedUrl)}" title="${escapeHtml(title || '13ASRS project video')}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+  if (embedUrl) {
+    return `<div class="video-frame blog-video-frame"><iframe src="${escapeHtml(embedUrl)}" title="${escapeHtml(title || '13ASRS project video')}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`;
+  }
+  const src = prefixSitePath(raw, prefix);
+  if (isVideoFile(src)) {
+    return `<div class="video-frame blog-video-frame"><video controls preload="metadata" playsinline src="${escapeHtml(src)}">Your browser does not support the video tag.</video></div>`;
+  }
+  return `<div class="video-frame blog-video-frame"><iframe src="${escapeHtml(src)}" title="${escapeHtml(title || '13ASRS project video')}" loading="lazy" allowfullscreen></iframe></div>`;
 }
 
 function getPostCover(post) {
-  if (post.coverImage) return post.coverImage;
-  const imgMatch = String(post.contentHtml || post.content || '').match(/<img[^>]+src=["']([^"']+)["'][^>]*>/i);
-  return imgMatch ? imgMatch[1] : 'system-acr.webp';
+  return String(post.coverImage || '').trim();
 }
 
 function normalizePost(rawPost) {
@@ -214,6 +224,11 @@ function renderStaticPost(post) {
   const backLabel = isCase ? 'Back to Case Studies' : 'Back to Blog';
   const category = post.category || post.solutionLabel || (isCase ? 'Case Study' : 'Blog');
   const cover = getPostCover(post);
+  const coverHtml = cover ? `
+                        <figure class="blog-cover-frame">
+                            <img class="blog-cover" src="${escapeHtml(prefixSitePath(cover, prefix))}" alt="${escapeHtml(post.title)}">
+                        </figure>` : '';
+  const videoHtml = renderVideoFrame(post.youtubeUrl || post.videoUrl, post.title, prefix);
   const relatedProjectDefaults = [
     { title: 'ASRS Project', href: siteHref('case-studies.html?solution=asrs#caseGrid') },
     { title: 'Smart Factory Project', href: siteHref('case-studies.html?solution=smart-factory#caseGrid') },
@@ -305,9 +320,7 @@ function renderStaticPost(post) {
                             <h1 class="blog-title">${escapeHtml(post.title)}</h1>
                             <p class="blog-summary">${escapeHtml(post.summary || '')}</p>
                         </div>
-                        <figure class="blog-cover-frame">
-                            <img class="blog-cover" src="${escapeHtml(prefixSitePath(cover, prefix))}" alt="${escapeHtml(post.title)}" onerror="this.onerror=null;this.src='${escapeHtml(siteHref('system-acr.webp'))}';">
-                        </figure>
+                        ${coverHtml}
                     </div>
 
                     <div class="blog-article-layout">
@@ -327,9 +340,7 @@ function renderStaticPost(post) {
                         </aside>
 
                         <div class="blog-main-column">
-                            <div class="video-frame blog-video-frame">
-                                ${renderYouTubeFrame(post.youtubeUrl, post.title)}
-                            </div>
+                            ${videoHtml}
                             <section class="article-section blog-content-section">
                                 <div class="blog-content">${contentHtml}</div>
                             </section>
