@@ -9,6 +9,8 @@ const ROOT = path.resolve(__dirname, '..');
 const PORT = Number(process.env.STATIC_POST_STUDIO_PORT || 8791);
 const DRAFT_DIR = path.join(ROOT, 'content', 'static-posts', 'generated');
 const SHOULD_OPEN_BROWSER = process.env.STATIC_POST_STUDIO_OPEN !== '0';
+const GIT_CHECK_TIMEOUT_MS = 15_000;
+const GIT_LOGIN_TIMEOUT_MS = 180_000;
 
 const INDUSTRIES = [
   ['', 'Select industry', '请选择行业'],
@@ -211,6 +213,95 @@ function runGit(args) {
   return output;
 }
 
+function runGitProbe(args, options = {}) {
+  const result = spawnSync('git', args, {
+    cwd: ROOT,
+    encoding: 'utf8',
+    timeout: options.timeout || GIT_CHECK_TIMEOUT_MS,
+    env: {
+      ...process.env,
+      GIT_TERMINAL_PROMPT: '0',
+      GCM_INTERACTIVE: 'never',
+    },
+  });
+  return {
+    status: result.status,
+    signal: result.signal,
+    error: result.error ? result.error.message : '',
+    output: `${result.stdout || ''}${result.stderr || ''}`.trim(),
+  };
+}
+
+function currentBranchName() {
+  const result = runGitProbe(['branch', '--show-current']);
+  return result.status === 0 && result.output ? result.output.split(/\r?\n/)[0].trim() : 'main';
+}
+
+function checkGitConnection() {
+  const inside = runGitProbe(['rev-parse', '--is-inside-work-tree']);
+  if (inside.status !== 0) {
+    return {
+      ok: false,
+      remote: '',
+      branch: '',
+      message: 'This folder is not a Git repository.',
+      details: inside.output || inside.error,
+    };
+  }
+
+  const remoteResult = runGitProbe(['remote', 'get-url', 'origin']);
+  if (remoteResult.status !== 0 || !remoteResult.output) {
+    return {
+      ok: false,
+      remote: '',
+      branch: currentBranchName(),
+      message: 'No origin remote is configured.',
+      details: remoteResult.output || remoteResult.error,
+    };
+  }
+
+  const remote = remoteResult.output.split(/\r?\n/)[0].trim();
+  const branch = currentBranchName();
+  const pushTarget = `HEAD:${branch}`;
+  const pushCheck = runGitProbe(['push', '--dry-run', 'origin', pushTarget], {
+    timeout: GIT_CHECK_TIMEOUT_MS,
+  });
+
+  if (pushCheck.status === 0) {
+    return {
+      ok: true,
+      remote,
+      branch,
+      message: 'GitHub connection is ready.',
+      details: pushCheck.output,
+    };
+  }
+
+  return {
+    ok: false,
+    remote,
+    branch,
+    message: 'GitHub is not connected or this account cannot push to the repository.',
+    details: pushCheck.output || pushCheck.error || `git push --dry-run origin ${pushTarget} failed.`,
+  };
+}
+
+function runGitHubLogin() {
+  const result = spawnSync('git', ['credential-manager', 'github', 'login'], {
+    cwd: ROOT,
+    encoding: 'utf8',
+    timeout: GIT_LOGIN_TIMEOUT_MS,
+  });
+  const output = `${result.stdout || ''}${result.stderr || ''}`.trim();
+  if (result.error) {
+    throw new Error(result.error.message);
+  }
+  if (result.status !== 0) {
+    throw new Error(output || 'GitHub login failed.');
+  }
+  return output || 'GitHub login completed.';
+}
+
 function hasStagedChanges(paths) {
   const result = spawnSync('git', ['diff', '--cached', '--quiet', '--', ...paths], {
     cwd: ROOT,
@@ -221,6 +312,10 @@ function hasStagedChanges(paths) {
 
 function stageCommitPush(paths, message) {
   runGit(['rev-parse', '--is-inside-work-tree']);
+  const connection = checkGitConnection();
+  if (!connection.ok) {
+    throw new Error(`${connection.message}\n${connection.details || 'Please log in to GitHub first.'}`);
+  }
   const normalizedPaths = paths.map(file => file.replace(/\\/g, '/'));
   const alreadyStaged = getStagedFiles();
   const unrelatedStaged = alreadyStaged.filter(file => !normalizedPaths.includes(file.replace(/\\/g, '/')));
@@ -372,6 +467,27 @@ async function handleListPosts(req, res) {
   sendJson(res, 200, { ok: true, posts: listManagedPosts() });
 }
 
+async function handleGitStatus(req, res) {
+  sendJson(res, 200, { ok: true, git: checkGitConnection() });
+}
+
+async function handleGitLogin(req, res) {
+  try {
+    const loginOutput = runGitHubLogin();
+    sendJson(res, 200, {
+      ok: true,
+      loginOutput,
+      git: checkGitConnection(),
+    });
+  } catch (error) {
+    sendJson(res, 400, {
+      ok: false,
+      error: error.message || String(error),
+      git: checkGitConnection(),
+    });
+  }
+}
+
 async function handleLoadPost(req, res) {
   try {
     const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
@@ -499,6 +615,13 @@ function renderApp() {
     .manage-box { display:grid; gap:10px; padding:12px; border:1px solid var(--line); border-radius:14px; background:#f8fafc; }
     .manage-actions { display:flex; gap:8px; flex-wrap:wrap; }
     .danger { background:#fee2e2; color:#991b1b; }
+    .git-status { margin:18px 28px 0; padding:14px 16px; border-radius:14px; border:1px solid var(--line); background:#fff7ed; color:#9a3412; display:flex; justify-content:space-between; gap:14px; align-items:center; }
+    .git-status.ready { background:#ecfdf5; color:#065f46; }
+    .git-status.error { background:#fff1f2; color:#991b1b; }
+    .git-status.checking { background:#eff6ff; color:#1e3a8a; }
+    .git-status strong { display:block; margin-bottom:3px; }
+    .git-status small { display:block; color:inherit; opacity:.82; white-space:pre-wrap; }
+    .git-status button { white-space:nowrap; background:#111827; color:#fff; }
     @media (max-width: 980px) { main { grid-template-columns:1fr; padding:16px; } }
   </style>
 </head>
@@ -518,6 +641,13 @@ function renderApp() {
       </label>
     </div>
   </header>
+  <div id="gitStatus" class="git-status checking">
+    <div>
+      <strong data-i18n="gitChecking">正在检查 GitHub 连接...</strong>
+      <small data-i18n="gitCheckingHint">如果没有连接，会先让你登录 GitHub。</small>
+    </div>
+    <button type="button" id="gitLoginButton" hidden data-i18n="gitLogin">登录 GitHub</button>
+  </div>
   <main>
     <section class="panel">
       <h2 data-i18n="postFields">文章字段</h2>
@@ -606,8 +736,12 @@ function renderApp() {
     const pathPreview = document.getElementById('pathPreview');
     const existingPostSelect = document.getElementById('existingPostSelect');
     const studioLanguage = document.getElementById('studioLanguage');
+    const gitStatus = document.getElementById('gitStatus');
+    const gitLoginButton = document.getElementById('gitLoginButton');
     let existingPosts = [];
     let currentUiLanguage = localStorage.getItem('staticPostStudioLanguage') || 'zh';
+    let gitConnectionReady = false;
+    let lastGitStatus = null;
 
     const I18N = {
       zh: {
@@ -670,6 +804,16 @@ function renderApp() {
         generated: '已生成：',
         draftJson: 'JSON 草稿：',
         git: 'Git：',
+        gitChecking: '正在检查 GitHub 连接...',
+        gitCheckingHint: '如果没有连接，会先让你登录 GitHub。',
+        gitReady: 'GitHub 已连接',
+        gitReadyHint: '可以自动提交并推送到 GitHub。',
+        gitNotReady: 'GitHub 未连接',
+        gitNotReadyHint: '请先登录 GitHub，否则自动推送不会成功。',
+        gitLogin: '登录 GitHub',
+        gitLoggingIn: '正在打开 GitHub 登录...',
+        gitLoginFailed: 'GitHub 登录失败',
+        gitStatusFailed: '无法检查 GitHub 连接',
         sampleTitle: '示例自动化案例',
         sampleSummary: '这是一个用于生成静态案例页面的简短摘要。',
         sampleSeoTitle: '示例自动化案例 | 13ASRS',
@@ -735,6 +879,16 @@ function renderApp() {
         generated: 'Generated: ',
         draftJson: 'Draft JSON: ',
         git: 'Git:',
+        gitChecking: 'Checking GitHub connection...',
+        gitCheckingHint: 'If it is not connected, the tool will ask you to log in first.',
+        gitReady: 'GitHub connected',
+        gitReadyHint: 'Automatic commit and push can be used.',
+        gitNotReady: 'GitHub not connected',
+        gitNotReadyHint: 'Log in to GitHub first, otherwise auto-push will fail.',
+        gitLogin: 'Log in to GitHub',
+        gitLoggingIn: 'Opening GitHub login...',
+        gitLoginFailed: 'GitHub login failed',
+        gitStatusFailed: 'Could not check GitHub connection',
         sampleTitle: 'Sample Automation Case Study',
         sampleSummary: 'A short summary for the generated static case page.',
         sampleSeoTitle: 'Sample Automation Case Study | 13ASRS',
@@ -776,6 +930,60 @@ function renderApp() {
       if (!currentTemplate || Object.values(DEFAULT_CONTENT_HTML).includes(currentTemplate)) {
         form.contentHtml.value = DEFAULT_CONTENT_HTML[currentUiLanguage];
       }
+      if (lastGitStatus) {
+        renderGitStatus(lastGitStatus);
+      }
+    }
+
+    function setGitChecking(message) {
+      gitConnectionReady = false;
+      gitStatus.className = 'git-status checking';
+      gitStatus.querySelector('strong').textContent = message || tr('gitChecking');
+      gitStatus.querySelector('small').textContent = tr('gitCheckingHint');
+      gitLoginButton.hidden = true;
+      gitLoginButton.disabled = true;
+    }
+
+    function renderGitStatus(git) {
+      lastGitStatus = git;
+      gitConnectionReady = Boolean(git && git.ok);
+      gitStatus.className = 'git-status ' + (gitConnectionReady ? 'ready' : 'error');
+      gitStatus.querySelector('strong').textContent = gitConnectionReady ? tr('gitReady') : tr('gitNotReady');
+      const location = [git && git.remote, git && git.branch ? '(' + git.branch + ')' : ''].filter(Boolean).join(' ');
+      const details = git && git.details ? '\\n' + git.details : '';
+      gitStatus.querySelector('small').textContent = gitConnectionReady
+        ? [tr('gitReadyHint'), location].filter(Boolean).join(' ')
+        : [tr('gitNotReadyHint'), git && git.message, location].filter(Boolean).join('\\n') + details;
+      gitLoginButton.hidden = gitConnectionReady;
+      gitLoginButton.disabled = false;
+      gitLoginButton.textContent = tr('gitLogin');
+    }
+
+    async function refreshGitStatus() {
+      setGitChecking();
+      const response = await fetch('/api/git-status', { cache: 'no-store' });
+      const result = await response.json();
+      if (!result.ok) throw new Error(result.error || tr('gitStatusFailed'));
+      renderGitStatus(result.git);
+      return result.git;
+    }
+
+    async function loginGitHub() {
+      setGitChecking(tr('gitLoggingIn'));
+      try {
+        const response = await fetch('/api/git-login', { method: 'POST' });
+        const result = await response.json();
+        if (!result.ok) throw new Error(result.error || tr('gitLoginFailed'));
+        renderGitStatus(result.git);
+      } catch (error) {
+        gitConnectionReady = false;
+        gitStatus.className = 'git-status error';
+        gitStatus.querySelector('strong').textContent = tr('gitLoginFailed');
+        gitStatus.querySelector('small').textContent = error.message;
+        gitLoginButton.hidden = false;
+        gitLoginButton.disabled = false;
+        gitLoginButton.textContent = tr('gitLogin');
+      }
     }
 
     function normalizedFileName() {
@@ -798,6 +1006,16 @@ function renderApp() {
       } catch {}
     });
     applyUiLanguage(currentUiLanguage);
+    gitLoginButton.addEventListener('click', () => loginGitHub());
+    refreshGitStatus().catch(error => {
+      gitConnectionReady = false;
+      gitStatus.className = 'git-status error';
+      gitStatus.querySelector('strong').textContent = tr('gitStatusFailed');
+      gitStatus.querySelector('small').textContent = error.message;
+      gitLoginButton.hidden = false;
+      gitLoginButton.disabled = false;
+      gitLoginButton.textContent = tr('gitLogin');
+    });
 
     function relatedToTextarea(value) {
       if (!Array.isArray(value)) return value || '';
@@ -927,6 +1145,12 @@ function renderApp() {
       data.force = form.force.checked;
       data.autoPush = form.autoPush.checked;
       try {
+        if (data.autoPush) {
+          const git = gitConnectionReady ? lastGitStatus : await refreshGitStatus();
+          if (!git || !git.ok) {
+            throw new Error(tr('gitNotReadyHint'));
+          }
+        }
         const response = await fetch('/api/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -969,6 +1193,8 @@ const server = http.createServer((req, res) => {
   if (req.method === 'POST' && req.url === '/api/generate') return handleGenerate(req, res);
   if (req.method === 'GET' && req.url.startsWith('/api/posts')) return handleListPosts(req, res);
   if (req.method === 'GET' && req.url.startsWith('/api/post')) return handleLoadPost(req, res);
+  if (req.method === 'GET' && req.url === '/api/git-status') return handleGitStatus(req, res);
+  if (req.method === 'POST' && req.url === '/api/git-login') return handleGitLogin(req, res);
   if (req.method === 'POST' && req.url === '/api/delete') return handleDeletePost(req, res);
   if (req.method === 'GET') return serveWorkspaceFile(req, res);
   send(res, 405, 'Method not allowed', { 'Content-Type': 'text/plain; charset=utf-8' });
