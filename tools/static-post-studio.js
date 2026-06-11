@@ -3,49 +3,50 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const { spawnSync } = require('child_process');
+const { spawn, spawnSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const PORT = Number(process.env.STATIC_POST_STUDIO_PORT || 8791);
 const DRAFT_DIR = path.join(ROOT, 'content', 'static-posts', 'generated');
+const SHOULD_OPEN_BROWSER = process.env.STATIC_POST_STUDIO_OPEN !== '0';
 
 const INDUSTRIES = [
-  ['', 'Select industry'],
-  ['all-industries', 'All Industries'],
-  ['food-beverage', 'Food & Beverage'],
-  ['pharmaceutical-biotech', 'Pharmaceutical & Biotech'],
-  ['packaging-printing', 'Packaging & Printing'],
-  ['cold-chain-frozen-food', 'Cold Chain / Frozen Food'],
-  ['logistics-distribution', 'Logistics & Distribution'],
-  ['ecommerce-fulfillment', 'E-commerce Fulfillment'],
-  ['manufacturing-industrial', 'Manufacturing / Industrial'],
-  ['chemical-petrochemical', 'Chemical & Petrochemical'],
-  ['agriculture-grain-processing', 'Agriculture & Grain Processing'],
-  ['automotive-transportation', 'Automotive & Transportation'],
-  ['electronics-semiconductors', 'Electronics & Semiconductors'],
-  ['health-personal-care', 'Health & Personal Care'],
-  ['household-products', 'Household Products'],
-  ['other', 'Other'],
+  ['', 'Select industry', '请选择行业'],
+  ['all-industries', 'All Industries', '全部行业'],
+  ['food-beverage', 'Food & Beverage', '食品饮料'],
+  ['pharmaceutical-biotech', 'Pharmaceutical & Biotech', '医药与生物科技'],
+  ['packaging-printing', 'Packaging & Printing', '包装与印刷'],
+  ['cold-chain-frozen-food', 'Cold Chain / Frozen Food', '冷链 / 冷冻食品'],
+  ['logistics-distribution', 'Logistics & Distribution', '物流配送'],
+  ['ecommerce-fulfillment', 'E-commerce Fulfillment', '电商履约'],
+  ['manufacturing-industrial', 'Manufacturing / Industrial', '制造业 / 工业'],
+  ['chemical-petrochemical', 'Chemical & Petrochemical', '化工与石化'],
+  ['agriculture-grain-processing', 'Agriculture & Grain Processing', '农业与粮食加工'],
+  ['automotive-transportation', 'Automotive & Transportation', '汽车与交通'],
+  ['electronics-semiconductors', 'Electronics & Semiconductors', '电子与半导体'],
+  ['health-personal-care', 'Health & Personal Care', '健康与个护'],
+  ['household-products', 'Household Products', '家居日用品'],
+  ['other', 'Other', '其他'],
 ];
 
 const SOLUTIONS = [
-  ['', 'Select solution'],
-  ['all-solutions', 'All Solutions'],
-  ['asrs', 'ASRS / Automated Storage & Retrieval Systems'],
-  ['conveyor-transport', 'Conveyor Systems / Automated Transport'],
-  ['smart-factory', 'Smart Factory / Factory Automation'],
-  ['production-line', 'Production Line Automation'],
-  ['packaging-automation', 'Packaging Automation'],
-  ['filling-bottling', 'Filling & Bottling Systems'],
-  ['printing-inkjet-flexo-ci', 'Printing / Inkjet / Flexo / CI Printing'],
-  ['film-blowing-extrusion', 'Film Blowing / Film Extrusion'],
-  ['cold-storage-automation', 'Cold Storage / Low-Temperature Automation'],
-  ['material-pallet-handling', 'Material Handling / Pallet Handling'],
-  ['wms-wes', 'Intelligent WMS / WES Integration'],
-  ['erp-mes-monitoring', 'ERP / MES / Production Monitoring'],
-  ['robotics-integration', 'Robotics Integration'],
-  ['laser-industrial-machining', 'Laser Processing / Industrial Machining'],
-  ['other-industrial-automation', 'Other Industrial Automation Solutions'],
+  ['', 'Select solution', '请选择方案'],
+  ['all-solutions', 'All Solutions', '全部方案'],
+  ['asrs', 'ASRS / Automated Storage & Retrieval Systems', 'ASRS / 自动化立体仓储系统'],
+  ['conveyor-transport', 'Conveyor Systems / Automated Transport', '输送系统 / 自动化搬运'],
+  ['smart-factory', 'Smart Factory / Factory Automation', '智能工厂 / 工厂自动化'],
+  ['production-line', 'Production Line Automation', '生产线自动化'],
+  ['packaging-automation', 'Packaging Automation', '包装自动化'],
+  ['filling-bottling', 'Filling & Bottling Systems', '灌装与瓶装系统'],
+  ['printing-inkjet-flexo-ci', 'Printing / Inkjet / Flexo / CI Printing', '印刷 / 喷码 / 柔印 / CI 印刷'],
+  ['film-blowing-extrusion', 'Film Blowing / Film Extrusion', '吹膜 / 薄膜挤出'],
+  ['cold-storage-automation', 'Cold Storage / Low-Temperature Automation', '冷库 / 低温自动化'],
+  ['material-pallet-handling', 'Material Handling / Pallet Handling', '物料搬运 / 托盘处理'],
+  ['wms-wes', 'Intelligent WMS / WES Integration', '智能 WMS / WES 集成'],
+  ['erp-mes-monitoring', 'ERP / MES / Production Monitoring', 'ERP / MES / 生产监控'],
+  ['robotics-integration', 'Robotics Integration', '机器人集成'],
+  ['laser-industrial-machining', 'Laser Processing / Industrial Machining', '激光加工 / 工业加工'],
+  ['other-industrial-automation', 'Other Industrial Automation Solutions', '其他工业自动化方案'],
 ];
 
 function escapeHtml(value) {
@@ -100,6 +101,32 @@ function normalizeFileName(fileName) {
 
 function outputPathFor(post) {
   return `${post.contentType === 'case' ? 'cases' : 'blog'}/${post.fileName}`;
+}
+
+function resolveWorkspacePath(relativePath) {
+  const normalized = String(relativePath || '').replace(/\\/g, '/').replace(/^\/+/, '');
+  const absolute = path.resolve(ROOT, normalized);
+  if (!absolute.startsWith(ROOT)) {
+    throw new Error('Path is outside the workspace.');
+  }
+  return { absolute, relative: normalized };
+}
+
+function resolveDraftPath(relativePath) {
+  const { absolute, relative } = resolveWorkspacePath(relativePath);
+  if (!absolute.startsWith(DRAFT_DIR) || path.extname(absolute).toLowerCase() !== '.json') {
+    throw new Error('Invalid draft path.');
+  }
+  return { absolute, relative };
+}
+
+function resolveGeneratedHtmlPath(relativePath) {
+  const { absolute, relative } = resolveWorkspacePath(relativePath);
+  const isAllowed = relative.startsWith('blog/') || relative.startsWith('cases/');
+  if (!isAllowed || path.extname(absolute).toLowerCase() !== '.html') {
+    throw new Error('Invalid generated HTML path.');
+  }
+  return { absolute, relative };
 }
 
 function draftPathFor(post) {
@@ -172,6 +199,148 @@ function runGenerator(draftPath, force) {
   return (result.stdout || '').trim();
 }
 
+function runGit(args) {
+  const result = spawnSync('git', args, {
+    cwd: ROOT,
+    encoding: 'utf8',
+  });
+  const output = `${result.stdout || ''}${result.stderr || ''}`.trim();
+  if (result.status !== 0) {
+    throw new Error(output || `git ${args.join(' ')} failed.`);
+  }
+  return output;
+}
+
+function hasStagedChanges(paths) {
+  const result = spawnSync('git', ['diff', '--cached', '--quiet', '--', ...paths], {
+    cwd: ROOT,
+    encoding: 'utf8',
+  });
+  return result.status === 1;
+}
+
+function stageCommitPush(paths, message) {
+  runGit(['rev-parse', '--is-inside-work-tree']);
+  const normalizedPaths = paths.map(file => file.replace(/\\/g, '/'));
+  const alreadyStaged = getStagedFiles();
+  const unrelatedStaged = alreadyStaged.filter(file => !normalizedPaths.includes(file.replace(/\\/g, '/')));
+  if (unrelatedStaged.length) {
+    throw new Error(`Auto-push stopped because other files are already staged:\n${unrelatedStaged.join('\n')}`);
+  }
+
+  runGit(['add', '--', ...normalizedPaths]);
+
+  if (!hasStagedChanges(normalizedPaths)) {
+    return 'No generated-file changes to commit.';
+  }
+
+  const commitOutput = runGit(['commit', '-m', message]);
+  const pushOutput = runGit(['push']);
+  return [commitOutput, pushOutput].filter(Boolean).join('\n');
+}
+
+function getStagedFiles() {
+  const result = spawnSync('git', ['diff', '--cached', '--name-only'], {
+    cwd: ROOT,
+    encoding: 'utf8',
+  });
+  if (result.status !== 0) {
+    throw new Error((result.stderr || result.stdout || 'Could not inspect staged git files.').trim());
+  }
+  return (result.stdout || '').split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+}
+
+function autoPushGeneratedPost(post, draftPath, commitMessage) {
+  const outputPath = outputPathFor(post);
+  const draftRelPath = path.relative(ROOT, draftPath).replace(/\\/g, '/');
+  const paths = [outputPath, draftRelPath];
+  const title = post.title.replace(/\s+/g, ' ').trim();
+  const defaultMessage = `Add static ${post.contentType} page: ${title}`;
+  const message = String(commitMessage || defaultMessage).trim();
+  return stageCommitPush(paths, message);
+}
+
+function readJsonFile(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, ''));
+}
+
+function listGeneratedHtmlFiles() {
+  const dirs = [
+    { dir: path.join(ROOT, 'blog'), contentType: 'blog' },
+    { dir: path.join(ROOT, 'cases'), contentType: 'case' },
+  ];
+  const files = [];
+  for (const { dir, contentType } of dirs) {
+    if (!fs.existsSync(dir)) continue;
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (!entry.isFile() || !entry.name.endsWith('.html')) continue;
+      const relative = path.relative(ROOT, path.join(dir, entry.name)).replace(/\\/g, '/');
+      files.push({ outputPath: relative, fileName: entry.name, contentType });
+    }
+  }
+  return files;
+}
+
+function listManagedPosts() {
+  const drafts = [];
+  const seenOutputPaths = new Set();
+  if (fs.existsSync(DRAFT_DIR)) {
+    for (const entry of fs.readdirSync(DRAFT_DIR, { withFileTypes: true })) {
+      if (!entry.isFile() || !entry.name.endsWith('.json')) continue;
+      const draftAbsolute = path.join(DRAFT_DIR, entry.name);
+      try {
+        const post = readJsonFile(draftAbsolute);
+        if (!post.fileName) continue;
+        const contentType = post.contentType === 'case' ? 'case' : 'blog';
+        const fileName = normalizeFileName(post.fileName);
+        const outputPath = outputPathFor({ contentType, fileName });
+        seenOutputPaths.add(outputPath);
+        drafts.push({
+          id: path.relative(ROOT, draftAbsolute).replace(/\\/g, '/'),
+          draftPath: path.relative(ROOT, draftAbsolute).replace(/\\/g, '/'),
+          outputPath,
+          contentType,
+          fileName,
+          title: post.title || fileName,
+          date: post.date || '',
+          hasDraft: true,
+          htmlExists: fs.existsSync(path.join(ROOT, outputPath)),
+        });
+      } catch (error) {
+        drafts.push({
+          id: path.relative(ROOT, draftAbsolute).replace(/\\/g, '/'),
+          draftPath: path.relative(ROOT, draftAbsolute).replace(/\\/g, '/'),
+          outputPath: '',
+          contentType: 'blog',
+          fileName: entry.name,
+          title: `Unreadable draft: ${entry.name}`,
+          date: '',
+          hasDraft: true,
+          htmlExists: false,
+          error: error.message,
+        });
+      }
+    }
+  }
+
+  for (const file of listGeneratedHtmlFiles()) {
+    if (seenOutputPaths.has(file.outputPath)) continue;
+    drafts.push({
+      id: file.outputPath,
+      draftPath: '',
+      outputPath: file.outputPath,
+      contentType: file.contentType,
+      fileName: file.fileName,
+      title: file.fileName,
+      date: '',
+      hasDraft: false,
+      htmlExists: true,
+    });
+  }
+
+  return drafts.sort((a, b) => String(b.date || b.fileName).localeCompare(String(a.date || a.fileName)));
+}
+
 async function handleGenerate(req, res) {
   try {
     const body = await readRequestBody(req);
@@ -182,13 +351,79 @@ async function handleGenerate(req, res) {
     fs.writeFileSync(draftPath, `${JSON.stringify(post, null, 2)}\n`, 'utf8');
 
     const output = runGenerator(draftPath, Boolean(input.force));
+    let gitOutput = '';
+    if (input.autoPush) {
+      gitOutput = autoPushGeneratedPost(post, draftPath, input.commitMessage);
+    }
     sendJson(res, 200, {
       ok: true,
       draftPath: path.relative(ROOT, draftPath).replace(/\\/g, '/'),
       outputPath: outputPathFor(post),
       previewUrl: `/${outputPathFor(post)}`,
       generatorOutput: output,
+      gitOutput,
     });
+  } catch (error) {
+    sendJson(res, 400, { ok: false, error: error.message || String(error) });
+  }
+}
+
+async function handleListPosts(req, res) {
+  sendJson(res, 200, { ok: true, posts: listManagedPosts() });
+}
+
+async function handleLoadPost(req, res) {
+  try {
+    const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
+    const draftPath = url.searchParams.get('draftPath');
+    if (!draftPath) throw new Error('draftPath is required.');
+    const { absolute, relative } = resolveDraftPath(draftPath);
+    const post = readJsonFile(absolute);
+    sendJson(res, 200, { ok: true, draftPath: relative, post });
+  } catch (error) {
+    sendJson(res, 400, { ok: false, error: error.message || String(error) });
+  }
+}
+
+async function handleDeletePost(req, res) {
+  try {
+    const body = await readRequestBody(req);
+    const input = JSON.parse(body || '{}');
+    const removed = [];
+    const gitPaths = [];
+    let title = input.outputPath || input.draftPath || 'static page';
+
+    if (input.outputPath) {
+      const { absolute, relative } = resolveGeneratedHtmlPath(input.outputPath);
+      if (fs.existsSync(absolute)) {
+        fs.rmSync(absolute, { force: true });
+        removed.push(relative);
+        gitPaths.push(relative);
+      }
+    }
+
+    if (input.draftPath) {
+      const { absolute, relative } = resolveDraftPath(input.draftPath);
+      if (fs.existsSync(absolute)) {
+        try {
+          const post = readJsonFile(absolute);
+          title = post.title || title;
+        } catch {}
+        fs.rmSync(absolute, { force: true });
+        removed.push(relative);
+        gitPaths.push(relative);
+      }
+    }
+
+    if (!removed.length) throw new Error('Nothing was deleted.');
+
+    let gitOutput = '';
+    if (input.autoPush) {
+      const message = String(input.commitMessage || `Delete static page: ${title}`).trim();
+      gitOutput = stageCommitPush(gitPaths, message);
+    }
+
+    sendJson(res, 200, { ok: true, removed, gitOutput });
   } catch (error) {
     sendJson(res, 400, { ok: false, error: error.message || String(error) });
   }
@@ -219,23 +454,29 @@ function serveWorkspaceFile(req, res) {
 }
 
 function renderOptions(options) {
-  return options.map(([value, label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join('');
+  return options.map(([value, labelEn, labelZh]) => {
+    const zh = labelZh || labelEn;
+    return `<option value="${escapeHtml(value)}" data-label-en="${escapeHtml(labelEn)}" data-label-zh="${escapeHtml(zh)}">${escapeHtml(zh)}</option>`;
+  }).join('');
 }
 
 function renderApp() {
   const today = new Date().toISOString().slice(0, 10);
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Static Blog / Case Studio</title>
+  <title>静态 Blog / Case 生成器</title>
   <style>
     :root { color-scheme: light; --bg:#f4f6f8; --panel:#fff; --ink:#172033; --muted:#64748b; --line:#d9e1ec; --brand:#d71920; }
     body { margin:0; font-family: Arial, Helvetica, sans-serif; background:var(--bg); color:var(--ink); }
     header { padding:28px 34px; background:#111827; color:#fff; }
+    .topbar { display:flex; justify-content:space-between; gap:18px; align-items:flex-start; }
     header h1 { margin:0 0 8px; font-size:26px; }
     header p { margin:0; color:#cbd5e1; }
+    .language-switch { display:flex; align-items:center; gap:10px; color:#e2e8f0; min-width:180px; }
+    .language-switch select { border-color:rgba(255,255,255,.25); background:#1f2937; color:#fff; }
     main { padding:28px; display:grid; grid-template-columns:minmax(320px, 520px) 1fr; gap:22px; }
     .panel { background:var(--panel); border:1px solid var(--line); border-radius:18px; box-shadow:0 18px 45px rgba(15,23,42,.08); overflow:hidden; }
     .panel h2 { margin:0; padding:18px 20px; border-bottom:1px solid var(--line); font-size:18px; }
@@ -255,72 +496,104 @@ function renderApp() {
     .preview { padding:20px; }
     iframe { width:100%; height:760px; border:1px solid var(--line); border-radius:14px; background:#fff; }
     .path-preview { font-family:Consolas, Monaco, monospace; background:#0f172a; color:#e2e8f0; padding:12px; border-radius:12px; overflow:auto; }
+    .manage-box { display:grid; gap:10px; padding:12px; border:1px solid var(--line); border-radius:14px; background:#f8fafc; }
+    .manage-actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .danger { background:#fee2e2; color:#991b1b; }
     @media (max-width: 980px) { main { grid-template-columns:1fr; padding:16px; } }
   </style>
 </head>
 <body>
   <header>
-    <h1>Static Blog / Case Studio</h1>
-    <p>本地生成真实 HTML 页面：Blog 输出到 <strong>blog/</strong>，Case 输出到 <strong>cases/</strong>。后台 KV 不会被实时读取或覆盖。</p>
+    <div class="topbar">
+      <div>
+        <h1 data-i18n="appTitle">静态 Blog / Case 生成器</h1>
+        <p data-i18n-html="appDesc">本地生成真实 HTML 页面。Blog 输出到 <strong>blog/</strong>，Case 输出到 <strong>cases/</strong>。不会自动读取或覆盖 KV。</p>
+      </div>
+      <label class="language-switch">
+        <span data-i18n="language">语言</span>
+        <select id="studioLanguage">
+          <option value="zh">中文</option>
+          <option value="en">English</option>
+        </select>
+      </label>
+    </div>
   </header>
   <main>
     <section class="panel">
-      <h2>Post Fields</h2>
+      <h2 data-i18n="postFields">文章字段</h2>
       <form id="postForm">
+        <div class="manage-box">
+          <label><span data-i18n="existingPages">已有 Blog / Case 页面</span>
+            <select id="existingPostSelect">
+              <option value="" data-i18n="loadingPages">正在加载已有页面...</option>
+            </select>
+            <span class="hint" data-i18n="existingHint">有 JSON 草稿的页面可以加载到表单继续修改；只有 HTML 的页面也可以删除。</span>
+          </label>
+          <div class="manage-actions">
+            <button class="ghost" type="button" id="refreshPosts" data-i18n="refreshList">刷新列表</button>
+            <button class="ghost" type="button" id="loadPost" data-i18n="loadSelected">加载选中</button>
+            <button class="danger" type="button" id="deletePost" data-i18n="deleteSelected">删除选中</button>
+          </div>
+        </div>
         <div class="row">
-          <label>Content Type
+          <label><span data-i18n="contentType">内容类型</span>
             <select name="contentType" id="contentType">
               <option value="blog">Blog</option>
               <option value="case">Case</option>
             </select>
           </label>
-          <label>File Name
-            <input name="fileName" id="fileName" placeholder="my-article.html" required>
-            <span class="hint">只填文件名。路径会自动变成 blog/my-article.html 或 cases/my-article.html。</span>
+          <label><span data-i18n="fileName">文件名</span>
+            <input name="fileName" id="fileName" placeholder="my-article.html" data-i18n-placeholder="fileNamePlaceholder" required>
+            <span class="hint" data-i18n="fileNameHint">只填文件名。路径会自动变成 blog/my-article.html 或 cases/my-article.html。</span>
           </label>
         </div>
         <div class="path-preview" id="pathPreview">blog/my-article.html</div>
-        <label>Title <input name="title" id="title" required></label>
-        <label>Summary <textarea name="summary"></textarea></label>
+        <label><span data-i18n="title">标题</span><input name="title" id="title" required></label>
+        <label><span data-i18n="summary">摘要</span><textarea name="summary"></textarea></label>
         <div class="row">
-          <label>Industry <select name="industry" id="industry">${renderOptions(INDUSTRIES)}</select></label>
-          <label>Solution <select name="solution" id="solution">${renderOptions(SOLUTIONS)}</select></label>
+          <label><span data-i18n="industry">行业</span><select name="industry" id="industry">${renderOptions(INDUSTRIES)}</select></label>
+          <label><span data-i18n="solution">方案</span><select name="solution" id="solution">${renderOptions(SOLUTIONS)}</select></label>
         </div>
         <div class="row">
-          <label>Cover Image URL <input name="coverImage" placeholder="system-acr.webp or https://..."></label>
-          <label>YouTube URL <input name="youtubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=..."></label>
+          <label><span data-i18n="coverImage">封面图片 URL</span><input name="coverImage" placeholder="system-acr.webp 或 https://..." data-i18n-placeholder="coverImagePlaceholder"></label>
+          <label><span data-i18n="youtubeUrl">YouTube URL</span><input name="youtubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." data-i18n-placeholder="youtubePlaceholder"></label>
         </div>
         <div class="row">
-          <label>Author <input name="author" value="13ASRS"></label>
-          <label>Date <input name="date" type="date" value="${today}"></label>
+          <label><span data-i18n="author">作者</span><input name="author" value="13ASRS"></label>
+          <label><span data-i18n="date">日期</span><input name="date" type="date" value="${today}"></label>
         </div>
-        <label>SEO Title <input name="seoTitle"></label>
-        <label>SEO Description <input name="seoDescription"></label>
-        <label>Related Projects
-          <textarea name="relatedProjects" placeholder="Title | case-studies.html&#10;Another title | cases/example.html"></textarea>
-          <span class="hint">每行一个，格式：标题 | 链接。只写标题也可以。</span>
+        <label><span data-i18n="seoTitle">SEO 标题</span><input name="seoTitle"></label>
+        <label><span data-i18n="seoDescription">SEO 描述</span><input name="seoDescription"></label>
+        <label><span data-i18n="relatedProjects">相关案例</span>
+          <textarea name="relatedProjects" placeholder="标题 | case-studies.html&#10;另一个标题 | cases/example.html" data-i18n-placeholder="relatedProjectsPlaceholder"></textarea>
+          <span class="hint" data-i18n="relatedHint">每行一个，格式：标题 | 链接。只写标题也可以。</span>
         </label>
-        <label>Related Solutions
-          <textarea name="relatedSolutions" placeholder="ASRS Warehouse Solution | solutions.html#asrs"></textarea>
+        <label><span data-i18n="relatedSolutions">相关方案</span>
+          <textarea name="relatedSolutions" placeholder="ASRS 仓储方案 | solutions.html#asrs" data-i18n-placeholder="relatedSolutionsPlaceholder"></textarea>
         </label>
-        <label>Content HTML
-          <textarea name="contentHtml" id="contentHtml" required><h2>Project Overview</h2>
-<p>Write the article or case study body here.</p>
-<h2>Solution</h2>
-<p>Describe the solution, equipment, workflow, and customer value.</p></textarea>
+        <label><span data-i18n="contentHtml">正文 HTML</span>
+          <textarea name="contentHtml" id="contentHtml" required><h2>项目概览</h2>
+<p>在这里填写文章或案例正文。</p>
+<h2>解决方案</h2>
+<p>描述方案、设备、流程和客户价值。</p></textarea>
         </label>
-        <label><input name="force" type="checkbox" style="width:auto;"> Overwrite existing HTML if it already exists</label>
+        <label><input name="force" type="checkbox" style="width:auto;"> <span data-i18n="overwriteExisting">如果 HTML 已存在，覆盖它</span></label>
+        <label><input name="autoPush" type="checkbox" style="width:auto;"> <span data-i18n="autoPush">生成后自动提交并推送到 GitHub</span></label>
+        <label><span data-i18n="commitMessage">提交说明</span>
+          <input name="commitMessage" placeholder="添加静态 Blog 页面" data-i18n-placeholder="commitMessagePlaceholder">
+          <span class="hint" data-i18n="commitHint">可选。留空时会自动根据标题生成提交说明。</span>
+        </label>
         <div class="actions">
-          <button class="primary" type="submit">Generate Static Page</button>
-          <button class="ghost" type="button" id="fillExample">Fill Example</button>
+          <button class="primary" type="submit" data-i18n="generate">生成静态页面</button>
+          <button class="ghost" type="button" id="fillExample" data-i18n="fillExample">填入示例</button>
         </div>
-        <div id="status" class="status">Ready.</div>
+        <div id="status" class="status" data-i18n="ready">准备就绪。</div>
       </form>
     </section>
     <section class="panel">
-      <h2>Preview</h2>
+      <h2 data-i18n="preview">预览</h2>
       <div class="preview">
-        <iframe id="previewFrame" title="Generated page preview"></iframe>
+        <iframe id="previewFrame" title="生成页面预览" data-i18n-title="previewFrameTitle"></iframe>
       </div>
     </section>
   </main>
@@ -331,6 +604,179 @@ function renderApp() {
     const contentType = document.getElementById('contentType');
     const fileName = document.getElementById('fileName');
     const pathPreview = document.getElementById('pathPreview');
+    const existingPostSelect = document.getElementById('existingPostSelect');
+    const studioLanguage = document.getElementById('studioLanguage');
+    let existingPosts = [];
+    let currentUiLanguage = localStorage.getItem('staticPostStudioLanguage') || 'zh';
+
+    const I18N = {
+      zh: {
+        appTitle: '静态 Blog / Case 生成器',
+        appDesc: '本地生成真实 HTML 页面。Blog 输出到 <strong>blog/</strong>，Case 输出到 <strong>cases/</strong>。不会自动读取或覆盖 KV。',
+        language: '语言',
+        postFields: '文章字段',
+        existingPages: '已有 Blog / Case 页面',
+        loadingPages: '正在加载已有页面...',
+        existingHint: '有 JSON 草稿的页面可以加载到表单继续修改；只有 HTML 的页面也可以删除。',
+        refreshList: '刷新列表',
+        loadSelected: '加载选中',
+        deleteSelected: '删除选中',
+        contentType: '内容类型',
+        fileName: '文件名',
+        fileNamePlaceholder: 'my-article.html',
+        fileNameHint: '只填文件名。路径会自动变成 blog/my-article.html 或 cases/my-article.html。',
+        title: '标题',
+        summary: '摘要',
+        industry: '行业',
+        solution: '方案',
+        coverImage: '封面图片 URL',
+        coverImagePlaceholder: 'system-acr.webp 或 https://...',
+        youtubeUrl: 'YouTube URL',
+        youtubePlaceholder: 'https://www.youtube.com/watch?v=...',
+        author: '作者',
+        date: '日期',
+        seoTitle: 'SEO 标题',
+        seoDescription: 'SEO 描述',
+        relatedProjects: '相关案例',
+        relatedProjectsPlaceholder: '标题 | case-studies.html\\n另一个标题 | cases/example.html',
+        relatedHint: '每行一个，格式：标题 | 链接。只写标题也可以。',
+        relatedSolutions: '相关方案',
+        relatedSolutionsPlaceholder: 'ASRS 仓储方案 | solutions.html#asrs',
+        contentHtml: '正文 HTML',
+        overwriteExisting: '如果 HTML 已存在，覆盖它',
+        autoPush: '生成后自动提交并推送到 GitHub',
+        commitMessage: '提交说明',
+        commitMessagePlaceholder: '添加静态 Blog 页面',
+        commitHint: '可选。留空时会自动根据标题生成提交说明。',
+        generate: '生成静态页面',
+        fillExample: '填入示例',
+        ready: '准备就绪。',
+        preview: '预览',
+        previewFrameTitle: '生成页面预览',
+        noGeneratedPages: '没有找到已生成页面',
+        editable: '可编辑',
+        htmlOnly: '仅 HTML',
+        missingHtml: ' / HTML 缺失',
+        couldNotLoadPages: '无法加载已有页面。',
+        selectFirst: '请先选择一个已有页面。',
+        noDraft: '这个页面没有 JSON 草稿，无法自动加载编辑。你可以删除它，或手动重新创建。',
+        loaded: '已加载：',
+        deleteConfirm: '确定删除 ',
+        deleteFailed: '删除失败。',
+        deleted: '已删除：',
+        listRefreshed: '已有页面列表已刷新。',
+        generating: '正在生成...',
+        generateFailed: '生成失败',
+        generated: '已生成：',
+        draftJson: 'JSON 草稿：',
+        git: 'Git：',
+        sampleTitle: '示例自动化案例',
+        sampleSummary: '这是一个用于生成静态案例页面的简短摘要。',
+        sampleSeoTitle: '示例自动化案例 | 13ASRS',
+        sampleSeoDescription: '由本地生成器创建的静态案例页面。',
+      },
+      en: {
+        appTitle: 'Static Blog / Case Studio',
+        appDesc: 'Generate real local HTML pages. Blog pages go to <strong>blog/</strong>; case pages go to <strong>cases/</strong>. KV data is not read or overwritten automatically.',
+        language: 'Language',
+        postFields: 'Post Fields',
+        existingPages: 'Existing Blog / Case Pages',
+        loadingPages: 'Loading existing pages...',
+        existingHint: 'Draft-backed pages can be loaded into this form. HTML-only pages can still be deleted.',
+        refreshList: 'Refresh List',
+        loadSelected: 'Load Selected',
+        deleteSelected: 'Delete Selected',
+        contentType: 'Content Type',
+        fileName: 'File Name',
+        fileNamePlaceholder: 'my-article.html',
+        fileNameHint: 'Only enter the file name. The tool will create blog/my-article.html or cases/my-article.html.',
+        title: 'Title',
+        summary: 'Summary',
+        industry: 'Industry',
+        solution: 'Solution',
+        coverImage: 'Cover Image URL',
+        coverImagePlaceholder: 'system-acr.webp or https://...',
+        youtubeUrl: 'YouTube URL',
+        youtubePlaceholder: 'https://www.youtube.com/watch?v=...',
+        author: 'Author',
+        date: 'Date',
+        seoTitle: 'SEO Title',
+        seoDescription: 'SEO Description',
+        relatedProjects: 'Related Projects',
+        relatedProjectsPlaceholder: 'Title | case-studies.html\\nAnother title | cases/example.html',
+        relatedHint: 'One item per line. Format: Title | link. A title-only line is also allowed.',
+        relatedSolutions: 'Related Solutions',
+        relatedSolutionsPlaceholder: 'ASRS Warehouse Solution | solutions.html#asrs',
+        contentHtml: 'Content HTML',
+        overwriteExisting: 'Overwrite existing HTML if it already exists',
+        autoPush: 'Commit and push this generated page to GitHub after generation',
+        commitMessage: 'Commit Message',
+        commitMessagePlaceholder: 'Add static blog page',
+        commitHint: 'Optional. If empty, the tool uses a message based on the title.',
+        generate: 'Generate Static Page',
+        fillExample: 'Fill Example',
+        ready: 'Ready.',
+        preview: 'Preview',
+        previewFrameTitle: 'Generated page preview',
+        noGeneratedPages: 'No generated pages found',
+        editable: 'editable',
+        htmlOnly: 'html only',
+        missingHtml: ' / missing HTML',
+        couldNotLoadPages: 'Could not load existing pages.',
+        selectFirst: 'Select an existing page first.',
+        noDraft: 'This page has no JSON draft, so it cannot be loaded for editing. You can delete it or recreate it manually.',
+        loaded: 'Loaded: ',
+        deleteConfirm: 'Delete ',
+        deleteFailed: 'Delete failed.',
+        deleted: 'Deleted:',
+        listRefreshed: 'Existing page list refreshed.',
+        generating: 'Generating...',
+        generateFailed: 'Generate failed',
+        generated: 'Generated: ',
+        draftJson: 'Draft JSON: ',
+        git: 'Git:',
+        sampleTitle: 'Sample Automation Case Study',
+        sampleSummary: 'A short summary for the generated static case page.',
+        sampleSeoTitle: 'Sample Automation Case Study | 13ASRS',
+        sampleSeoDescription: 'Static case page generated from the local post studio.',
+      }
+    };
+
+    const DEFAULT_CONTENT_HTML = {
+      zh: '<h2>项目概览</h2>\\n<p>在这里填写文章或案例正文。</p>\\n<h2>解决方案</h2>\\n<p>描述方案、设备、流程和客户价值。</p>',
+      en: '<h2>Project Overview</h2>\\n<p>Write the article or case study body here.</p>\\n<h2>Solution</h2>\\n<p>Describe the solution, equipment, workflow, and customer value.</p>'
+    };
+
+    function tr(key) {
+      return (I18N[currentUiLanguage] && I18N[currentUiLanguage][key]) || I18N.en[key] || key;
+    }
+
+    function applyUiLanguage(language) {
+      currentUiLanguage = language === 'en' ? 'en' : 'zh';
+      localStorage.setItem('staticPostStudioLanguage', currentUiLanguage);
+      studioLanguage.value = currentUiLanguage;
+      document.documentElement.lang = currentUiLanguage === 'zh' ? 'zh-CN' : 'en';
+      document.title = tr('appTitle');
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        el.textContent = tr(el.dataset.i18n);
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        el.innerHTML = tr(el.dataset.i18nHtml);
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        el.placeholder = tr(el.dataset.i18nPlaceholder);
+      });
+      document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        el.title = tr(el.dataset.i18nTitle);
+      });
+      document.querySelectorAll('option[data-label-en][data-label-zh]').forEach(option => {
+        option.textContent = currentUiLanguage === 'en' ? option.dataset.labelEn : option.dataset.labelZh;
+      });
+      const currentTemplate = form.contentHtml.value.trim();
+      if (!currentTemplate || Object.values(DEFAULT_CONTENT_HTML).includes(currentTemplate)) {
+        form.contentHtml.value = DEFAULT_CONTENT_HTML[currentUiLanguage];
+      }
+    }
 
     function normalizedFileName() {
       const raw = fileName.value.trim() || 'my-article.html';
@@ -345,26 +791,141 @@ function renderApp() {
     contentType.addEventListener('change', updatePathPreview);
     fileName.addEventListener('input', updatePathPreview);
     updatePathPreview();
+    studioLanguage.addEventListener('change', async () => {
+      applyUiLanguage(studioLanguage.value);
+      try {
+        await refreshPostList();
+      } catch {}
+    });
+    applyUiLanguage(currentUiLanguage);
+
+    function relatedToTextarea(value) {
+      if (!Array.isArray(value)) return value || '';
+      return value.map(item => {
+        if (typeof item === 'string') return item;
+        return item.href ? item.title + ' | ' + item.href : item.title;
+      }).filter(Boolean).join('\\n');
+    }
+
+    function getSelectedPost() {
+      return existingPosts.find(post => post.id === existingPostSelect.value);
+    }
+
+    async function refreshPostList() {
+      const response = await fetch('/api/posts');
+      const result = await response.json();
+      if (!result.ok) throw new Error(result.error || tr('couldNotLoadPages'));
+      existingPosts = result.posts || [];
+      if (!existingPosts.length) {
+        existingPostSelect.innerHTML = '<option value="">' + tr('noGeneratedPages') + '</option>';
+        return;
+      }
+      existingPostSelect.innerHTML = existingPosts.map(post => {
+        const state = post.hasDraft ? tr('editable') : tr('htmlOnly');
+        const missing = post.htmlExists ? '' : tr('missingHtml');
+        return '<option value="' + post.id + '">' + post.contentType.toUpperCase() + ' - ' + post.outputPath + ' - ' + state + missing + '</option>';
+      }).join('');
+    }
+
+    async function loadSelectedPost() {
+      const selected = getSelectedPost();
+      if (!selected) throw new Error(tr('selectFirst'));
+      if (!selected.hasDraft || !selected.draftPath) {
+        throw new Error(tr('noDraft'));
+      }
+      const response = await fetch('/api/post?draftPath=' + encodeURIComponent(selected.draftPath));
+      const result = await response.json();
+      if (!result.ok) throw new Error(result.error || tr('couldNotLoadPages'));
+      const post = result.post;
+      form.contentType.value = post.contentType || 'blog';
+      form.fileName.value = post.fileName || '';
+      form.title.value = post.title || '';
+      form.summary.value = post.summary || '';
+      form.coverImage.value = post.coverImage || '';
+      form.industry.value = post.industry || '';
+      form.solution.value = post.solution || '';
+      form.youtubeUrl.value = post.youtubeUrl || '';
+      form.author.value = post.author || '13ASRS';
+      form.date.value = post.date || '';
+      form.seoTitle.value = post.seoTitle || '';
+      form.seoDescription.value = post.seoDescription || '';
+      form.relatedProjects.value = relatedToTextarea(post.relatedProjects);
+      form.relatedSolutions.value = relatedToTextarea(post.relatedSolutions);
+      form.contentHtml.value = post.contentHtml || '';
+      form.force.checked = true;
+      updatePathPreview();
+      frame.src = selected.outputPath ? '/' + selected.outputPath + '?t=' + Date.now() : '';
+      statusBox.className = 'status';
+      statusBox.textContent = tr('loaded') + selected.outputPath;
+    }
+
+    async function deleteSelectedPost() {
+      const selected = getSelectedPost();
+      if (!selected) throw new Error(tr('selectFirst'));
+      if (!confirm(tr('deleteConfirm') + (selected.outputPath || selected.draftPath) + '?')) return;
+      const response = await fetch('/api/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          draftPath: selected.draftPath,
+          outputPath: selected.outputPath,
+          autoPush: form.autoPush.checked,
+          commitMessage: form.commitMessage.value
+        })
+      });
+      const result = await response.json();
+      if (!result.ok) throw new Error(result.error || tr('deleteFailed'));
+      statusBox.className = 'status';
+      statusBox.textContent = tr('deleted') + '\\n' + result.removed.join('\\n') + (result.gitOutput ? '\\n\\n' + tr('git') + '\\n' + result.gitOutput : '');
+      frame.removeAttribute('src');
+      await refreshPostList();
+    }
+
+    document.getElementById('refreshPosts').addEventListener('click', async () => {
+      try {
+        await refreshPostList();
+        statusBox.className = 'status';
+        statusBox.textContent = tr('listRefreshed');
+      } catch (error) {
+        statusBox.className = 'status error';
+        statusBox.textContent = error.message;
+      }
+    });
+    document.getElementById('loadPost').addEventListener('click', () => loadSelectedPost().catch(error => {
+      statusBox.className = 'status error';
+      statusBox.textContent = error.message;
+    }));
+    document.getElementById('deletePost').addEventListener('click', () => deleteSelectedPost().catch(error => {
+      statusBox.className = 'status error';
+      statusBox.textContent = error.message;
+    }));
+    refreshPostList().catch(error => {
+      existingPostSelect.innerHTML = '<option value="">' + tr('couldNotLoadPages') + '</option>';
+      statusBox.className = 'status error';
+      statusBox.textContent = error.message;
+    });
 
     document.getElementById('fillExample').addEventListener('click', () => {
       contentType.value = 'case';
       fileName.value = 'sample-automation-case.html';
-      form.title.value = 'Sample Automation Case Study';
-      form.summary.value = 'A short summary for the generated static case page.';
+      form.title.value = tr('sampleTitle');
+      form.summary.value = tr('sampleSummary');
       form.coverImage.value = 'system-acr.webp';
       form.industry.value = 'manufacturing-industrial';
       form.solution.value = 'smart-factory';
-      form.seoTitle.value = 'Sample Automation Case Study | 13ASRS';
-      form.seoDescription.value = 'Static case page generated from the local post studio.';
+      form.seoTitle.value = tr('sampleSeoTitle');
+      form.seoDescription.value = tr('sampleSeoDescription');
+      form.contentHtml.value = DEFAULT_CONTENT_HTML[currentUiLanguage];
       updatePathPreview();
     });
 
     form.addEventListener('submit', async event => {
       event.preventDefault();
       statusBox.className = 'status';
-      statusBox.textContent = 'Generating...';
+      statusBox.textContent = tr('generating');
       const data = Object.fromEntries(new FormData(form).entries());
       data.force = form.force.checked;
+      data.autoPush = form.autoPush.checked;
       try {
         const response = await fetch('/api/generate', {
           method: 'POST',
@@ -372,8 +933,8 @@ function renderApp() {
           body: JSON.stringify(data)
         });
         const result = await response.json();
-        if (!result.ok) throw new Error(result.error || 'Generate failed');
-        statusBox.textContent = 'Generated: ' + result.outputPath + '\\nDraft JSON: ' + result.draftPath + '\\n' + result.generatorOutput;
+        if (!result.ok) throw new Error(result.error || tr('generateFailed'));
+        statusBox.textContent = tr('generated') + result.outputPath + '\\n' + tr('draftJson') + result.draftPath + '\\n' + result.generatorOutput + (result.gitOutput ? '\\n\\n' + tr('git') + '\\n' + result.gitOutput : '');
         frame.src = result.previewUrl + '?t=' + Date.now();
       } catch (error) {
         statusBox.className = 'status error';
@@ -385,13 +946,37 @@ function renderApp() {
 </html>`;
 }
 
+function openBrowser(url) {
+  if (!SHOULD_OPEN_BROWSER) return;
+  const command = process.platform === 'win32'
+    ? 'cmd'
+    : process.platform === 'darwin'
+      ? 'open'
+      : 'xdg-open';
+  const args = process.platform === 'win32'
+    ? ['/c', 'start', '', url]
+    : [url];
+  const child = spawn(command, args, {
+    cwd: ROOT,
+    detached: true,
+    stdio: 'ignore',
+    windowsHide: true,
+  });
+  child.unref();
+}
+
 const server = http.createServer((req, res) => {
   if (req.method === 'POST' && req.url === '/api/generate') return handleGenerate(req, res);
+  if (req.method === 'GET' && req.url.startsWith('/api/posts')) return handleListPosts(req, res);
+  if (req.method === 'GET' && req.url.startsWith('/api/post')) return handleLoadPost(req, res);
+  if (req.method === 'POST' && req.url === '/api/delete') return handleDeletePost(req, res);
   if (req.method === 'GET') return serveWorkspaceFile(req, res);
   send(res, 405, 'Method not allowed', { 'Content-Type': 'text/plain; charset=utf-8' });
 });
 
 server.listen(PORT, '127.0.0.1', () => {
-  console.log(`Static Post Studio running at http://127.0.0.1:${PORT}`);
+  const url = `http://127.0.0.1:${PORT}`;
+  console.log(`Static Post Studio running at ${url}`);
   console.log('Press Ctrl+C to stop.');
+  openBrowser(url);
 });
