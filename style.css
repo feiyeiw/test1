@@ -2422,14 +2422,6 @@ footer .container,
     margin-bottom: 28px;
 }
 
-.blog-video-frame video {
-    width: 100%;
-    display: block;
-    border: 0;
-    border-radius: inherit;
-    background: #000;
-}
-
 .article-section {
     width: 100%;
     margin-top: 34px;

@@ -9,9 +9,8 @@ const ROOT = path.resolve(__dirname, '..');
 const PORT = Number(process.env.STATIC_POST_STUDIO_PORT || 8791);
 const DRAFT_DIR = path.join(ROOT, 'content', 'static-posts', 'generated');
 const SHOULD_OPEN_BROWSER = process.env.STATIC_POST_STUDIO_OPEN !== '0';
-const GIT_CHECK_TIMEOUT_MS = 60_000;
+const GIT_CHECK_TIMEOUT_MS = 15_000;
 const GIT_LOGIN_TIMEOUT_MS = 180_000;
-const GIT_NETWORK_OPTIONS = ['-c', 'http.sslBackend=openssl'];
 
 const INDUSTRIES = [
   ['', 'Select industry', '请选择行业'],
@@ -215,7 +214,7 @@ function runGit(args) {
 }
 
 function runGitProbe(args, options = {}) {
-  const result = spawnSync('git', [...GIT_NETWORK_OPTIONS, ...args], {
+  const result = spawnSync('git', args, {
     cwd: ROOT,
     encoding: 'utf8',
     timeout: options.timeout || GIT_CHECK_TIMEOUT_MS,
@@ -264,14 +263,9 @@ function checkGitConnection() {
   const remote = remoteResult.output.split(/\r?\n/)[0].trim();
   const branch = currentBranchName();
   const pushTarget = `HEAD:${branch}`;
-  let pushCheck = runGitProbe(['push', '--dry-run', 'origin', pushTarget], {
+  const pushCheck = runGitProbe(['push', '--dry-run', 'origin', pushTarget], {
     timeout: GIT_CHECK_TIMEOUT_MS,
   });
-  if (pushCheck.error && pushCheck.error.includes('ETIMEDOUT')) {
-    pushCheck = runGitProbe(['push', '--dry-run', 'origin', pushTarget], {
-      timeout: GIT_CHECK_TIMEOUT_MS,
-    });
-  }
 
   if (pushCheck.status === 0) {
     return {
@@ -293,7 +287,7 @@ function checkGitConnection() {
 }
 
 function runGitHubLogin() {
-  const result = spawnSync('git', ['credential-manager', 'github', 'login', '--force', '--browser'], {
+  const result = spawnSync('git', ['credential-manager', 'github', 'login'], {
     cwd: ROOT,
     encoding: 'utf8',
     timeout: GIT_LOGIN_TIMEOUT_MS,
@@ -336,7 +330,7 @@ function stageCommitPush(paths, message) {
   }
 
   const commitOutput = runGit(['commit', '-m', message]);
-  const pushOutput = runGit([...GIT_NETWORK_OPTIONS, 'push']);
+  const pushOutput = runGit(['push']);
   return [commitOutput, pushOutput].filter(Boolean).join('\n');
 }
 
@@ -560,9 +554,6 @@ function contentTypeFor(filePath) {
   if (ext === '.png') return 'image/png';
   if (ext === '.jpg' || ext === '.jpeg') return 'image/jpeg';
   if (ext === '.webp') return 'image/webp';
-  if (ext === '.mp4') return 'video/mp4';
-  if (ext === '.webm') return 'video/webm';
-  if (ext === '.ogg' || ext === '.ogv') return 'video/ogg';
   return 'application/octet-stream';
 }
 
@@ -694,8 +685,8 @@ function renderApp() {
           <label><span data-i18n="solution">方案</span><select name="solution" id="solution">${renderOptions(SOLUTIONS)}</select></label>
         </div>
         <div class="row">
-          <label><span data-i18n="coverImage">封面图片 URL / 本地文件</span><input name="coverImage" placeholder="可留空，或填 images/example.webp / https://..." data-i18n-placeholder="coverImagePlaceholder"></label>
-          <label><span data-i18n="youtubeUrl">视频 URL / 本地文件</span><input name="youtubeUrl" placeholder="可留空，或填 videos/demo.mp4 / YouTube URL" data-i18n-placeholder="youtubePlaceholder"></label>
+          <label><span data-i18n="coverImage">封面图片 URL</span><input name="coverImage" placeholder="system-acr.webp 或 https://..." data-i18n-placeholder="coverImagePlaceholder"></label>
+          <label><span data-i18n="youtubeUrl">YouTube URL</span><input name="youtubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." data-i18n-placeholder="youtubePlaceholder"></label>
         </div>
         <div class="row">
           <label><span data-i18n="author">作者</span><input name="author" value="13ASRS"></label>
@@ -772,10 +763,10 @@ function renderApp() {
         summary: '摘要',
         industry: '行业',
         solution: '方案',
-        coverImage: '封面图片 URL / 本地文件',
-        coverImagePlaceholder: '可留空，或填 images/example.webp / https://...',
-        youtubeUrl: '视频 URL / 本地文件',
-        youtubePlaceholder: '可留空，或填 videos/demo.mp4 / YouTube URL',
+        coverImage: '封面图片 URL',
+        coverImagePlaceholder: 'system-acr.webp 或 https://...',
+        youtubeUrl: 'YouTube URL',
+        youtubePlaceholder: 'https://www.youtube.com/watch?v=...',
         author: '作者',
         date: '日期',
         seoTitle: 'SEO 标题',
@@ -848,10 +839,10 @@ function renderApp() {
         summary: 'Summary',
         industry: 'Industry',
         solution: 'Solution',
-        coverImage: 'Cover Image URL / Local File',
-        coverImagePlaceholder: 'Optional. Use images/example.webp or https://...',
-        youtubeUrl: 'Video URL / Local File',
-        youtubePlaceholder: 'Optional. Use videos/demo.mp4 or a YouTube URL',
+        coverImage: 'Cover Image URL',
+        coverImagePlaceholder: 'system-acr.webp or https://...',
+        youtubeUrl: 'YouTube URL',
+        youtubePlaceholder: 'https://www.youtube.com/watch?v=...',
         author: 'Author',
         date: 'Date',
         seoTitle: 'SEO Title',
