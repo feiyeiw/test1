@@ -51,6 +51,60 @@ const SOLUTIONS = [
   ['other-industrial-automation', 'Other Industrial Automation Solutions', '其他工业自动化方案'],
 ];
 
+const COUNTRIES = [
+  ['', 'Select country', '请选择国家'],
+  ['malaysia', 'Malaysia', 'Malaysia'],
+  ['thailand', 'Thailand', 'Thailand'],
+  ['indonesia', 'Indonesia', 'Indonesia'],
+  ['vietnam', 'Vietnam', 'Vietnam'],
+  ['usa', 'USA', 'USA'],
+  ['mexico', 'Mexico', 'Mexico'],
+  ['uae', 'UAE', 'UAE'],
+  ['other', 'Other', 'Other'],
+];
+
+const FUNCTIONS = [
+  ['', 'Select function', '请选择功能分类'],
+  ['warehouse-automation', 'Warehouse Automation', '仓储自动化'],
+  ['factory-intralogistics', 'Factory Intralogistics', '厂内物流'],
+  ['production-automation', 'Production Automation', '生产自动化'],
+  ['packaging-automation', 'Packaging Automation', '包装自动化'],
+  ['process-automation', 'Process Automation', '工艺自动化'],
+  ['smart-factory', 'Smart Factory', '智能工厂'],
+];
+
+const APPLICATIONS = [
+  ['', 'Select application', '请选择应用场景'],
+  ['warehouse-storage', 'Warehouse & Storage', '仓储与存储'],
+  ['packaging', 'Packaging', '包装'],
+  ['production-lines', 'Production Lines', '生产线'],
+  ['mixing-processing', 'Mixing & Processing', '混合与加工'],
+  ['filling-bottling', 'Filling & Bottling', '灌装与瓶装'],
+  ['material-handling', 'Material Handling', '物料搬运'],
+  ['inspection-testing', 'Inspection & Testing', '检测与测试'],
+  ['printing-labeling', 'Printing & Labeling', '印刷与贴标'],
+  ['loading-dispatch', 'Loading & Dispatch', '装车与发运'],
+];
+
+const BLOG_CATEGORIES = [
+  ['', 'Select blog category', '请选择 Blog 分类'],
+  ['solutions', 'Solutions', '解决方案'],
+  ['cost-roi', 'Cost & ROI', '成本收益'],
+  ['design-guides', 'Design Guides', '设计指南'],
+  ['industry-applications', 'Industry Applications', '行业应用'],
+  ['technology-insights', 'Technology Insights', '技术洞察'],
+  ['project-planning', 'Project Planning', '项目规划'],
+  ['buyer-guides', 'Buyer Guides', '采购指南'],
+  ['best-practices', 'Best Practices', '最佳实践'],
+  ['troubleshooting', 'Troubleshooting', '问题解决'],
+  ['trends-innovations', 'Trends & Innovations', '趋势分析'],
+  ['compliance-safety', 'Compliance & Safety', '法规安全'],
+  ['case-insights', 'Case Insights', '案例拆解'],
+  ['maintenance-operations', 'Maintenance & Operations', '维护运营'],
+  ['productivity-improvement', 'Productivity Improvement', '效率提升'],
+  ['sustainability-energy-saving', 'Sustainability & Energy Saving', '节能减排'],
+];
+
 function escapeHtml(value) {
   return String(value || '').replace(/[&<>"']/g, char => ({
     '&': '&amp;',
@@ -101,8 +155,19 @@ function normalizeFileName(fileName) {
   return withExt;
 }
 
+function normalizeSlug(value, fallback) {
+  const raw = String(value || fallback || '').trim().replace(/\.html$/i, '');
+  const slug = raw
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  if (!slug) throw new Error('URL slug is required.');
+  return slug;
+}
+
 function outputPathFor(post) {
-  return `${post.contentType === 'case' ? 'cases' : 'blog'}/${post.fileName}`;
+  const slug = normalizeSlug(post.urlSlug, post.fileName);
+  return `${post.contentType === 'case' ? 'case' : 'blog'}/${slug}/index.html`;
 }
 
 function resolveWorkspacePath(relativePath) {
@@ -124,7 +189,7 @@ function resolveDraftPath(relativePath) {
 
 function resolveGeneratedHtmlPath(relativePath) {
   const { absolute, relative } = resolveWorkspacePath(relativePath);
-  const isAllowed = relative.startsWith('blog/') || relative.startsWith('cases/');
+  const isAllowed = relative.startsWith('blog/') || relative.startsWith('case/') || relative.startsWith('cases/');
   if (!isAllowed || path.extname(absolute).toLowerCase() !== '.html') {
     throw new Error('Invalid generated HTML path.');
   }
@@ -140,10 +205,19 @@ function draftPathFor(post) {
 function cleanPostPayload(input) {
   const contentType = input.contentType === 'case' ? 'case' : 'blog';
   const fileName = normalizeFileName(input.fileName);
+  const urlSlug = normalizeSlug(input.urlSlug, fileName);
   const industry = String(input.industry || '').trim();
   const solution = String(input.solution || '').trim();
+  const country = String(input.country || '').trim();
+  const functionCategory = String(input.functionCategory || '').trim();
+  const application = String(input.application || '').trim();
+  const blogCategory = String(input.blogCategory || '').trim();
   const industryLabel = INDUSTRIES.find(([value]) => value === industry)?.[1] || input.industryLabel || '';
   const solutionLabel = SOLUTIONS.find(([value]) => value === solution)?.[1] || input.solutionLabel || '';
+  const countryLabel = COUNTRIES.find(([value]) => value === country)?.[1] || input.countryLabel || '';
+  const functionLabel = FUNCTIONS.find(([value]) => value === functionCategory)?.[1] || input.functionLabel || '';
+  const applicationLabel = APPLICATIONS.find(([value]) => value === application)?.[1] || input.applicationLabel || '';
+  const blogCategoryLabel = BLOG_CATEGORIES.find(([value]) => value === blogCategory)?.[1] || input.blogCategoryLabel || '';
   const title = String(input.title || '').trim();
   const contentHtml = String(input.contentHtml || '').trim();
 
@@ -152,24 +226,49 @@ function cleanPostPayload(input) {
 
   return {
     fileName,
+    urlSlug,
     contentType,
     title,
     summary: String(input.summary || '').trim(),
     coverImage: String(input.coverImage || '').trim(),
+    country,
+    countryLabel,
     industry,
     industryLabel,
     solution,
     solutionLabel,
-    category: String(input.category || solutionLabel || (contentType === 'case' ? 'Case Study' : 'Blog')).trim(),
+    functionCategory,
+    functionLabel,
+    application,
+    applicationLabel,
+    blogCategory,
+    blogCategoryLabel,
+    category: String(input.category || blogCategoryLabel || functionLabel || solutionLabel || (contentType === 'case' ? 'Case Study' : 'Blog')).trim(),
     youtubeUrl: String(input.youtubeUrl || '').trim(),
     author: String(input.author || '13ASRS').trim(),
     date: String(input.date || new Date().toISOString().slice(0, 10)).trim(),
     seoTitle: String(input.seoTitle || title).trim(),
     seoDescription: String(input.seoDescription || input.summary || '').trim(),
+    keywords: parseSimpleList(input.keywords),
+    technology: parseSimpleList(input.technology),
+    projectImages: parseSimpleList(input.projectImages),
+    challenge: String(input.challenge || '').trim(),
+    solutionDetail: String(input.solutionDetail || '').trim(),
+    layoutWorkflow: String(input.layoutWorkflow || '').trim(),
+    results: parseSimpleList(input.results),
+    equipmentList: parseSimpleList(input.equipmentList),
     relatedProjects: parseRelated(input.relatedProjects),
     relatedSolutions: parseRelated(input.relatedSolutions),
     contentHtml,
   };
+}
+
+function parseSimpleList(value) {
+  if (Array.isArray(value)) return value.map(item => String(item || '').trim()).filter(Boolean);
+  return String(value || '')
+    .split(/\r?\n|,/)
+    .map(item => item.trim())
+    .filter(Boolean);
 }
 
 function parseRelated(value) {
@@ -197,6 +296,20 @@ function runGenerator(draftPath, force) {
 
   if (result.status !== 0) {
     throw new Error((result.stderr || result.stdout || 'Generator failed.').trim());
+  }
+  return (result.stdout || '').trim();
+}
+
+function runStaticIndexBaker() {
+  const result = spawnSync(process.execPath, [
+    path.join(ROOT, 'tools', 'bake-static-indexes.js'),
+  ], {
+    cwd: ROOT,
+    encoding: 'utf8',
+  });
+
+  if (result.status !== 0) {
+    throw new Error((result.stderr || result.stdout || 'Static index baker failed.').trim());
   }
   return (result.stdout || '').trim();
 }
@@ -348,7 +461,7 @@ function getStagedFiles() {
 function autoPushGeneratedPost(post, draftPath, commitMessage) {
   const outputPath = outputPathFor(post);
   const draftRelPath = path.relative(ROOT, draftPath).replace(/\\/g, '/');
-  const paths = [outputPath, draftRelPath];
+  const paths = [outputPath, draftRelPath, 'blog.html', 'case-studies.html', 'index.html'];
   const title = post.title.replace(/\s+/g, ' ').trim();
   const defaultMessage = `Add static ${post.contentType} page: ${title}`;
   const message = String(commitMessage || defaultMessage).trim();
@@ -362,15 +475,25 @@ function readJsonFile(filePath) {
 function listGeneratedHtmlFiles() {
   const dirs = [
     { dir: path.join(ROOT, 'blog'), contentType: 'blog' },
+    { dir: path.join(ROOT, 'case'), contentType: 'case' },
     { dir: path.join(ROOT, 'cases'), contentType: 'case' },
   ];
   const files = [];
   for (const { dir, contentType } of dirs) {
     if (!fs.existsSync(dir)) continue;
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      if (!entry.isFile() || !entry.name.endsWith('.html')) continue;
-      const relative = path.relative(ROOT, path.join(dir, entry.name)).replace(/\\/g, '/');
-      files.push({ outputPath: relative, fileName: entry.name, contentType });
+      const absolute = path.join(dir, entry.name);
+      if (entry.isFile() && entry.name.endsWith('.html')) {
+        const relative = path.relative(ROOT, absolute).replace(/\\/g, '/');
+        files.push({ outputPath: relative, fileName: entry.name, contentType });
+      }
+      if (entry.isDirectory()) {
+        const indexPath = path.join(absolute, 'index.html');
+        if (fs.existsSync(indexPath)) {
+          const relative = path.relative(ROOT, indexPath).replace(/\\/g, '/');
+          files.push({ outputPath: relative, fileName: `${entry.name}.html`, urlSlug: entry.name, contentType });
+        }
+      }
     }
   }
   return files;
@@ -388,7 +511,8 @@ function listManagedPosts() {
         if (!post.fileName) continue;
         const contentType = post.contentType === 'case' ? 'case' : 'blog';
         const fileName = normalizeFileName(post.fileName);
-        const outputPath = outputPathFor({ contentType, fileName });
+        const urlSlug = normalizeSlug(post.urlSlug, fileName);
+        const outputPath = outputPathFor({ contentType, fileName, urlSlug });
         seenOutputPaths.add(outputPath);
         drafts.push({
           id: path.relative(ROOT, draftAbsolute).replace(/\\/g, '/'),
@@ -396,6 +520,7 @@ function listManagedPosts() {
           outputPath,
           contentType,
           fileName,
+          urlSlug,
           title: post.title || fileName,
           date: post.date || '',
           hasDraft: true,
@@ -426,6 +551,7 @@ function listManagedPosts() {
       outputPath: file.outputPath,
       contentType: file.contentType,
       fileName: file.fileName,
+      urlSlug: file.urlSlug || '',
       title: file.fileName,
       date: '',
       hasDraft: false,
@@ -446,6 +572,7 @@ async function handleGenerate(req, res) {
     fs.writeFileSync(draftPath, `${JSON.stringify(post, null, 2)}\n`, 'utf8');
 
     const output = runGenerator(draftPath, Boolean(input.force));
+    runStaticIndexBaker();
     let gitOutput = '';
     if (input.autoPush) {
       gitOutput = autoPushGeneratedPost(post, draftPath, input.commitMessage);
@@ -455,7 +582,7 @@ async function handleGenerate(req, res) {
       draftPath: path.relative(ROOT, draftPath).replace(/\\/g, '/'),
       outputPath: outputPathFor(post),
       previewUrl: `/${outputPathFor(post)}`,
-      generatorOutput: output,
+      generatorOutput: [output, indexOutput].filter(Boolean).join('\n'),
       gitOutput,
     });
   } catch (error) {
@@ -534,9 +661,11 @@ async function handleDeletePost(req, res) {
     if (!removed.length) throw new Error('Nothing was deleted.');
 
     let gitOutput = '';
+    const indexOutput = runStaticIndexBaker();
+
     if (input.autoPush) {
       const message = String(input.commitMessage || `Delete static page: ${title}`).trim();
-      gitOutput = stageCommitPush(gitPaths, message);
+      gitOutput = stageCommitPush([...gitPaths, 'blog.html', 'case-studies.html', 'index.html'], message);
     }
 
     sendJson(res, 200, { ok: true, removed, gitOutput });
@@ -554,6 +683,9 @@ function contentTypeFor(filePath) {
   if (ext === '.png') return 'image/png';
   if (ext === '.jpg' || ext === '.jpeg') return 'image/jpeg';
   if (ext === '.webp') return 'image/webp';
+  if (ext === '.mp4') return 'video/mp4';
+  if (ext === '.webm') return 'video/webm';
+  if (ext === '.ogg' || ext === '.ogv') return 'video/ogg';
   return 'application/octet-stream';
 }
 
@@ -615,6 +747,12 @@ function renderApp() {
     .manage-box { display:grid; gap:10px; padding:12px; border:1px solid var(--line); border-radius:14px; background:#f8fafc; }
     .manage-actions { display:flex; gap:8px; flex-wrap:wrap; }
     .danger { background:#fee2e2; color:#991b1b; }
+    .template-box { display:grid; gap:14px; padding:14px; border:1px solid var(--line); border-radius:14px; background:#f8fafc; }
+    .template-box h3 { margin:0; font-size:16px; }
+    .template-box textarea { min-height:96px; }
+    .advanced-html { border:1px dashed var(--line); border-radius:14px; padding:12px 14px; background:#fff; }
+    .advanced-html summary { cursor:pointer; font-weight:800; color:#26344d; }
+    .advanced-html label { margin-top:12px; }
     .git-status { margin:18px 28px 0; padding:14px 16px; border-radius:14px; border:1px solid var(--line); background:#fff7ed; color:#9a3412; display:flex; justify-content:space-between; gap:14px; align-items:center; }
     .git-status.ready { background:#ecfdf5; color:#065f46; }
     .git-status.error { background:#fff1f2; color:#991b1b; }
@@ -677,6 +815,12 @@ function renderApp() {
             <span class="hint" data-i18n="fileNameHint">只填文件名。路径会自动变成 blog/my-article.html 或 cases/my-article.html。</span>
           </label>
         </div>
+        <div>
+          <label><span data-i18n="urlSlug">URL Slug</span>
+            <input name="urlSlug" id="urlSlug" placeholder="chemical-asrs-project-malaysia" data-i18n-placeholder="urlSlugPlaceholder">
+            <span class="hint" data-i18n="urlSlugHint">用于生成 /blog/slug/ 或 /case/slug/，留空时自动根据文件名生成。</span>
+          </label>
+        </div>
         <div class="path-preview" id="pathPreview">blog/my-article.html</div>
         <label><span data-i18n="title">标题</span><input name="title" id="title" required></label>
         <label><span data-i18n="summary">摘要</span><textarea name="summary"></textarea></label>
@@ -685,15 +829,43 @@ function renderApp() {
           <label><span data-i18n="solution">方案</span><select name="solution" id="solution">${renderOptions(SOLUTIONS)}</select></label>
         </div>
         <div class="row">
-          <label><span data-i18n="coverImage">封面图片 URL</span><input name="coverImage" placeholder="system-acr.webp 或 https://..." data-i18n-placeholder="coverImagePlaceholder"></label>
-          <label><span data-i18n="youtubeUrl">YouTube URL</span><input name="youtubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." data-i18n-placeholder="youtubePlaceholder"></label>
+          <label><span data-i18n="country">国家</span><select name="country" id="country">${renderOptions(COUNTRIES)}</select></label>
+          <label><span data-i18n="blogCategory">Blog 分类</span><select name="blogCategory" id="blogCategory">${renderOptions(BLOG_CATEGORIES)}</select></label>
         </div>
+        <div class="row">
+          <label><span data-i18n="functionCategory">功能分类</span><select name="functionCategory" id="functionCategory">${renderOptions(FUNCTIONS)}</select></label>
+          <label><span data-i18n="application">应用场景</span><select name="application" id="application">${renderOptions(APPLICATIONS)}</select></label>
+        </div>
+        <label><span data-i18n="technology">核心技术</span>
+          <textarea name="technology" placeholder="ASRS&#10;Stacker Crane&#10;WMS" data-i18n-placeholder="technologyPlaceholder"></textarea>
+          <span class="hint" data-i18n="technologyHint">每行一个，可填写 ASRS、AGV、AMR、Conveyor、Robot、WMS、MES 等。</span>
+        </label>
+        <div class="row">
+          <label><span data-i18n="coverImage">封面图片 URL / 本地文件</span><input name="coverImage" placeholder="可留空，或填 images/example.webp / https://..." data-i18n-placeholder="coverImagePlaceholder"></label>
+          <label><span data-i18n="youtubeUrl">视频 URL / 本地文件</span><input name="youtubeUrl" placeholder="可留空，或填 videos/demo.mp4 / YouTube URL" data-i18n-placeholder="youtubePlaceholder"></label>
+        </div>
+        <label><span data-i18n="projectImages">项目图片 / 图纸</span>
+          <textarea name="projectImages" placeholder="images/layout.webp | Layout Drawing&#10;images/site-photo.webp | Site Photo" data-i18n-placeholder="projectImagesPlaceholder"></textarea>
+          <span class="hint" data-i18n="projectImagesHint">每行一个，支持本地图片或 URL。格式：图片路径 | 说明。</span>
+        </label>
+        <label><span data-i18n="challenge">Challenge 客户痛点</span><textarea name="challenge"></textarea></label>
+        <label><span data-i18n="solutionDetail">Solution 解决方案</span><textarea name="solutionDetail"></textarea></label>
+        <label><span data-i18n="layoutWorkflow">Workflow & Layout 流程与布局</span><textarea name="layoutWorkflow"></textarea></label>
+        <label><span data-i18n="results">Results & ROI 量化结果</span>
+          <textarea name="results" placeholder="Storage Capacity +300%&#10;Labor Cost -60%&#10;Inventory Accuracy 99.9%" data-i18n-placeholder="resultsPlaceholder"></textarea>
+        </label>
+        <label><span data-i18n="equipmentList">Equipment List 项目设备</span>
+          <textarea name="equipmentList" placeholder="Stacker Crane&#10;Conveyor System&#10;WMS" data-i18n-placeholder="equipmentPlaceholder"></textarea>
+        </label>
         <div class="row">
           <label><span data-i18n="author">作者</span><input name="author" value="13ASRS"></label>
           <label><span data-i18n="date">日期</span><input name="date" type="date" value="${today}"></label>
         </div>
         <label><span data-i18n="seoTitle">SEO 标题</span><input name="seoTitle"></label>
         <label><span data-i18n="seoDescription">SEO 描述</span><input name="seoDescription"></label>
+        <label><span data-i18n="keywords">SEO 关键词</span>
+          <textarea name="keywords" placeholder="Chemical Warehouse Automation&#10;ASRS Malaysia" data-i18n-placeholder="keywordsPlaceholder"></textarea>
+        </label>
         <label><span data-i18n="relatedProjects">相关案例</span>
           <textarea name="relatedProjects" placeholder="标题 | case-studies.html&#10;另一个标题 | cases/example.html" data-i18n-placeholder="relatedProjectsPlaceholder"></textarea>
           <span class="hint" data-i18n="relatedHint">每行一个，格式：标题 | 链接。只写标题也可以。</span>
@@ -701,12 +873,27 @@ function renderApp() {
         <label><span data-i18n="relatedSolutions">相关方案</span>
           <textarea name="relatedSolutions" placeholder="ASRS 仓储方案 | solutions.html#asrs" data-i18n-placeholder="relatedSolutionsPlaceholder"></textarea>
         </label>
-        <label><span data-i18n="contentHtml">正文 HTML</span>
-          <textarea name="contentHtml" id="contentHtml" required><h2>项目概览</h2>
+        <div class="template-box">
+          <h3 data-i18n="bodyTemplateTitle">正文模板</h3>
+          <span class="hint" data-i18n="bodyTemplateHint">直接填写下面这些段落，工具会自动生成正文 HTML。</span>
+          <label><span data-i18n="bodyOverview">项目概览 / 文章开头</span><textarea id="bodyOverview" data-template-field="overview"></textarea></label>
+          <label><span data-i18n="bodyKeyPoints">核心要点</span>
+            <textarea id="bodyKeyPoints" data-template-field="keyPoints" data-i18n-placeholder="bodyKeyPointsPlaceholder" placeholder="每行一个要点"></textarea>
+            <span class="hint" data-i18n="bodyKeyPointsHint">可选。每行会自动变成一个列表项。</span>
+          </label>
+          <label><span data-i18n="bodyProcess">实施过程 / 工作流程</span><textarea id="bodyProcess" data-template-field="process"></textarea></label>
+          <label><span data-i18n="bodyValue">客户价值 / 结果</span><textarea id="bodyValue" data-template-field="value"></textarea></label>
+          <label><span data-i18n="bodyConclusion">结尾 / 下一步</span><textarea id="bodyConclusion" data-template-field="conclusion"></textarea></label>
+        </div>
+        <details class="advanced-html">
+          <summary data-i18n="advancedHtmlToggle">高级：查看 / 编辑生成的 HTML</summary>
+          <label><span data-i18n="contentHtml">正文 HTML</span>
+            <textarea name="contentHtml" id="contentHtml" required><h2>项目概览</h2>
 <p>在这里填写文章或案例正文。</p>
 <h2>解决方案</h2>
 <p>描述方案、设备、流程和客户价值。</p></textarea>
-        </label>
+          </label>
+        </details>
         <label><input name="force" type="checkbox" style="width:auto;"> <span data-i18n="overwriteExisting">如果 HTML 已存在，覆盖它</span></label>
         <label><input name="autoPush" type="checkbox" style="width:auto;"> <span data-i18n="autoPush">生成后自动提交并推送到 GitHub</span></label>
         <label><span data-i18n="commitMessage">提交说明</span>
@@ -733,15 +920,25 @@ function renderApp() {
     const frame = document.getElementById('previewFrame');
     const contentType = document.getElementById('contentType');
     const fileName = document.getElementById('fileName');
+    const urlSlug = document.getElementById('urlSlug');
     const pathPreview = document.getElementById('pathPreview');
     const existingPostSelect = document.getElementById('existingPostSelect');
     const studioLanguage = document.getElementById('studioLanguage');
     const gitStatus = document.getElementById('gitStatus');
     const gitLoginButton = document.getElementById('gitLoginButton');
+    const templateFields = {
+      overview: document.getElementById('bodyOverview'),
+      keyPoints: document.getElementById('bodyKeyPoints'),
+      process: document.getElementById('bodyProcess'),
+      value: document.getElementById('bodyValue'),
+      conclusion: document.getElementById('bodyConclusion'),
+    };
     let existingPosts = [];
     let currentUiLanguage = localStorage.getItem('staticPostStudioLanguage') || 'zh';
     let gitConnectionReady = false;
     let lastGitStatus = null;
+    let syncingTemplate = false;
+    let htmlManuallyEdited = false;
 
     const I18N = {
       zh: {
@@ -758,24 +955,56 @@ function renderApp() {
         contentType: '内容类型',
         fileName: '文件名',
         fileNamePlaceholder: 'my-article.html',
-        fileNameHint: '只填文件名。路径会自动变成 blog/my-article.html 或 cases/my-article.html。',
+        fileNameHint: '用于草稿和兼容文件名。实际 URL 会优先使用 URL Slug。',
+        urlSlug: 'URL Slug',
+        urlSlugPlaceholder: 'chemical-asrs-project-malaysia',
+        urlSlugHint: '用于生成 /blog/slug/ 或 /case/slug/，留空时自动根据文件名生成。',
         title: '标题',
         summary: '摘要',
         industry: '行业',
         solution: '方案',
-        coverImage: '封面图片 URL',
-        coverImagePlaceholder: 'system-acr.webp 或 https://...',
-        youtubeUrl: 'YouTube URL',
-        youtubePlaceholder: 'https://www.youtube.com/watch?v=...',
+        country: '国家',
+        blogCategory: 'Blog 分类',
+        functionCategory: '功能分类',
+        application: '应用场景',
+        technology: '核心技术',
+        technologyPlaceholder: 'ASRS\\nStacker Crane\\nWMS',
+        technologyHint: '每行一个，可填写 ASRS、AGV、AMR、Conveyor、Robot、WMS、MES 等。',
+        coverImage: '封面图片 URL / 本地文件',
+        coverImagePlaceholder: '可留空，或填 images/example.webp / https://...',
+        youtubeUrl: '视频 URL / 本地文件',
+        youtubePlaceholder: '可留空，或填 videos/demo.mp4 / YouTube URL',
+        projectImages: '项目图片 / 图纸',
+        projectImagesPlaceholder: 'images/layout.webp | Layout Drawing\\nimages/site-photo.webp | Site Photo',
+        projectImagesHint: '每行一个，支持本地图片或 URL。格式：图片路径 | 说明。',
+        challenge: 'Challenge 客户痛点',
+        solutionDetail: 'Solution 解决方案',
+        layoutWorkflow: 'Workflow & Layout 流程与布局',
+        results: 'Results & ROI 量化结果',
+        resultsPlaceholder: 'Storage Capacity +300%\\nLabor Cost -60%\\nInventory Accuracy 99.9%',
+        equipmentList: 'Equipment List 项目设备',
+        equipmentPlaceholder: 'Stacker Crane\\nConveyor System\\nWMS',
         author: '作者',
         date: '日期',
         seoTitle: 'SEO 标题',
         seoDescription: 'SEO 描述',
+        keywords: 'SEO 关键词',
+        keywordsPlaceholder: 'Chemical Warehouse Automation\\nASRS Malaysia',
         relatedProjects: '相关案例',
         relatedProjectsPlaceholder: '标题 | case-studies.html\\n另一个标题 | cases/example.html',
         relatedHint: '每行一个，格式：标题 | 链接。只写标题也可以。',
         relatedSolutions: '相关方案',
         relatedSolutionsPlaceholder: 'ASRS 仓储方案 | solutions.html#asrs',
+        bodyTemplateTitle: '正文模板',
+        bodyTemplateHint: '直接填写下面这些段落，工具会自动生成正文 HTML。',
+        bodyOverview: '项目概览 / 文章开头',
+        bodyKeyPoints: '核心要点',
+        bodyKeyPointsPlaceholder: '每行一个要点',
+        bodyKeyPointsHint: '可选。每行会自动变成一个列表项。',
+        bodyProcess: '实施过程 / 工作流程',
+        bodyValue: '客户价值 / 结果',
+        bodyConclusion: '结尾 / 下一步',
+        advancedHtmlToggle: '高级：查看 / 编辑生成的 HTML',
         contentHtml: '正文 HTML',
         overwriteExisting: '如果 HTML 已存在，覆盖它',
         autoPush: '生成后自动提交并推送到 GitHub',
@@ -834,24 +1063,56 @@ function renderApp() {
         contentType: 'Content Type',
         fileName: 'File Name',
         fileNamePlaceholder: 'my-article.html',
-        fileNameHint: 'Only enter the file name. The tool will create blog/my-article.html or cases/my-article.html.',
+        fileNameHint: 'Used for drafts and compatibility. The actual URL prefers URL Slug.',
+        urlSlug: 'URL Slug',
+        urlSlugPlaceholder: 'chemical-asrs-project-malaysia',
+        urlSlugHint: 'Generates /blog/slug/ or /case/slug/. If empty, it is generated from the file name.',
         title: 'Title',
         summary: 'Summary',
         industry: 'Industry',
         solution: 'Solution',
-        coverImage: 'Cover Image URL',
-        coverImagePlaceholder: 'system-acr.webp or https://...',
-        youtubeUrl: 'YouTube URL',
-        youtubePlaceholder: 'https://www.youtube.com/watch?v=...',
+        country: 'Country',
+        blogCategory: 'Blog Category',
+        functionCategory: 'Function',
+        application: 'Application',
+        technology: 'Technology',
+        technologyPlaceholder: 'ASRS\\nStacker Crane\\nWMS',
+        technologyHint: 'One item per line, such as ASRS, AGV, AMR, Conveyor, Robot, WMS, and MES.',
+        coverImage: 'Cover Image URL / Local File',
+        coverImagePlaceholder: 'Optional. Use images/example.webp or https://...',
+        youtubeUrl: 'Video URL / Local File',
+        youtubePlaceholder: 'Optional. Use videos/demo.mp4 or a YouTube URL',
+        projectImages: 'Project Images / Drawings',
+        projectImagesPlaceholder: 'images/layout.webp | Layout Drawing\\nimages/site-photo.webp | Site Photo',
+        projectImagesHint: 'One item per line. Supports local image paths or URLs. Format: image path | description.',
+        challenge: 'Challenge',
+        solutionDetail: 'Solution',
+        layoutWorkflow: 'Workflow & Layout',
+        results: 'Results & ROI',
+        resultsPlaceholder: 'Storage Capacity +300%\\nLabor Cost -60%\\nInventory Accuracy 99.9%',
+        equipmentList: 'Equipment List',
+        equipmentPlaceholder: 'Stacker Crane\\nConveyor System\\nWMS',
         author: 'Author',
         date: 'Date',
         seoTitle: 'SEO Title',
         seoDescription: 'SEO Description',
+        keywords: 'SEO Keywords',
+        keywordsPlaceholder: 'Chemical Warehouse Automation\\nASRS Malaysia',
         relatedProjects: 'Related Projects',
         relatedProjectsPlaceholder: 'Title | case-studies.html\\nAnother title | cases/example.html',
         relatedHint: 'One item per line. Format: Title | link. A title-only line is also allowed.',
         relatedSolutions: 'Related Solutions',
         relatedSolutionsPlaceholder: 'ASRS Warehouse Solution | solutions.html#asrs',
+        bodyTemplateTitle: 'Body Template',
+        bodyTemplateHint: 'Fill these plain-text sections. The tool will generate the HTML body automatically.',
+        bodyOverview: 'Project Overview / Opening',
+        bodyKeyPoints: 'Key Points',
+        bodyKeyPointsPlaceholder: 'One key point per line',
+        bodyKeyPointsHint: 'Optional. Each line becomes one list item.',
+        bodyProcess: 'Implementation / Workflow',
+        bodyValue: 'Customer Value / Results',
+        bodyConclusion: 'Conclusion / Next Step',
+        advancedHtmlToggle: 'Advanced: view / edit generated HTML',
         contentHtml: 'Content HTML',
         overwriteExisting: 'Overwrite existing HTML if it already exists',
         autoPush: 'Commit and push this generated page to GitHub after generation',
@@ -903,8 +1164,137 @@ function renderApp() {
       en: '<h2>Project Overview</h2>\\n<p>Write the article or case study body here.</p>\\n<h2>Solution</h2>\\n<p>Describe the solution, equipment, workflow, and customer value.</p>'
     };
 
+    const DEFAULT_BODY_TEMPLATE = {
+      zh: {
+        overview: '在这里填写文章或案例的背景、客户情况和项目目标。',
+        keyPoints: '客户当前遇到的问题\\n本项目采用的自动化方案\\n项目带来的业务价值',
+        process: '描述系统布局、物流路径、设备协同方式和实施流程。',
+        value: '描述效率提升、容量提升、人工节省、准确率提升等结果。',
+        conclusion: '总结这个项目对类似客户的参考价值，并引导客户咨询方案。'
+      },
+      en: {
+        overview: 'Describe the background, customer situation, and project goal.',
+        keyPoints: 'Customer challenge\\nAutomation solution used\\nBusiness value delivered',
+        process: 'Describe the layout, workflow, equipment coordination, and implementation process.',
+        value: 'Describe improvements such as capacity, labor savings, accuracy, or ROI.',
+        conclusion: 'Summarize why this project is useful for similar customers and invite consultation.'
+      }
+    };
+
     function tr(key) {
       return (I18N[currentUiLanguage] && I18N[currentUiLanguage][key]) || I18N.en[key] || key;
+    }
+
+    function escapeHtmlClient(value) {
+      return String(value || '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char]));
+    }
+
+    function paragraphsFromText(value) {
+      return String(value || '')
+        .split(/\\n{2,}/)
+        .map(part => part.trim())
+        .filter(Boolean)
+        .map(part => '<p>' + escapeHtmlClient(part).replace(/\\n/g, '<br>') + '</p>')
+        .join('\\n');
+    }
+
+    function listFromLines(value) {
+      const items = String(value || '').split(/\\r?\\n/).map(line => line.trim()).filter(Boolean);
+      if (!items.length) return '';
+      return '<ul>\\n' + items.map(item => '  <li>' + escapeHtmlClient(item) + '</li>').join('\\n') + '\\n</ul>';
+    }
+
+    function hasTemplateContent() {
+      return Object.values(templateFields).some(field => field.value.trim());
+    }
+
+    function buildContentHtmlFromTemplate() {
+      const headings = currentUiLanguage === 'en'
+        ? {
+          overview: 'Project Overview',
+          keyPoints: 'Key Points',
+          process: 'Implementation & Workflow',
+          value: 'Customer Value & Results',
+          conclusion: 'Conclusion'
+        }
+        : {
+          overview: '项目概览',
+          keyPoints: '核心要点',
+          process: '实施过程与工作流程',
+          value: '客户价值与结果',
+          conclusion: '结论与下一步'
+        };
+      const sections = [];
+      const overview = paragraphsFromText(templateFields.overview.value);
+      if (overview) sections.push('<h2>' + headings.overview + '</h2>\\n' + overview);
+      const keyPoints = listFromLines(templateFields.keyPoints.value);
+      if (keyPoints) sections.push('<h2>' + headings.keyPoints + '</h2>\\n' + keyPoints);
+      const process = paragraphsFromText(templateFields.process.value);
+      if (process) sections.push('<h2>' + headings.process + '</h2>\\n' + process);
+      const value = paragraphsFromText(templateFields.value.value);
+      if (value) sections.push('<h2>' + headings.value + '</h2>\\n' + value);
+      const conclusion = paragraphsFromText(templateFields.conclusion.value);
+      if (conclusion) sections.push('<h2>' + headings.conclusion + '</h2>\\n' + conclusion);
+      return sections.join('\\n');
+    }
+
+    function syncTemplateToHtml() {
+      if (syncingTemplate) return;
+      syncingTemplate = true;
+      try {
+        form.contentHtml.value = buildContentHtmlFromTemplate() || DEFAULT_CONTENT_HTML[currentUiLanguage];
+        htmlManuallyEdited = false;
+      } finally {
+        syncingTemplate = false;
+      }
+    }
+
+    function fillDefaultBodyTemplate(force) {
+      const defaults = DEFAULT_BODY_TEMPLATE[currentUiLanguage] || DEFAULT_BODY_TEMPLATE.zh;
+      if (!force && hasTemplateContent()) return;
+      Object.entries(defaults).forEach(([key, value]) => {
+        templateFields[key].value = value;
+      });
+      syncTemplateToHtml();
+    }
+
+    function plainTextFromHtml(html) {
+      const div = document.createElement('div');
+      div.innerHTML = html || '';
+      return div.textContent.replace(/\s+/g, ' ').trim();
+    }
+
+    function setTemplateFromHtml(html) {
+      Object.values(templateFields).forEach(field => { field.value = ''; });
+      const parser = new DOMParser();
+      const doc = parser.parseFromString('<div>' + (html || '') + '</div>', 'text/html');
+      const headings = Array.from(doc.body.querySelectorAll('h2, h3'));
+      if (!headings.length) {
+        templateFields.overview.value = plainTextFromHtml(html);
+        htmlManuallyEdited = false;
+        return;
+      }
+      const buckets = ['overview', 'keyPoints', 'process', 'value', 'conclusion'];
+      headings.slice(0, buckets.length).forEach((heading, index) => {
+        const parts = [];
+        let node = heading.nextElementSibling;
+        while (node && !/^H[23]$/i.test(node.tagName)) {
+          if (node.tagName === 'UL' || node.tagName === 'OL') {
+            parts.push(Array.from(node.querySelectorAll('li')).map(li => li.textContent.trim()).filter(Boolean).join('\\n'));
+          } else {
+            parts.push(node.textContent.trim());
+          }
+          node = node.nextElementSibling;
+        }
+        templateFields[buckets[index]].value = parts.filter(Boolean).join('\\n\\n');
+      });
+      htmlManuallyEdited = false;
     }
 
     function applyUiLanguage(language) {
@@ -928,9 +1318,12 @@ function renderApp() {
       document.querySelectorAll('option[data-label-en][data-label-zh]').forEach(option => {
         option.textContent = currentUiLanguage === 'en' ? option.dataset.labelEn : option.dataset.labelZh;
       });
-      const currentTemplate = form.contentHtml.value.trim();
-      if (!currentTemplate || Object.values(DEFAULT_CONTENT_HTML).includes(currentTemplate)) {
-        form.contentHtml.value = DEFAULT_CONTENT_HTML[currentUiLanguage];
+      const currentHtml = form.contentHtml.value.trim();
+      const isDefaultHtml = Object.values(DEFAULT_CONTENT_HTML).includes(currentHtml);
+      if (!hasTemplateContent() && (!currentHtml || isDefaultHtml)) {
+        fillDefaultBodyTemplate(false);
+      } else if (hasTemplateContent() && !htmlManuallyEdited) {
+        syncTemplateToHtml();
       }
       if (lastGitStatus) {
         renderGitStatus(lastGitStatus);
@@ -993,9 +1386,14 @@ function renderApp() {
       return raw.toLowerCase().endsWith('.html') ? raw : raw + '.html';
     }
 
+    function normalizedSlug() {
+      const raw = (urlSlug.value.trim() || normalizedFileName().replace(/\\.html$/i, ''));
+      return raw.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'my-article';
+    }
+
     function updatePathPreview() {
-      const dir = contentType.value === 'case' ? 'cases' : 'blog';
-      pathPreview.textContent = dir + '/' + normalizedFileName();
+      const dir = contentType.value === 'case' ? 'case' : 'blog';
+      pathPreview.textContent = dir + '/' + normalizedSlug() + '/index.html';
     }
 
     contentType.addEventListener('change', () => {
@@ -1003,6 +1401,7 @@ function renderApp() {
       renderPostList();
     });
     fileName.addEventListener('input', updatePathPreview);
+    urlSlug.addEventListener('input', updatePathPreview);
     updatePathPreview();
     studioLanguage.addEventListener('change', async () => {
       applyUiLanguage(studioLanguage.value);
@@ -1028,6 +1427,11 @@ function renderApp() {
         if (typeof item === 'string') return item;
         return item.href ? item.title + ' | ' + item.href : item.title;
       }).filter(Boolean).join('\\n');
+    }
+
+    function listToTextarea(value) {
+      if (!Array.isArray(value)) return value || '';
+      return value.filter(Boolean).join('\\n');
     }
 
     function getSelectedPost() {
@@ -1076,19 +1480,33 @@ function renderApp() {
       const post = result.post;
       form.contentType.value = post.contentType || 'blog';
       form.fileName.value = post.fileName || '';
+      form.urlSlug.value = post.urlSlug || '';
       form.title.value = post.title || '';
       form.summary.value = post.summary || '';
       form.coverImage.value = post.coverImage || '';
+      form.country.value = post.country || '';
       form.industry.value = post.industry || '';
       form.solution.value = post.solution || '';
+      form.functionCategory.value = post.functionCategory || '';
+      form.application.value = post.application || '';
+      form.blogCategory.value = post.blogCategory || '';
+      form.technology.value = listToTextarea(post.technology);
       form.youtubeUrl.value = post.youtubeUrl || '';
       form.author.value = post.author || '13ASRS';
       form.date.value = post.date || '';
       form.seoTitle.value = post.seoTitle || '';
       form.seoDescription.value = post.seoDescription || '';
+      form.keywords.value = listToTextarea(post.keywords);
+      form.projectImages.value = listToTextarea(post.projectImages);
+      form.challenge.value = post.challenge || '';
+      form.solutionDetail.value = post.solutionDetail || '';
+      form.layoutWorkflow.value = post.layoutWorkflow || '';
+      form.results.value = listToTextarea(post.results);
+      form.equipmentList.value = listToTextarea(post.equipmentList);
       form.relatedProjects.value = relatedToTextarea(post.relatedProjects);
       form.relatedSolutions.value = relatedToTextarea(post.relatedSolutions);
       form.contentHtml.value = post.contentHtml || '';
+      setTemplateFromHtml(form.contentHtml.value);
       form.force.checked = true;
       updatePathPreview();
       renderPostList();
@@ -1137,6 +1555,12 @@ function renderApp() {
       statusBox.className = 'status error';
       statusBox.textContent = error.message;
     }));
+    Object.values(templateFields).forEach(field => {
+      field.addEventListener('input', syncTemplateToHtml);
+    });
+    form.contentHtml.addEventListener('input', () => {
+      if (!syncingTemplate) htmlManuallyEdited = true;
+    });
     refreshPostList().catch(error => {
       existingPostSelect.innerHTML = '<option value="">' + tr('couldNotLoadPages') + '</option>';
       statusBox.className = 'status error';
@@ -1146,14 +1570,26 @@ function renderApp() {
     document.getElementById('fillExample').addEventListener('click', () => {
       contentType.value = 'case';
       fileName.value = 'sample-automation-case.html';
+      urlSlug.value = 'sample-automation-case';
       form.title.value = tr('sampleTitle');
       form.summary.value = tr('sampleSummary');
       form.coverImage.value = 'system-acr.webp';
+      form.country.value = 'malaysia';
       form.industry.value = 'manufacturing-industrial';
       form.solution.value = 'smart-factory';
+      form.functionCategory.value = 'warehouse-automation';
+      form.application.value = 'warehouse-storage';
+      form.blogCategory.value = '';
+      form.technology.value = 'ASRS\\nStacker Crane\\nWMS';
+      form.projectImages.value = 'images/layout.webp | Layout Drawing\\nimages/site-photo.webp | Site Photo';
+      form.challenge.value = 'Customer needed higher storage density, lower labor dependency, and more accurate inventory control.';
+      form.solutionDetail.value = '13ASRS designed an automated warehouse system with stacker cranes, conveyors, and WMS integration.';
+      form.layoutWorkflow.value = 'Inbound pallets are scanned, conveyed to storage, retrieved by WMS orders, and dispatched through outbound lanes.';
+      form.results.value = 'Storage Capacity +300%\\nLabor Cost -60%\\nInventory Accuracy 99.9%';
+      form.equipmentList.value = 'Stacker Crane\\nConveyor System\\nWMS';
       form.seoTitle.value = tr('sampleSeoTitle');
       form.seoDescription.value = tr('sampleSeoDescription');
-      form.contentHtml.value = DEFAULT_CONTENT_HTML[currentUiLanguage];
+      fillDefaultBodyTemplate(true);
       updatePathPreview();
     });
 
@@ -1161,6 +1597,9 @@ function renderApp() {
       event.preventDefault();
       statusBox.className = 'status';
       statusBox.textContent = tr('generating');
+      if (!htmlManuallyEdited && hasTemplateContent()) {
+        syncTemplateToHtml();
+      }
       const data = Object.fromEntries(new FormData(form).entries());
       data.force = form.force.checked;
       data.autoPush = form.autoPush.checked;

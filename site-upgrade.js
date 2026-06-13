@@ -213,20 +213,21 @@ async function renderLatestCases(containerId, limit = 6) {
     const container = document.getElementById(containerId);
     if (!container) return;
     const staticIds = getStaticCaseIds(container);
-
-    if (typeof blogApi === 'undefined') {
-        if (!staticIds.length) {
-            container.innerHTML = renderLatestCaseSlider(HOME_FALLBACK_CASES.slice(0, limit));
-        }
+    if (staticIds.length) {
         hydrateLatestCaseSliders(container);
         if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
         return;
     }
 
-    if (!staticIds.length) {
-        container.innerHTML = '<div class="loading-message">Loading latest case studies...</div>';
+    if (typeof blogApi === 'undefined') {
+        container.innerHTML = renderLatestCaseSlider(HOME_FALLBACK_CASES.slice(0, limit));
+        hydrateLatestCaseSliders(container);
         if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
+        return;
     }
+
+    container.innerHTML = '<div class="loading-message">Loading latest case studies...</div>';
+    if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
     try {
         const cases = typeof blogApi.getAllCases === 'function' ? await blogApi.getAllCases() : [];
         const latest = [...cases]
@@ -235,20 +236,13 @@ async function renderLatestCases(containerId, limit = 6) {
             .slice(0, limit);
         const caseItems = latest.length ? latest : HOME_FALLBACK_CASES.slice(0, limit);
         const nextIds = caseItems.map(caseItem => String(caseItem.id || ''));
-        if (staticIds.length && staticIds.join(',') === nextIds.join(',')) {
-            hydrateLatestCaseSliders(container);
-            if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
-            return;
-        }
         container.dataset.staticCaseIds = nextIds.join(',');
         container.innerHTML = renderLatestCaseSlider(caseItems);
         hydrateLatestCaseSliders(container);
         if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
     } catch (error) {
         console.error('Error rendering latest cases:', error);
-        if (!staticIds.length) {
-            container.innerHTML = renderLatestCaseSlider(HOME_FALLBACK_CASES.slice(0, limit));
-        }
+        container.innerHTML = renderLatestCaseSlider(HOME_FALLBACK_CASES.slice(0, limit));
         hydrateLatestCaseSliders(container);
         if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();
     }
@@ -695,6 +689,11 @@ async function hydrateCaseLibrary() {
     applyUrlFilters();
     industry.addEventListener('change', filterCases);
     solution.addEventListener('change', filterCases);
+
+    if (getStaticCaseIds(caseGrid).length) {
+        filterCases();
+        return;
+    }
 
     if (typeof blogApi === 'undefined') {
         filterCases();

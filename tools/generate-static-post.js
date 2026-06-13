@@ -7,7 +7,7 @@ const DEFAULT_INPUT = path.join('content', 'static-posts', 'static-post.json');
 const DEFAULT_OUT_DIR = '.';
 const STATIC_POST_DIRS = {
   blog: 'blog',
-  case: 'cases',
+  case: 'case',
 };
 
 function parseArgs(argv) {
@@ -35,7 +35,7 @@ Usage:
 
 Input can be one JSON file, a JSON array, or a directory of JSON files.
 Each post needs fileName, title, contentHtml, and contentType ("blog" or "case").
-Blog pages are generated under blog/<fileName>; case pages are generated under cases/<fileName>.
+Blog pages are generated under blog/<slug>/index.html; case pages are generated under case/<slug>/index.html when urlSlug is present.
 `);
       process.exit(0);
     }
@@ -88,17 +88,34 @@ function normalizeFileName(fileName) {
   return withExt;
 }
 
+function normalizeSlug(value, fallback) {
+  const raw = String(value || fallback || '').trim().replace(/\.html$/i, '');
+  const slug = raw
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  if (!slug) throw new Error('urlSlug is required.');
+  return slug;
+}
+
 function getPostDirectory(contentType) {
   return contentType === 'case' ? STATIC_POST_DIRS.case : STATIC_POST_DIRS.blog;
 }
 
 function getOutputRelativePath(post) {
+  if (post.urlSlug) {
+    return path.join(getPostDirectory(post.contentType), post.urlSlug, 'index.html').replace(/\\/g, '/');
+  }
   return path.join(getPostDirectory(post.contentType), post.fileName).replace(/\\/g, '/');
 }
 
 function getRelativePrefix(outputPath) {
   const depth = outputPath.split('/').length - 1;
   return depth > 0 ? '../'.repeat(depth) : '';
+}
+
+function getPublicUrlPath(outputPath) {
+  return String(outputPath || '').replace(/index\.html$/i, '');
 }
 
 function isExternalUrl(value) {
@@ -139,16 +156,56 @@ function getYouTubeEmbedUrl(url) {
   return '';
 }
 
-function renderYouTubeFrame(url, title) {
-  const embedUrl = getYouTubeEmbedUrl(url);
-  if (!embedUrl) return '<div class="video-placeholder">YouTube project video</div>';
-  return `<iframe src="${escapeHtml(embedUrl)}" title="${escapeHtml(title || '13ASRS project video')}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+function isVideoFile(value) {
+  return /\.(?:mp4|webm|ogg|ogv)(?:[?#].*)?$/i.test(String(value || '').trim());
+}
+
+function splitLines(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.map(item => String(item || '').trim()).filter(Boolean);
+  return String(value)
+    .split(/\r?\n|,/)
+    .map(item => item.trim())
+    .filter(Boolean);
+}
+
+function renderVideoFrame(url, title, prefix) {
+  const raw = String(url || '').trim();
+  if (!raw) return '';
+  const embedUrl = getYouTubeEmbedUrl(raw);
+  if (embedUrl) {
+    return `<div class="video-frame blog-video-frame"><iframe src="${escapeHtml(embedUrl)}" title="${escapeHtml(title || '13ASRS project video')}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`;
+  }
+  const src = prefixSitePath(raw, prefix);
+  if (isVideoFile(src)) {
+    return `<div class="video-frame blog-video-frame"><video controls preload="metadata" playsinline src="${escapeHtml(src)}">Your browser does not support the video tag.</video></div>`;
+  }
+  return `<div class="video-frame blog-video-frame"><iframe src="${escapeHtml(src)}" title="${escapeHtml(title || '13ASRS project video')}" loading="lazy" allowfullscreen></iframe></div>`;
 }
 
 function getPostCover(post) {
-  if (post.coverImage) return post.coverImage;
-  const imgMatch = String(post.contentHtml || post.content || '').match(/<img[^>]+src=["']([^"']+)["'][^>]*>/i);
-  return imgMatch ? imgMatch[1] : 'system-acr.webp';
+  return String(post.coverImage || '').trim();
+}
+
+function renderOptionalSection(title, body) {
+  const value = String(body || '').trim();
+  if (!value) return '';
+  return `<section class="article-section"><h2>${escapeHtml(title)}</h2><div class="blog-content">${value}</div></section>`;
+}
+
+function renderListSection(title, values) {
+  const items = splitLines(values);
+  if (!items.length) return '';
+  return `<section class="article-section"><h2>${escapeHtml(title)}</h2><ul class="static-detail-list">${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`;
+}
+
+function renderProjectGallery(images, prefix) {
+  const items = splitLines(images);
+  if (!items.length) return '';
+  return `<div class="project-gallery">${items.map(item => {
+    const [src, alt] = item.split('|').map(part => part.trim());
+    return `<figure><img src="${escapeHtml(prefixSitePath(src, prefix))}" alt="${escapeHtml(alt || 'Project image')}"></figure>`;
+  }).join('')}</div>`;
 }
 
 function normalizePost(rawPost) {
@@ -160,10 +217,14 @@ function normalizePost(rawPost) {
   };
 
   post.fileName = normalizeFileName(post.fileName);
+  post.urlSlug = normalizeSlug(post.urlSlug, post.fileName);
   post.outputPath = getOutputRelativePath(post);
   post.contentHtml = String(post.contentHtml || post.content || '').trim();
   post.plainText = post.plainText || stripHtml(post.contentHtml);
-  post.category = post.category || post.solutionLabel || (post.contentType === 'case' ? 'Case Study' : 'Blog');
+  post.technology = splitLines(post.technology);
+  post.projectImages = splitLines(post.projectImages);
+  post.keywords = splitLines(post.keywords);
+  post.category = post.category || post.blogCategory || post.functionLabel || post.solutionLabel || (post.contentType === 'case' ? 'Case Study' : 'Blog');
   post.seoTitle = post.seoTitle || `${post.title || '13ASRS Article'} | 13ASRS`;
   post.seoDescription = post.seoDescription || post.summary || post.plainText.slice(0, 160);
 
@@ -212,8 +273,25 @@ function renderStaticPost(post) {
   const isCase = post.contentType === 'case';
   const backHref = siteHref(isCase ? 'case-studies.html' : 'blog.html');
   const backLabel = isCase ? 'Back to Case Studies' : 'Back to Blog';
-  const category = post.category || post.solutionLabel || (isCase ? 'Case Study' : 'Blog');
+  const category = post.category || post.blogCategory || post.functionLabel || post.solutionLabel || (isCase ? 'Case Study' : 'Blog');
   const cover = getPostCover(post);
+  const coverHtml = cover ? `
+                        <figure class="blog-cover-frame">
+                            <img class="blog-cover" src="${escapeHtml(prefixSitePath(cover, prefix))}" alt="${escapeHtml(post.title)}">
+                        </figure>` : '';
+  const videoHtml = renderVideoFrame(post.youtubeUrl || post.videoUrl, post.title, prefix);
+  const technologyLabels = splitLines(post.technology).join(', ');
+  const facts = [
+    ['Country', post.country],
+    ['Industry', post.industryLabel || post.industry],
+    ['Function', post.functionLabel || post.functionCategory],
+    ['Application', post.applicationLabel || post.application],
+    ['Technology', technologyLabels],
+  ].filter(([, value]) => value);
+  const workflowBody = [
+    String(post.layoutWorkflow || '').trim(),
+    renderProjectGallery(post.projectImages, prefix),
+  ].filter(Boolean).join('\n');
   const relatedProjectDefaults = [
     { title: 'ASRS Project', href: siteHref('case-studies.html?solution=asrs#caseGrid') },
     { title: 'Smart Factory Project', href: siteHref('case-studies.html?solution=smart-factory#caseGrid') },
@@ -246,7 +324,7 @@ function renderStaticPost(post) {
     <title>${escapeHtml(post.seoTitle)}</title>
     <meta name="description" content="${escapeHtml(post.seoDescription)}">
     ${post.seoKeywords ? `<meta name="keywords" content="${escapeHtml(post.seoKeywords)}">` : ''}
-    <link rel="canonical" href="https://13asrs.com/${escapeHtml(post.outputPath)}">
+    <link rel="canonical" href="https://13asrs.com/${escapeHtml(getPublicUrlPath(post.outputPath))}">
     <link rel="stylesheet" href="${escapeHtml(siteHref('style.css'))}">
 </head>
 <body class="static-post-page ${isCase ? 'static-case-page' : 'static-blog-page'}">
@@ -304,10 +382,9 @@ function renderStaticPost(post) {
                             </div>
                             <h1 class="blog-title">${escapeHtml(post.title)}</h1>
                             <p class="blog-summary">${escapeHtml(post.summary || '')}</p>
+                            ${facts.length ? `<div class="project-fact-chips">${facts.map(([label, value]) => `<span><strong>${escapeHtml(label)}</strong>${escapeHtml(value)}</span>`).join('')}</div>` : ''}
                         </div>
-                        <figure class="blog-cover-frame">
-                            <img class="blog-cover" src="${escapeHtml(prefixSitePath(cover, prefix))}" alt="${escapeHtml(post.title)}" onerror="this.onerror=null;this.src='${escapeHtml(siteHref('system-acr.webp'))}';">
-                        </figure>
+                        ${coverHtml}
                     </div>
 
                     <div class="blog-article-layout">
@@ -327,12 +404,16 @@ function renderStaticPost(post) {
                         </aside>
 
                         <div class="blog-main-column">
-                            <div class="video-frame blog-video-frame">
-                                ${renderYouTubeFrame(post.youtubeUrl, post.title)}
-                            </div>
+                            ${videoHtml}
                             <section class="article-section blog-content-section">
+                                <h2>Project Overview</h2>
                                 <div class="blog-content">${contentHtml}</div>
                             </section>
+                            ${isCase ? renderOptionalSection('Challenge', post.challenge) : ''}
+                            ${isCase ? renderOptionalSection('Solution', post.solutionDetail || post.solutionText) : ''}
+                            ${isCase ? renderOptionalSection('Workflow & Layout', workflowBody) : ''}
+                            ${isCase ? renderListSection('Equipment Used', post.equipmentList) : ''}
+                            ${isCase ? renderListSection('Results & ROI', post.results) : ''}
                             <section class="article-section" id="related-projects">
                                 <h2>Related Case Studies</h2>
                                 <div class="related-grid">${renderRelatedCards(relatedProjects, relatedProjectDefaults)}</div>

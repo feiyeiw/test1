@@ -60,25 +60,48 @@ function getCaseExcerpt(item, length = 155) {
 function getCaseCover(item) {
   if (item.coverImage) return item.coverImage;
   const imgMatch = String(item.contentHtml || item.content || '').match(/<img[^>]+src=["']([^"']+)["'][^>]*>/i);
-  return imgMatch ? imgMatch[1] : 'system-acr.webp';
+  return imgMatch ? imgMatch[1] : '';
 }
 
 function getCaseLink(item) {
+  if (item.outputPath) return item.outputPath.replace(/index\.html$/i, '');
+  if (item.urlSlug) return `case/${item.urlSlug}/`;
   return item.href || `blog-detail.html?id=${encodeURIComponent(item.id)}`;
+}
+
+function listValues(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.map(item => String(item || '').trim()).filter(Boolean);
+  return String(value).split(/\r?\n|,/).map(item => item.trim()).filter(Boolean);
+}
+
+function firstResult(item) {
+  return listValues(item.results || item.result || item.metrics)[0] || '';
 }
 
 function renderCaseCard(item) {
   const href = getCaseLink(item);
   const title = escapeHtml(item.title || 'Automation Case Study');
+  const cover = getCaseCover(item);
+  const media = cover
+    ? `<a class="blog-index-media" href="${escapeHtml(href)}"><img src="${escapeHtml(cover)}" alt="${title}"></a>`
+    : '';
+  const technologies = listValues(item.technology || item.technologies).slice(0, 4);
+  const technologyText = technologies.join(', ');
+  const resultText = firstResult(item);
+  const videoButton = item.youtubeUrl || item.videoUrl || item.projectVideo
+    ? `<a class="text-link" href="${escapeHtml(href)}">View case and video</a>`
+    : `<a class="text-link" href="${escapeHtml(href)}">View complete case</a>`;
   return `
-                    <article class="blog-index-card case-card-filter" data-case-id="${escapeHtml(item.id)}" data-industry="${escapeHtml(item.industry)}" data-solution="${escapeHtml(item.solution)}">
-                        <a class="blog-index-media" href="${href}"><img src="${escapeHtml(getCaseCover(item))}" alt="${title}" onerror="this.onerror=null;this.src='system-acr.webp';"></a>
+                    <article class="blog-index-card case-card-filter" data-case-id="${escapeHtml(item.id)}" data-function="${escapeHtml(item.functionCategory || item.function || item.solution || '')}" data-industry="${escapeHtml(item.industry || '')}" data-application="${escapeHtml(item.application || '')}" data-technology="${escapeHtml(technologyText)}">
+                        ${media}
                         <div class="blog-index-body">
-                            <div class="blog-card-meta"><span>${escapeHtml(item.industryLabel || 'Case Study')}</span><span>${escapeHtml(item.date || '')}</span></div>
+                            <div class="blog-card-meta"><span>${escapeHtml(item.countryLabel || item.country || 'Project')}</span><span>${escapeHtml(item.industryLabel || item.industry || 'Industry')}</span></div>
                             <h3><a href="${href}">${title}</a></h3>
                             <p>${escapeHtml(getCaseExcerpt(item))}</p>
-                            <div class="blog-card-meta"><span>${escapeHtml(item.solutionLabel || item.category || 'Automation Solution')}</span></div>
-                            <a class="text-link" href="${href}">View complete case and video</a>
+                            <div class="blog-card-meta"><span>${escapeHtml(item.functionLabel || item.functionCategory || item.category || 'Automation Function')}</span><span>${escapeHtml(technologyText || 'Technology')}</span></div>
+                            ${resultText ? `<p><strong>${escapeHtml(resultText)}</strong></p>` : ''}
+                            ${videoButton}
                         </div>
                     </article>`;
 }
@@ -87,11 +110,12 @@ function renderLatestCaseSlider(caseItems) {
   const cards = caseItems.map((item, index) => {
     const href = getCaseLink(item);
     const title = escapeHtml(item.title || 'Automation Case Study');
-    const industry = escapeHtml(item.industryLabel || item.category || 'Case Study');
-    const solution = escapeHtml(item.solutionLabel || 'Automation Solution');
+    const cover = getCaseCover(item);
+    const industry = escapeHtml(item.industryLabel || item.industry || item.category || 'Case Study');
+    const solution = escapeHtml(item.functionLabel || item.functionCategory || item.solutionLabel || 'Automation Solution');
     return `
             <article class="latest-case-card" data-case-id="${escapeHtml(item.id)}">
-                <a class="latest-case-media" href="${escapeHtml(href)}"><img src="${escapeHtml(getCaseCover(item))}" alt="${title}" onerror="this.onerror=null;this.src='system-acr.webp';"></a>
+                ${cover ? `<a class="latest-case-media" href="${escapeHtml(href)}"><img src="${escapeHtml(cover)}" alt="${title}"></a>` : ''}
                 <div class="latest-case-body">
                     <span class="eyebrow">${industry}</span>
                     <h3><a href="${escapeHtml(href)}">${title}</a></h3>
