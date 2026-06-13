@@ -806,7 +806,7 @@ function renderApp() {
     .inline-upload { display:flex; gap:8px; align-items:center; }
     .inline-upload input[type="text"] { flex:1; }
     .upload-button { display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:0 12px; border:1px solid var(--line); border-radius:12px; background:#eef2ff; color:#1e3a8a; font-weight:800; cursor:pointer; white-space:nowrap; }
-    .upload-button input { display:none; }
+    .file-input-hidden { display:none; }
     .related-picker { display:grid; gap:8px; }
     .related-picker-row { display:grid; grid-template-columns:1fr auto; gap:8px; align-items:center; }
     .related-selected { min-height:46px; display:flex; flex-wrap:wrap; gap:8px; padding:10px; border:1px solid var(--line); border-radius:12px; background:#f8fafc; }
@@ -904,16 +904,16 @@ function renderApp() {
         </label>
         <div class="row">
           <label><span data-i18n="coverImage">???? URL / ????</span>
-            <div class="inline-upload"><input name="coverImage" placeholder="?????? images/example.webp / https://..." data-i18n-placeholder="coverImagePlaceholder"><span class="upload-button"><span data-i18n="chooseImage">????</span><input id="coverImageFile" type="file" accept="image/*"></span></div>
+            <div class="inline-upload"><input name="coverImage" placeholder="?????? images/example.webp / https://..." data-i18n-placeholder="coverImagePlaceholder"><button class="upload-button" type="button" id="chooseCoverImageButton" data-i18n="chooseImage">????</button><input class="file-input-hidden" id="coverImageFile" type="file" accept="image/*"></div>
           </label>
           <label><span data-i18n="youtubeUrl">?? URL / ????</span>
-            <div class="inline-upload"><input name="youtubeUrl" placeholder="?????? videos/demo.mp4 / YouTube URL" data-i18n-placeholder="youtubePlaceholder"><span class="upload-button"><span data-i18n="chooseVideo">????</span><input id="projectVideoFile" type="file" accept="video/*"></span></div>
+            <div class="inline-upload"><input name="youtubeUrl" placeholder="?????? videos/demo.mp4 / YouTube URL" data-i18n-placeholder="youtubePlaceholder"><button class="upload-button" type="button" id="chooseProjectVideoButton" data-i18n="chooseVideo">????</button><input class="file-input-hidden" id="projectVideoFile" type="file" accept="video/*"></div>
           </label>
         </div>
         <label><span data-i18n="projectImages">???? / ??</span>
           <textarea name="projectImages" placeholder="images/layout.webp | Layout Drawing&#10;images/site-photo.webp | Site Photo" data-i18n-placeholder="projectImagesPlaceholder"></textarea>
           <span class="hint" data-i18n="projectImagesHint">???????????? URL???????? | ???</span>
-          <span class="upload-button"><span data-i18n="chooseProjectImages">Choose Project Images</span><input id="projectImagesFile" type="file" accept="image/*" multiple></span>
+          <button class="upload-button" type="button" id="chooseProjectImagesButton" data-i18n="chooseProjectImages">Choose Project Images</button><input class="file-input-hidden" id="projectImagesFile" type="file" accept="image/*" multiple>
         </label>
         <label><span data-i18n="challenge">Challenge 瀹㈡埛鐥涚偣</span><textarea name="challenge"></textarea></label>
         <label><span data-i18n="solutionDetail">Solution 瑙ｅ喅鏂规</span><textarea name="solutionDetail"></textarea></label>
@@ -1811,7 +1811,13 @@ function renderApp() {
       const button = event.target.closest('[data-remove-related]');
       if (button) removeRelatedValue(form.relatedSolutions, relatedBlogSelected, button.dataset.removeRelated);
     });
-    document.getElementById('coverImageFile').addEventListener('change', event => {
+    const coverImageFileInput = document.getElementById('coverImageFile');
+    const projectVideoFileInput = document.getElementById('projectVideoFile');
+    const projectImagesFileInput = document.getElementById('projectImagesFile');
+    document.getElementById('chooseCoverImageButton').addEventListener('click', () => coverImageFileInput.click());
+    document.getElementById('chooseProjectVideoButton').addEventListener('click', () => projectVideoFileInput.click());
+    document.getElementById('chooseProjectImagesButton').addEventListener('click', () => projectImagesFileInput.click());
+    coverImageFileInput.addEventListener('change', event => {
       uploadFiles(event.target.files, 'image')
         .then(files => {
           if (files[0]) form.coverImage.value = files[0].path;
@@ -1822,7 +1828,7 @@ function renderApp() {
           statusBox.textContent = error.message;
         });
     });
-    document.getElementById('projectVideoFile').addEventListener('change', event => {
+    projectVideoFileInput.addEventListener('change', event => {
       uploadFiles(event.target.files, 'video')
         .then(files => {
           if (files[0]) form.youtubeUrl.value = files[0].path;
@@ -1833,7 +1839,7 @@ function renderApp() {
           statusBox.textContent = error.message;
         });
     });
-    document.getElementById('projectImagesFile').addEventListener('change', event => {
+    projectImagesFileInput.addEventListener('change', event => {
       uploadFiles(event.target.files, 'image')
         .then(files => {
           appendTextareaLines(form.projectImages, files.map(file => file.path + ' | ' + String(file.name || '').replace(/\\.[^.]+$/, '')));
