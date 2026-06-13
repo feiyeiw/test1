@@ -765,7 +765,7 @@ function renderApp() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>闈欐€?Blog / Case 鐢熸垚鍣?/title>
+  <title>静态 Blog / Case 生成器</title>
   <style>
     :root { color-scheme: light; --bg:#f4f6f8; --panel:#fff; --ink:#172033; --muted:#64748b; --line:#d9e1ec; --brand:#d71920; }
     body { margin:0; font-family: Arial, Helvetica, sans-serif; background:var(--bg); color:var(--ink); }
@@ -807,7 +807,13 @@ function renderApp() {
     .inline-upload input[type="text"] { flex:1; }
     .upload-button { display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:0 12px; border:1px solid var(--line); border-radius:12px; background:#eef2ff; color:#1e3a8a; font-weight:800; cursor:pointer; white-space:nowrap; }
     .upload-button input { display:none; }
-    .multi-select { min-height:120px; }
+    .related-picker { display:grid; gap:8px; }
+    .related-picker-row { display:grid; grid-template-columns:1fr auto; gap:8px; align-items:center; }
+    .related-selected { min-height:46px; display:flex; flex-wrap:wrap; gap:8px; padding:10px; border:1px solid var(--line); border-radius:12px; background:#f8fafc; }
+    .related-selected:empty::before { content:attr(data-empty); color:var(--muted); font-weight:400; }
+    .related-chip { display:inline-flex; align-items:center; gap:8px; max-width:100%; padding:7px 10px; border-radius:999px; background:#e8eef7; color:#24324a; font-size:12px; font-weight:700; }
+    .related-chip span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:360px; }
+    .related-chip button { padding:0; width:20px; height:20px; border-radius:50%; background:#cbd5e1; color:#1f2937; line-height:20px; }
     .hidden-data-field { display:none; }
     .git-status { margin:18px 28px 0; padding:14px 16px; border-radius:14px; border:1px solid var(--line); background:#fff7ed; color:#9a3412; display:flex; justify-content:space-between; gap:14px; align-items:center; }
     .git-status.ready { background:#ecfdf5; color:#065f46; }
@@ -823,13 +829,13 @@ function renderApp() {
   <header>
     <div class="topbar">
       <div>
-        <h1 data-i18n="appTitle">闈欐€?Blog / Case 鐢熸垚鍣?/h1>
-        <p data-i18n-html="appDesc">鏈湴鐢熸垚鐪熷疄 HTML 椤甸潰銆侭log 杈撳嚭鍒?<strong>blog/</strong>锛孋ase 杈撳嚭鍒?<strong>cases/</strong>銆備笉浼氳嚜鍔ㄨ鍙栨垨瑕嗙洊 KV銆?/p>
+        <h1 data-i18n="appTitle">闈欐€?Blog / Case 鐢熸垚鍣</h1>
+        <p data-i18n-html="appDesc">鏈湴鐢熸垚鐪熷疄 HTML 椤甸潰銆侭log 杈撳嚭鍒?<strong>blog/</strong>锛孋ase 杈撳嚭鍒?<strong>cases/</strong>銆備笉浼氳嚜鍔ㄨ鍙栨垨瑕嗙洊 KV銆</p>
       </div>
       <label class="language-switch">
         <span data-i18n="language">璇█</span>
         <select id="studioLanguage">
-          <option value="zh">涓枃</option>
+          <option value="zh">中文</option>
           <option value="en">English</option>
         </select>
       </label>
@@ -838,7 +844,7 @@ function renderApp() {
   <div id="gitStatus" class="git-status checking">
     <div>
       <strong data-i18n="gitChecking">姝ｅ湪妫€鏌?GitHub 杩炴帴...</strong>
-      <small data-i18n="gitCheckingHint">濡傛灉娌℃湁杩炴帴锛屼細鍏堣浣犵櫥褰?GitHub銆?/small>
+      <small data-i18n="gitCheckingHint">濡傛灉娌℃湁杩炴帴锛屼細鍏堣浣犵櫥褰?GitHub銆</small>
     </div>
     <button type="button" id="gitLoginButton" hidden data-i18n="gitLogin">鐧诲綍 GitHub</button>
   </div>
@@ -857,7 +863,7 @@ function renderApp() {
             <select id="existingPostSelect">
               <option value="" data-i18n="loadingPages">姝ｅ湪鍔犺浇宸叉湁椤甸潰...</option>
             </select>
-            <span class="hint" data-i18n="existingHint">鏈?JSON 鑽夌鐨勯〉闈㈠彲浠ュ姞杞藉埌琛ㄥ崟缁х画淇敼锛涘彧鏈?HTML 鐨勯〉闈篃鍙互鍒犻櫎銆?/span>
+            <span class="hint" data-i18n="existingHint">鏈?JSON 鑽夌鐨勯〉闈㈠彲浠ュ姞杞藉埌琛ㄥ崟缁х画淇敼锛涘彧鏈?HTML 鐨勯〉闈篃鍙互鍒犻櫎銆</span>
           </label>
           <div class="manage-actions">
             <button class="ghost" type="button" id="refreshPosts" data-i18n="refreshList">鍒锋柊鍒楄〃</button>
@@ -866,15 +872,15 @@ function renderApp() {
           </div>
         </div>
         <div>
-          <label><span data-i18n="fileName">鏂囦欢鍚?/span>
+          <label><span data-i18n="fileName">鏂囦欢鍚</span>
             <input name="fileName" id="fileName" placeholder="my-article.html" data-i18n-placeholder="fileNamePlaceholder">
-            <span class="hint" data-i18n="fileNameHint">鍙～鏂囦欢鍚嶃€傝矾寰勪細鑷姩鍙樻垚 blog/my-article.html 鎴?cases/my-article.html銆?/span>
+            <span class="hint" data-i18n="fileNameHint">鍙～鏂囦欢鍚嶃€傝矾寰勪細鑷姩鍙樻垚 blog/my-article.html 鎴?cases/my-article.html銆</span>
           </label>
         </div>
         <div>
           <label><span data-i18n="urlSlug">URL Slug</span>
             <input name="urlSlug" id="urlSlug" placeholder="chemical-asrs-project-malaysia" data-i18n-placeholder="urlSlugPlaceholder">
-            <span class="hint" data-i18n="urlSlugHint">鐢ㄤ簬鐢熸垚 /blog/slug/ 鎴?/case/slug/锛岀暀绌烘椂鑷姩鏍规嵁鏂囦欢鍚嶇敓鎴愩€?/span>
+            <span class="hint" data-i18n="urlSlugHint">鐢ㄤ簬鐢熸垚 /blog/slug/ 鎴?/case/slug/锛岀暀绌烘椂鑷姩鏍规嵁鏂囦欢鍚嶇敓鎴愩€</span>
           </label>
         </div>
         <div class="path-preview" id="pathPreview">blog/my-article.html</div>
@@ -892,9 +898,9 @@ function renderApp() {
           <label><span data-i18n="functionCategory">鍔熻兘鍒嗙被</span><select name="functionCategory" id="functionCategory">${renderOptions(FUNCTIONS)}</select></label>
           <label><span data-i18n="application">搴旂敤鍦烘櫙</span><select name="application" id="application">${renderOptions(APPLICATIONS)}</select></label>
         </div>
-        <label><span data-i18n="technology">鏍稿績鎶€鏈?/span>
+        <label><span data-i18n="technology">鏍稿績鎶€鏈</span>
           <textarea name="technology" placeholder="ASRS&#10;Stacker Crane&#10;WMS" data-i18n-placeholder="technologyPlaceholder"></textarea>
-          <span class="hint" data-i18n="technologyHint">姣忚涓€涓紝鍙～鍐?ASRS銆丄GV銆丄MR銆丆onveyor銆丷obot銆乄MS銆丮ES 绛夈€?/span>
+          <span class="hint" data-i18n="technologyHint">姣忚涓€涓紝鍙～鍐?ASRS銆丄GV銆丄MR銆丆onveyor銆丷obot銆乄MS銆丮ES 绛夈€</span>
         </label>
         <div class="row">
           <label><span data-i18n="coverImage">???? URL / ????</span>
@@ -919,62 +925,74 @@ function renderApp() {
           <textarea name="equipmentList" placeholder="Stacker Crane&#10;Conveyor System&#10;WMS" data-i18n-placeholder="equipmentPlaceholder"></textarea>
         </label>
         <div class="row">
-          <label><span data-i18n="author">浣滆€?/span><input name="author" value="13ASRS"></label>
+          <label><span data-i18n="author">浣滆€</span><input name="author" value="13ASRS"></label>
           <label><span data-i18n="date">鏃ユ湡</span><input name="date" type="date" value="${today}"></label>
         </div>
         <label><span data-i18n="seoTitle">SEO 鏍囬</span><input name="seoTitle"></label>
         <label><span data-i18n="seoDescription">SEO 鎻忚堪</span><input name="seoDescription"></label>
-        <label><span data-i18n="keywords">SEO 鍏抽敭璇?/span>
+        <label><span data-i18n="keywords">SEO 鍏抽敭璇</span>
           <textarea name="keywords" placeholder="Chemical Warehouse Automation&#10;ASRS Malaysia" data-i18n-placeholder="keywordsPlaceholder"></textarea>
         </label>
-        <label><span data-i18n="relatedProjects">????</span>
-          <select id="relatedCaseSelect" class="multi-select" multiple></select>
+        <label><span data-i18n="relatedProjects">相关案例</span>
+          <div class="related-picker">
+            <div class="related-picker-row">
+              <select id="relatedCaseSelect"></select>
+              <button class="ghost" type="button" id="addRelatedCase" data-i18n="addRelated">加入</button>
+            </div>
+            <div id="relatedCaseSelected" class="related-selected" data-empty="还没有选择相关案例"></div>
+          </div>
           <textarea class="hidden-data-field" name="relatedProjects"></textarea>
-          <span class="hint" data-i18n="relatedCasesHint">????? Case ??????</span>
+          <span class="hint" data-i18n="relatedCasesHint">从已生成的 Case 页面中选择，点“加入”后会放到下面框中。</span>
         </label>
-        <label><span data-i18n="relatedSolutions">?? Blog</span>
-          <select id="relatedBlogSelect" class="multi-select" multiple></select>
+        <label><span data-i18n="relatedSolutions">相关 Blog</span>
+          <div class="related-picker">
+            <div class="related-picker-row">
+              <select id="relatedBlogSelect"></select>
+              <button class="ghost" type="button" id="addRelatedBlog" data-i18n="addRelated">加入</button>
+            </div>
+            <div id="relatedBlogSelected" class="related-selected" data-empty="还没有选择相关 Blog"></div>
+          </div>
           <textarea class="hidden-data-field" name="relatedSolutions"></textarea>
-          <span class="hint" data-i18n="relatedBlogsHint">????? Blog ??????</span>
+          <span class="hint" data-i18n="relatedBlogsHint">从已生成的 Blog 页面中选择，点“加入”后会放到下面框中。</span>
         </label>
         <div class="template-box">
-          <h3 data-i18n="bodyTemplateTitle">姝ｆ枃妯℃澘</h3>
-          <span class="hint" data-i18n="bodyTemplateHint">鐩存帴濉啓涓嬮潰杩欎簺娈佃惤锛屽伐鍏蜂細鑷姩鐢熸垚姝ｆ枃 HTML銆?/span>
-          <label><span data-i18n="bodyOverview">椤圭洰姒傝 / 鏂囩珷寮€澶?/span><textarea id="bodyOverview" data-template-field="overview"></textarea></label>
-          <label><span data-i18n="bodyKeyPoints">鏍稿績瑕佺偣</span>
-            <textarea id="bodyKeyPoints" data-template-field="keyPoints" data-i18n-placeholder="bodyKeyPointsPlaceholder" placeholder="姣忚涓€涓鐐?></textarea>
-            <span class="hint" data-i18n="bodyKeyPointsHint">鍙€夈€傛瘡琛屼細鑷姩鍙樻垚涓€涓垪琛ㄩ」銆?/span>
+          <h3 data-i18n="bodyTemplateTitle">????</h3>
+          <span class="hint" data-i18n="bodyTemplateHint">???????????????????? HTML?</span>
+          <label><span data-i18n="bodyOverview">???? / ????</span><textarea id="bodyOverview" data-template-field="overview"></textarea></label>
+          <label><span data-i18n="bodyKeyPoints">????</span>
+            <textarea id="bodyKeyPoints" data-template-field="keyPoints" data-i18n-placeholder="bodyKeyPointsPlaceholder" placeholder="??????"></textarea>
+            <span class="hint" data-i18n="bodyKeyPointsHint">????????????????</span>
           </label>
-          <label><span data-i18n="bodyProcess">瀹炴柦杩囩▼ / 宸ヤ綔娴佺▼</span><textarea id="bodyProcess" data-template-field="process"></textarea></label>
-          <label><span data-i18n="bodyValue">瀹㈡埛浠峰€?/ 缁撴灉</span><textarea id="bodyValue" data-template-field="value"></textarea></label>
-          <label><span data-i18n="bodyConclusion">缁撳熬 / 涓嬩竴姝?/span><textarea id="bodyConclusion" data-template-field="conclusion"></textarea></label>
+          <label><span data-i18n="bodyProcess">???? / ???</span><textarea id="bodyProcess" data-template-field="process"></textarea></label>
+          <label><span data-i18n="bodyValue">???? / ??</span><textarea id="bodyValue" data-template-field="value"></textarea></label>
+          <label><span data-i18n="bodyConclusion">?? / ??</span><textarea id="bodyConclusion" data-template-field="conclusion"></textarea></label>
         </div>
         <details class="advanced-html">
-          <summary data-i18n="advancedHtmlToggle">楂樼骇锛氭煡鐪?/ 缂栬緫鐢熸垚鐨?HTML</summary>
-          <label><span data-i18n="contentHtml">姝ｆ枃 HTML</span>
-            <textarea name="contentHtml" id="contentHtml" required><h2>椤圭洰姒傝</h2>
-<p>鍦ㄨ繖閲屽～鍐欐枃绔犳垨妗堜緥姝ｆ枃銆?/p>
-<h2>瑙ｅ喅鏂规</h2>
-<p>鎻忚堪鏂规銆佽澶囥€佹祦绋嬪拰瀹㈡埛浠峰€笺€?/p></textarea>
+          <summary data-i18n="advancedHtmlToggle">????? / ????? HTML</summary>
+          <label><span data-i18n="contentHtml">?? HTML</span>
+            <textarea name="contentHtml" id="contentHtml" required><h2>????</h2>
+<p>??????????</p>
+<h2>????</h2>
+<p>?????????????</p></textarea>
           </label>
         </details>
-        <label><input name="force" type="checkbox" style="width:auto;"> <span data-i18n="overwriteExisting">濡傛灉 HTML 宸插瓨鍦紝瑕嗙洊瀹?/span></label>
-        <label><input name="autoPush" type="checkbox" style="width:auto;"> <span data-i18n="autoPush">鐢熸垚鍚庤嚜鍔ㄦ彁浜ゅ苟鎺ㄩ€佸埌 GitHub</span></label>
-        <label><span data-i18n="commitMessage">鎻愪氦璇存槑</span>
-          <input name="commitMessage" placeholder="娣诲姞闈欐€?Blog 椤甸潰" data-i18n-placeholder="commitMessagePlaceholder">
-          <span class="hint" data-i18n="commitHint">鍙€夈€傜暀绌烘椂浼氳嚜鍔ㄦ牴鎹爣棰樼敓鎴愭彁浜よ鏄庛€?/span>
+        <label><input name="force" type="checkbox" style="width:auto;"> <span data-i18n="overwriteExisting">???? HTML ??</span></label>
+        <label><input name="autoPush" type="checkbox" style="width:auto;"> <span data-i18n="autoPush">??????????? GitHub</span></label>
+        <label><span data-i18n="commitMessage">????</span>
+          <input name="commitMessage" placeholder="Add new Blog or Case page" data-i18n-placeholder="commitMessagePlaceholder">
+          <span class="hint" data-i18n="commitHint">???????????????</span>
         </label>
         <div class="actions">
-          <button class="primary" type="submit" data-i18n="generate">鐢熸垚闈欐€侀〉闈?/button>
-          <button class="ghost" type="button" id="fillExample" data-i18n="fillExample">濉叆绀轰緥</button>
+          <button class="primary" type="submit" data-i18n="generate">????</button>
+          <button class="ghost" type="button" id="fillExample" data-i18n="fillExample">????</button>
         </div>
-        <div id="status" class="status" data-i18n="ready">鍑嗗灏辩华銆?/div>
+        <div id="status" class="status" data-i18n="ready">?????</div>
       </form>
     </section>
     <section class="panel">
-      <h2 data-i18n="preview">棰勮</h2>
+      <h2 data-i18n="preview">??</h2>
       <div class="preview">
-        <iframe id="previewFrame" title="鐢熸垚椤甸潰棰勮" data-i18n-title="previewFrameTitle"></iframe>
+        <iframe id="previewFrame" title="??????" data-i18n-title="previewFrameTitle"></iframe>
       </div>
     </section>
   </main>
@@ -993,6 +1011,10 @@ function renderApp() {
     const titleInput = document.getElementById('title');
     const relatedCaseSelect = document.getElementById('relatedCaseSelect');
     const relatedBlogSelect = document.getElementById('relatedBlogSelect');
+    const addRelatedCaseButton = document.getElementById('addRelatedCase');
+    const addRelatedBlogButton = document.getElementById('addRelatedBlog');
+    const relatedCaseSelected = document.getElementById('relatedCaseSelected');
+    const relatedBlogSelected = document.getElementById('relatedBlogSelected');
     const templateFields = {
       overview: document.getElementById('bodyOverview'),
       keyPoints: document.getElementById('bodyKeyPoints'),
@@ -1256,6 +1278,7 @@ function renderApp() {
     };
 
     function tr(key) {
+      if (key === 'addRelated') return currentUiLanguage === 'en' ? 'Add' : '加入';
       return (I18N[currentUiLanguage] && I18N[currentUiLanguage][key]) || I18N.en[key] || key;
     }
 
@@ -1580,34 +1603,68 @@ function renderApp() {
       return new Set(String(textarea.value || '').split(/\\r?\\n/).map(line => line.trim()).filter(Boolean));
     }
 
-    function syncSelectFromTextarea(select, textarea) {
-      const selected = selectValuesFromTextarea(textarea);
-      Array.from(select.options).forEach(option => {
-        option.selected = selected.has(option.value);
-      });
+    function relatedRowsFromTextarea(textarea) {
+      return Array.from(selectValuesFromTextarea(textarea));
     }
 
-    function syncTextareaFromSelect(select, textarea) {
-      textarea.value = Array.from(select.selectedOptions).map(option => option.value).join('\\n');
+    function labelFromRelatedLine(line) {
+      return String(line || '').split('|')[0].trim() || line;
+    }
+
+    function syncRelatedSelectedBox(textarea, container) {
+      const rows = relatedRowsFromTextarea(textarea);
+      container.innerHTML = rows.map(row => (
+        '<span class="related-chip" data-value="' + escapeHtmlClient(row) + '">' +
+          '<span title="' + escapeHtmlClient(row) + '">' + escapeHtmlClient(labelFromRelatedLine(row)) + '</span>' +
+          '<button type="button" data-remove-related="' + escapeHtmlClient(row) + '" aria-label="Remove">×</button>' +
+        '</span>'
+      )).join('');
+    }
+
+    function syncRelatedUi(textarea, container) {
+      textarea.value = relatedRowsFromTextarea(textarea).join('\\n');
+      syncRelatedSelectedBox(textarea, container);
+    }
+
+    function addRelatedFromSelect(select, textarea, container) {
+      const value = select.value;
+      if (!value) return;
+      const selected = selectValuesFromTextarea(textarea);
+      selected.add(value);
+      textarea.value = Array.from(selected).join('\\n');
+      syncRelatedUi(textarea, container);
+    }
+
+    function removeRelatedValue(textarea, container, value) {
+      textarea.value = relatedRowsFromTextarea(textarea).filter(row => row !== value).join('\\n');
+      syncRelatedUi(textarea, container);
     }
 
     function renderRelatedPicker(select, textarea, type, emptyLabel) {
       const selected = selectValuesFromTextarea(textarea);
       const posts = existingPosts.filter(post => post.contentType === type && post.htmlExists);
       if (!posts.length) {
-        select.innerHTML = '<option disabled>' + emptyLabel + '</option>';
+        select.innerHTML = '<option value="">' + emptyLabel + '</option>';
+        select.disabled = true;
         return;
       }
+      select.disabled = false;
       select.innerHTML = posts.map(post => {
         const value = relatedLineFromPost(post);
         const label = post.title || post.outputPath || post.fileName;
-        return '<option value="' + escapeHtmlClient(value) + '"' + (selected.has(value) ? ' selected' : '') + '>' + escapeHtmlClient(label) + '</option>';
+        return '<option value="' + escapeHtmlClient(value) + '">' + (selected.has(value) ? '✓ ' : '') + escapeHtmlClient(label) + '</option>';
       }).join('');
     }
 
     function renderRelatedPickers() {
       renderRelatedPicker(relatedCaseSelect, form.relatedProjects, 'case', tr('noGeneratedPagesForType'));
       renderRelatedPicker(relatedBlogSelect, form.relatedSolutions, 'blog', tr('noGeneratedPagesForType'));
+      relatedCaseSelected.dataset.empty = currentUiLanguage === 'en' ? 'No related case selected yet' : '还没有选择相关案例';
+      relatedBlogSelected.dataset.empty = currentUiLanguage === 'en' ? 'No related blog selected yet' : '还没有选择相关 Blog';
+      addRelatedCaseButton.disabled = relatedCaseSelect.disabled;
+      addRelatedBlogButton.disabled = relatedBlogSelect.disabled;
+      syncRelatedUi(form.relatedProjects, relatedCaseSelected);
+      syncRelatedUi(form.relatedSolutions, relatedBlogSelected);
     }
 
     function getSelectedPost() {
@@ -1684,8 +1741,8 @@ function renderApp() {
       form.relatedProjects.value = relatedToTextarea(post.relatedProjects);
       form.relatedSolutions.value = relatedToTextarea(post.relatedSolutions);
       renderRelatedPickers();
-      syncSelectFromTextarea(relatedCaseSelect, form.relatedProjects);
-      syncSelectFromTextarea(relatedBlogSelect, form.relatedSolutions);
+      syncRelatedUi(form.relatedProjects, relatedCaseSelected);
+      syncRelatedUi(form.relatedSolutions, relatedBlogSelected);
       form.contentHtml.value = post.contentHtml || '';
       setTemplateFromHtml(form.contentHtml.value);
       form.force.checked = true;
@@ -1744,8 +1801,16 @@ function renderApp() {
     form.contentHtml.addEventListener('input', () => {
       if (!syncingTemplate) htmlManuallyEdited = true;
     });
-    relatedCaseSelect.addEventListener('change', () => syncTextareaFromSelect(relatedCaseSelect, form.relatedProjects));
-    relatedBlogSelect.addEventListener('change', () => syncTextareaFromSelect(relatedBlogSelect, form.relatedSolutions));
+    addRelatedCaseButton.addEventListener('click', () => addRelatedFromSelect(relatedCaseSelect, form.relatedProjects, relatedCaseSelected));
+    addRelatedBlogButton.addEventListener('click', () => addRelatedFromSelect(relatedBlogSelect, form.relatedSolutions, relatedBlogSelected));
+    relatedCaseSelected.addEventListener('click', event => {
+      const button = event.target.closest('[data-remove-related]');
+      if (button) removeRelatedValue(form.relatedProjects, relatedCaseSelected, button.dataset.removeRelated);
+    });
+    relatedBlogSelected.addEventListener('click', event => {
+      const button = event.target.closest('[data-remove-related]');
+      if (button) removeRelatedValue(form.relatedSolutions, relatedBlogSelected, button.dataset.removeRelated);
+    });
     document.getElementById('coverImageFile').addEventListener('change', event => {
       uploadFiles(event.target.files, 'image')
         .then(files => {
@@ -1818,8 +1883,8 @@ function renderApp() {
       if (!htmlManuallyEdited && hasTemplateContent()) {
         syncTemplateToHtml();
       }
-      syncTextareaFromSelect(relatedCaseSelect, form.relatedProjects);
-      syncTextareaFromSelect(relatedBlogSelect, form.relatedSolutions);
+      syncRelatedUi(form.relatedProjects, relatedCaseSelected);
+      syncRelatedUi(form.relatedSolutions, relatedBlogSelected);
       if (!fileName.value.trim() || !urlSlug.value.trim()) {
         syncTitleDerivedPaths();
       }
