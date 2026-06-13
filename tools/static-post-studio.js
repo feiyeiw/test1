@@ -11,48 +11,49 @@ const DRAFT_DIR = path.join(ROOT, 'content', 'static-posts', 'generated');
 const SHOULD_OPEN_BROWSER = process.env.STATIC_POST_STUDIO_OPEN !== '0';
 const GIT_CHECK_TIMEOUT_MS = 15_000;
 const GIT_LOGIN_TIMEOUT_MS = 180_000;
+const MAX_REQUEST_BODY_BYTES = 80 * 1024 * 1024;
 
 const INDUSTRIES = [
-  ['', 'Select industry', '请选择行业'],
-  ['all-industries', 'All Industries', '全部行业'],
-  ['food-beverage', 'Food & Beverage', '食品饮料'],
-  ['pharmaceutical-biotech', 'Pharmaceutical & Biotech', '医药与生物科技'],
-  ['packaging-printing', 'Packaging & Printing', '包装与印刷'],
-  ['cold-chain-frozen-food', 'Cold Chain / Frozen Food', '冷链 / 冷冻食品'],
-  ['logistics-distribution', 'Logistics & Distribution', '物流配送'],
-  ['ecommerce-fulfillment', 'E-commerce Fulfillment', '电商履约'],
-  ['manufacturing-industrial', 'Manufacturing / Industrial', '制造业 / 工业'],
-  ['chemical-petrochemical', 'Chemical & Petrochemical', '化工与石化'],
-  ['agriculture-grain-processing', 'Agriculture & Grain Processing', '农业与粮食加工'],
-  ['automotive-transportation', 'Automotive & Transportation', '汽车与交通'],
-  ['electronics-semiconductors', 'Electronics & Semiconductors', '电子与半导体'],
-  ['health-personal-care', 'Health & Personal Care', '健康与个护'],
-  ['household-products', 'Household Products', '家居日用品'],
-  ['other', 'Other', '其他'],
+  ['', 'Select industry', 'Select industry'],
+  ['all-industries', 'All Industries', 'All Industries'],
+  ['food-beverage', 'Food & Beverage', 'Food & Beverage'],
+  ['pharmaceutical-biotech', 'Pharmaceutical & Biotech', 'Pharmaceutical & Biotech'],
+  ['packaging-printing', 'Packaging & Printing', 'Packaging & Printing'],
+  ['cold-chain-frozen-food', 'Cold Chain / Frozen Food', 'Cold Chain / Frozen Food'],
+  ['logistics-distribution', 'Logistics & Distribution', 'Logistics & Distribution'],
+  ['ecommerce-fulfillment', 'E-commerce Fulfillment', 'E-commerce Fulfillment'],
+  ['manufacturing-industrial', 'Manufacturing / Industrial', 'Manufacturing / Industrial'],
+  ['chemical-petrochemical', 'Chemical & Petrochemical', 'Chemical & Petrochemical'],
+  ['agriculture-grain-processing', 'Agriculture & Grain Processing', 'Agriculture & Grain Processing'],
+  ['automotive-transportation', 'Automotive & Transportation', 'Automotive & Transportation'],
+  ['electronics-semiconductors', 'Electronics & Semiconductors', 'Electronics & Semiconductors'],
+  ['health-personal-care', 'Health & Personal Care', 'Health & Personal Care'],
+  ['household-products', 'Household Products', 'Household Products'],
+  ['other', 'Other', 'Other'],
 ];
 
 const SOLUTIONS = [
-  ['', 'Select solution', '请选择方案'],
-  ['all-solutions', 'All Solutions', '全部方案'],
-  ['asrs', 'ASRS / Automated Storage & Retrieval Systems', 'ASRS / 自动化立体仓储系统'],
-  ['conveyor-transport', 'Conveyor Systems / Automated Transport', '输送系统 / 自动化搬运'],
-  ['smart-factory', 'Smart Factory / Factory Automation', '智能工厂 / 工厂自动化'],
-  ['production-line', 'Production Line Automation', '生产线自动化'],
-  ['packaging-automation', 'Packaging Automation', '包装自动化'],
-  ['filling-bottling', 'Filling & Bottling Systems', '灌装与瓶装系统'],
-  ['printing-inkjet-flexo-ci', 'Printing / Inkjet / Flexo / CI Printing', '印刷 / 喷码 / 柔印 / CI 印刷'],
-  ['film-blowing-extrusion', 'Film Blowing / Film Extrusion', '吹膜 / 薄膜挤出'],
-  ['cold-storage-automation', 'Cold Storage / Low-Temperature Automation', '冷库 / 低温自动化'],
-  ['material-pallet-handling', 'Material Handling / Pallet Handling', '物料搬运 / 托盘处理'],
-  ['wms-wes', 'Intelligent WMS / WES Integration', '智能 WMS / WES 集成'],
-  ['erp-mes-monitoring', 'ERP / MES / Production Monitoring', 'ERP / MES / 生产监控'],
-  ['robotics-integration', 'Robotics Integration', '机器人集成'],
-  ['laser-industrial-machining', 'Laser Processing / Industrial Machining', '激光加工 / 工业加工'],
-  ['other-industrial-automation', 'Other Industrial Automation Solutions', '其他工业自动化方案'],
+  ['', 'Select solution', 'Select solution'],
+  ['all-solutions', 'All Solutions', 'All Solutions'],
+  ['asrs', 'ASRS / Automated Storage & Retrieval Systems', 'ASRS / Automated Storage & Retrieval Systems'],
+  ['conveyor-transport', 'Conveyor Systems / Automated Transport', 'Conveyor Systems / Automated Transport'],
+  ['smart-factory', 'Smart Factory / Factory Automation', 'Smart Factory / Factory Automation'],
+  ['production-line', 'Production Line Automation', 'Production Line Automation'],
+  ['packaging-automation', 'Packaging Automation', 'Packaging Automation'],
+  ['filling-bottling', 'Filling & Bottling Systems', 'Filling & Bottling Systems'],
+  ['printing-inkjet-flexo-ci', 'Printing / Inkjet / Flexo / CI Printing', 'Printing / Inkjet / Flexo / CI Printing'],
+  ['film-blowing-extrusion', 'Film Blowing / Film Extrusion', 'Film Blowing / Film Extrusion'],
+  ['cold-storage-automation', 'Cold Storage / Low-Temperature Automation', 'Cold Storage / Low-Temperature Automation'],
+  ['material-pallet-handling', 'Material Handling / Pallet Handling', 'Material Handling / Pallet Handling'],
+  ['wms-wes', 'Intelligent WMS / WES Integration', 'Intelligent WMS / WES Integration'],
+  ['erp-mes-monitoring', 'ERP / MES / Production Monitoring', 'ERP / MES / Production Monitoring'],
+  ['robotics-integration', 'Robotics Integration', 'Robotics Integration'],
+  ['laser-industrial-machining', 'Laser Processing / Industrial Machining', 'Laser Processing / Industrial Machining'],
+  ['other-industrial-automation', 'Other Industrial Automation Solutions', 'Other Industrial Automation Solutions'],
 ];
 
 const COUNTRIES = [
-  ['', 'Select country', '请选择国家'],
+  ['', 'Select country', 'Select country'],
   ['malaysia', 'Malaysia', 'Malaysia'],
   ['thailand', 'Thailand', 'Thailand'],
   ['indonesia', 'Indonesia', 'Indonesia'],
@@ -64,45 +65,45 @@ const COUNTRIES = [
 ];
 
 const FUNCTIONS = [
-  ['', 'Select function', '请选择功能分类'],
-  ['warehouse-automation', 'Warehouse Automation', '仓储自动化'],
-  ['factory-intralogistics', 'Factory Intralogistics', '厂内物流'],
-  ['production-automation', 'Production Automation', '生产自动化'],
-  ['packaging-automation', 'Packaging Automation', '包装自动化'],
-  ['process-automation', 'Process Automation', '工艺自动化'],
-  ['smart-factory', 'Smart Factory', '智能工厂'],
+  ['', 'Select function', 'Select function'],
+  ['warehouse-automation', 'Warehouse Automation', 'Warehouse Automation'],
+  ['factory-intralogistics', 'Factory Intralogistics', 'Factory Intralogistics'],
+  ['production-automation', 'Production Automation', 'Production Automation'],
+  ['packaging-automation', 'Packaging Automation', 'Packaging Automation'],
+  ['process-automation', 'Process Automation', 'Process Automation'],
+  ['smart-factory', 'Smart Factory', 'Smart Factory'],
 ];
 
 const APPLICATIONS = [
-  ['', 'Select application', '请选择应用场景'],
-  ['warehouse-storage', 'Warehouse & Storage', '仓储与存储'],
-  ['packaging', 'Packaging', '包装'],
-  ['production-lines', 'Production Lines', '生产线'],
-  ['mixing-processing', 'Mixing & Processing', '混合与加工'],
-  ['filling-bottling', 'Filling & Bottling', '灌装与瓶装'],
-  ['material-handling', 'Material Handling', '物料搬运'],
-  ['inspection-testing', 'Inspection & Testing', '检测与测试'],
-  ['printing-labeling', 'Printing & Labeling', '印刷与贴标'],
-  ['loading-dispatch', 'Loading & Dispatch', '装车与发运'],
+  ['', 'Select application', 'Select application'],
+  ['warehouse-storage', 'Warehouse & Storage', 'Warehouse & Storage'],
+  ['packaging', 'Packaging', 'Packaging'],
+  ['production-lines', 'Production Lines', 'Production Lines'],
+  ['mixing-processing', 'Mixing & Processing', 'Mixing & Processing'],
+  ['filling-bottling', 'Filling & Bottling', 'Filling & Bottling'],
+  ['material-handling', 'Material Handling', 'Material Handling'],
+  ['inspection-testing', 'Inspection & Testing', 'Inspection & Testing'],
+  ['printing-labeling', 'Printing & Labeling', 'Printing & Labeling'],
+  ['loading-dispatch', 'Loading & Dispatch', 'Loading & Dispatch'],
 ];
 
 const BLOG_CATEGORIES = [
-  ['', 'Select blog category', '请选择 Blog 分类'],
-  ['solutions', 'Solutions', '解决方案'],
-  ['cost-roi', 'Cost & ROI', '成本收益'],
-  ['design-guides', 'Design Guides', '设计指南'],
-  ['industry-applications', 'Industry Applications', '行业应用'],
-  ['technology-insights', 'Technology Insights', '技术洞察'],
-  ['project-planning', 'Project Planning', '项目规划'],
-  ['buyer-guides', 'Buyer Guides', '采购指南'],
-  ['best-practices', 'Best Practices', '最佳实践'],
-  ['troubleshooting', 'Troubleshooting', '问题解决'],
-  ['trends-innovations', 'Trends & Innovations', '趋势分析'],
-  ['compliance-safety', 'Compliance & Safety', '法规安全'],
-  ['case-insights', 'Case Insights', '案例拆解'],
-  ['maintenance-operations', 'Maintenance & Operations', '维护运营'],
-  ['productivity-improvement', 'Productivity Improvement', '效率提升'],
-  ['sustainability-energy-saving', 'Sustainability & Energy Saving', '节能减排'],
+  ['', 'Select blog category', 'Select blog category'],
+  ['solutions', 'Solutions', 'Solutions'],
+  ['cost-roi', 'Cost & ROI', 'Cost & ROI'],
+  ['design-guides', 'Design Guides', 'Design Guides'],
+  ['industry-applications', 'Industry Applications', 'Industry Applications'],
+  ['technology-insights', 'Technology Insights', 'Technology Insights'],
+  ['project-planning', 'Project Planning', 'Project Planning'],
+  ['buyer-guides', 'Buyer Guides', 'Buyer Guides'],
+  ['best-practices', 'Best Practices', 'Best Practices'],
+  ['troubleshooting', 'Troubleshooting', 'Troubleshooting'],
+  ['trends-innovations', 'Trends & Innovations', 'Trends & Innovations'],
+  ['compliance-safety', 'Compliance & Safety', 'Compliance & Safety'],
+  ['case-insights', 'Case Insights', 'Case Insights'],
+  ['maintenance-operations', 'Maintenance & Operations', 'Maintenance & Operations'],
+  ['productivity-improvement', 'Productivity Improvement', 'Productivity Improvement'],
+  ['sustainability-energy-saving', 'Sustainability & Energy Saving', 'Sustainability & Energy Saving'],
 ];
 
 function escapeHtml(value) {
@@ -132,7 +133,7 @@ function readRequestBody(req) {
     let body = '';
     req.on('data', chunk => {
       body += chunk;
-      if (body.length > 2_000_000) {
+      if (body.length > MAX_REQUEST_BODY_BYTES) {
         reject(new Error('Request body is too large.'));
         req.destroy();
       }
@@ -143,16 +144,13 @@ function readRequestBody(req) {
 }
 
 function normalizeFileName(fileName) {
-  const raw = String(fileName || '').trim();
-  if (!raw) throw new Error('File name is required.');
-  const withExt = raw.toLowerCase().endsWith('.html') ? raw : `${raw}.html`;
-  if (withExt.includes('/') || withExt.includes('\\') || withExt.includes('..')) {
-    throw new Error('File name must not contain folders.');
-  }
-  if (!/^[a-z0-9][a-z0-9._-]*\.html$/i.test(withExt)) {
-    throw new Error('File name may only contain letters, numbers, dots, dashes, and underscores.');
-  }
-  return withExt;
+  const raw = String(fileName || '').trim().replace(/\.html$/i, '');
+  const slug = raw
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  if (!slug) throw new Error('File name is required.');
+  return `${slug}.html`;
 }
 
 function normalizeSlug(value, fallback) {
@@ -196,6 +194,28 @@ function resolveGeneratedHtmlPath(relativePath) {
   return { absolute, relative };
 }
 
+function safeAssetFileName(name, fallbackExt) {
+  const parsed = path.parse(String(name || 'asset'));
+  const base = parsed.name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '') || 'asset';
+  const ext = (parsed.ext || fallbackExt || '').toLowerCase().replace(/[^.a-z0-9]/g, '');
+  return `${Date.now()}-${base}${ext || fallbackExt || ''}`;
+}
+
+function uploadTargetFor(kind) {
+  return kind === 'video'
+    ? { dir: path.join(ROOT, 'videos', 'uploads'), rel: 'videos/uploads', exts: ['.mp4', '.webm', '.ogg', '.ogv'] }
+    : { dir: path.join(ROOT, 'images', 'uploads'), rel: 'images/uploads', exts: ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'] };
+}
+
+function decodeDataUrl(dataUrl) {
+  const match = String(dataUrl || '').match(/^data:([^;]+);base64,([\s\S]+)$/);
+  if (!match) throw new Error('Invalid uploaded file data.');
+  return { mime: match[1], bytes: Buffer.from(match[2], 'base64') };
+}
+
 function draftPathFor(post) {
   const base = post.fileName.replace(/\.html$/i, '.json');
   const prefix = post.contentType === 'case' ? 'case' : 'blog';
@@ -204,8 +224,9 @@ function draftPathFor(post) {
 
 function cleanPostPayload(input) {
   const contentType = input.contentType === 'case' ? 'case' : 'blog';
-  const fileName = normalizeFileName(input.fileName);
-  const urlSlug = normalizeSlug(input.urlSlug, fileName);
+  const title = String(input.title || '').trim();
+  const fileName = normalizeFileName(input.fileName || title);
+  const urlSlug = normalizeSlug(input.urlSlug, input.fileName || title);
   const industry = String(input.industry || '').trim();
   const solution = String(input.solution || '').trim();
   const country = String(input.country || '').trim();
@@ -218,7 +239,6 @@ function cleanPostPayload(input) {
   const functionLabel = FUNCTIONS.find(([value]) => value === functionCategory)?.[1] || input.functionLabel || '';
   const applicationLabel = APPLICATIONS.find(([value]) => value === application)?.[1] || input.applicationLabel || '';
   const blogCategoryLabel = BLOG_CATEGORIES.find(([value]) => value === blogCategory)?.[1] || input.blogCategoryLabel || '';
-  const title = String(input.title || '').trim();
   const contentHtml = String(input.contentHtml || '').trim();
 
   if (!title) throw new Error('Title is required.');
@@ -461,7 +481,8 @@ function getStagedFiles() {
 function autoPushGeneratedPost(post, draftPath, commitMessage) {
   const outputPath = outputPathFor(post);
   const draftRelPath = path.relative(ROOT, draftPath).replace(/\\/g, '/');
-  const paths = [outputPath, draftRelPath, 'blog.html', 'case-studies.html', 'index.html'];
+  const uploadPaths = ['images/uploads', 'videos/uploads'].filter(item => fs.existsSync(path.join(ROOT, item)));
+  const paths = [outputPath, draftRelPath, 'blog.html', 'case-studies.html', 'index.html', ...uploadPaths];
   const title = post.title.replace(/\s+/g, ' ').trim();
   const defaultMessage = `Add static ${post.contentType} page: ${title}`;
   const message = String(commitMessage || defaultMessage).trim();
@@ -572,7 +593,7 @@ async function handleGenerate(req, res) {
     fs.writeFileSync(draftPath, `${JSON.stringify(post, null, 2)}\n`, 'utf8');
 
     const output = runGenerator(draftPath, Boolean(input.force));
-    runStaticIndexBaker();
+    const indexOutput = runStaticIndexBaker();
     let gitOutput = '';
     if (input.autoPush) {
       gitOutput = autoPushGeneratedPost(post, draftPath, input.commitMessage);
@@ -623,6 +644,35 @@ async function handleLoadPost(req, res) {
     const { absolute, relative } = resolveDraftPath(draftPath);
     const post = readJsonFile(absolute);
     sendJson(res, 200, { ok: true, draftPath: relative, post });
+  } catch (error) {
+    sendJson(res, 400, { ok: false, error: error.message || String(error) });
+  }
+}
+
+async function handleUploadAssets(req, res) {
+  try {
+    const body = await readRequestBody(req);
+    const input = JSON.parse(body || '{}');
+    const files = Array.isArray(input.files) ? input.files : [];
+    if (!files.length) throw new Error('No files uploaded.');
+    const target = uploadTargetFor(input.kind === 'video' ? 'video' : 'image');
+    fs.mkdirSync(target.dir, { recursive: true });
+    const saved = files.map((file, index) => {
+      const { bytes } = decodeDataUrl(file.dataUrl);
+      const ext = path.extname(String(file.name || '')).toLowerCase();
+      if (ext && !target.exts.includes(ext)) {
+        throw new Error(`Unsupported file type: ${file.name}`);
+      }
+      const fallbackExt = target.exts[0];
+      const fileName = safeAssetFileName(`${index}-${file.name || 'asset'}`, ext || fallbackExt);
+      const absolute = path.join(target.dir, fileName);
+      fs.writeFileSync(absolute, bytes);
+      return {
+        name: file.name || fileName,
+        path: `${target.rel}/${fileName}`,
+      };
+    });
+    sendJson(res, 200, { ok: true, files: saved });
   } catch (error) {
     sendJson(res, 400, { ok: false, error: error.message || String(error) });
   }
@@ -715,7 +765,7 @@ function renderApp() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>静态 Blog / Case 生成器</title>
+  <title>闈欐€?Blog / Case 鐢熸垚鍣?/title>
   <style>
     :root { color-scheme: light; --bg:#f4f6f8; --panel:#fff; --ink:#172033; --muted:#64748b; --line:#d9e1ec; --brand:#d71920; }
     body { margin:0; font-family: Arial, Helvetica, sans-serif; background:var(--bg); color:var(--ink); }
@@ -753,6 +803,12 @@ function renderApp() {
     .advanced-html { border:1px dashed var(--line); border-radius:14px; padding:12px 14px; background:#fff; }
     .advanced-html summary { cursor:pointer; font-weight:800; color:#26344d; }
     .advanced-html label { margin-top:12px; }
+    .inline-upload { display:flex; gap:8px; align-items:center; }
+    .inline-upload input[type="text"] { flex:1; }
+    .upload-button { display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:0 12px; border:1px solid var(--line); border-radius:12px; background:#eef2ff; color:#1e3a8a; font-weight:800; cursor:pointer; white-space:nowrap; }
+    .upload-button input { display:none; }
+    .multi-select { min-height:120px; }
+    .hidden-data-field { display:none; }
     .git-status { margin:18px 28px 0; padding:14px 16px; border-radius:14px; border:1px solid var(--line); background:#fff7ed; color:#9a3412; display:flex; justify-content:space-between; gap:14px; align-items:center; }
     .git-status.ready { background:#ecfdf5; color:#065f46; }
     .git-status.error { background:#fff1f2; color:#991b1b; }
@@ -767,13 +823,13 @@ function renderApp() {
   <header>
     <div class="topbar">
       <div>
-        <h1 data-i18n="appTitle">静态 Blog / Case 生成器</h1>
-        <p data-i18n-html="appDesc">本地生成真实 HTML 页面。Blog 输出到 <strong>blog/</strong>，Case 输出到 <strong>cases/</strong>。不会自动读取或覆盖 KV。</p>
+        <h1 data-i18n="appTitle">闈欐€?Blog / Case 鐢熸垚鍣?/h1>
+        <p data-i18n-html="appDesc">鏈湴鐢熸垚鐪熷疄 HTML 椤甸潰銆侭log 杈撳嚭鍒?<strong>blog/</strong>锛孋ase 杈撳嚭鍒?<strong>cases/</strong>銆備笉浼氳嚜鍔ㄨ鍙栨垨瑕嗙洊 KV銆?/p>
       </div>
       <label class="language-switch">
-        <span data-i18n="language">语言</span>
+        <span data-i18n="language">璇█</span>
         <select id="studioLanguage">
-          <option value="zh">中文</option>
+          <option value="zh">涓枃</option>
           <option value="en">English</option>
         </select>
       </label>
@@ -781,136 +837,144 @@ function renderApp() {
   </header>
   <div id="gitStatus" class="git-status checking">
     <div>
-      <strong data-i18n="gitChecking">正在检查 GitHub 连接...</strong>
-      <small data-i18n="gitCheckingHint">如果没有连接，会先让你登录 GitHub。</small>
+      <strong data-i18n="gitChecking">姝ｅ湪妫€鏌?GitHub 杩炴帴...</strong>
+      <small data-i18n="gitCheckingHint">濡傛灉娌℃湁杩炴帴锛屼細鍏堣浣犵櫥褰?GitHub銆?/small>
     </div>
-    <button type="button" id="gitLoginButton" hidden data-i18n="gitLogin">登录 GitHub</button>
+    <button type="button" id="gitLoginButton" hidden data-i18n="gitLogin">鐧诲綍 GitHub</button>
   </div>
   <main>
     <section class="panel">
-      <h2 data-i18n="postFields">文章字段</h2>
+      <h2 data-i18n="postFields">鏂囩珷瀛楁</h2>
       <form id="postForm">
-        <label><span data-i18n="contentType">内容类型</span>
+        <label><span data-i18n="contentType">鍐呭绫诲瀷</span>
           <select name="contentType" id="contentType">
             <option value="blog">Blog</option>
             <option value="case">Case</option>
           </select>
         </label>
         <div class="manage-box">
-          <label><span data-i18n="existingPages">已有 Blog / Case 页面</span>
+          <label><span data-i18n="existingPages">宸叉湁 Blog / Case 椤甸潰</span>
             <select id="existingPostSelect">
-              <option value="" data-i18n="loadingPages">正在加载已有页面...</option>
+              <option value="" data-i18n="loadingPages">姝ｅ湪鍔犺浇宸叉湁椤甸潰...</option>
             </select>
-            <span class="hint" data-i18n="existingHint">有 JSON 草稿的页面可以加载到表单继续修改；只有 HTML 的页面也可以删除。</span>
+            <span class="hint" data-i18n="existingHint">鏈?JSON 鑽夌鐨勯〉闈㈠彲浠ュ姞杞藉埌琛ㄥ崟缁х画淇敼锛涘彧鏈?HTML 鐨勯〉闈篃鍙互鍒犻櫎銆?/span>
           </label>
           <div class="manage-actions">
-            <button class="ghost" type="button" id="refreshPosts" data-i18n="refreshList">刷新列表</button>
-            <button class="ghost" type="button" id="loadPost" data-i18n="loadSelected">加载选中</button>
-            <button class="danger" type="button" id="deletePost" data-i18n="deleteSelected">删除选中</button>
+            <button class="ghost" type="button" id="refreshPosts" data-i18n="refreshList">鍒锋柊鍒楄〃</button>
+            <button class="ghost" type="button" id="loadPost" data-i18n="loadSelected">鍔犺浇閫変腑</button>
+            <button class="danger" type="button" id="deletePost" data-i18n="deleteSelected">鍒犻櫎閫変腑</button>
           </div>
         </div>
         <div>
-          <label><span data-i18n="fileName">文件名</span>
-            <input name="fileName" id="fileName" placeholder="my-article.html" data-i18n-placeholder="fileNamePlaceholder" required>
-            <span class="hint" data-i18n="fileNameHint">只填文件名。路径会自动变成 blog/my-article.html 或 cases/my-article.html。</span>
+          <label><span data-i18n="fileName">鏂囦欢鍚?/span>
+            <input name="fileName" id="fileName" placeholder="my-article.html" data-i18n-placeholder="fileNamePlaceholder">
+            <span class="hint" data-i18n="fileNameHint">鍙～鏂囦欢鍚嶃€傝矾寰勪細鑷姩鍙樻垚 blog/my-article.html 鎴?cases/my-article.html銆?/span>
           </label>
         </div>
         <div>
           <label><span data-i18n="urlSlug">URL Slug</span>
             <input name="urlSlug" id="urlSlug" placeholder="chemical-asrs-project-malaysia" data-i18n-placeholder="urlSlugPlaceholder">
-            <span class="hint" data-i18n="urlSlugHint">用于生成 /blog/slug/ 或 /case/slug/，留空时自动根据文件名生成。</span>
+            <span class="hint" data-i18n="urlSlugHint">鐢ㄤ簬鐢熸垚 /blog/slug/ 鎴?/case/slug/锛岀暀绌烘椂鑷姩鏍规嵁鏂囦欢鍚嶇敓鎴愩€?/span>
           </label>
         </div>
         <div class="path-preview" id="pathPreview">blog/my-article.html</div>
-        <label><span data-i18n="title">标题</span><input name="title" id="title" required></label>
-        <label><span data-i18n="summary">摘要</span><textarea name="summary"></textarea></label>
+        <label><span data-i18n="title">鏍囬</span><input name="title" id="title" required></label>
+        <label><span data-i18n="summary">鎽樿</span><textarea name="summary"></textarea></label>
         <div class="row">
-          <label><span data-i18n="industry">行业</span><select name="industry" id="industry">${renderOptions(INDUSTRIES)}</select></label>
-          <label><span data-i18n="solution">方案</span><select name="solution" id="solution">${renderOptions(SOLUTIONS)}</select></label>
+          <label><span data-i18n="industry">琛屼笟</span><select name="industry" id="industry">${renderOptions(INDUSTRIES)}</select></label>
+          <label><span data-i18n="solution">鏂规</span><select name="solution" id="solution">${renderOptions(SOLUTIONS)}</select></label>
         </div>
         <div class="row">
-          <label><span data-i18n="country">国家</span><select name="country" id="country">${renderOptions(COUNTRIES)}</select></label>
-          <label><span data-i18n="blogCategory">Blog 分类</span><select name="blogCategory" id="blogCategory">${renderOptions(BLOG_CATEGORIES)}</select></label>
+          <label><span data-i18n="country">鍥藉</span><select name="country" id="country">${renderOptions(COUNTRIES)}</select></label>
+          <label><span data-i18n="blogCategory">Blog 鍒嗙被</span><select name="blogCategory" id="blogCategory">${renderOptions(BLOG_CATEGORIES)}</select></label>
         </div>
         <div class="row">
-          <label><span data-i18n="functionCategory">功能分类</span><select name="functionCategory" id="functionCategory">${renderOptions(FUNCTIONS)}</select></label>
-          <label><span data-i18n="application">应用场景</span><select name="application" id="application">${renderOptions(APPLICATIONS)}</select></label>
+          <label><span data-i18n="functionCategory">鍔熻兘鍒嗙被</span><select name="functionCategory" id="functionCategory">${renderOptions(FUNCTIONS)}</select></label>
+          <label><span data-i18n="application">搴旂敤鍦烘櫙</span><select name="application" id="application">${renderOptions(APPLICATIONS)}</select></label>
         </div>
-        <label><span data-i18n="technology">核心技术</span>
+        <label><span data-i18n="technology">鏍稿績鎶€鏈?/span>
           <textarea name="technology" placeholder="ASRS&#10;Stacker Crane&#10;WMS" data-i18n-placeholder="technologyPlaceholder"></textarea>
-          <span class="hint" data-i18n="technologyHint">每行一个，可填写 ASRS、AGV、AMR、Conveyor、Robot、WMS、MES 等。</span>
+          <span class="hint" data-i18n="technologyHint">姣忚涓€涓紝鍙～鍐?ASRS銆丄GV銆丄MR銆丆onveyor銆丷obot銆乄MS銆丮ES 绛夈€?/span>
         </label>
         <div class="row">
-          <label><span data-i18n="coverImage">封面图片 URL / 本地文件</span><input name="coverImage" placeholder="可留空，或填 images/example.webp / https://..." data-i18n-placeholder="coverImagePlaceholder"></label>
-          <label><span data-i18n="youtubeUrl">视频 URL / 本地文件</span><input name="youtubeUrl" placeholder="可留空，或填 videos/demo.mp4 / YouTube URL" data-i18n-placeholder="youtubePlaceholder"></label>
+          <label><span data-i18n="coverImage">???? URL / ????</span>
+            <div class="inline-upload"><input name="coverImage" placeholder="?????? images/example.webp / https://..." data-i18n-placeholder="coverImagePlaceholder"><span class="upload-button"><span data-i18n="chooseImage">????</span><input id="coverImageFile" type="file" accept="image/*"></span></div>
+          </label>
+          <label><span data-i18n="youtubeUrl">?? URL / ????</span>
+            <div class="inline-upload"><input name="youtubeUrl" placeholder="?????? videos/demo.mp4 / YouTube URL" data-i18n-placeholder="youtubePlaceholder"><span class="upload-button"><span data-i18n="chooseVideo">????</span><input id="projectVideoFile" type="file" accept="video/*"></span></div>
+          </label>
         </div>
-        <label><span data-i18n="projectImages">项目图片 / 图纸</span>
+        <label><span data-i18n="projectImages">???? / ??</span>
           <textarea name="projectImages" placeholder="images/layout.webp | Layout Drawing&#10;images/site-photo.webp | Site Photo" data-i18n-placeholder="projectImagesPlaceholder"></textarea>
-          <span class="hint" data-i18n="projectImagesHint">每行一个，支持本地图片或 URL。格式：图片路径 | 说明。</span>
+          <span class="hint" data-i18n="projectImagesHint">???????????? URL???????? | ???</span>
+          <span class="upload-button"><span data-i18n="chooseProjectImages">Choose Project Images</span><input id="projectImagesFile" type="file" accept="image/*" multiple></span>
         </label>
-        <label><span data-i18n="challenge">Challenge 客户痛点</span><textarea name="challenge"></textarea></label>
-        <label><span data-i18n="solutionDetail">Solution 解决方案</span><textarea name="solutionDetail"></textarea></label>
-        <label><span data-i18n="layoutWorkflow">Workflow & Layout 流程与布局</span><textarea name="layoutWorkflow"></textarea></label>
-        <label><span data-i18n="results">Results & ROI 量化结果</span>
+        <label><span data-i18n="challenge">Challenge 瀹㈡埛鐥涚偣</span><textarea name="challenge"></textarea></label>
+        <label><span data-i18n="solutionDetail">Solution 瑙ｅ喅鏂规</span><textarea name="solutionDetail"></textarea></label>
+        <label><span data-i18n="layoutWorkflow">Workflow & Layout 娴佺▼涓庡竷灞€</span><textarea name="layoutWorkflow"></textarea></label>
+        <label><span data-i18n="results">Results & ROI 閲忓寲缁撴灉</span>
           <textarea name="results" placeholder="Storage Capacity +300%&#10;Labor Cost -60%&#10;Inventory Accuracy 99.9%" data-i18n-placeholder="resultsPlaceholder"></textarea>
         </label>
-        <label><span data-i18n="equipmentList">Equipment List 项目设备</span>
+        <label><span data-i18n="equipmentList">Equipment List 椤圭洰璁惧</span>
           <textarea name="equipmentList" placeholder="Stacker Crane&#10;Conveyor System&#10;WMS" data-i18n-placeholder="equipmentPlaceholder"></textarea>
         </label>
         <div class="row">
-          <label><span data-i18n="author">作者</span><input name="author" value="13ASRS"></label>
-          <label><span data-i18n="date">日期</span><input name="date" type="date" value="${today}"></label>
+          <label><span data-i18n="author">浣滆€?/span><input name="author" value="13ASRS"></label>
+          <label><span data-i18n="date">鏃ユ湡</span><input name="date" type="date" value="${today}"></label>
         </div>
-        <label><span data-i18n="seoTitle">SEO 标题</span><input name="seoTitle"></label>
-        <label><span data-i18n="seoDescription">SEO 描述</span><input name="seoDescription"></label>
-        <label><span data-i18n="keywords">SEO 关键词</span>
+        <label><span data-i18n="seoTitle">SEO 鏍囬</span><input name="seoTitle"></label>
+        <label><span data-i18n="seoDescription">SEO 鎻忚堪</span><input name="seoDescription"></label>
+        <label><span data-i18n="keywords">SEO 鍏抽敭璇?/span>
           <textarea name="keywords" placeholder="Chemical Warehouse Automation&#10;ASRS Malaysia" data-i18n-placeholder="keywordsPlaceholder"></textarea>
         </label>
-        <label><span data-i18n="relatedProjects">相关案例</span>
-          <textarea name="relatedProjects" placeholder="标题 | case-studies.html&#10;另一个标题 | cases/example.html" data-i18n-placeholder="relatedProjectsPlaceholder"></textarea>
-          <span class="hint" data-i18n="relatedHint">每行一个，格式：标题 | 链接。只写标题也可以。</span>
+        <label><span data-i18n="relatedProjects">????</span>
+          <select id="relatedCaseSelect" class="multi-select" multiple></select>
+          <textarea class="hidden-data-field" name="relatedProjects"></textarea>
+          <span class="hint" data-i18n="relatedCasesHint">????? Case ??????</span>
         </label>
-        <label><span data-i18n="relatedSolutions">相关方案</span>
-          <textarea name="relatedSolutions" placeholder="ASRS 仓储方案 | solutions.html#asrs" data-i18n-placeholder="relatedSolutionsPlaceholder"></textarea>
+        <label><span data-i18n="relatedSolutions">?? Blog</span>
+          <select id="relatedBlogSelect" class="multi-select" multiple></select>
+          <textarea class="hidden-data-field" name="relatedSolutions"></textarea>
+          <span class="hint" data-i18n="relatedBlogsHint">????? Blog ??????</span>
         </label>
         <div class="template-box">
-          <h3 data-i18n="bodyTemplateTitle">正文模板</h3>
-          <span class="hint" data-i18n="bodyTemplateHint">直接填写下面这些段落，工具会自动生成正文 HTML。</span>
-          <label><span data-i18n="bodyOverview">项目概览 / 文章开头</span><textarea id="bodyOverview" data-template-field="overview"></textarea></label>
-          <label><span data-i18n="bodyKeyPoints">核心要点</span>
-            <textarea id="bodyKeyPoints" data-template-field="keyPoints" data-i18n-placeholder="bodyKeyPointsPlaceholder" placeholder="每行一个要点"></textarea>
-            <span class="hint" data-i18n="bodyKeyPointsHint">可选。每行会自动变成一个列表项。</span>
+          <h3 data-i18n="bodyTemplateTitle">姝ｆ枃妯℃澘</h3>
+          <span class="hint" data-i18n="bodyTemplateHint">鐩存帴濉啓涓嬮潰杩欎簺娈佃惤锛屽伐鍏蜂細鑷姩鐢熸垚姝ｆ枃 HTML銆?/span>
+          <label><span data-i18n="bodyOverview">椤圭洰姒傝 / 鏂囩珷寮€澶?/span><textarea id="bodyOverview" data-template-field="overview"></textarea></label>
+          <label><span data-i18n="bodyKeyPoints">鏍稿績瑕佺偣</span>
+            <textarea id="bodyKeyPoints" data-template-field="keyPoints" data-i18n-placeholder="bodyKeyPointsPlaceholder" placeholder="姣忚涓€涓鐐?></textarea>
+            <span class="hint" data-i18n="bodyKeyPointsHint">鍙€夈€傛瘡琛屼細鑷姩鍙樻垚涓€涓垪琛ㄩ」銆?/span>
           </label>
-          <label><span data-i18n="bodyProcess">实施过程 / 工作流程</span><textarea id="bodyProcess" data-template-field="process"></textarea></label>
-          <label><span data-i18n="bodyValue">客户价值 / 结果</span><textarea id="bodyValue" data-template-field="value"></textarea></label>
-          <label><span data-i18n="bodyConclusion">结尾 / 下一步</span><textarea id="bodyConclusion" data-template-field="conclusion"></textarea></label>
+          <label><span data-i18n="bodyProcess">瀹炴柦杩囩▼ / 宸ヤ綔娴佺▼</span><textarea id="bodyProcess" data-template-field="process"></textarea></label>
+          <label><span data-i18n="bodyValue">瀹㈡埛浠峰€?/ 缁撴灉</span><textarea id="bodyValue" data-template-field="value"></textarea></label>
+          <label><span data-i18n="bodyConclusion">缁撳熬 / 涓嬩竴姝?/span><textarea id="bodyConclusion" data-template-field="conclusion"></textarea></label>
         </div>
         <details class="advanced-html">
-          <summary data-i18n="advancedHtmlToggle">高级：查看 / 编辑生成的 HTML</summary>
-          <label><span data-i18n="contentHtml">正文 HTML</span>
-            <textarea name="contentHtml" id="contentHtml" required><h2>项目概览</h2>
-<p>在这里填写文章或案例正文。</p>
-<h2>解决方案</h2>
-<p>描述方案、设备、流程和客户价值。</p></textarea>
+          <summary data-i18n="advancedHtmlToggle">楂樼骇锛氭煡鐪?/ 缂栬緫鐢熸垚鐨?HTML</summary>
+          <label><span data-i18n="contentHtml">姝ｆ枃 HTML</span>
+            <textarea name="contentHtml" id="contentHtml" required><h2>椤圭洰姒傝</h2>
+<p>鍦ㄨ繖閲屽～鍐欐枃绔犳垨妗堜緥姝ｆ枃銆?/p>
+<h2>瑙ｅ喅鏂规</h2>
+<p>鎻忚堪鏂规銆佽澶囥€佹祦绋嬪拰瀹㈡埛浠峰€笺€?/p></textarea>
           </label>
         </details>
-        <label><input name="force" type="checkbox" style="width:auto;"> <span data-i18n="overwriteExisting">如果 HTML 已存在，覆盖它</span></label>
-        <label><input name="autoPush" type="checkbox" style="width:auto;"> <span data-i18n="autoPush">生成后自动提交并推送到 GitHub</span></label>
-        <label><span data-i18n="commitMessage">提交说明</span>
-          <input name="commitMessage" placeholder="添加静态 Blog 页面" data-i18n-placeholder="commitMessagePlaceholder">
-          <span class="hint" data-i18n="commitHint">可选。留空时会自动根据标题生成提交说明。</span>
+        <label><input name="force" type="checkbox" style="width:auto;"> <span data-i18n="overwriteExisting">濡傛灉 HTML 宸插瓨鍦紝瑕嗙洊瀹?/span></label>
+        <label><input name="autoPush" type="checkbox" style="width:auto;"> <span data-i18n="autoPush">鐢熸垚鍚庤嚜鍔ㄦ彁浜ゅ苟鎺ㄩ€佸埌 GitHub</span></label>
+        <label><span data-i18n="commitMessage">鎻愪氦璇存槑</span>
+          <input name="commitMessage" placeholder="娣诲姞闈欐€?Blog 椤甸潰" data-i18n-placeholder="commitMessagePlaceholder">
+          <span class="hint" data-i18n="commitHint">鍙€夈€傜暀绌烘椂浼氳嚜鍔ㄦ牴鎹爣棰樼敓鎴愭彁浜よ鏄庛€?/span>
         </label>
         <div class="actions">
-          <button class="primary" type="submit" data-i18n="generate">生成静态页面</button>
-          <button class="ghost" type="button" id="fillExample" data-i18n="fillExample">填入示例</button>
+          <button class="primary" type="submit" data-i18n="generate">鐢熸垚闈欐€侀〉闈?/button>
+          <button class="ghost" type="button" id="fillExample" data-i18n="fillExample">濉叆绀轰緥</button>
         </div>
-        <div id="status" class="status" data-i18n="ready">准备就绪。</div>
+        <div id="status" class="status" data-i18n="ready">鍑嗗灏辩华銆?/div>
       </form>
     </section>
     <section class="panel">
-      <h2 data-i18n="preview">预览</h2>
+      <h2 data-i18n="preview">棰勮</h2>
       <div class="preview">
-        <iframe id="previewFrame" title="生成页面预览" data-i18n-title="previewFrameTitle"></iframe>
+        <iframe id="previewFrame" title="鐢熸垚椤甸潰棰勮" data-i18n-title="previewFrameTitle"></iframe>
       </div>
     </section>
   </main>
@@ -926,6 +990,9 @@ function renderApp() {
     const studioLanguage = document.getElementById('studioLanguage');
     const gitStatus = document.getElementById('gitStatus');
     const gitLoginButton = document.getElementById('gitLoginButton');
+    const titleInput = document.getElementById('title');
+    const relatedCaseSelect = document.getElementById('relatedCaseSelect');
+    const relatedBlogSelect = document.getElementById('relatedBlogSelect');
     const templateFields = {
       overview: document.getElementById('bodyOverview'),
       keyPoints: document.getElementById('bodyKeyPoints'),
@@ -943,9 +1010,9 @@ function renderApp() {
     const I18N = {
       zh: {
         appTitle: '静态 Blog / Case 生成器',
-        appDesc: '本地生成真实 HTML 页面。Blog 输出到 <strong>blog/</strong>，Case 输出到 <strong>cases/</strong>。不会自动读取或覆盖 KV。',
+        appDesc: '本地生成真实 HTML 页面。Blog 输出到 <strong>blog/</strong>，Case 输出到 <strong>case/</strong>。不会自动读取或覆盖 KV。',
         language: '语言',
-        postFields: '文章字段',
+        postFields: '内容字段',
         existingPages: '已有 Blog / Case 页面',
         loadingPages: '正在加载已有页面...',
         existingHint: '有 JSON 草稿的页面可以加载到表单继续修改；只有 HTML 的页面也可以删除。',
@@ -954,11 +1021,11 @@ function renderApp() {
         deleteSelected: '删除选中',
         contentType: '内容类型',
         fileName: '文件名',
-        fileNamePlaceholder: 'my-article.html',
-        fileNameHint: '用于草稿和兼容文件名。实际 URL 会优先使用 URL Slug。',
+        fileNamePlaceholder: '留空时根据标题生成',
+        fileNameHint: '可留空。留空时会根据标题自动生成安全文件名。',
         urlSlug: 'URL Slug',
-        urlSlugPlaceholder: 'chemical-asrs-project-malaysia',
-        urlSlugHint: '用于生成 /blog/slug/ 或 /case/slug/，留空时自动根据文件名生成。',
+        urlSlugPlaceholder: '留空时根据标题生成',
+        urlSlugHint: '用于生成 /blog/slug/ 或 /case/slug/，留空时自动根据标题生成。',
         title: '标题',
         summary: '摘要',
         industry: '行业',
@@ -971,12 +1038,15 @@ function renderApp() {
         technologyPlaceholder: 'ASRS\\nStacker Crane\\nWMS',
         technologyHint: '每行一个，可填写 ASRS、AGV、AMR、Conveyor、Robot、WMS、MES 等。',
         coverImage: '封面图片 URL / 本地文件',
-        coverImagePlaceholder: '可留空，或填 images/example.webp / https://...',
+        coverImagePlaceholder: '可留空，或粘贴图片 URL / images/example.webp',
         youtubeUrl: '视频 URL / 本地文件',
-        youtubePlaceholder: '可留空，或填 videos/demo.mp4 / YouTube URL',
+        youtubePlaceholder: '可留空，或粘贴视频 URL / videos/demo.mp4 / YouTube URL',
         projectImages: '项目图片 / 图纸',
         projectImagesPlaceholder: 'images/layout.webp | Layout Drawing\\nimages/site-photo.webp | Site Photo',
-        projectImagesHint: '每行一个，支持本地图片或 URL。格式：图片路径 | 说明。',
+        projectImagesHint: '每行一个，支持粘贴多个图片 URL，也支持多选本地图片上传。格式：图片路径 | 说明。',
+        chooseImage: '选择图片',
+        chooseVideo: '选择视频',
+        chooseProjectImages: '选择多张项目图片',
         challenge: 'Challenge 客户痛点',
         solutionDetail: 'Solution 解决方案',
         layoutWorkflow: 'Workflow & Layout 流程与布局',
@@ -991,10 +1061,9 @@ function renderApp() {
         keywords: 'SEO 关键词',
         keywordsPlaceholder: 'Chemical Warehouse Automation\\nASRS Malaysia',
         relatedProjects: '相关案例',
-        relatedProjectsPlaceholder: '标题 | case-studies.html\\n另一个标题 | cases/example.html',
-        relatedHint: '每行一个，格式：标题 | 链接。只写标题也可以。',
-        relatedSolutions: '相关方案',
-        relatedSolutionsPlaceholder: 'ASRS 仓储方案 | solutions.html#asrs',
+        relatedCasesHint: '从已生成的 Case 页面中多选。',
+        relatedSolutions: '相关 Blog',
+        relatedBlogsHint: '从已生成的 Blog 页面中多选。',
         bodyTemplateTitle: '正文模板',
         bodyTemplateHint: '直接填写下面这些段落，工具会自动生成正文 HTML。',
         bodyOverview: '项目概览 / 文章开头',
@@ -1009,7 +1078,7 @@ function renderApp() {
         overwriteExisting: '如果 HTML 已存在，覆盖它',
         autoPush: '生成后自动提交并推送到 GitHub',
         commitMessage: '提交说明',
-        commitMessagePlaceholder: '添加静态 Blog 页面',
+        commitMessagePlaceholder: '添加静态 Blog / Case 页面',
         commitHint: '可选。留空时会自动根据标题生成提交说明。',
         generate: '生成静态页面',
         fillExample: '填入示例',
@@ -1047,7 +1116,7 @@ function renderApp() {
         sampleTitle: '示例自动化案例',
         sampleSummary: '这是一个用于生成静态案例页面的简短摘要。',
         sampleSeoTitle: '示例自动化案例 | 13ASRS',
-        sampleSeoDescription: '由本地生成器创建的静态案例页面。',
+        sampleSeoDescription: '由本地生成器创建的静态案例页面。'
       },
       en: {
         appTitle: 'Static Blog / Case Studio',
@@ -1085,6 +1154,9 @@ function renderApp() {
         projectImages: 'Project Images / Drawings',
         projectImagesPlaceholder: 'images/layout.webp | Layout Drawing\\nimages/site-photo.webp | Site Photo',
         projectImagesHint: 'One item per line. Supports local image paths or URLs. Format: image path | description.',
+        chooseImage: 'Choose Image',
+        chooseVideo: 'Choose Video',
+        chooseProjectImages: 'Choose Project Images',
         challenge: 'Challenge',
         solutionDetail: 'Solution',
         layoutWorkflow: 'Workflow & Layout',
@@ -1099,9 +1171,11 @@ function renderApp() {
         keywords: 'SEO Keywords',
         keywordsPlaceholder: 'Chemical Warehouse Automation\\nASRS Malaysia',
         relatedProjects: 'Related Projects',
+        relatedCasesHint: 'Select one or more generated case pages.',
         relatedProjectsPlaceholder: 'Title | case-studies.html\\nAnother title | cases/example.html',
         relatedHint: 'One item per line. Format: Title | link. A title-only line is also allowed.',
-        relatedSolutions: 'Related Solutions',
+        relatedSolutions: 'Related Blog',
+        relatedBlogsHint: 'Select one or more generated blog pages.',
         relatedSolutionsPlaceholder: 'ASRS Warehouse Solution | solutions.html#asrs',
         bodyTemplateTitle: 'Body Template',
         bodyTemplateHint: 'Fill these plain-text sections. The tool will generate the HTML body automatically.',
@@ -1160,17 +1234,17 @@ function renderApp() {
     };
 
     const DEFAULT_CONTENT_HTML = {
-      zh: '<h2>项目概览</h2>\\n<p>在这里填写文章或案例正文。</p>\\n<h2>解决方案</h2>\\n<p>描述方案、设备、流程和客户价值。</p>',
+      zh: '<h2>Project Overview</h2>\\n<p>Write the article or case study body here.</p>\\n<h2>Solution</h2>\\n<p>Describe the solution, equipment, workflow, and customer value.</p>',
       en: '<h2>Project Overview</h2>\\n<p>Write the article or case study body here.</p>\\n<h2>Solution</h2>\\n<p>Describe the solution, equipment, workflow, and customer value.</p>'
     };
 
     const DEFAULT_BODY_TEMPLATE = {
       zh: {
-        overview: '在这里填写文章或案例的背景、客户情况和项目目标。',
-        keyPoints: '客户当前遇到的问题\\n本项目采用的自动化方案\\n项目带来的业务价值',
-        process: '描述系统布局、物流路径、设备协同方式和实施流程。',
-        value: '描述效率提升、容量提升、人工节省、准确率提升等结果。',
-        conclusion: '总结这个项目对类似客户的参考价值，并引导客户咨询方案。'
+        overview: 'Describe the background, customer situation, and project goal.',
+        keyPoints: 'Customer challenge\\nAutomation solution used\\nBusiness value delivered',
+        process: 'Describe the layout, workflow, equipment coordination, and implementation process.',
+        value: 'Describe improvements such as capacity, labor savings, accuracy, or ROI.',
+        conclusion: 'Summarize why this project is useful for similar customers and invite consultation.'
       },
       en: {
         overview: 'Describe the background, customer situation, and project goal.',
@@ -1215,21 +1289,13 @@ function renderApp() {
     }
 
     function buildContentHtmlFromTemplate() {
-      const headings = currentUiLanguage === 'en'
-        ? {
-          overview: 'Project Overview',
-          keyPoints: 'Key Points',
-          process: 'Implementation & Workflow',
-          value: 'Customer Value & Results',
-          conclusion: 'Conclusion'
-        }
-        : {
-          overview: '项目概览',
-          keyPoints: '核心要点',
-          process: '实施过程与工作流程',
-          value: '客户价值与结果',
-          conclusion: '结论与下一步'
-        };
+      const headings = {
+        overview: 'Project Overview',
+        keyPoints: 'Key Points',
+        process: 'Implementation & Workflow',
+        value: 'Customer Value & Results',
+        conclusion: 'Conclusion'
+      };
       const sections = [];
       const overview = paragraphsFromText(templateFields.overview.value);
       if (overview) sections.push('<h2>' + headings.overview + '</h2>\\n' + overview);
@@ -1381,14 +1447,38 @@ function renderApp() {
       }
     }
 
+    function slugifyClient(value, fallback) {
+      const slug = String(value || '')
+        .trim()
+        .replace(/\\.html$/i, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+      return slug || fallback || 'my-article';
+    }
+
     function normalizedFileName() {
-      const raw = fileName.value.trim() || 'my-article.html';
+      const raw = fileName.value.trim() || titleInput.value.trim() || 'my-article.html';
       return raw.toLowerCase().endsWith('.html') ? raw : raw + '.html';
     }
 
     function normalizedSlug() {
-      const raw = (urlSlug.value.trim() || normalizedFileName().replace(/\\.html$/i, ''));
-      return raw.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'my-article';
+      const raw = urlSlug.value.trim() || fileName.value.trim() || titleInput.value.trim() || normalizedFileName().replace(/\\.html$/i, '');
+      return slugifyClient(raw, 'my-article');
+    }
+
+    let fileNameWasAuto = !fileName.value.trim();
+    let slugWasAuto = !urlSlug.value.trim();
+
+    function syncTitleDerivedPaths() {
+      const titleSlug = slugifyClient(titleInput.value, '');
+      if (fileNameWasAuto && titleSlug) {
+        fileName.value = titleSlug + '.html';
+      }
+      if (slugWasAuto && titleSlug) {
+        urlSlug.value = titleSlug;
+      }
+      updatePathPreview();
     }
 
     function updatePathPreview() {
@@ -1399,9 +1489,17 @@ function renderApp() {
     contentType.addEventListener('change', () => {
       updatePathPreview();
       renderPostList();
+      renderRelatedPickers();
     });
-    fileName.addEventListener('input', updatePathPreview);
-    urlSlug.addEventListener('input', updatePathPreview);
+    titleInput.addEventListener('input', syncTitleDerivedPaths);
+    fileName.addEventListener('input', () => {
+      fileNameWasAuto = !fileName.value.trim();
+      updatePathPreview();
+    });
+    urlSlug.addEventListener('input', () => {
+      slugWasAuto = !urlSlug.value.trim();
+      updatePathPreview();
+    });
     updatePathPreview();
     studioLanguage.addEventListener('change', async () => {
       applyUiLanguage(studioLanguage.value);
@@ -1434,6 +1532,84 @@ function renderApp() {
       return value.filter(Boolean).join('\\n');
     }
 
+    function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error || new Error('Could not read file.'));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function uploadFiles(fileList, kind) {
+      const files = Array.from(fileList || []);
+      if (!files.length) return [];
+      statusBox.className = 'status';
+      statusBox.textContent = currentUiLanguage === 'en' ? 'Uploading local files...' : '姝ｅ湪涓婁紶鏈湴鏂囦欢...';
+      const payloadFiles = [];
+      for (const file of files) {
+        payloadFiles.push({
+          name: file.name,
+          type: file.type,
+          dataUrl: await readFileAsDataUrl(file),
+        });
+      }
+      const response = await fetch('/api/upload-assets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kind, files: payloadFiles }),
+      });
+      const result = await response.json();
+      if (!result.ok) throw new Error(result.error || 'Upload failed.');
+      statusBox.className = 'status';
+      statusBox.textContent = (currentUiLanguage === 'en' ? 'Uploaded: ' : '宸蹭笂浼狅細') + result.files.map(file => file.path).join('\\n');
+      return result.files || [];
+    }
+
+    function appendTextareaLines(textarea, lines) {
+      const existing = textarea.value.trim();
+      textarea.value = [existing, ...lines].filter(Boolean).join('\\n');
+    }
+
+    function relatedLineFromPost(post) {
+      const href = String(post.outputPath || '').replace(/index\\.html$/i, '');
+      return (post.title || post.fileName || href) + (href ? ' | ' + href : '');
+    }
+
+    function selectValuesFromTextarea(textarea) {
+      return new Set(String(textarea.value || '').split(/\\r?\\n/).map(line => line.trim()).filter(Boolean));
+    }
+
+    function syncSelectFromTextarea(select, textarea) {
+      const selected = selectValuesFromTextarea(textarea);
+      Array.from(select.options).forEach(option => {
+        option.selected = selected.has(option.value);
+      });
+    }
+
+    function syncTextareaFromSelect(select, textarea) {
+      textarea.value = Array.from(select.selectedOptions).map(option => option.value).join('\\n');
+    }
+
+    function renderRelatedPicker(select, textarea, type, emptyLabel) {
+      const selected = selectValuesFromTextarea(textarea);
+      const posts = existingPosts.filter(post => post.contentType === type && post.htmlExists);
+      if (!posts.length) {
+        select.innerHTML = '<option disabled>' + emptyLabel + '</option>';
+        return;
+      }
+      select.innerHTML = posts.map(post => {
+        const value = relatedLineFromPost(post);
+        const label = post.title || post.outputPath || post.fileName;
+        return '<option value="' + escapeHtmlClient(value) + '"' + (selected.has(value) ? ' selected' : '') + '>' + escapeHtmlClient(label) + '</option>';
+      }).join('');
+    }
+
+    function renderRelatedPickers() {
+      renderRelatedPicker(relatedCaseSelect, form.relatedProjects, 'case', tr('noGeneratedPagesForType'));
+      renderRelatedPicker(relatedBlogSelect, form.relatedSolutions, 'blog', tr('noGeneratedPagesForType'));
+    }
+
     function getSelectedPost() {
       return existingPosts.find(post => post.id === existingPostSelect.value);
     }
@@ -1463,9 +1639,11 @@ function renderApp() {
       existingPosts = result.posts || [];
       if (!existingPosts.length) {
         existingPostSelect.innerHTML = '<option value="">' + tr('noGeneratedPages') + '</option>';
+        renderRelatedPickers();
         return;
       }
       renderPostList();
+      renderRelatedPickers();
     }
 
     async function loadSelectedPost() {
@@ -1505,9 +1683,14 @@ function renderApp() {
       form.equipmentList.value = listToTextarea(post.equipmentList);
       form.relatedProjects.value = relatedToTextarea(post.relatedProjects);
       form.relatedSolutions.value = relatedToTextarea(post.relatedSolutions);
+      renderRelatedPickers();
+      syncSelectFromTextarea(relatedCaseSelect, form.relatedProjects);
+      syncSelectFromTextarea(relatedBlogSelect, form.relatedSolutions);
       form.contentHtml.value = post.contentHtml || '';
       setTemplateFromHtml(form.contentHtml.value);
       form.force.checked = true;
+      fileNameWasAuto = false;
+      slugWasAuto = false;
       updatePathPreview();
       renderPostList();
       frame.src = selected.outputPath ? '/' + selected.outputPath + '?t=' + Date.now() : '';
@@ -1561,6 +1744,41 @@ function renderApp() {
     form.contentHtml.addEventListener('input', () => {
       if (!syncingTemplate) htmlManuallyEdited = true;
     });
+    relatedCaseSelect.addEventListener('change', () => syncTextareaFromSelect(relatedCaseSelect, form.relatedProjects));
+    relatedBlogSelect.addEventListener('change', () => syncTextareaFromSelect(relatedBlogSelect, form.relatedSolutions));
+    document.getElementById('coverImageFile').addEventListener('change', event => {
+      uploadFiles(event.target.files, 'image')
+        .then(files => {
+          if (files[0]) form.coverImage.value = files[0].path;
+          event.target.value = '';
+        })
+        .catch(error => {
+          statusBox.className = 'status error';
+          statusBox.textContent = error.message;
+        });
+    });
+    document.getElementById('projectVideoFile').addEventListener('change', event => {
+      uploadFiles(event.target.files, 'video')
+        .then(files => {
+          if (files[0]) form.youtubeUrl.value = files[0].path;
+          event.target.value = '';
+        })
+        .catch(error => {
+          statusBox.className = 'status error';
+          statusBox.textContent = error.message;
+        });
+    });
+    document.getElementById('projectImagesFile').addEventListener('change', event => {
+      uploadFiles(event.target.files, 'image')
+        .then(files => {
+          appendTextareaLines(form.projectImages, files.map(file => file.path + ' | ' + String(file.name || '').replace(/\\.[^.]+$/, '')));
+          event.target.value = '';
+        })
+        .catch(error => {
+          statusBox.className = 'status error';
+          statusBox.textContent = error.message;
+        });
+    });
     refreshPostList().catch(error => {
       existingPostSelect.innerHTML = '<option value="">' + tr('couldNotLoadPages') + '</option>';
       statusBox.className = 'status error';
@@ -1599,6 +1817,11 @@ function renderApp() {
       statusBox.textContent = tr('generating');
       if (!htmlManuallyEdited && hasTemplateContent()) {
         syncTemplateToHtml();
+      }
+      syncTextareaFromSelect(relatedCaseSelect, form.relatedProjects);
+      syncTextareaFromSelect(relatedBlogSelect, form.relatedSolutions);
+      if (!fileName.value.trim() || !urlSlug.value.trim()) {
+        syncTitleDerivedPaths();
       }
       const data = Object.fromEntries(new FormData(form).entries());
       data.force = form.force.checked;
@@ -1654,6 +1877,7 @@ const server = http.createServer((req, res) => {
   if (req.method === 'GET' && req.url.startsWith('/api/post')) return handleLoadPost(req, res);
   if (req.method === 'GET' && req.url === '/api/git-status') return handleGitStatus(req, res);
   if (req.method === 'POST' && req.url === '/api/git-login') return handleGitLogin(req, res);
+  if (req.method === 'POST' && req.url === '/api/upload-assets') return handleUploadAssets(req, res);
   if (req.method === 'POST' && req.url === '/api/delete') return handleDeletePost(req, res);
   if (req.method === 'GET') return serveWorkspaceFile(req, res);
   send(res, 405, 'Method not allowed', { 'Content-Type': 'text/plain; charset=utf-8' });
@@ -1665,3 +1889,4 @@ server.listen(PORT, '127.0.0.1', () => {
   console.log('Press Ctrl+C to stop.');
   openBrowser(url);
 });
+

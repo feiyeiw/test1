@@ -76,16 +76,14 @@ function slugifyHeading(text, fallback) {
 }
 
 function normalizeFileName(fileName) {
-  const raw = String(fileName || '').trim();
+  const raw = String(fileName || '').trim().replace(/\.html$/i, '');
   if (!raw) throw new Error('fileName is required.');
-  const withExt = raw.toLowerCase().endsWith('.html') ? raw : `${raw}.html`;
-  if (withExt.includes('/') || withExt.includes('\\') || withExt.includes('..')) {
-    throw new Error(`fileName must be a simple root HTML file name: ${raw}`);
-  }
-  if (!/^[a-z0-9][a-z0-9._-]*\.html$/i.test(withExt)) {
-    throw new Error(`fileName may only contain letters, numbers, dots, dashes, and underscores: ${raw}`);
-  }
-  return withExt;
+  const slug = raw
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  if (!slug) throw new Error(`fileName must contain at least one letter or number: ${raw}`);
+  return `${slug}.html`;
 }
 
 function normalizeSlug(value, fallback) {
@@ -419,7 +417,7 @@ function renderStaticPost(post) {
                                 <div class="related-grid">${renderRelatedCards(relatedProjects, relatedProjectDefaults)}</div>
                             </section>
                             <section class="article-section">
-                                <h2>Related Solutions</h2>
+                                <h2>Related Blog</h2>
                                 <div class="related-grid">${renderRelatedCards(relatedSolutions, relatedSolutionDefaults)}</div>
                             </section>
                             <div class="blog-cta">
