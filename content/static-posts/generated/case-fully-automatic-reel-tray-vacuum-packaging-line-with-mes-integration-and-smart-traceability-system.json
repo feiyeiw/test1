@@ -18,7 +18,7 @@
   "blogCategory": "",
   "blogCategoryLabel": "Select blog category",
   "category": "Select blog category",
-  "youtubeUrl": "",
+  "youtubeUrl": "https://www.youtube.com/watch?v=eGSW8YmRh00",
   "author": "13ASRS",
   "date": "2026-06-14",
   "seoTitle": "Fully Automatic Reel & Tray Vacuum Packaging Line with MES Integration and Smart Traceability System",
@@ -47,9 +47,7 @@
     "Optional weighing inspection system",
     "Optional palletizing automation"
   ],
-  "projectImages": [
-    "images/uploads/1781491041532-0-6-13-2.jpg | 6月13日 (2)-封面"
-  ],
+  "projectImages": [],
   "challenge": "",
   "solutionDetail": "",
   "layoutWorkflow": "",
