@@ -167,6 +167,19 @@ function splitLines(value) {
     .filter(Boolean);
 }
 
+function renderTextBlocks(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  if (/<[a-z][\s\S]*>/i.test(raw)) return raw;
+
+  return raw
+    .split(/\n\s*\n/)
+    .map(block => block.trim())
+    .filter(Boolean)
+    .map(block => `<p>${escapeHtml(block).replace(/\r?\n/g, '<br>')}</p>`)
+    .join('');
+}
+
 function renderVideoFrame(url, title, prefix) {
   const raw = String(url || '').trim();
   if (!raw) return '';
@@ -185,16 +198,16 @@ function getPostCover(post) {
   return String(post.coverImage || '').trim();
 }
 
-function renderOptionalSection(title, body) {
+function renderOptionalSection(title, body, id, extraHtml = '') {
   const value = String(body || '').trim();
-  if (!value) return '';
-  return `<section class="article-section"><h2>${escapeHtml(title)}</h2><div class="blog-content">${value}</div></section>`;
+  if (!value && !extraHtml) return '';
+  return `<section class="article-section" id="${escapeHtml(id || slugifyHeading(title, 'case-section'))}"><h2>${escapeHtml(title)}</h2><div class="blog-content">${renderTextBlocks(value)}${extraHtml}</div></section>`;
 }
 
-function renderListSection(title, values) {
+function renderListSection(title, values, id) {
   const items = splitLines(values);
   if (!items.length) return '';
-  return `<section class="article-section"><h2>${escapeHtml(title)}</h2><ul class="static-detail-list">${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`;
+  return `<section class="article-section" id="${escapeHtml(id || slugifyHeading(title, 'case-list'))}"><h2>${escapeHtml(title)}</h2><ul class="static-detail-list">${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`;
 }
 
 function renderProjectGallery(images, prefix) {
@@ -286,10 +299,15 @@ function renderStaticPost(post) {
     ['Application', post.applicationLabel || post.application],
     ['Technology', technologyLabels],
   ].filter(([, value]) => value);
-  const workflowBody = [
-    String(post.layoutWorkflow || '').trim(),
-    renderProjectGallery(post.projectImages, prefix),
-  ].filter(Boolean).join('\n');
+  const projectGalleryHtml = renderProjectGallery(post.projectImages, prefix);
+  const caseSections = isCase ? [
+    { id: 'challenge', title: 'Challenge', html: renderOptionalSection('Challenge', post.challenge, 'challenge') },
+    { id: 'solution', title: 'Solution', html: renderOptionalSection('Solution', post.solutionDetail || post.solutionText, 'solution') },
+    { id: 'workflow-layout', title: 'Workflow & Layout', html: renderOptionalSection('Workflow & Layout', post.layoutWorkflow, 'workflow-layout', projectGalleryHtml) },
+    { id: 'results-roi', title: 'Results & ROI', html: renderListSection('Results & ROI', post.results, 'results-roi') },
+    { id: 'equipment-list', title: 'Equipment List', html: renderListSection('Equipment List', post.equipmentList, 'equipment-list') },
+  ].filter(section => section.html) : [];
+  const pageToc = [...toc, ...caseSections.map(({ id, title }) => ({ id, text: title }))];
   const relatedProjectDefaults = [
     { title: 'ASRS Project', href: siteHref('case-studies.html?solution=asrs#caseGrid') },
     { title: 'Smart Factory Project', href: siteHref('case-studies.html?solution=smart-factory#caseGrid') },
@@ -387,9 +405,9 @@ function renderStaticPost(post) {
 
                     <div class="blog-article-layout">
                         <aside class="blog-sidebar">
-                            <section class="article-side-panel"${toc.length ? '' : ' style="display:none;"'}>
+                            <section class="article-side-panel"${pageToc.length ? '' : ' style="display:none;"'}>
                                 <h2>Table of Contents</h2>
-                                <nav class="toc-list">${renderToc(toc)}</nav>
+                                <nav class="toc-list">${renderToc(pageToc)}</nav>
                             </section>
                             <section class="article-side-panel">
                                 <h2>Article Info</h2>
@@ -407,11 +425,7 @@ function renderStaticPost(post) {
                                 <h2>Project Overview</h2>
                                 <div class="blog-content">${contentHtml}</div>
                             </section>
-                            ${isCase ? renderOptionalSection('Challenge', post.challenge) : ''}
-                            ${isCase ? renderOptionalSection('Solution', post.solutionDetail || post.solutionText) : ''}
-                            ${isCase ? renderOptionalSection('Workflow & Layout', workflowBody) : ''}
-                            ${isCase ? renderListSection('Equipment Used', post.equipmentList) : ''}
-                            ${isCase ? renderListSection('Results & ROI', post.results) : ''}
+                            ${caseSections.map(section => section.html).join('\n                            ')}
                             <section class="article-section" id="related-projects">
                                 <h2>Related Case Studies</h2>
                                 <div class="related-grid">${renderRelatedCards(relatedProjects, relatedProjectDefaults)}</div>
