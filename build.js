@@ -52,7 +52,7 @@ const excludeFiles = [
 
 // Directories to exclude
 const excludeDirs = ['.git', 'node_modules', '.claude', 'dist'];
-const preservedStaticDirs = ['blog', 'cases'];
+const preservedStaticDirs = ['blog', 'case', 'cases', 'images', 'videos'];
 
 // Function to generate hash from file content
 function generateFileHash(filePath) {
