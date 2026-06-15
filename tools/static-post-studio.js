@@ -235,7 +235,7 @@ function cleanPostPayload(input) {
   const blogCategory = String(input.blogCategory || '').trim();
   const industryLabel = INDUSTRIES.find(([value]) => value === industry)?.[1] || input.industryLabel || '';
   const solutionLabel = SOLUTIONS.find(([value]) => value === solution)?.[1] || input.solutionLabel || '';
-  const countryLabel = COUNTRIES.find(([value]) => value === country)?.[1] || input.countryLabel || '';
+  const countryLabel = country;
   const functionLabel = FUNCTIONS.find(([value]) => value === functionCategory)?.[1] || input.functionLabel || '';
   const applicationLabel = APPLICATIONS.find(([value]) => value === application)?.[1] || input.applicationLabel || '';
   const blogCategoryLabel = BLOG_CATEGORIES.find(([value]) => value === blogCategory)?.[1] || input.blogCategoryLabel || '';
@@ -899,7 +899,7 @@ function renderApp() {
           <label><span data-i18n="solution">鏂规</span><select name="solution" id="solution">${renderOptions(SOLUTIONS)}</select></label>
         </div>
         <div class="row">
-          <label><span data-i18n="country">鍥藉</span><select name="country" id="country">${renderOptions(COUNTRIES)}</select></label>
+          <label><span data-i18n="country">Country</span><input name="country" id="country" placeholder="Malaysia / USA / Germany" data-i18n-placeholder="countryPlaceholder"></label>
           <label><span data-i18n="blogCategory">Blog 鍒嗙被</span><select name="blogCategory" id="blogCategory">${renderOptions(BLOG_CATEGORIES)}</select></label>
         </div>
         <div class="row">
@@ -1061,6 +1061,7 @@ function renderApp() {
         industry: '行业',
         solution: '方案',
         country: '国家',
+        countryPlaceholder: '可留空，例如：Malaysia / USA / Germany',
         blogCategory: 'Blog 分类',
         functionCategory: '功能分类',
         application: '应用场景',
@@ -1173,6 +1174,7 @@ function renderApp() {
         industry: 'Industry',
         solution: 'Solution',
         country: 'Country',
+        countryPlaceholder: 'Optional, for example: Malaysia / USA / Germany',
         blogCategory: 'Blog Category',
         functionCategory: 'Function',
         application: 'Application',
@@ -1878,7 +1880,7 @@ function renderApp() {
       form.title.value = tr('sampleTitle');
       form.summary.value = tr('sampleSummary');
       form.coverImage.value = 'system-acr.webp';
-      form.country.value = 'malaysia';
+      form.country.value = 'Malaysia';
       form.industry.value = 'manufacturing-industrial';
       form.solution.value = 'smart-factory';
       form.functionCategory.value = 'warehouse-automation';

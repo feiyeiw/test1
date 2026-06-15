@@ -293,7 +293,7 @@ function renderStaticPost(post) {
   const videoHtml = renderVideoFrame(post.youtubeUrl || post.videoUrl, post.title, prefix);
   const technologyLabels = splitLines(post.technology).join(', ');
   const facts = [
-    ['Country', post.country],
+    ['Country', post.countryLabel || post.country],
     ['Industry', post.industryLabel || post.industry],
     ['Function', post.functionLabel || post.functionCategory],
     ['Application', post.applicationLabel || post.application],
