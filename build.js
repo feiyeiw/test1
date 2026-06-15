@@ -53,6 +53,19 @@ const excludeFiles = [
 // Directories to exclude
 const excludeDirs = ['.git', 'node_modules', '.claude', 'dist'];
 const preservedStaticDirs = ['blog', 'case', 'cases', 'images', 'videos'];
+const CLOUDFLARE_PAGES_MAX_FILE_BYTES = 25 * 1024 * 1024;
+
+function shouldSkipForPagesLimit(filePath) {
+  const size = fs.statSync(filePath).size;
+  if (size <= CLOUDFLARE_PAGES_MAX_FILE_BYTES) {
+    return false;
+  }
+
+  const relativePath = path.relative('.', filePath);
+  const sizeMb = (size / (1024 * 1024)).toFixed(1);
+  console.warn(`Skipping ${relativePath}: ${sizeMb} MiB exceeds the Cloudflare Pages 25 MiB file limit.`);
+  return true;
+}
 
 // Function to generate hash from file content
 function generateFileHash(filePath) {
@@ -131,6 +144,10 @@ async function copyFiles(srcDir, destDir) {
       }
 
       if (shouldCopy && !excludeFiles.includes(entry.name)) {
+        if (shouldSkipForPagesLimit(srcPath)) {
+          continue;
+        }
+
         const parsedPath = path.parse(entry.name);
 
         // Determine if file should be hashed
@@ -181,6 +198,9 @@ function copyDir(src, dest) {
     if (entry.isDirectory()) {
       copyDir(srcPath, destPath);
     } else {
+      if (shouldSkipForPagesLimit(srcPath)) {
+        continue;
+      }
       fs.copyFileSync(srcPath, destPath);
     }
   }
