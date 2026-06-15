@@ -13,6 +13,7 @@ if errorlevel 1 (
 echo Starting Static Blog / Case Studio...
 echo The browser should open automatically.
 echo Keep this window open while using the tool.
+echo If the tool is already running, this launcher will open the existing page.
 echo.
 node "%~dp0tools\static-post-studio.js"
 

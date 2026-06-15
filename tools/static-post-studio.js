@@ -9,7 +9,7 @@ const ROOT = path.resolve(__dirname, '..');
 const PORT = Number(process.env.STATIC_POST_STUDIO_PORT || 8791);
 const DRAFT_DIR = path.join(ROOT, 'content', 'static-posts', 'generated');
 const SHOULD_OPEN_BROWSER = process.env.STATIC_POST_STUDIO_OPEN !== '0';
-const GIT_CHECK_TIMEOUT_MS = 15_000;
+const GIT_CHECK_TIMEOUT_MS = 45_000;
 const GIT_LOGIN_TIMEOUT_MS = 180_000;
 const MAX_REQUEST_BODY_BYTES = 80 * 1024 * 1024;
 
@@ -410,11 +410,19 @@ function checkGitConnection() {
     };
   }
 
+  const probeText = `${pushCheck.error}\n${pushCheck.output}`;
+  const timedOut = /ETIMEDOUT|timed out|timeout/i.test(probeText);
+  const needsSync = /non-fast-forward|fetch first|failed to push some refs|rejected/i.test(probeText);
   return {
     ok: false,
+    reason: needsSync ? 'behind' : timedOut ? 'timeout' : 'auth',
     remote,
     branch,
-    message: 'GitHub is not connected or this account cannot push to the repository.',
+    message: needsSync
+      ? 'GitHub is connected, but this local branch is behind the remote branch.'
+      : timedOut
+      ? 'GitHub connection timed out while checking push access.'
+      : 'GitHub is not connected or this account cannot push to the repository.',
     details: pushCheck.output || pushCheck.error || `git push --dry-run origin ${pushTarget} failed.`,
   };
 }
@@ -1129,6 +1137,8 @@ function renderApp() {
         gitCheckingHint: '如果没有连接，会先让你登录 GitHub。',
         gitReady: 'GitHub 已连接',
         gitReadyHint: '可以自动提交并推送到 GitHub。',
+        gitNeedsSync: 'GitHub 已连接，但需要先同步',
+        gitNeedsSyncHint: '远程仓库有新提交，本地分支落后。请先同步远程更新后再自动推送。',
         gitNotReady: 'GitHub 未连接',
         gitNotReadyHint: '请先登录 GitHub，否则自动推送不会成功。',
         gitLogin: '登录 GitHub',
@@ -1242,6 +1252,8 @@ function renderApp() {
         gitCheckingHint: 'If it is not connected, the tool will ask you to log in first.',
         gitReady: 'GitHub connected',
         gitReadyHint: 'Automatic commit and push can be used.',
+        gitNeedsSync: 'GitHub connected, but sync is required',
+        gitNeedsSyncHint: 'The remote repository has new commits and this local branch is behind. Pull or sync remote changes before auto-push.',
         gitNotReady: 'GitHub not connected',
         gitNotReadyHint: 'Log in to GitHub first, otherwise auto-push will fail.',
         gitLogin: 'Log in to GitHub',
@@ -1431,14 +1443,17 @@ function renderApp() {
     function renderGitStatus(git) {
       lastGitStatus = git;
       gitConnectionReady = Boolean(git && git.ok);
-      gitStatus.className = 'git-status ' + (gitConnectionReady ? 'ready' : 'error');
-      gitStatus.querySelector('strong').textContent = gitConnectionReady ? tr('gitReady') : tr('gitNotReady');
+      const needsSync = Boolean(git && git.reason === 'behind');
+      gitStatus.className = 'git-status ' + (gitConnectionReady ? 'ready' : needsSync ? 'checking' : 'error');
+      gitStatus.querySelector('strong').textContent = gitConnectionReady ? tr('gitReady') : needsSync ? tr('gitNeedsSync') : tr('gitNotReady');
       const location = [git && git.remote, git && git.branch ? '(' + git.branch + ')' : ''].filter(Boolean).join(' ');
       const details = git && git.details ? '\\n' + git.details : '';
       gitStatus.querySelector('small').textContent = gitConnectionReady
         ? [tr('gitReadyHint'), location].filter(Boolean).join(' ')
+        : needsSync
+        ? [tr('gitNeedsSyncHint'), git && git.message, location].filter(Boolean).join('\\n') + details
         : [tr('gitNotReadyHint'), git && git.message, location].filter(Boolean).join('\\n') + details;
-      gitLoginButton.hidden = gitConnectionReady;
+      gitLoginButton.hidden = gitConnectionReady || needsSync;
       gitLoginButton.disabled = false;
       gitLoginButton.textContent = tr('gitLogin');
     }
@@ -1899,9 +1914,9 @@ function renderApp() {
       data.autoPush = form.autoPush.checked;
       try {
         if (data.autoPush) {
-          const git = gitConnectionReady ? lastGitStatus : await refreshGitStatus();
+          const git = await refreshGitStatus();
           if (!git || !git.ok) {
-            throw new Error(tr('gitNotReadyHint'));
+            throw new Error([git && git.message, git && git.details].filter(Boolean).join('\\n') || tr('gitNotReadyHint'));
           }
         }
         const response = await fetch('/api/generate', {
@@ -1954,8 +1969,22 @@ const server = http.createServer((req, res) => {
   send(res, 405, 'Method not allowed', { 'Content-Type': 'text/plain; charset=utf-8' });
 });
 
+const studioUrl = `http://127.0.0.1:${PORT}`;
+
+server.on('error', error => {
+  if (error && error.code === 'EADDRINUSE') {
+    console.log(`Static Post Studio is already running at ${studioUrl}`);
+    console.log('Opening the existing page instead of starting a second server.');
+    openBrowser(studioUrl);
+    process.exit(0);
+    return;
+  }
+  console.error(error && error.stack ? error.stack : error);
+  process.exit(1);
+});
+
 server.listen(PORT, '127.0.0.1', () => {
-  const url = `http://127.0.0.1:${PORT}`;
+  const url = studioUrl;
   console.log(`Static Post Studio running at ${url}`);
   console.log('Press Ctrl+C to stop.');
   openBrowser(url);
