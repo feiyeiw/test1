@@ -300,14 +300,14 @@ function renderStaticPost(post) {
     ['Technology', technologyLabels],
   ].filter(([, value]) => value);
   const projectGalleryHtml = renderProjectGallery(post.projectImages, prefix);
-  const caseSections = isCase ? [
+  const detailSections = [
     { id: 'challenge', title: 'Challenge', html: renderOptionalSection('Challenge', post.challenge, 'challenge') },
     { id: 'solution', title: 'Solution', html: renderOptionalSection('Solution', post.solutionDetail || post.solutionText, 'solution') },
     { id: 'workflow-layout', title: 'Workflow & Layout', html: renderOptionalSection('Workflow & Layout', post.layoutWorkflow, 'workflow-layout', projectGalleryHtml) },
     { id: 'results-roi', title: 'Results & ROI', html: renderListSection('Results & ROI', post.results, 'results-roi') },
     { id: 'equipment-list', title: 'Equipment List', html: renderListSection('Equipment List', post.equipmentList, 'equipment-list') },
-  ].filter(section => section.html) : [];
-  const pageToc = [...toc, ...caseSections.map(({ id, title }) => ({ id, text: title }))];
+  ].filter(section => section.html);
+  const pageToc = [...toc, ...detailSections.map(({ id, title }) => ({ id, text: title }))];
   const relatedProjectDefaults = [
     { title: 'ASRS Project', href: siteHref('case-studies.html?solution=asrs#caseGrid') },
     { title: 'Smart Factory Project', href: siteHref('case-studies.html?solution=smart-factory#caseGrid') },
@@ -425,7 +425,7 @@ function renderStaticPost(post) {
                                 <h2>Project Overview</h2>
                                 <div class="blog-content">${contentHtml}</div>
                             </section>
-                            ${caseSections.map(section => section.html).join('\n                            ')}
+                            ${detailSections.map(section => section.html).join('\n                            ')}
                             <section class="article-section" id="related-projects">
                                 <h2>Related Case Studies</h2>
                                 <div class="related-grid">${renderRelatedCards(relatedProjects, relatedProjectDefaults)}</div>

@@ -923,15 +923,6 @@ function renderApp() {
           <span class="hint" data-i18n="projectImagesHint">???????????? URL???????? | ???</span>
           <button class="upload-button" type="button" id="chooseProjectImagesButton" data-i18n="chooseProjectImages">Choose Project Images</button><input class="file-input-hidden" id="projectImagesFile" type="file" accept="image/*" multiple>
         </label>
-        <label><span data-i18n="challenge">Challenge 瀹㈡埛鐥涚偣</span><textarea name="challenge"></textarea></label>
-        <label><span data-i18n="solutionDetail">Solution 瑙ｅ喅鏂规</span><textarea name="solutionDetail"></textarea></label>
-        <label><span data-i18n="layoutWorkflow">Workflow & Layout 娴佺▼涓庡竷灞€</span><textarea name="layoutWorkflow"></textarea></label>
-        <label><span data-i18n="results">Results & ROI 閲忓寲缁撴灉</span>
-          <textarea name="results" placeholder="Storage Capacity +300%&#10;Labor Cost -60%&#10;Inventory Accuracy 99.9%" data-i18n-placeholder="resultsPlaceholder"></textarea>
-        </label>
-        <label><span data-i18n="equipmentList">Equipment List 椤圭洰璁惧</span>
-          <textarea name="equipmentList" placeholder="Stacker Crane&#10;Conveyor System&#10;WMS" data-i18n-placeholder="equipmentPlaceholder"></textarea>
-        </label>
         <div class="row">
           <label><span data-i18n="author">浣滆€</span><input name="author" value="13ASRS"></label>
           <label><span data-i18n="date">鏃ユ湡</span><input name="date" type="date" value="${today}"></label>
@@ -962,6 +953,15 @@ function renderApp() {
           </div>
           <textarea class="hidden-data-field" name="relatedSolutions"></textarea>
           <span class="hint" data-i18n="relatedBlogsHint">从已生成的 Blog 页面中选择，点“加入”后会放到下面框中。</span>
+        </label>
+        <label><span data-i18n="challenge">Challenge 瀹㈡埛鐥涚偣</span><textarea name="challenge"></textarea></label>
+        <label><span data-i18n="solutionDetail">Solution 瑙ｅ喅鏂规</span><textarea name="solutionDetail"></textarea></label>
+        <label><span data-i18n="layoutWorkflow">Workflow & Layout 娴佺▼涓庡竷灞€</span><textarea name="layoutWorkflow"></textarea></label>
+        <label><span data-i18n="results">Results & ROI 閲忓寲缁撴灉</span>
+          <textarea name="results" placeholder="Storage Capacity +300%&#10;Labor Cost -60%&#10;Inventory Accuracy 99.9%" data-i18n-placeholder="resultsPlaceholder"></textarea>
+        </label>
+        <label><span data-i18n="equipmentList">Equipment List 椤圭洰璁惧</span>
+          <textarea name="equipmentList" placeholder="Stacker Crane&#10;Conveyor System&#10;WMS" data-i18n-placeholder="equipmentPlaceholder"></textarea>
         </label>
         <div class="template-box">
           <h3 data-i18n="bodyTemplateTitle">????</h3>
