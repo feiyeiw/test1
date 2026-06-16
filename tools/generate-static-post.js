@@ -116,6 +116,12 @@ function getPublicUrlPath(outputPath) {
   return String(outputPath || '').replace(/index\.html$/i, '');
 }
 
+function normalizeLookupKey(value) {
+  return stripHtml(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '');
+}
+
 function isExternalUrl(value) {
   return /^(?:[a-z]+:)?\/\//i.test(value)
     || /^(?:data|mailto|tel):/i.test(value)
@@ -132,6 +138,87 @@ function prefixHtmlRefs(html, prefix) {
   return String(html || '').replace(/\b(src|href)=["']([^"']+)["']/gi, (match, attr, value) => {
     return `${attr}="${escapeHtml(prefixSitePath(value, prefix))}"`;
   });
+}
+
+function looksLikeHref(value) {
+  const raw = String(value || '').trim();
+  return !raw
+    || isExternalUrl(raw)
+    || raw.startsWith('/')
+    || raw.startsWith('../')
+    || raw.includes('/')
+    || /\.html(?:[?#].*)?$/i.test(raw);
+}
+
+function makeLookupPost(rawPost) {
+  const contentType = rawPost.contentType === 'case' ? 'case' : 'blog';
+  const fileName = normalizeFileName(rawPost.fileName || rawPost.title);
+  const urlSlug = normalizeSlug(rawPost.urlSlug, fileName);
+  const outputPath = getOutputRelativePath({ contentType, fileName, urlSlug });
+  return {
+    contentType,
+    title: rawPost.title || fileName.replace(/\.html$/i, ''),
+    fileName,
+    urlSlug,
+    href: getPublicUrlPath(outputPath),
+  };
+}
+
+function addLookupItem(map, post) {
+  const bucket = map[post.contentType];
+  const keys = [post.title, post.fileName, post.urlSlug, post.href].map(normalizeLookupKey).filter(Boolean);
+  for (const key of keys) {
+    if (!bucket.has(key)) bucket.set(key, post);
+  }
+}
+
+function findLookupItem(map, contentType, value) {
+  const key = normalizeLookupKey(value);
+  if (!key) return null;
+  const bucket = map[contentType] || new Map();
+  if (bucket.has(key)) return bucket.get(key);
+  for (const [candidateKey, post] of bucket.entries()) {
+    if (candidateKey.includes(key) || key.includes(candidateKey)) return post;
+  }
+  return null;
+}
+
+function buildRelatedLookup(posts) {
+  const map = { blog: new Map(), case: new Map() };
+  const generatedDir = path.join('content', 'static-posts', 'generated');
+  const rawPosts = [];
+
+  if (fs.existsSync(generatedDir)) {
+    for (const file of fs.readdirSync(generatedDir)) {
+      if (!file.endsWith('.json')) continue;
+      try {
+        const data = JSON.parse(fs.readFileSync(path.join(generatedDir, file), 'utf8').replace(/^\uFEFF/, ''));
+        rawPosts.push(...(Array.isArray(data) ? data : [data]));
+      } catch {
+        // Ignore incomplete drafts in the lookup; the main generator still validates the requested input.
+      }
+    }
+  }
+
+  for (const post of rawPosts) {
+    try {
+      addLookupItem(map, makeLookupPost(post));
+    } catch {
+      // Ignore records that are not usable as related links.
+    }
+  }
+
+  for (const post of posts) {
+    addLookupItem(map, {
+      contentType: post.contentType,
+      title: post.title,
+      fileName: post.fileName,
+      urlSlug: post.urlSlug,
+      href: getPublicUrlPath(post.outputPath),
+    });
+  }
+
+  return map;
 }
 
 function getYouTubeEmbedUrl(url) {
@@ -266,17 +353,34 @@ function renderToc(toc) {
   return toc.map(item => `<a href="#${escapeHtml(item.id)}">${escapeHtml(item.text)}</a>`).join('');
 }
 
-function renderRelatedCards(items, defaults) {
+function renderRelatedCards(items, defaults, stringHref = 'case-studies.html') {
   const values = splitConfiguredList(items);
-  const cards = values.length ? values : defaults;
+  const cards = values.length ? [...values, ...defaults] : defaults;
   return cards.slice(0, 3).map(item => {
     const label = typeof item === 'string' ? item : item.title;
-    const href = typeof item === 'string' ? 'case-studies.html' : item.href;
+    const href = typeof item === 'string' ? stringHref : item.href;
     return `<a class="related-card" href="${escapeHtml(href || '#')}"><span class="eyebrow">Recommended</span><h3>${escapeHtml(label || 'Related Resource')}</h3><p>Explore a relevant 13ASRS reference before planning your project.</p></a>`;
   }).join('');
 }
 
-function renderStaticPost(post) {
+function resolveRelatedItems(items, contentType, relatedLookup, siteHref) {
+  return splitConfiguredList(items).map(item => {
+    if (typeof item === 'string') {
+      const match = findLookupItem(relatedLookup, contentType, item);
+      return match ? { title: match.title, href: siteHref(match.href) } : item;
+    }
+
+    const title = item.title || item.href || 'Related Resource';
+    const href = String(item.href || '').trim();
+    if (!looksLikeHref(href)) {
+      const match = findLookupItem(relatedLookup, contentType, href) || findLookupItem(relatedLookup, contentType, title);
+      if (match) return { title, href: siteHref(match.href) };
+    }
+    return { ...item, href: siteHref(href || '#') };
+  });
+}
+
+function renderStaticPost(post, relatedLookup) {
   const prefix = getRelativePrefix(post.outputPath);
   const siteHref = href => prefixSitePath(href, prefix);
   const { html: contentWithHeadingIds, toc } = addHeadingIds(post.contentHtml);
@@ -318,12 +422,8 @@ function renderStaticPost(post) {
     { title: 'Smart Factory Solution', href: siteHref('solutions.html#factory') },
     { title: 'Industrial Machinery Solutions', href: siteHref('solutions.html#machinery') },
   ];
-  const relatedProjects = splitConfiguredList(post.relatedProjects).map(item => (
-    typeof item === 'string' ? item : { ...item, href: siteHref(item.href || '#') }
-  ));
-  const relatedSolutions = splitConfiguredList(post.relatedSolutions).map(item => (
-    typeof item === 'string' ? item : { ...item, href: siteHref(item.href || '#') }
-  ));
+  const relatedProjects = resolveRelatedItems(post.relatedProjects, 'case', relatedLookup, siteHref);
+  const relatedSolutions = resolveRelatedItems(post.relatedSolutions, 'blog', relatedLookup, siteHref);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -428,11 +528,11 @@ function renderStaticPost(post) {
                             ${detailSections.map(section => section.html).join('\n                            ')}
                             <section class="article-section" id="related-projects">
                                 <h2>Related Case Studies</h2>
-                                <div class="related-grid">${renderRelatedCards(relatedProjects, relatedProjectDefaults)}</div>
+                                <div class="related-grid">${renderRelatedCards(relatedProjects, relatedProjectDefaults, siteHref('case-studies.html'))}</div>
                             </section>
                             <section class="article-section">
                                 <h2>Related Blog</h2>
-                                <div class="related-grid">${renderRelatedCards(relatedSolutions, relatedSolutionDefaults)}</div>
+                                <div class="related-grid">${renderRelatedCards(relatedSolutions, relatedSolutionDefaults, siteHref('blog.html'))}</div>
                             </section>
                             <div class="blog-cta">
                                 <div>
@@ -503,6 +603,7 @@ function main() {
   const options = parseArgs(process.argv.slice(2));
   const { posts, skipped } = readPosts(options.input);
   if (!posts.length) throw new Error('No static posts found.');
+  const relatedLookup = buildRelatedLookup(posts);
 
   const outDir = path.resolve(options.outDir);
   fs.mkdirSync(outDir, { recursive: true });
@@ -513,7 +614,7 @@ function main() {
       throw new Error(`${post.outputPath} already exists. Use --force to overwrite it.`);
     }
     fs.mkdirSync(path.dirname(outPath), { recursive: true });
-    fs.writeFileSync(outPath, renderStaticPost(post), 'utf8');
+    fs.writeFileSync(outPath, renderStaticPost(post, relatedLookup), 'utf8');
     console.log(`Generated ${post.outputPath}`);
   }
   if (skipped) console.log(`Skipped ${skipped} item(s) without fileName.`);
