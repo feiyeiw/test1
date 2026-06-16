@@ -75,7 +75,12 @@
     "12.MES + SCADA control platform",
     "13.Industrial PLC control cabinets"
   ],
-  "relatedProjects": [],
+  "relatedProjects": [
+    {
+      "title": "Fully Automatic Reel & Tray Vacuum Packaging Line",
+      "href": "MES Integrated Aluminum Bag Packing System with Labeling & Traceability"
+    }
+  ],
   "relatedSolutions": [
     {
       "title": "How to Design a 200 Reel/Hour High-Speed Electronics Packaging Line？",
