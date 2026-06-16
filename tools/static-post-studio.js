@@ -906,10 +906,6 @@ function renderApp() {
           <label><span data-i18n="functionCategory">鍔熻兘鍒嗙被</span><select name="functionCategory" id="functionCategory">${renderOptions(FUNCTIONS)}</select></label>
           <label><span data-i18n="application">搴旂敤鍦烘櫙</span><select name="application" id="application">${renderOptions(APPLICATIONS)}</select></label>
         </div>
-        <label><span data-i18n="technology">鏍稿績鎶€鏈</span>
-          <textarea name="technology" placeholder="ASRS&#10;Stacker Crane&#10;WMS" data-i18n-placeholder="technologyPlaceholder"></textarea>
-          <span class="hint" data-i18n="technologyHint">姣忚涓€涓紝鍙～鍐?ASRS銆丄GV銆丄MR銆丆onveyor銆丷obot銆乄MS銆丮ES 绛夈€</span>
-        </label>
         <div class="row">
           <label><span data-i18n="coverImage">???? URL / ????</span>
             <div class="inline-upload"><input name="coverImage" placeholder="?????? images/example.webp / https://..." data-i18n-placeholder="coverImagePlaceholder"><button class="upload-button" type="button" id="chooseCoverImageButton" data-i18n="chooseImage">????</button><input class="file-input-hidden" id="coverImageFile" type="file" accept="image/*"></div>
@@ -927,10 +923,26 @@ function renderApp() {
           <label><span data-i18n="author">浣滆€</span><input name="author" value="13ASRS"></label>
           <label><span data-i18n="date">鏃ユ湡</span><input name="date" type="date" value="${today}"></label>
         </div>
+        <div class="template-box">
+          <h3 data-i18n="bodyTemplateTitle">????</h3>
+          <span class="hint" data-i18n="bodyTemplateHint">???????????????????? HTML?</span>
+        <label><span data-i18n="technology">鏍稿績鎶€鏈</span>
+          <textarea name="technology" placeholder="ASRS&#10;Stacker Crane&#10;WMS" data-i18n-placeholder="technologyPlaceholder"></textarea>
+          <span class="hint" data-i18n="technologyHint">姣忚涓€涓紝鍙～鍐?ASRS銆丄GV銆丄MR銆丆onveyor銆丷obot銆乄MS銆丮ES 绛夈€</span>
+        </label>
         <label><span data-i18n="seoTitle">SEO 鏍囬</span><input name="seoTitle"></label>
         <label><span data-i18n="seoDescription">SEO 鎻忚堪</span><input name="seoDescription"></label>
         <label><span data-i18n="keywords">SEO 鍏抽敭璇</span>
           <textarea name="keywords" placeholder="Chemical Warehouse Automation&#10;ASRS Malaysia" data-i18n-placeholder="keywordsPlaceholder"></textarea>
+        </label>
+        <label><span data-i18n="challenge">Challenge 瀹㈡埛鐥涚偣</span><textarea name="challenge"></textarea></label>
+        <label><span data-i18n="solutionDetail">Solution 瑙ｅ喅鏂规</span><textarea name="solutionDetail"></textarea></label>
+        <label><span data-i18n="layoutWorkflow">Workflow & Layout 娴佺▼涓庡竷灞€</span><textarea name="layoutWorkflow"></textarea></label>
+        <label><span data-i18n="results">Results & ROI 閲忓寲缁撴灉</span>
+          <textarea name="results" placeholder="Storage Capacity +300%&#10;Labor Cost -60%&#10;Inventory Accuracy 99.9%" data-i18n-placeholder="resultsPlaceholder"></textarea>
+        </label>
+        <label><span data-i18n="equipmentList">Equipment List 椤圭洰璁惧</span>
+          <textarea name="equipmentList" placeholder="Stacker Crane&#10;Conveyor System&#10;WMS" data-i18n-placeholder="equipmentPlaceholder"></textarea>
         </label>
         <label><span data-i18n="relatedProjects">相关案例</span>
           <div class="related-picker">
@@ -954,18 +966,6 @@ function renderApp() {
           <textarea class="hidden-data-field" name="relatedSolutions"></textarea>
           <span class="hint" data-i18n="relatedBlogsHint">从已生成的 Blog 页面中选择，点“加入”后会放到下面框中。</span>
         </label>
-        <label><span data-i18n="challenge">Challenge 瀹㈡埛鐥涚偣</span><textarea name="challenge"></textarea></label>
-        <label><span data-i18n="solutionDetail">Solution 瑙ｅ喅鏂规</span><textarea name="solutionDetail"></textarea></label>
-        <label><span data-i18n="layoutWorkflow">Workflow & Layout 娴佺▼涓庡竷灞€</span><textarea name="layoutWorkflow"></textarea></label>
-        <label><span data-i18n="results">Results & ROI 閲忓寲缁撴灉</span>
-          <textarea name="results" placeholder="Storage Capacity +300%&#10;Labor Cost -60%&#10;Inventory Accuracy 99.9%" data-i18n-placeholder="resultsPlaceholder"></textarea>
-        </label>
-        <label><span data-i18n="equipmentList">Equipment List 椤圭洰璁惧</span>
-          <textarea name="equipmentList" placeholder="Stacker Crane&#10;Conveyor System&#10;WMS" data-i18n-placeholder="equipmentPlaceholder"></textarea>
-        </label>
-        <div class="template-box">
-          <h3 data-i18n="bodyTemplateTitle">????</h3>
-          <span class="hint" data-i18n="bodyTemplateHint">???????????????????? HTML?</span>
           <label><span data-i18n="bodyOverview">???? / ????</span><textarea id="bodyOverview" data-template-field="overview"></textarea></label>
           <label><span data-i18n="bodyKeyPoints">????</span>
             <textarea id="bodyKeyPoints" data-template-field="keyPoints" data-i18n-placeholder="bodyKeyPointsPlaceholder" placeholder="??????"></textarea>
