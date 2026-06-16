@@ -3,6 +3,7 @@ const path = require('path');
 const crypto = require('crypto');
 const Terser = require('terser');
 const CleanCSS = require('clean-css');
+const { generateSitemap } = require('./tools/generate-sitemap');
 
 console.log('Starting build process...');
 
@@ -257,6 +258,9 @@ function updateHtmlFiles(distDir, fileMap) {
 }
 
 (async function main() {
+  // Keep robots/sitemap aligned with newly generated static blog and case pages.
+  generateSitemap();
+
   // Copy files from current directory to dist
   console.log('Copying static files...');
   const fileMap = await copyFiles('.', distDir);

@@ -1,4 +1,8 @@
 User-agent: *
+Allow: /blog/
+Allow: /case/
+Allow: /images/
+Allow: /videos/
 Disallow: /admin.html
 Disallow: /login.html
 Allow: /
