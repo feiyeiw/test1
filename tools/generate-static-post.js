@@ -291,6 +291,12 @@ function renderOptionalSection(title, body, id, extraHtml = '') {
   return `<section class="article-section" id="${escapeHtml(id || slugifyHeading(title, 'case-section'))}"><h2>${escapeHtml(title)}</h2><div class="blog-content">${renderTextBlocks(value)}${extraHtml}</div></section>`;
 }
 
+function renderHtmlSection(title, html, id) {
+  const value = String(html || '').trim();
+  if (!value) return '';
+  return `<section class="article-section" id="${escapeHtml(id || slugifyHeading(title, 'article-section'))}"><h2>${escapeHtml(title)}</h2><div class="blog-content">${value}</div></section>`;
+}
+
 function renderListSection(title, values, id) {
   const items = splitLines(values);
   if (!items.length) return '';
@@ -304,6 +310,110 @@ function renderProjectGallery(images, prefix) {
     const [src, alt] = item.split('|').map(part => part.trim());
     return `<figure><img src="${escapeHtml(prefixSitePath(src, prefix))}" alt="${escapeHtml(alt || 'Project image')}"></figure>`;
   }).join('')}</div>`;
+}
+
+function normalizeSectionTitle(value) {
+  return stripHtml(value)
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '');
+}
+
+function splitHtmlIntoH2Sections(contentHtml) {
+  const source = String(contentHtml || '').trim();
+  if (!source) return [];
+
+  const headingPattern = /<h2([^>]*)>([\s\S]*?)<\/h2>/gi;
+  const headings = [];
+  let match;
+  while ((match = headingPattern.exec(source)) !== null) {
+    headings.push({
+      index: match.index,
+      end: headingPattern.lastIndex,
+      heading: stripHtml(match[2]),
+    });
+  }
+
+  if (!headings.length) {
+    return [{ heading: 'Project Overview / Opening', body: source }];
+  }
+
+  const sections = [];
+  const leading = source.slice(0, headings[0].index).trim();
+  if (leading) sections.push({ heading: 'Project Overview / Opening', body: leading });
+
+  for (let index = 0; index < headings.length; index += 1) {
+    const current = headings[index];
+    const next = headings[index + 1];
+    const body = source.slice(current.end, next ? next.index : source.length).trim();
+    sections.push({ heading: current.heading, body });
+  }
+  return sections.filter(section => section.body || section.heading);
+}
+
+function matchesSectionTitle(heading, aliases) {
+  const key = normalizeSectionTitle(heading);
+  return aliases.some(alias => {
+    const aliasKey = normalizeSectionTitle(alias);
+    return key === aliasKey || key.includes(aliasKey) || aliasKey.includes(key);
+  });
+}
+
+function renderOrderedBodySections(contentHtml, prefix) {
+  const sections = splitHtmlIntoH2Sections(contentHtml);
+  const used = new Set();
+  const order = [
+    {
+      title: 'Project Overview / Opening',
+      id: 'project-overview-opening',
+      aliases: ['Project Overview', 'Project Overview / Opening', 'Opening', 'Overview'],
+    },
+    {
+      title: 'Key Points',
+      id: 'key-points',
+      aliases: ['Key Points', 'Key Point', 'Highlights', 'Key Features'],
+    },
+    {
+      title: 'Implementation / Workflow',
+      id: 'implementation-workflow',
+      aliases: ['Implementation / Workflow', 'Implementation & Workflow', 'Implementation Workflow', 'Implementation', 'Workflow'],
+    },
+    {
+      title: 'Customer Value / Results',
+      id: 'customer-value-results',
+      aliases: ['Customer Value / Results', 'Customer Value & Results', 'Customer Value', 'Customer Results'],
+    },
+    {
+      title: 'Conclusion / Next Step',
+      id: 'conclusion-next-step',
+      aliases: ['Conclusion / Next Step', 'Conclusion', 'Next Step', 'Next Steps'],
+    },
+  ];
+
+  const rendered = [];
+  for (const target of order) {
+    const matchIndex = sections.findIndex((section, index) => !used.has(index) && matchesSectionTitle(section.heading, target.aliases));
+    if (matchIndex === -1) continue;
+    used.add(matchIndex);
+    rendered.push({
+      id: target.id,
+      title: target.title,
+      html: renderHtmlSection(target.title, prefixHtmlRefs(sections[matchIndex].body, prefix), target.id),
+    });
+  }
+
+  sections.forEach((section, index) => {
+    if (used.has(index)) return;
+    const title = section.heading || 'Additional Details';
+    const id = slugifyHeading(title, `additional-details-${index + 1}`);
+    rendered.push({
+      id,
+      title,
+      html: renderHtmlSection(title, prefixHtmlRefs(section.body, prefix), id),
+    });
+  });
+
+  return rendered.filter(section => section.html);
 }
 
 function normalizePost(rawPost) {
@@ -330,22 +440,6 @@ function normalizePost(rawPost) {
   if (!post.contentHtml) throw new Error(`${post.fileName}: contentHtml is required.`);
 
   return post;
-}
-
-function addHeadingIds(contentHtml) {
-  const toc = [];
-  let index = 0;
-  const html = String(contentHtml || '').replace(/<(h[23])([^>]*)>([\s\S]*?)<\/\1>/gi, (match, tag, attrs, inner) => {
-    index += 1;
-    const text = stripHtml(inner);
-    const existingId = attrs.match(/\sid=["']([^"']+)["']/i);
-    const id = existingId ? existingId[1] : slugifyHeading(text, `section-${index}`);
-    toc.push({ id, text });
-    if (existingId) return match;
-    return `<${tag}${attrs} id="${escapeHtml(id)}">${inner}</${tag}>`;
-  });
-
-  return { html, toc: toc.slice(0, 8) };
 }
 
 function renderToc(toc) {
@@ -383,8 +477,6 @@ function resolveRelatedItems(items, contentType, relatedLookup, siteHref) {
 function renderStaticPost(post, relatedLookup) {
   const prefix = getRelativePrefix(post.outputPath);
   const siteHref = href => prefixSitePath(href, prefix);
-  const { html: contentWithHeadingIds, toc } = addHeadingIds(post.contentHtml);
-  const contentHtml = prefixHtmlRefs(contentWithHeadingIds, prefix);
   const isCase = post.contentType === 'case';
   const backHref = siteHref(isCase ? 'case-studies.html' : 'blog.html');
   const backLabel = isCase ? 'Back to Case Studies' : 'Back to Blog';
@@ -404,14 +496,17 @@ function renderStaticPost(post, relatedLookup) {
     ['Technology', technologyLabels],
   ].filter(([, value]) => value);
   const projectGalleryHtml = renderProjectGallery(post.projectImages, prefix);
-  const detailSections = [
+  const articleSections = [
+    { id: 'summary', title: 'Summary', html: renderOptionalSection('Summary', post.summary, 'summary') },
+    { id: 'technology', title: 'Technology', html: renderListSection('Technology', post.technology, 'technology') },
     { id: 'challenge', title: 'Challenge', html: renderOptionalSection('Challenge', post.challenge, 'challenge') },
     { id: 'solution', title: 'Solution', html: renderOptionalSection('Solution', post.solutionDetail || post.solutionText, 'solution') },
     { id: 'workflow-layout', title: 'Workflow & Layout', html: renderOptionalSection('Workflow & Layout', post.layoutWorkflow, 'workflow-layout', projectGalleryHtml) },
     { id: 'results-roi', title: 'Results & ROI', html: renderListSection('Results & ROI', post.results, 'results-roi') },
     { id: 'equipment-list', title: 'Equipment List', html: renderListSection('Equipment List', post.equipmentList, 'equipment-list') },
+    ...renderOrderedBodySections(post.contentHtml, prefix),
   ].filter(section => section.html);
-  const pageToc = [...toc, ...detailSections.map(({ id, title }) => ({ id, text: title }))];
+  const pageToc = articleSections.map(({ id, title }) => ({ id, text: title }));
   const relatedProjectDefaults = [
     { title: 'ASRS Project', href: siteHref('case-studies.html?solution=asrs#caseGrid') },
     { title: 'Smart Factory Project', href: siteHref('case-studies.html?solution=smart-factory#caseGrid') },
@@ -521,11 +616,7 @@ function renderStaticPost(post, relatedLookup) {
 
                         <div class="blog-main-column">
                             ${videoHtml}
-                            <section class="article-section blog-content-section">
-                                <h2>Project Overview</h2>
-                                <div class="blog-content">${contentHtml}</div>
-                            </section>
-                            ${detailSections.map(section => section.html).join('\n                            ')}
+                            ${articleSections.map(section => section.html).join('\n                            ')}
                             <section class="article-section" id="related-projects">
                                 <h2>Related Case Studies</h2>
                                 <div class="related-grid">${renderRelatedCards(relatedProjects, relatedProjectDefaults, siteHref('case-studies.html'))}</div>
