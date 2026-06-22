@@ -7,3 +7,4 @@ Disallow: /admin.html
 Disallow: /login.html
 Allow: /
 Sitemap: https://13asrs.com/sitemap.xml
+Sitemap: https://13asrs.com/rss.xml

@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const Terser = require('terser');
 const CleanCSS = require('clean-css');
 const { generateSitemap } = require('./tools/generate-sitemap');
+const { generateRss } = require('./tools/generate-rss');
 
 console.log('Starting build process...');
 
@@ -257,9 +258,25 @@ function updateHtmlFiles(distDir, fileMap) {
   }
 }
 
+function injectRssDiscovery(distDir) {
+  const files = getFilesRecursive(distDir, ['.html']);
+  const rssLink = '    <link rel="alternate" type="application/rss+xml" title="13ASRS Blog, Case Studies & News" href="https://13asrs.com/rss.xml">';
+
+  for (const filePath of files) {
+    let content = fs.readFileSync(filePath, 'utf8');
+    if (/type=["']application\/rss\+xml["']/i.test(content)) continue;
+    if (!/<\/head>/i.test(content)) continue;
+
+    content = content.replace(/<\/head>/i, rssLink + '\n</head>');
+    fs.writeFileSync(filePath, content, 'utf8');
+    console.log('Added RSS discovery link in ' + path.relative(distDir, filePath));
+  }
+}
+
 (async function main() {
-  // Keep robots/sitemap aligned with newly generated static blog and case pages.
+  // Keep robots/sitemap/RSS aligned with newly generated static blog and case pages.
   generateSitemap();
+  generateRss();
 
   // Copy files from current directory to dist
   console.log('Copying static files...');
@@ -268,6 +285,7 @@ function updateHtmlFiles(distDir, fileMap) {
   // Update HTML files with hashed file names
   console.log('Updating HTML files with hashed file names...');
   updateHtmlFiles(distDir, fileMap);
+  injectRssDiscovery(distDir);
 
   console.log('Build completed successfully!');
   console.log(`Files in ${distDir}:`, fs.readdirSync(distDir));
