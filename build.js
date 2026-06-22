@@ -177,6 +177,11 @@ async function copyFiles(srcDir, destDir) {
           fs.copyFileSync(srcPath, finalDestPath);
         }
 
+        if (entry.name === 'logo.jpg' && finalFileName !== entry.name) {
+          fs.copyFileSync(srcPath, path.join(destDir, entry.name));
+          console.log('Copying compatibility file: logo.jpg');
+        }
+
         // Store mapping for reference updates
         fileMap[entry.name] = finalFileName;
       }
