@@ -930,11 +930,6 @@ function renderApp() {
           <textarea name="technology" placeholder="ASRS&#10;Stacker Crane&#10;WMS" data-i18n-placeholder="technologyPlaceholder"></textarea>
           <span class="hint" data-i18n="technologyHint">姣忚涓€涓紝鍙～鍐?ASRS銆丄GV銆丄MR銆丆onveyor銆丷obot銆乄MS銆丮ES 绛夈€</span>
         </label>
-        <label><span data-i18n="seoTitle">SEO 鏍囬</span><input name="seoTitle"></label>
-        <label><span data-i18n="seoDescription">SEO 鎻忚堪</span><input name="seoDescription"></label>
-        <label><span data-i18n="keywords">SEO 鍏抽敭璇</span>
-          <textarea name="keywords" placeholder="Chemical Warehouse Automation&#10;ASRS Malaysia" data-i18n-placeholder="keywordsPlaceholder"></textarea>
-        </label>
         <label><span data-i18n="challenge">Challenge 瀹㈡埛鐥涚偣</span><textarea name="challenge"></textarea></label>
         <label><span data-i18n="solutionDetail">Solution 瑙ｅ喅鏂规</span><textarea name="solutionDetail"></textarea></label>
         <label><span data-i18n="layoutWorkflow">Workflow & Layout 娴佺▼涓庡竷灞€</span><textarea name="layoutWorkflow"></textarea></label>
@@ -974,6 +969,11 @@ function renderApp() {
           <label><span data-i18n="bodyProcess">???? / ???</span><textarea id="bodyProcess" data-template-field="process"></textarea></label>
           <label><span data-i18n="bodyValue">???? / ??</span><textarea id="bodyValue" data-template-field="value"></textarea></label>
           <label><span data-i18n="bodyConclusion">?? / ??</span><textarea id="bodyConclusion" data-template-field="conclusion"></textarea></label>
+          <label><span data-i18n="seoTitle">SEO 鏍囬</span><input name="seoTitle"></label>
+          <label><span data-i18n="seoDescription">SEO 鎻忚堪</span><input name="seoDescription"></label>
+          <label><span data-i18n="keywords">SEO 鍏抽敭璇</span>
+            <textarea name="keywords" placeholder="Chemical Warehouse Automation&#10;ASRS Malaysia" data-i18n-placeholder="keywordsPlaceholder"></textarea>
+          </label>
         </div>
         <details class="advanced-html">
           <summary data-i18n="advancedHtmlToggle">????? / ????? HTML</summary>
@@ -1991,4 +1991,3 @@ server.listen(PORT, '127.0.0.1', () => {
   console.log('Press Ctrl+C to stop.');
   openBrowser(url);
 });
-

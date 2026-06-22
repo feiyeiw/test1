@@ -496,6 +496,7 @@ function renderStaticPost(post, relatedLookup) {
     ['Technology', technologyLabels],
   ].filter(([, value]) => value);
   const projectGalleryHtml = renderProjectGallery(post.projectImages, prefix);
+  const seoKeywords = splitLines(post.seoKeywords || post.keywords);
   const articleSections = [
     { id: 'summary', title: 'Summary', html: renderOptionalSection('Summary', post.summary, 'summary') },
     { id: 'technology', title: 'Technology', html: renderListSection('Technology', post.technology, 'technology') },
@@ -505,6 +506,9 @@ function renderStaticPost(post, relatedLookup) {
     { id: 'results-roi', title: 'Results & ROI', html: renderListSection('Results & ROI', post.results, 'results-roi') },
     { id: 'equipment-list', title: 'Equipment List', html: renderListSection('Equipment List', post.equipmentList, 'equipment-list') },
     ...renderOrderedBodySections(post.contentHtml, prefix),
+    { id: 'seo-title', title: 'SEO Title', html: renderOptionalSection('SEO Title', post.seoTitle, 'seo-title') },
+    { id: 'seo-description', title: 'SEO Description', html: renderOptionalSection('SEO Description', post.seoDescription, 'seo-description') },
+    { id: 'seo-keywords', title: 'SEO Keywords', html: renderListSection('SEO Keywords', seoKeywords, 'seo-keywords') },
   ].filter(section => section.html);
   const pageToc = articleSections.map(({ id, title }) => ({ id, text: title }));
   const relatedProjectDefaults = [
@@ -534,7 +538,7 @@ function renderStaticPost(post, relatedLookup) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${escapeHtml(post.seoTitle)}</title>
     <meta name="description" content="${escapeHtml(post.seoDescription)}">
-    ${post.seoKeywords ? `<meta name="keywords" content="${escapeHtml(post.seoKeywords)}">` : ''}
+    ${seoKeywords.length ? `<meta name="keywords" content="${escapeHtml(seoKeywords.join(', '))}">` : ''}
     <link rel="canonical" href="https://13asrs.com/${escapeHtml(getPublicUrlPath(post.outputPath))}">
     <link rel="stylesheet" href="${escapeHtml(siteHref('style.css'))}">
 </head>
