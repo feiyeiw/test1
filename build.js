@@ -55,6 +55,7 @@ const excludeFiles = [
 // Directories to exclude
 const excludeDirs = ['.git', 'node_modules', '.claude', 'dist'];
 const preservedStaticDirs = ['blog', 'case', 'cases', 'images', 'videos'];
+const preservedRootFiles = new Set(['_headers', '_redirects']);
 const CLOUDFLARE_PAGES_MAX_FILE_BYTES = 25 * 1024 * 1024;
 
 function shouldSkipForPagesLimit(filePath) {
@@ -145,7 +146,7 @@ async function copyFiles(srcDir, destDir) {
         }
       }
 
-      if (shouldCopy && !excludeFiles.includes(entry.name)) {
+      if ((shouldCopy || preservedRootFiles.has(entry.name)) && !excludeFiles.includes(entry.name)) {
         if (shouldSkipForPagesLimit(srcPath)) {
           continue;
         }
@@ -155,7 +156,8 @@ async function copyFiles(srcDir, destDir) {
         // Determine if file should be hashed
         let finalFileName, finalDestPath;
 
-        if (parsedPath.ext === '.html' || parsedPath.ext === '.txt' || parsedPath.ext === '.xml' ||
+        if (preservedRootFiles.has(entry.name) ||
+            parsedPath.ext === '.html' || parsedPath.ext === '.txt' || parsedPath.ext === '.xml' ||
             (parsedPath.ext === '.json' && parsedPath.name.startsWith('translations-'))) {
           // HTML, robots.txt, sitemap.xml, and translation files keep original names
           finalFileName = entry.name;
