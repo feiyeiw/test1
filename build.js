@@ -184,6 +184,12 @@ async function copyFiles(srcDir, destDir) {
           console.log('Copying compatibility file: logo.jpg');
         }
 
+        if (entry.name === 'hero-home-automation.webp') {
+          fs.copyFileSync(srcPath, path.join(destDir, entry.name));
+          fs.copyFileSync(srcPath, path.join(destDir, 'hero-home-automation.7fabe3f3.webp'));
+          console.log('Copying compatibility files for homepage hero image');
+        }
+
         // Store mapping for reference updates
         fileMap[entry.name] = finalFileName;
       }
