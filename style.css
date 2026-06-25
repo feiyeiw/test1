@@ -1566,10 +1566,10 @@ nav ul li a.active {
     color: #fff;
 }
 
-.home-page .industrial-hero {
+.home-page .page-hero {
     background:
         linear-gradient(90deg, rgba(7, 17, 31, 0.9), rgba(7, 17, 31, 0.55)),
-        url("hero-home-automation.webp") center/cover no-repeat;
+        url("hero-home-automation-factory.png") center/cover no-repeat;
 }
 
 .solutions-page .page-hero {
