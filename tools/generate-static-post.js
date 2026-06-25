@@ -547,7 +547,7 @@ function renderStaticPost(post, relatedLookup) {
         <div class="header-main">
             <div class="container">
                 <div class="logo-brand">
-                    <div class="logo"><a href="${escapeHtml(siteHref('index.html'))}"><img src="${escapeHtml(siteHref('logo.jpg'))}" alt="13ASRS"></a></div>
+                    <div class="logo"><a href="${escapeHtml(siteHref('index.html'))}"><img src="/logo.jpg" alt="13ASRS" onerror="this.replaceWith(document.createTextNode('13ASRS'))"></a></div>
                     <span class="logo-slogan">
                         <span class="slogan-line1">Industrial Automation Solutions</span>
                         <span class="slogan-line2">Smart warehouse and factory integration</span>
@@ -647,7 +647,7 @@ function renderStaticPost(post, relatedLookup) {
     <footer>
         <div class="container">
             <div class="footer-content">
-                <div class="footer-logo"><img src="${escapeHtml(siteHref('logo.jpg'))}" alt="13ASRS"></div>
+                <div class="footer-logo"><img src="/logo.jpg" alt="13ASRS" onerror="this.replaceWith(document.createTextNode('13ASRS'))"></div>
                 <div class="footer-links">
                     <a href="${escapeHtml(siteHref('solutions.html'))}">Solutions</a>
                     <a href="${escapeHtml(siteHref('case-studies.html'))}">Case Studies</a>
