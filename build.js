@@ -278,6 +278,22 @@ function injectRssDiscovery(distDir) {
   }
 }
 
+function injectSiteIcons(distDir) {
+  const files = getFilesRecursive(distDir, ['.html']);
+  const siteIconLink = '    <link rel="icon" href="/logo.jpg" type="image/jpeg">';
+
+  for (const filePath of files) {
+    let content = fs.readFileSync(filePath, 'utf8');
+    if (/rel=["']icon["'][^>]+href=["']\/logo\.jpg["']/i.test(content) ||
+        /href=["']\/logo\.jpg["'][^>]+rel=["']icon["']/i.test(content)) continue;
+    if (!/<\/head>/i.test(content)) continue;
+
+    content = content.replace(/<\/head>/i, siteIconLink + '\n</head>');
+    fs.writeFileSync(filePath, content, 'utf8');
+    console.log('Added site icon links in ' + path.relative(distDir, filePath));
+  }
+}
+
 (async function main() {
   // Keep robots/sitemap/RSS aligned with newly generated static blog and case pages.
   generateSitemap();
@@ -290,6 +306,7 @@ function injectRssDiscovery(distDir) {
   // Update HTML files with hashed file names
   console.log('Updating HTML files with hashed file names...');
   updateHtmlFiles(distDir, fileMap);
+  injectSiteIcons(distDir);
   injectRssDiscovery(distDir);
 
   console.log('Build completed successfully!');
