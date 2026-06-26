@@ -1,0 +1,117 @@
+{
+  "fileName": "amr-fleet-management-system-how-108-robots-are-coordinated-in-real-time.html",
+  "urlSlug": "amr-fleet-management-system-how-108-robots-are-coordinated-in-real-time",
+  "contentType": "blog",
+  "title": "AMR Fleet Management System: How 108 Robots Are Coordinated in Real-Time",
+  "summary": "This article explains how an AMR fleet management system coordinates 108 autonomous mobile robots in real time within a large-scale ASRS warehouse, using AI-based path planning, congestion control, and multi-robot collaboration algorithms to maximize efficiency and safety.",
+  "coverImage": "images/uploads/1782484736648-0-asrs-6.jpg",
+  "country": "",
+  "countryLabel": "",
+  "industry": "all-industries",
+  "industryLabel": "All Industries",
+  "solution": "asrs",
+  "solutionLabel": "ASRS / Automated Storage & Retrieval Systems",
+  "functionCategory": "warehouse-automation",
+  "functionLabel": "Warehouse Automation",
+  "application": "warehouse-storage",
+  "applicationLabel": "Warehouse & Storage",
+  "blogCategory": "industry-applications",
+  "blogCategoryLabel": "Industry Applications",
+  "category": "Industry Applications",
+  "youtubeUrl": "https://www.youtube.com/watch?v=h_D1NGyi3Es",
+  "author": "13ASRS",
+  "date": "2026-06-12",
+  "seoTitle": "AMR Fleet Management System: How 108 Robots Are Coordinated in Real-Time",
+  "seoDescription": "This article explains how an AMR fleet management system coordinates 108 autonomous mobile robots in real time within a large-scale ASRS warehouse, using AI-based path planning, congestion control, and multi-robot collaboration algorithms to maximize efficiency and safety.",
+  "keywords": [],
+  "technology": [
+    "Automated Storage and Retrieval System (ASRS)",
+    "AMR (Autonomous Mobile Robot) fleet system",
+    "Fleet Management System (FMS)",
+    "AI path planning algorithm",
+    "Multi-robot coordination control system",
+    "Real-time task scheduling engine",
+    "Obstacle avoidance system (LiDAR + vision sensors)",
+    "WMS warehouse management system",
+    "IoT real-time monitoring network",
+    "Congestion control algorithm (traffic optimization layer)"
+  ],
+  "projectImages": [
+    "Automated Storage and Retrieval System (ASRS)",
+    "AMR (Autonomous Mobile Robot) fleet system",
+    "Fleet Management System (FMS)",
+    "AI path planning algorithm",
+    "Multi-robot coordination control system",
+    "Real-time task scheduling engine",
+    "Obstacle avoidance system (LiDAR + vision sensors)",
+    "WMS warehouse management system",
+    "IoT real-time monitoring network",
+    "Congestion control algorithm (traffic optimization layer)"
+  ],
+  "challenge": "Large-scale AMR warehouse systems face critical operational challenges:\n\n7.1 High robot density causes traffic congestion\n7.2 Conflicting task assignments between multiple robots\n7.3 Inefficient routing in dynamic warehouse environments\n7.4 Delays caused by path blocking and collisions\n7.5 Lack of real-time coordination across 100+ robots\n7.6 Uneven workload distribution among AMRs\n7.7 Difficulty scaling from small fleets to large fleets",
+  "solutionDetail": "The AMR Fleet Management System solves these challenges through:\n\n8.1 Central AI-based fleet control platform\n8.2 Real-time task allocation for all 108 robots\n8.3 Dynamic path planning and rerouting system\n8.4 Multi-layer congestion control algorithm\n8.5 Zone-based traffic management architecture\n8.6 Predictive collision avoidance system\n8.7 Load balancing across robot fleet\n8.8 Continuous system optimization via AI learning",
+  "layoutWorkflow": "9.1 WMS generates warehouse tasks in real time\n9.2 Fleet system assigns tasks to nearest AMR\n9.3 AI calculates optimal route for each robot\n9.4 Robots navigate using LiDAR + vision sensors\n9.5 Congestion control system prevents traffic overlap\n9.6 ACR delivers goods to AMR pickup points\n9.7 AMR transports goods to picking stations\n9.8 System updates real-time status for all operations",
+  "results": [
+    "10.1 108 robots coordinated in real-time without collision",
+    "10.2 Warehouse throughput significantly increased",
+    "10.3 200–400% improvement in picking efficiency",
+    "10.4 Reduced idle time of robots and stations",
+    "10.5 Lower congestion and operational delays",
+    "10.6 Improved scalability for large fleet systems",
+    "10.7 Higher system stability under peak load",
+    "10.8 Strong ROI through labor and time reduction"
+  ],
+  "equipmentList": [
+    "11.1 AMR autonomous mobile robot fleet (108 units)",
+    "11.2 Fleet management system (FMS) software",
+    "11.3 AI path planning engine",
+    "11.4 LiDAR navigation system",
+    "11.5 Vision-based obstacle detection system",
+    "11.6 WMS warehouse management system",
+    "11.7 Real-time task scheduling server",
+    "11.8 IoT monitoring and tracking system",
+    "11.9 Network communication infrastructure",
+    "11.10 Congestion control algorithm module"
+  ],
+  "relatedProjects": [
+    {
+      "title": "Can 108 AMRs + 46 ACRs Replace Manual Picking? High-Density ASRS Automation Case Study",
+      "href": "case/can-108-amrs-46-acrs-replace-manual-picking-high-density-asrs-automation-case-study/"
+    },
+    {
+      "title": "Mega ASRS Warehouse Case Study",
+      "href": "12,000㎡ System with 50,000 Storage Locations & 1,000 Tasks/Hour"
+    },
+    {
+      "title": "ASRS Warehouse Industry Applications Case Study",
+      "href": "How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    }
+  ],
+  "relatedSolutions": [
+    {
+      "title": "AMR vs ACR in ASRS Systems: Which Robot Type Improves Warehouse Efficiency More?",
+      "href": "blog/amr-vs-acr-in-asrs-systems-which-robot-type-improves-warehouse-efficiency-more/"
+    },
+    {
+      "title": "How a 129,000 Storage Location ASRS Warehouse Is Designed: Layout & Engineering Explained",
+      "href": "blog/how-a-129-000-storage-location-asrs-warehouse-is-designed-layout-engineering-explained/"
+    },
+    {
+      "title": "ASRS Warehouse Cost Breakdown: How Much Does a 108 AMR + 46 ACR System Really Cost?",
+      "href": "blog/asrs-warehouse-cost-breakdown-how-much-does-a-108-amr-46-acr-system-really-cost/"
+    },
+    {
+      "title": "Goods-to-Person System Explained: Why Manual Picking Is No Longer Competitive",
+      "href": "blog/goods-to-person-system-explained-why-manual-picking-is-no-longer-competitive/"
+    },
+    {
+      "title": "How WMS + MES Integration Powers Real-Time Smart Warehouse Operations",
+      "href": "blog/how-wms-mes-integration-powers-real-time-smart-warehouse-operations/"
+    },
+    {
+      "title": "High-Density Warehouse Design: How 8.6m Racking Systems Double Storage Capacity",
+      "href": "blog/high-density-warehouse-design-how-8-6m-racking-systems-double-storage-capacity/"
+    }
+  ],
+  "contentHtml": "<h2>Project Overview</h2>\n<p>12.1 Modern warehouses rely on intelligent robot coordination<br>12.2 Large-scale AMR fleets require centralized control systems<br>12.3 Real-time decision-making is critical for efficiency<br>12.4 Fleet management is the brain of ASRS robot systems</p>\n<h2>Key Points</h2>\n<ul>\n  <li>13.1 AMR fleet system = central brain of warehouse robotics</li>\n  <li>13.2 AI path planning prevents collisions and delays</li>\n  <li>13.3 Congestion control ensures smooth traffic flow</li>\n  <li>13.4 Task allocation is dynamic and real-time</li>\n  <li>13.5 Multi-robot coordination improves scalability</li>\n  <li>13.6 WMS + FMS integration is essential</li>\n  <li>13.7 System adapts to changing warehouse conditions</li>\n</ul>\n<h2>Implementation & Workflow</h2>\n<p>14.1 Warehouse traffic simulation and analysis<br>14.2 AMR fleet sizing and deployment planning<br>14.3 Fleet management system architecture setup<br>14.4 AI path planning configuration<br>14.5 Zone-based warehouse mapping<br>14.6 WMS integration with fleet system<br>14.7 Congestion control calibration<br>14.8 Full system testing and optimization</p>\n<h2>Customer Value & Results</h2>\n<p>15.1 Seamless coordination of 108 robots in real time<br>15.2 Significant reduction in warehouse congestion<br>15.3 Higher throughput and operational speed<br>15.4 Improved system reliability and stability<br>15.5 Scalable architecture for future expansion<br>15.6 Lower operational and labor costs<br>15.7 Increased automation maturity level<br>15.8 Strong long-term ROI for smart warehouse investment</p>\n<h2>Conclusion</h2>\n<p>16.1 AMR fleet management is the core intelligence layer of modern ASRS systems<br>16.2 Without it, large-scale robot coordination is impossible</p>\n<p>If you are planning an automated warehouse project, we can support you with:</p>\n<p>16.3 AMR fleet system design and simulation<br>16.4 AI path planning and congestion control optimization<br>16.5 ASRS warehouse architecture planning<br>16.6 WMS + FMS integration design<br>16.7 Robot fleet sizing and ROI analysis<br>16.8 Turnkey smart warehouse implementation</p>"
+}
