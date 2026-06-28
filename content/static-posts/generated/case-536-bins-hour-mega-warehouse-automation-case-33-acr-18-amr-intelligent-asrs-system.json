@@ -1,0 +1,109 @@
+{
+  "fileName": "536-bins-hour-mega-warehouse-automation-case-33-acr-18-amr-intelligent-asrs-system.html",
+  "urlSlug": "536-bins-hour-mega-warehouse-automation-case-33-acr-18-amr-intelligent-asrs-system",
+  "contentType": "case",
+  "title": "536 Bins/Hour Mega Warehouse Automation Case | 33 ACR + 18 AMR Intelligent ASRS System",
+  "summary": "This project demonstrates a next-generation high-throughput automated storage and retrieval system (ASRS) combining 33 ACR robots and 18 AMR robots.\n\nThe system is designed for large-scale e-commerce and distribution environments where high SKU complexity, fast order fulfillment, and 24/7 operation are required.\n\nWith a peak throughput of 536 bins per hour, this solution significantly improves warehouse efficiency while increasing storage density and reducing manual labor dependency.",
+  "coverImage": "images/uploads/1782650099033-0-case-study-536-bins-per-hour-mega-warehouse-automation-case-33-acr-18-amr-intelligent-asrs-system.png",
+  "country": "",
+  "countryLabel": "",
+  "industry": "all-industries",
+  "industryLabel": "All Industries",
+  "solution": "asrs",
+  "solutionLabel": "ASRS / Automated Storage & Retrieval Systems",
+  "functionCategory": "warehouse-automation",
+  "functionLabel": "Warehouse Automation",
+  "application": "warehouse-storage",
+  "applicationLabel": "Warehouse & Storage",
+  "blogCategory": "case-insights",
+  "blogCategoryLabel": "Case Insights",
+  "category": "Case Insights",
+  "youtubeUrl": "https://www.youtube.com/watch?v=r3FvRpvXAyc",
+  "author": "13ASRS",
+  "date": "2026-06-28",
+  "seoTitle": "536 Bins/Hour Mega Warehouse Automation Case | 33 ACR + 18 AMR Intelligent ASRS System",
+  "seoDescription": "This project demonstrates a next-generation high-throughput automated storage and retrieval system (ASRS) combining 33 ACR robots and 18 AMR robots.\n\nThe system is designed for large-scale e-commerce and distribution environments where high SKU complexity, fast order fulfillment, and 24/7 operation are required.\n\nWith a peak throughput of 536 bins per hour, this solution significantly improves warehouse efficiency while increasing storage density and reducing manual labor dependency.",
+  "keywords": [],
+  "technology": [
+    "This mega warehouse system integrates multiple advanced automation technologies:",
+    "33 ACR (Autonomous Case/Carton Robots)",
+    "18 AMR (Autonomous Mobile Robots)",
+    "Multi-aisle high-density racking system",
+    "Intelligent WCS / WMS control system",
+    "3D SCADA warehouse visualization",
+    "Dynamic task scheduling algorithm",
+    "Automatic charging docking system",
+    "Real-time inventory tracking system",
+    "Multi-zone picking coordination",
+    "High-speed conveyor integration"
+  ],
+  "projectImages": [],
+  "challenge": "Modern logistics and e-commerce warehouses face increasing operational pressure:\n\nHigh SKU complexity (thousands of SKUs)\nRapid order fulfillment requirements\nLabor shortage and rising labor costs\nInefficient manual picking operations\nWarehouse space limitations\nOrder accuracy requirements\n\nTraditional warehouse systems struggle to handle both high throughput and high density storage simultaneously.",
+  "solutionDetail": "This project implements a hybrid automation strategy combining ACR + AMR + intelligent control system.\n\nKey advantages:\n\nACR robots handle high-density rack storage and retrieval\nAMR robots manage flexible intra-warehouse transport\nIntelligent system allocates tasks dynamically\nReduced human intervention in core operations\nFully scalable warehouse architecture\n\nThis hybrid model enables both high storage density and high operational flexibility.",
+  "layoutWorkflow": "Step 1: Incoming Goods Reception\nGoods are received and scanned into the system for identification and sorting.\n\nStep 2: AMR Transport Allocation\nAMR robots automatically transport goods to assigned warehouse zones.\n\nStep 3: ACR Storage Operation\nACR robots perform:\nBin lifting\nDeep rack storage\nAutomated slot assignment\n\nStep 4: Intelligent Storage Management\nSystem dynamically optimizes:\nStorage location\nRetrieval priority\nWarehouse balancing\n\nStep 5: Order Picking Execution\nWhen orders are triggered:\nACR retrieves bins\nAMR transports bins to packing zones\n\nStep 6: Sorting & Packing\nGoods are grouped and prepared for outbound shipment.\n\nStep 7: Dispatch & Outbound\nFinished orders are sent to shipping zones automatically.",
+  "results": [
+    "Key Performance Results:",
+    "Throughput: 536 bins/hour",
+    "Storage capacity: 46",
+    "000 bins",
+    "Warehouse area: 4",
+    "100 sqm",
+    "Storage efficiency improvement: +40%",
+    "Space utilization improvement: +15% (dual-deep design)",
+    "Operational Benefits:",
+    "24/7 continuous operation",
+    "Fully automated charging system",
+    "Reduced labor dependency by up to 70%",
+    "Higher order accuracy",
+    "Faster order fulfillment cycles",
+    "ROI Estimate:",
+    "Typical ROI period:",
+    "18–36 months depending on throughput utilization"
+  ],
+  "equipmentList": [
+    "Core system equipment includes:",
+    "33 ACR intelligent storage robots",
+    "18 AMR transport robots",
+    "Multi-layer racking system",
+    "Conveyor buffer zones",
+    "Automatic charging stations",
+    "Warehouse control system (WCS)",
+    "Warehouse management system (WMS)",
+    "SCADA visualization platform",
+    "Safety scanning system",
+    "High-speed sorting modules"
+  ],
+  "relatedProjects": [
+    {
+      "title": "Can 108 AMRs + 46 ACRs Replace Manual Picking? High-Density ASRS Automation Case Study",
+      "href": "case/can-108-amrs-46-acrs-replace-manual-picking-high-density-asrs-automation-case-study/"
+    },
+    {
+      "title": "ASRS Warehouse Industry Applications Case Study",
+      "href": "How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "title": "Mega ASRS Warehouse Case Study",
+      "href": "12,000㎡ System with 50,000 Storage Locations & 1,000 Tasks/Hour"
+    }
+  ],
+  "relatedSolutions": [
+    {
+      "title": "AMR vs ACR in ASRS Systems: Which Robot Type Improves Warehouse Efficiency More?",
+      "href": "blog/amr-vs-acr-in-asrs-systems-which-robot-type-improves-warehouse-efficiency-more/"
+    },
+    {
+      "title": "ASRS Warehouse Cost Breakdown: How Much Does a 108 AMR + 46 ACR System Really Cost?",
+      "href": "blog/asrs-warehouse-cost-breakdown-how-much-does-a-108-amr-46-acr-system-really-cost/"
+    },
+    {
+      "title": "ASRS Warehouse Design Guide 2026: How AI Scheduling Systems Improve 1,000+ Operations Per Hour Efficiency",
+      "href": "blog/asrs-warehouse-design-guide-2026-how-ai-scheduling-systems-improve-1-000-operations-per-hour-efficiency/"
+    },
+    {
+      "title": "ASRS Warehouse ROI Analysis: Why Automation Pays Back Faster Than Traditional Warehousing",
+      "href": "blog/asrs-warehouse-roi-analysis-why-automation-pays-back-faster-than-traditional-warehousing/"
+    }
+  ],
+  "contentHtml": "<h2>Project Overview</h2>\n<p>This project represents a new generation of intelligent warehouse automation systems.</p>\n<p>Unlike traditional ASRS systems that focus only on storage density, this solution integrates robotic mobility, dynamic scheduling, and real-time warehouse intelligence to maximize both efficiency and scalability.</p>\n<p>It is designed for high-demand logistics environments where speed, accuracy, and flexibility are equally important.</p>\n<h2>Key Points</h2>\n<ul>\n  <li>1️⃣ High Throughput Performance</li>\n  <li>The system achieves 536 bins/hour, enabling fast order processing for large-scale operations.</li>\n  <li>2️⃣ Hybrid Robot Architecture</li>\n  <li>ACR handles vertical + rack storage</li>\n  <li>AMR handles horizontal transportation</li>\n  <li>This separation improves efficiency and reduces system bottlenecks.</li>\n  <li>3️⃣ High Storage Density</li>\n  <li>46,000 bin capacity</li>\n  <li>Dual-deep rack design increases density by 15%</li>\n  <li>4️⃣ Smart Warehouse Intelligence</li>\n  <li>3D SCADA system enables:</li>\n  <li>Real-time monitoring</li>\n  <li>System visualization</li>\n  <li>Predictive scheduling</li>\n  <li>5️⃣ 24/7 Autonomous Operation</li>\n  <li>With automatic charging systems, robots operate continuously without downtime.</li>\n</ul>\n<h2>Implementation & Workflow</h2>\n<p>Phase 1: System Design (2–4 weeks)<br>Warehouse layout + robot allocation planning</p>\n<p>Phase 2: Manufacturing (6–10 weeks)<br>Racking system + robot production</p>\n<p>Phase 3: Software Integration (3–6 weeks)<br>WMS + WCS + SCADA system integration</p>\n<p>Phase 4: Installation (2–4 weeks)<br>On-site assembly and system setup</p>\n<p>Phase 5: Commissioning (1–2 weeks)<br>Testing, optimization, and go-live support</p>\n<h2>Customer Value & Results</h2>\n<p>Operational Value:<br>Higher warehouse throughput<br>Reduced human labor dependency<br>Faster order fulfillment<br>Improved accuracy and traceability<br>Continuous 24/7 operation capability</p>\n<p>Strategic Value:<br>Scalable warehouse architecture<br>Future-ready automation system<br>Multi-warehouse coordination capability<br>Reduced operational risk</p>\n<p>Financial Value:<br>Lower long-term labor cost<br>Higher warehouse utilization efficiency<br>Faster ROI through throughput optimization</p>\n<h2>Conclusion</h2>\n<p>This 33 ACR + 18 AMR mega warehouse system demonstrates how modern logistics operations can achieve high throughput, high density, and full automation simultaneously.</p>\n<p>It is especially suitable for:</p>\n<p>E-commerce fulfillment centers<br>Third-party logistics (3PL)<br>Large distribution hubs<br>High SKU complexity warehouses</p>\n<p>Before designing a similar system, key factors must be evaluated:</p>\n<p>✓ Warehouse size and structure<br>✓ SKU quantity and turnover rate<br>✓ Throughput requirement<br>✓ Automation level<br>✓ Expansion strategy</p>\n<p>If you are planning a smart warehouse or ASRS automation project, we can help you design the system, simulate throughput, and estimate total investment.</p>"
+}
