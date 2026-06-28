@@ -1,0 +1,113 @@
+{
+  "fileName": "how-a-33-acr-18-amr-warehouse-system-works-step-by-step.html",
+  "urlSlug": "how-a-33-acr-18-amr-warehouse-system-works-step-by-step",
+  "contentType": "blog",
+  "title": "How a 33 ACR + 18 AMR Warehouse System Works Step by Step",
+  "summary": "A modern automated warehouse system is not a collection of independent robots—it is a fully synchronized logistics execution ecosystem.\n\nThis case explains how a 33 ACR + 18 AMR ASRS warehouse system operates step by step, from inbound receiving to outbound dispatch, achieving high throughput, stable operation, and real-time system visibility.\n\nThe workflow is powered by intelligent coordination between robots, WMS/WCS software, and SCADA visualization systems.",
+  "coverImage": "images/uploads/1782653299396-0-blog5-how-a-33-acr-18-amr-warehouse-system-works-step-by-step.png",
+  "country": "",
+  "countryLabel": "",
+  "industry": "all-industries",
+  "industryLabel": "All Industries",
+  "solution": "asrs",
+  "solutionLabel": "ASRS / Automated Storage & Retrieval Systems",
+  "functionCategory": "warehouse-automation",
+  "functionLabel": "Warehouse Automation",
+  "application": "warehouse-storage",
+  "applicationLabel": "Warehouse & Storage",
+  "blogCategory": "troubleshooting",
+  "blogCategoryLabel": "Troubleshooting",
+  "category": "Troubleshooting",
+  "youtubeUrl": "https://www.youtube.com/watch?v=r3FvRpvXAyc",
+  "author": "13ASRS",
+  "date": "2026-06-18",
+  "seoTitle": "How a 33 ACR + 18 AMR Warehouse System Works Step by Step",
+  "seoDescription": "A modern automated warehouse system is not a collection of independent robots—it is a fully synchronized logistics execution ecosystem.\n\nThis case explains how a 33 ACR + 18 AMR ASRS warehouse system operates step by step, from inbound receiving to outbound dispatch, achieving high throughput, stable operation, and real-time system visibility.\n\nThe workflow is powered by intelligent coordination between robots, WMS/WCS software, and SCADA visualization systems.",
+  "keywords": [],
+  "technology": [
+    "This system integrates multiple core technologies:",
+    "33 ACR (Autonomous Case/Rack Robots)",
+    "18 AMR (Autonomous Mobile Robots)",
+    "WMS (Warehouse Management System)",
+    "WCS (Warehouse Control System)",
+    "3D SCADA warehouse visualization platform",
+    "Multi-zone warehouse architecture",
+    "Dynamic task scheduling engine",
+    "High-density racking system",
+    "Conveyor buffer and sorting systems",
+    "Real-time inventory tracking system",
+    "Automatic charging and fleet management system"
+  ],
+  "projectImages": [],
+  "challenge": "Traditional warehouses operate in fragmented workflows where each process is manually dependent.\n\nThis creates:\n\nDelays between warehouse stages\nInefficient labor allocation\nHigh error rates in picking and shipping\nLack of real-time visibility\nBottlenecks between storage and dispatch\n\nWithout system integration, warehouse performance cannot scale efficiently.",
+  "solutionDetail": "The 33 ACR + 18 AMR system solves these problems by creating a fully synchronized automated workflow architecture.\n\nKey principles include:\n\nSeparation of storage and transport tasks\nReal-time task allocation via WMS\nCentralized coordination through WCS\nContinuous robot operation (24/7 capability)\nFull visibility via SCADA system\n\nThis transforms warehouse operations into a unified digital system.",
+  "layoutWorkflow": "The system operates through a structured end-to-end workflow:\n\nStep 1: Inbound Receiving\nGoods arrive at the warehouse and are scanned into the WMS system.\nFunctions include:\nSKU identification\nBarcode scanning\nInventory registration\nQuality verification\n\nStep 2: AMR Transport Allocation\nAMR robots are assigned transport tasks automatically.\nThey move goods from receiving zones to designated storage or buffer areas.\nKey benefit:\nEliminates manual forklift dependency\nReduces transport delay\n\nStep 3: ACR Storage Execution\nACR robots handle high-density storage operations.\nFunctions include:\nBin lifting\nDeep rack storage\nDynamic slot allocation\nInventory optimization\nThis ensures maximum storage efficiency and system organization.\n\nStep 4: Intelligent Storage Management (WMS/WCS Layer)\nThe WMS and WCS systems continuously optimize warehouse operations:\nSKU-based storage allocation\nOrder priority scheduling\nRobot task balancing\nCongestion avoidance\nThis is the “brain” of the warehouse system.\n\nStep 5: Order Picking Process\nWhen an order is triggered:\nACR retrieves required bins from racks\nAMR transports bins to picking or buffer zones\nSystem ensures real-time synchronization\n\nStep 6: Sorting & Consolidation\nProducts are grouped and prepared for outbound shipping:\nOrder consolidation\nSorting by destination\nBuffer staging for packing\n\nStep 7: Outbound Dispatch\nFinished orders are:\nPackaged\nLabeled\nRouted to shipping docks\n\nThe system ensures continuous flow without manual interruption.",
+  "results": [
+    "Operational Performance:",
+    "Throughput: up to 536 bins/hour",
+    "24/7 continuous operation capability",
+    "Fully automated end-to-end workflow",
+    "Efficiency Improvements:",
+    "Warehouse process time significantly reduced",
+    "Bottlenecks eliminated between zones",
+    "Real-time coordination across all operations",
+    "Labor Reduction:",
+    "50–70% reduction in manual warehouse labor",
+    "Shift from operational labor to system supervision",
+    "Accuracy Improvement:",
+    "Up to 99.9% order accuracy",
+    "Reduced human picking errors"
+  ],
+  "equipmentList": [
+    "Core Hardware:",
+    "33 ACR warehouse robots",
+    "18 AMR transport robots",
+    "High-density racking system",
+    "Conveyor buffer systems",
+    "Automated charging stations",
+    "Software Systems:",
+    "WMS (Warehouse Management System)",
+    "WCS (Warehouse Control System)",
+    "3D SCADA visualization system",
+    "Fleet scheduling engine",
+    "Real-time inventory tracking system",
+    "Safety & Control Systems:",
+    "Laser safety scanners",
+    "Emergency stop systems",
+    "Robot fleet controllers",
+    "Network communication infrastructure"
+  ],
+  "relatedProjects": [
+    {
+      "title": "Can 108 AMRs + 46 ACRs Replace Manual Picking? High-Density ASRS Automation Case Study",
+      "href": "case/can-108-amrs-46-acrs-replace-manual-picking-high-density-asrs-automation-case-study/"
+    },
+    {
+      "title": "ASRS Warehouse Industry Applications Case Study",
+      "href": "How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "title": "536 Bins/Hour Mega Warehouse Automation Case",
+      "href": "33 ACR + 18 AMR Intelligent ASRS System"
+    }
+  ],
+  "relatedSolutions": [
+    {
+      "title": "How Much Does a 33 ACR + 18 AMR Automated Warehouse Cost in 2026?",
+      "href": "blog/how-much-does-a-33-acr-18-amr-automated-warehouse-cost-in-2026/"
+    },
+    {
+      "title": "How to Design a High-Throughput ASRS Warehouse with ACR and AMR Robots",
+      "href": "blog/how-to-design-a-high-throughput-asrs-warehouse-with-acr-and-amr-robots/"
+    },
+    {
+      "title": "ACR vs AMR vs Stacker Crane: Which Warehouse Automation System Is Best?",
+      "href": "blog/acr-vs-amr-vs-stacker-crane-which-warehouse-automation-system-is-best/"
+    },
+    {
+      "title": "How 536 Bins/Hour Warehouse Automation Improves Fulfillment Efficiency by 300%",
+      "href": "blog/how-536-bins-hour-warehouse-automation-improves-fulfillment-efficiency-by-300/"
+    }
+  ],
+  "contentHtml": "<h2>Project Overview</h2>\n<p>This warehouse system demonstrates how modern logistics operations are no longer driven by manual execution, but by real-time digital coordination systems.</p>\n<p>Instead of isolated machines performing individual tasks, the warehouse functions as a single intelligent organism.</p>\n<p>Every movement—from inbound to outbound—is optimized, tracked, and controlled through software intelligence.</p>\n<h2>Key Points</h2>\n<ul>\n  <li>1️⃣ Full Inbound → Outbound Integration</li>\n  <li>The system connects all warehouse stages:</li>\n  <li>Inbound → Storage → Picking → Sorting → Outbound</li>\n  <li>No manual transfer delays between stages.</li>\n  <li>2️⃣ Robot Coordination Logic</li>\n  <li>ACR handles vertical storage operations</li>\n  <li>AMR handles horizontal transport tasks</li>\n  <li>WMS assigns tasks dynamically</li>\n  <li>WCS executes real-time control</li>\n  <li>This separation ensures maximum efficiency.</li>\n  <li>3️⃣ Role of WMS/WCS</li>\n  <li>WMS (Warehouse Management System):</li>\n  <li>Inventory management</li>\n  <li>Order processing</li>\n  <li>Task scheduling</li>\n  <li>WCS (Warehouse Control System):</li>\n  <li>Robot coordination</li>\n  <li>Real-time execution control</li>\n  <li>System optimization</li>\n  <li>Together, they form the warehouse “brain system.”</li>\n  <li>4️⃣ SCADA Visualization System</li>\n  <li>The 3D SCADA system provides:</li>\n  <li>Real-time warehouse visualization</li>\n  <li>Robot movement tracking</li>\n  <li>Performance monitoring</li>\n  <li>System diagnostics</li>\n  <li>This improves operational transparency and decision-making.</li>\n  <li>5️⃣ Throughput Optimization Logic</li>\n  <li>System throughput is achieved through:</li>\n  <li>Parallel robot execution</li>\n  <li>Multi-zone workflow design</li>\n  <li>Dynamic scheduling algorithms</li>\n  <li>Continuous task streaming</li>\n  <li>This enables stable high-speed operation.</li>\n</ul>\n<h2>Implementation & Workflow</h2>\n<p>Phase 1: Requirement Analysis (2–3 weeks)<br>SKU structure analysis<br>Throughput target definition</p>\n<p>Phase 2: System Design (2–4 weeks)<br>Warehouse layout design<br>Robot allocation strategy</p>\n<p>Phase 3: Engineering &amp; Integration (4–8 weeks)<br>Hardware configuration<br>Software architecture setup</p>\n<p>Phase 4: Installation (2–4 weeks)<br>System deployment<br>Robot installation</p>\n<p>Phase 5: Commissioning (1–2 weeks)<br>Testing<br>Optimization<br>Full operation launch</p>\n<h2>Customer Value & Results</h2>\n<p>Operational Value:<br>Fully automated warehouse workflow<br>Stable 24/7 operations<br>High throughput efficiency<br>Reduced manual dependency</p>\n<p>Strategic Value:<br>Scalable warehouse architecture<br>Digital transformation of logistics operations<br>Future-ready automation system</p>\n<p>Financial Value:<br>Lower long-term operational costs<br>Higher warehouse ROI efficiency<br>Reduced error-related losses</p>\n<h2>Conclusion</h2>\n<p>A 33 ACR + 18 AMR warehouse system operates as a fully integrated automation ecosystem where every process—from inbound to outbound—is synchronized in real time.</p>\n<p>The key success factors include:</p>\n<p>✓ Clear robot role separation<br>✓ WMS/WCS coordination logic<br>✓ Multi-zone workflow architecture<br>✓ Real-time SCADA visibility<br>✓ Scalable system design</p>\n<p>If you are planning a smart warehouse or ASRS automation project, we can help design the full system workflow, simulate performance, and optimize your warehouse architecture before implementation.</p>"
+}
