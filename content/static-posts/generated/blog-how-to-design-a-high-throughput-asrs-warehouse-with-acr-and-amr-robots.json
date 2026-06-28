@@ -1,0 +1,102 @@
+{
+  "fileName": "how-to-design-a-high-throughput-asrs-warehouse-with-acr-and-amr-robots.html",
+  "urlSlug": "how-to-design-a-high-throughput-asrs-warehouse-with-acr-and-amr-robots",
+  "contentType": "blog",
+  "title": "How to Design a High-Throughput ASRS Warehouse with ACR and AMR Robots",
+  "summary": "Designing a high-throughput automated warehouse is not simply about adding more robots.\n\nA true high-performance ASRS system requires careful coordination between warehouse layout design, robot role separation, zoning strategy, and throughput modeling.\n\nThis guide explains how to design a scalable ASRS warehouse using ACR (Autonomous Case/Rack Robots) and AMR (Autonomous Mobile Robots) to achieve high efficiency, flexible expansion, and stable throughput performance.",
+  "coverImage": "images/uploads/1782651436682-0-blog4.png",
+  "country": "",
+  "countryLabel": "",
+  "industry": "all-industries",
+  "industryLabel": "All Industries",
+  "solution": "asrs",
+  "solutionLabel": "ASRS / Automated Storage & Retrieval Systems",
+  "functionCategory": "warehouse-automation",
+  "functionLabel": "Warehouse Automation",
+  "application": "warehouse-storage",
+  "applicationLabel": "Warehouse & Storage",
+  "blogCategory": "design-guides",
+  "blogCategoryLabel": "Design Guides",
+  "category": "Design Guides",
+  "youtubeUrl": "https://www.youtube.com/watch?v=r3FvRpvXAyc",
+  "author": "13ASRS",
+  "date": "2026-06-24",
+  "seoTitle": "How to Design a High-Throughput ASRS Warehouse with ACR and AMR Robots",
+  "seoDescription": "Designing a high-throughput automated warehouse is not simply about adding more robots.\n\nA true high-performance ASRS system requires careful coordination between warehouse layout design, robot role separation, zoning strategy, and throughput modeling.\n\nThis guide explains how to design a scalable ASRS warehouse using ACR (Autonomous Case/Rack Robots) and AMR (Autonomous Mobile Robots) to achieve high efficiency, flexible expansion, and stable throughput performance.",
+  "keywords": [],
+  "technology": [
+    "A modern ASRS warehouse design typically includes:",
+    "ACR robot storage & retrieval system",
+    "AMR autonomous transport system",
+    "High-density racking structure (single / double deep)",
+    "Multi-zone warehouse architecture",
+    "WMS (Warehouse Management System)",
+    "WCS (Warehouse Control System)",
+    "3D SCADA visualization platform",
+    "Dynamic task allocation engine",
+    "Conveyor buffer and sorting system",
+    "Real-time inventory tracking system",
+    "Throughput simulation model (bins/hour)"
+  ],
+  "projectImages": [],
+  "challenge": "Most warehouse automation projects fail not because of robot performance—but because of poor system design.\n\nCommon design problems include:\n\nUnbalanced warehouse layout\nIncorrect robot role allocation\nPoor storage density planning\nBottlenecks in picking zones\nLack of throughput modeling\nLimited scalability planning\n\nWithout proper design, even advanced ASRS systems cannot reach their full performance potential.",
+  "solutionDetail": "A high-performance ASRS warehouse must be designed as a multi-layer intelligent system, not just a collection of machines.\n\nThe optimal design approach includes:\n\nClear separation of ACR and AMR responsibilities\nZoning-based warehouse structure\nThroughput-driven layout planning\nSimulation-based capacity validation\nModular expansion capability\n\nThis ensures both high efficiency and long-term scalability.",
+  "layoutWorkflow": "A standard high-throughput ASRS warehouse layout includes four main zones:\n\nStep 1: Receiving Zone\nInbound goods are received, scanned, and registered into WMS.\nKey functions:\nSKU identification\nBarcode scanning\nQuality check\nSystem registration\n\nStep 2: AMR Transport Zone\nAMR robots handle horizontal movement between functional areas.\nKey roles:\nTransport inbound goods to storage zone\nMove goods to picking or buffer zones\nReduce manual forklift dependency\n\nStep 3: ACR Storage Zone\nACR robots manage vertical storage and retrieval inside high-density racks.\nKey roles:\nAutomated bin storage\nDeep-rack retrieval\nDynamic slot allocation\nHigh-density storage optimization\n\nStep 4: Picking & Buffer Zone\nThis is the high-frequency operation area.\nFunctions include:\nOrder picking\nProduct consolidation\nSorting and staging\nOrder preparation for outbound\n\nStep 5: Outbound Zone\nFinal shipment processing:\nPacking\nLabeling\nDispatch coordination",
+  "results": [
+    "Well-designed ASRS systems typically achieve:",
+    "Throughput improvement: 200–500%",
+    "Storage density increase: 30–60%",
+    "Labor reduction: 50–70%",
+    "Order accuracy: up to 99.9%",
+    "System utilization improvement: 20–50%"
+  ],
+  "equipmentList": [
+    "A complete ASRS design includes:",
+    "Core Hardware:",
+    "ACR robots (storage & retrieval)",
+    "AMR robots (transport layer)",
+    "High-density racking system",
+    "Conveyor buffer systems",
+    "Charging stations",
+    "Software Systems:",
+    "WMS (Warehouse Management System)",
+    "WCS (Warehouse Control System)",
+    "SCADA visualization platform",
+    "Task scheduling engine",
+    "Inventory tracking system",
+    "Optional Enhancements:",
+    "Vision inspection system",
+    "AI-based route optimization",
+    "Robot fleet management system",
+    "ERP integration module"
+  ],
+  "relatedProjects": [
+    {
+      "title": "Can 108 AMRs + 46 ACRs Replace Manual Picking? High-Density ASRS Automation Case Study",
+      "href": "case/can-108-amrs-46-acrs-replace-manual-picking-high-density-asrs-automation-case-study/"
+    },
+    {
+      "title": "ASRS Warehouse Industry Applications Case Study",
+      "href": "How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "title": "536 Bins/Hour Mega Warehouse Automation Case",
+      "href": "33 ACR + 18 AMR Intelligent ASRS System"
+    }
+  ],
+  "relatedSolutions": [
+    {
+      "title": "ASRS Warehouse Design Guide 2026: How AI Scheduling Systems Improve 1,000+ Operations Per Hour Efficiency",
+      "href": "blog/asrs-warehouse-design-guide-2026-how-ai-scheduling-systems-improve-1-000-operations-per-hour-efficiency/"
+    },
+    {
+      "title": "How a 129,000 Storage Location ASRS Warehouse Is Designed: Layout & Engineering Explained",
+      "href": "blog/how-a-129-000-storage-location-asrs-warehouse-is-designed-layout-engineering-explained/"
+    },
+    {
+      "title": "How Much Does a 33 ACR + 18 AMR Automated Warehouse Cost in 2026?",
+      "href": "blog/how-much-does-a-33-acr-18-amr-automated-warehouse-cost-in-2026/"
+    }
+  ],
+  "contentHtml": "<h2>Project Overview</h2>\n<p>High-throughput warehouse performance depends heavily on system design architecture.</p>\n<p>While many companies focus on robot quantity, the real performance driver is how well the system is structured.</p>\n<p>A well-designed ASRS warehouse ensures:</p>\n<p>Stable throughput<br>Efficient robot coordination<br>Scalable expansion capability<br>Minimal bottlenecks</p>\n<h2>Key Points</h2>\n<ul>\n  <li>1️⃣ ACR vs AMR Role Separation</li>\n  <li>ACR (Storage Layer)</li>\n  <li>Vertical storage operations</li>\n  <li>High-density rack handling</li>\n  <li>Bin retrieval and placement</li>\n  <li>AMR (Transport Layer)</li>\n  <li>Horizontal movement</li>\n  <li>Zone-to-zone transfer</li>\n  <li>Buffer and staging operations</li>\n  <li>Clear separation avoids operational conflict and improves system efficiency.</li>\n  <li>2️⃣ Multi-Zone Warehouse Design</li>\n  <li>A high-performance warehouse is divided into:</li>\n  <li>Receiving zone</li>\n  <li>Storage zone</li>\n  <li>Picking zone</li>\n  <li>Buffer zone</li>\n  <li>Outbound zone</li>\n  <li>Each zone operates independently but is synchronized through WMS/WCS.</li>\n  <li>3️⃣ Throughput Design (Bins/Hour Model)</li>\n  <li>Throughput is calculated based on:</li>\n  <li>Robot speed</li>\n  <li>Travel distance</li>\n  <li>Storage density</li>\n  <li>Task allocation efficiency</li>\n  <li>Example:</li>\n  <li>Small system: 100–200 bins/hour</li>\n  <li>Medium system: 200–400 bins/hour</li>\n  <li>High-throughput system: 400–600+ bins/hour</li>\n  <li>4️⃣ Bottleneck Prevention Strategy</li>\n  <li>Common bottlenecks:</li>\n  <li>Picking zone congestion</li>\n  <li>AMR transport delays</li>\n  <li>Storage retrieval conflicts</li>\n  <li>Solution:</li>\n  <li>Parallel zone design</li>\n  <li>Dynamic task scheduling</li>\n  <li>Buffer zone integration</li>\n  <li>5️⃣ Scalability Planning</li>\n  <li>A scalable ASRS design must support:</li>\n  <li>Additional ACR robots</li>\n  <li>Additional AMR fleet expansion</li>\n  <li>Rack system expansion</li>\n  <li>Software upgrade capability</li>\n  <li>Recommended design principle:</li>\n  <li>Plan for +30% future capacity expansion from day one.</li>\n</ul>\n<h2>Implementation & Workflow</h2>\n<p>Phase 1: System Analysis (2–3 weeks)<br>SKU analysis<br>Throughput requirement definition<br>Warehouse layout planning</p>\n<p>Phase 2: Simulation Design (2–4 weeks)<br>Digital warehouse modeling<br>Throughput simulation (bins/hour)<br>Bottleneck analysis</p>\n<p>Phase 3: System Engineering (4–8 weeks)<br>Robot configuration<br>Racking system design<br>Software architecture design</p>\n<p>Phase 4: Installation (2–4 weeks)<br>On-site deployment<br>Hardware integration</p>\n<p>Phase 5: Commissioning (1–2 weeks)<br>System testing<br>Optimization tuning<br>Full operation launch</p>\n<h2>Customer Value & Results</h2>\n<p>Operational Value:<br>Higher warehouse throughput<br>Reduced congestion and downtime<br>Improved order accuracy<br>Fully automated material flow</p>\n<p>Strategic Value:<br>Scalable warehouse architecture<br>Future-ready automation design<br>Multi-zone operational flexibility<br>Reduced operational risk</p>\n<p>Financial Value:<br>Lower cost per order<br>Reduced labor dependency<br>Higher warehouse ROI efficiency</p>\n<h2>Conclusion</h2>\n<p>Designing a high-throughput ASRS warehouse is fundamentally a system engineering challenge, not just an equipment selection process.</p>\n<p>The key to success lies in:</p>\n<p>✓ Proper ACR vs AMR role separation<br>✓ Multi-zone architecture design<br>✓ Throughput-driven planning<br>✓ Bottleneck elimination strategy<br>✓ Scalability-first thinking</p>\n<p>If you are planning an ASRS warehouse project, we can help design the full system architecture, simulate throughput performance, and optimize your investment strategy before implementation.</p>"
+}
