@@ -271,6 +271,27 @@ function updateHtmlFiles(distDir, fileMap) {
   }
 }
 
+function normalizeStaticPostLogoReferences(distDir) {
+  const files = getFilesRecursive(distDir, ['.html']);
+  const logoImg = '<img src="/logo.jpg?v=20260710" alt="13ASRS" onerror="this.replaceWith(document.createTextNode(\'13ASRS\'))">';
+
+  for (const filePath of files) {
+    const relativePath = path.relative(distDir, filePath).replace(/\\/g, '/');
+    if (!/^(blog|case)\//.test(relativePath)) continue;
+
+    let content = fs.readFileSync(filePath, 'utf8');
+    const updated = content.replace(
+      /<img\s+src=["'](?:\.\.\/\.\.\/|\/)?logo(?:\.[a-f0-9]{8})?\.jpg(?:\?[^"']*)?["']\s+alt=["']13ASRS["'](?:\s+onerror=["'][^"']*["'])?\s*>/gi,
+      logoImg
+    );
+
+    if (updated !== content) {
+      fs.writeFileSync(filePath, updated, 'utf8');
+      console.log('Normalized static post logo references in ' + relativePath);
+    }
+  }
+}
+
 function injectRssDiscovery(distDir) {
   const files = getFilesRecursive(distDir, ['.html']);
   const rssLink = '    <link rel="alternate" type="application/rss+xml" title="13ASRS Blog, Case Studies & News" href="https://13asrs.com/rss.xml">';
@@ -352,6 +373,7 @@ function injectCaseStudiesInternalLinks(distDir) {
   // Update HTML files with hashed file names
   console.log('Updating HTML files with hashed file names...');
   updateHtmlFiles(distDir, fileMap);
+  normalizeStaticPostLogoReferences(distDir);
   injectCaseStudiesInternalLinks(distDir);
   injectSiteIcons(distDir);
   injectRssDiscovery(distDir);
