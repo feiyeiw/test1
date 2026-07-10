@@ -73,11 +73,11 @@ function upgradeFooter() {
     footer.innerHTML = `
         <div class="container">
             <div class="footer-content">
-                <div class="footer-logo"><img src="logo.jpg" alt="13ASRS"></div>
+                <div class="footer-logo"><img src="/logo.jpg?v=20260710" alt="13ASRS" onerror="this.replaceWith(document.createTextNode('13ASRS'))"></div>
                 <div class="footer-columns">
-                    <div><h3>Solutions</h3><a href="solutions.html#asrs">Warehouse Automation</a><a href="asrs-cost.html">ASRS Cost Guide</a><a href="asrs-design.html">ASRS Design Guide</a><a href="solutions.html#factory">Smart Factory Automation</a><a href="solutions.html#machinery">Industrial Manufacturing</a></div>
-                    <div><h3>Industries</h3><a href="industries.html">Warehousing</a><a href="industries.html#manufacturing">Manufacturing</a><a href="industries.html#food">Food & Beverage</a><a href="industries.html#packaging">Packaging</a><a href="industries.html#automotive">Automotive</a><a href="industries.html#electronics">Electronics</a></div>
-                    <div><h3>Resources</h3><a href="case-studies.html">Case Studies</a><a href="blog.html">Knowledge Center</a><a href="blog.html">Blog</a><a href="https://www.youtube.com/channel/UCg4UaJdHvit-Ny9QNRPD7Mw" target="_blank" rel="noopener">YouTube Channel</a></div>
+                    <div><h3>Solutions</h3><a href="/solutions.html#asrs">Warehouse Automation</a><a href="/asrs-cost.html">ASRS Cost Guide</a><a href="/asrs-design.html">ASRS Design Guide</a><a href="/solutions.html#factory">Smart Factory Automation</a><a href="/solutions.html#machinery">Industrial Manufacturing</a></div>
+                    <div><h3>Industries</h3><a href="/industries.html">Warehousing</a><a href="/industries.html#manufacturing">Manufacturing</a><a href="/industries.html#food">Food & Beverage</a><a href="/industries.html#packaging">Packaging</a><a href="/industries.html#automotive">Automotive</a><a href="/industries.html#electronics">Electronics</a></div>
+                    <div><h3>Resources</h3><a href="/case-studies.html">Case Studies</a><a href="/blog.html">Knowledge Center</a><a href="/blog.html">Blog</a><a href="https://www.youtube.com/channel/UCg4UaJdHvit-Ny9QNRPD7Mw" target="_blank" rel="noopener">YouTube Channel</a></div>
                     <div><h3>Contact</h3><span>Website: 13asrs.com</span><span>Email: pjm@13asrs.com</span><span>Location: China</span></div>
                 </div>
             </div>
