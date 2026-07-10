@@ -457,6 +457,22 @@ function renderRelatedCards(items, defaults, stringHref = 'case-studies.html') {
   }).join('');
 }
 
+function renderCaseStudiesInternalLinks(siteHref) {
+  return `<section class="case-study-internal-links" data-case-study-internal-links="true">
+            <div class="container">
+                <span class="eyebrow">Automation Case Studies</span>
+                <h2>See real automation projects before planning your system.</h2>
+                <p>Compare warehouse automation, smart factory, packaging, and industrial manufacturing case studies from 13ASRS.</p>
+                <div class="case-study-link-list">
+                    <a href="${escapeHtml(siteHref('case-studies.html'))}">All Case Studies</a>
+                    <a href="${escapeHtml(siteHref('case-studies.html?solution=asrs#caseGrid'))}">ASRS Case Studies</a>
+                    <a href="${escapeHtml(siteHref('case-studies.html?solution=smart-factory#caseGrid'))}">Smart Factory Cases</a>
+                    <a href="${escapeHtml(siteHref('case-studies.html?industry=packaging-printing#caseGrid'))}">Packaging & Printing Cases</a>
+                </div>
+            </div>
+        </section>`;
+}
+
 function resolveRelatedItems(items, contentType, relatedLookup, siteHref) {
   return splitConfiguredList(items).map(item => {
     if (typeof item === 'string') {
@@ -642,6 +658,7 @@ function renderStaticPost(post, relatedLookup) {
                 </article>
             </div>
         </section>
+        ${renderCaseStudiesInternalLinks(siteHref)}
     </main>
 
     <footer>

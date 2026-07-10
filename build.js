@@ -302,6 +302,44 @@ function injectSiteIcons(distDir) {
   }
 }
 
+function injectCaseStudiesInternalLinks(distDir) {
+  const files = getFilesRecursive(distDir, ['.html']);
+  const internalLinksSection = `        <section class="case-study-internal-links" data-case-study-internal-links="true">
+            <div class="container">
+                <span class="eyebrow">Automation Case Studies</span>
+                <h2>See real automation projects before planning your system.</h2>
+                <p>Compare warehouse automation, smart factory, packaging, and industrial manufacturing case studies from 13ASRS.</p>
+                <div class="case-study-link-list">
+                    <a href="/case-studies.html">All Case Studies</a>
+                    <a href="/case-studies.html?solution=asrs#caseGrid">ASRS Case Studies</a>
+                    <a href="/case-studies.html?solution=smart-factory#caseGrid">Smart Factory Cases</a>
+                    <a href="/case-studies.html?industry=packaging-printing#caseGrid">Packaging & Printing Cases</a>
+                </div>
+            </div>
+        </section>`;
+
+  for (const filePath of files) {
+    const relativePath = path.relative(distDir, filePath).replace(/\\/g, '/');
+    if (relativePath === 'admin.html' || relativePath === 'login.html') continue;
+
+    let content = fs.readFileSync(filePath, 'utf8');
+    if (/data-case-study-internal-links=["']true["']/i.test(content)) continue;
+
+    if (/<\/main>/i.test(content)) {
+      content = content.replace(/<\/main>/i, internalLinksSection + '\n    </main>');
+    } else if (/<footer/i.test(content)) {
+      content = content.replace(/<footer/i, internalLinksSection + '\n    <footer');
+    } else if (/<\/body>/i.test(content)) {
+      content = content.replace(/<\/body>/i, internalLinksSection + '\n</body>');
+    } else {
+      continue;
+    }
+
+    fs.writeFileSync(filePath, content, 'utf8');
+    console.log('Added case studies internal links in ' + relativePath);
+  }
+}
+
 (async function main() {
   // Keep robots/sitemap/RSS aligned with newly generated static blog and case pages.
   generateSitemap();
@@ -314,6 +352,7 @@ function injectSiteIcons(distDir) {
   // Update HTML files with hashed file names
   console.log('Updating HTML files with hashed file names...');
   updateHtmlFiles(distDir, fileMap);
+  injectCaseStudiesInternalLinks(distDir);
   injectSiteIcons(distDir);
   injectRssDiscovery(distDir);
 
