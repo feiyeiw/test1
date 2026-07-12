@@ -457,22 +457,6 @@ function renderRelatedCards(items, defaults, stringHref = 'case-studies.html') {
   }).join('');
 }
 
-function renderCaseStudiesInternalLinks(siteHref) {
-  return `<section class="case-study-internal-links" data-case-study-internal-links="true">
-            <div class="container">
-                <span class="eyebrow">Automation Case Studies</span>
-                <h2>See real automation projects before planning your system.</h2>
-                <p>Compare warehouse automation, smart factory, packaging, and industrial manufacturing case studies from 13ASRS.</p>
-                <div class="case-study-link-list">
-                    <a href="${escapeHtml(siteHref('case-studies.html'))}">All Case Studies</a>
-                    <a href="${escapeHtml(siteHref('case-studies.html?solution=asrs#caseGrid'))}">ASRS Case Studies</a>
-                    <a href="${escapeHtml(siteHref('case-studies.html?solution=smart-factory#caseGrid'))}">Smart Factory Cases</a>
-                    <a href="${escapeHtml(siteHref('case-studies.html?industry=packaging-printing#caseGrid'))}">Packaging & Printing Cases</a>
-                </div>
-            </div>
-        </section>`;
-}
-
 function resolveRelatedItems(items, contentType, relatedLookup, siteHref) {
   return splitConfiguredList(items).map(item => {
     if (typeof item === 'string') {
@@ -503,13 +487,10 @@ function renderStaticPost(post, relatedLookup) {
                             <img class="blog-cover" src="${escapeHtml(prefixSitePath(cover, prefix))}" alt="${escapeHtml(post.title)}">
                         </figure>` : '';
   const videoHtml = renderVideoFrame(post.youtubeUrl || post.videoUrl, post.title, prefix);
-  const technologyLabels = splitLines(post.technology).join(', ');
   const facts = [
-    ['Country', post.countryLabel || post.country],
     ['Industry', post.industryLabel || post.industry],
     ['Function', post.functionLabel || post.functionCategory],
     ['Application', post.applicationLabel || post.application],
-    ['Technology', technologyLabels],
   ].filter(([, value]) => value);
   const projectGalleryHtml = renderProjectGallery(post.projectImages, prefix);
   const seoKeywords = splitLines(post.seoKeywords || post.keywords);
@@ -612,7 +593,6 @@ function renderStaticPost(post, relatedLookup) {
                                 <span>${escapeHtml(post.author)}</span>
                             </div>
                             <h1 class="blog-title">${escapeHtml(post.title)}</h1>
-                            <p class="blog-summary">${escapeHtml(post.summary || '')}</p>
                             ${facts.length ? `<div class="project-fact-chips">${facts.map(([label, value]) => `<span><strong>${escapeHtml(label)}</strong>${escapeHtml(value)}</span>`).join('')}</div>` : ''}
                         </div>
                         ${coverHtml}
@@ -658,7 +638,6 @@ function renderStaticPost(post, relatedLookup) {
                 </article>
             </div>
         </section>
-        ${renderCaseStudiesInternalLinks(siteHref)}
     </main>
 
     <footer>

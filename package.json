@@ -11,6 +11,7 @@
     "bake:cases": "node tools/bake-case-studies.js",
     "bake:static-indexes": "node tools/bake-static-indexes.js",
     "generate:post": "node tools/generate-static-post.js",
+    "audit:internal-links": "node tools/audit-blog-case-internal-links.js",
     "studio:posts": "node tools/static-post-studio.js"
   },
   "devDependencies": {

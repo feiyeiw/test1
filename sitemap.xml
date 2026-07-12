@@ -2,13 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://13asrs.com/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://13asrs.com/about.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-06-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -32,325 +32,697 @@
   </url>
   <url>
     <loc>https://13asrs.com/blog.html</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://13asrs.com/blog/5-common-packaging-problems-pharmaceutical-companies-face-and-how-automation-solves-them/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://13asrs.com/blog/5-key-steps-to-successfully-implement-an-automated-motor-assembly-line-in-your-factory/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/5-major-warehouse-problems-that-asrs-automation-solves-in-large-logistics-centers/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/5-warehouse-bottlenecks-that-an-integrated-asrs-system-can-eliminate/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/acr-vs-amr-vs-stacker-crane-which-warehouse-automation-system-is-best/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/aluminum-extrusion-line-upgrade-guide-how-to-modernize-old-production-lines-without-full-replacement/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/amr-fleet-management-system-how-108-robots-are-coordinated-in-real-time/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/amr-vs-acr-in-asrs-systems-which-robot-type-improves-warehouse-efficiency-more/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/amr-vs-rgv-vs-stacker-crane-what-does-each-robot-actually-do-in-an-automated-warehouse/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/asrs-vs-traditional-warehouse-systems-cost-roi-and-performance-comparison-for-industrial-buyers/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/asrs-warehouse-cost-breakdown-how-much-does-a-108-amr-46-acr-system-really-cost/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/asrs-warehouse-design-guide-2026-how-ai-scheduling-systems-improve-1-000-operations-per-hour-efficiency/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/asrs-warehouse-roi-analysis-why-automation-pays-back-faster-than-traditional-warehousing/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/battery-manufacturing-automation-manual-production-vs-smart-battery-factory-which-model-creates-better-roi/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/best-asrs-warehouse-solution-for-e-commerce-and-high-sku-distribution-centers/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/best-packaging-automation-solutions-for-beauty-and-cosmetic-manufacturers/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/best-warehouse-automation-solution-for-manufacturing-amr-rgv-asrs-integration/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/can-an-automatic-cartoning-line-reduce-labor-costs-by-50/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/can-asrs-reduce-labor-risk-in-chemical-warehouses-by-70/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/can-ctu-systems-replace-100-manual-picking-in-modern-warehouses/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/chemical-drum-warehouse-automation-full-workflow-explained-step-by-step/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/choosing-the-right-coating-machine-slot-die-vs-gravure-vs-comma-coating-systems/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/choosing-the-right-paper-cup-production-line-speed-automation-level-and-packaging-requirements/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/common-coating-defects-and-how-to-prevent-them-in-industrial-production/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/complete-asrs-workflow-explained-step-by-step-from-production-to-automated-storage/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/complete-cartoning-and-case-packing-workflow-explained-step-by-step/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/ctu-goods-to-person-roi-analysis-is-it-worth-the-investment-in-2026/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/ctu-vs-amr-vs-asrs-which-goods-to-person-system-is-best-for-warehouses/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/ctu-warehouse-design-guide-how-to-build-a-high-density-goods-to-person-system/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/ctu-warehouse-workflow-explained-from-storage-to-picking-to-dispatch/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/e-commerce-fulfillment-automation-how-asrs-systems-enable-fast-order-processing-and-high-volume-warehousing/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/end-to-end-layout-of-a-fully-automatic-electronics-packaging-factory-reel-tray-system-for-semiconductor-and-electronics-manufacturing/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/energy-saving-in-aluminum-production-how-modern-extrusion-lines-reduce-power-consumption-by-30/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/food-beverage-cold-storage-automation-how-asrs-systems-handle-perishable-goods-efficiently/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/from-electric-motors-to-automotive-electronics-how-automated-assembly-lines-are-transforming-manufacturing/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/future-of-tray-and-reel-packaging-automation-mes-ai-and-fully-unmanned-packaging-lines-in-semiconductor-electronics-manufacturing/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/goods-to-person-system-explained-why-manual-picking-is-no-longer-competitive/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/heavy-load-asrs-system-how-to-handle-1-ton-chemical-drums-safely/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/high-density-asrs-storage-system-explained-how-to-store-45-000-skus-in-one-intelligent-warehouse/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/high-density-warehouse-design-how-8-6m-racking-systems-double-storage-capacity/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-536-bins-hour-warehouse-automation-improves-fulfillment-efficiency-by-300/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-a-129-000-storage-location-asrs-warehouse-is-designed-layout-engineering-explained/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-a-33-acr-18-amr-warehouse-system-works-step-by-step/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/how-a-fully-automated-motor-assembly-line-increased-throughput-by-200-a-smart-factory-case-study/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/how-aluminum-extrusion-technology-improves-product-strength-and-precision-engineering-explained/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/how-aseptic-filling-systems-improve-food-safety-and-shelf-life-in-tomato-processing/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/how-asrs-automated-warehouses-improve-food-factory-logistics-and-inventory-management/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/how-asrs-warehouse-systems-improve-manufacturing-efficiency-in-automotive-and-electronics-factories/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/how-automated-packaging-and-palletizing-systems-reduce-labor-in-food-manufacturing/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/how-coating-machines-power-modern-lithium-battery-manufacturing-from-electrode-coating-to-separator-coating/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/how-does-a-12-000-automated-warehouse-handle-50-000-storage-locations-full-asrs-system-explained/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/how-does-a-tomato-paste-production-line-work-complete-industrial-process-from-fresh-tomato-to-finished-product/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-fast-can-a-complete-cartoning-and-case-packing-line-improve-production-efficiency/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-fast-is-a-ctu-system-throughput-speed-order-fulfillment-analysis/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/how-fully-automatic-paper-cup-production-lines-improve-manufacturing-efficiency/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-goods-to-person-systems-increase-picking-efficiency-by-300-in-e-commerce-warehouses/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-integrated-asrs-systems-increase-warehouse-throughput-by-over-300/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/how-mes-controls-labeling-and-traceability-in-reel-tray-packaging-systems/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-much-does-a-33-acr-18-amr-automated-warehouse-cost-in-2026/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-much-does-a-chemical-drum-asrs-warehouse-cost/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-much-does-a-complete-asrs-warehouse-system-cost/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-much-does-a-complete-cartoning-and-case-packing-line-cost-in-2026/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-much-does-a-complete-ev-battery-production-line-cost-battery-factory-investment-guide/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-much-does-a-ctu-goods-to-person-warehouse-cost-in-2026/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/how-much-does-a-fully-automatic-reel-tray-packaging-line-cost-semiconductor-electronics-vacuum-packaging-system-pricing-guide/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-much-does-a-mini-load-asrs-warehouse-cost-investment-guide-for-high-sku-warehouses/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/how-to-design-a-200-reel-hour-high-speed-electronics-packaging-line/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-to-design-a-complete-asrs-warehouse-workflow-with-amr-rgv-stacker-cranes/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-to-design-a-complete-packaging-line-for-pharmaceutical-products/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/how-to-design-a-high-efficiency-aluminum-profile-extrusion-factory-layout-industry-guide-2026/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-to-design-a-high-throughput-asrs-warehouse-with-acr-and-amr-robots/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-to-design-a-safe-chemical-storage-warehouse-with-stacker-crane-asrs-system/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-to-design-an-automated-warehouse-for-thousands-of-skus/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-to-plan-a-lithium-battery-factory-from-zero-complete-battery-factory-layout-guide/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-wms-mes-integration-powers-real-time-smart-warehouse-operations/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/industry-4-0-in-motor-manufacturing-how-smart-assembly-lines-are-shaping-the-future-of-production/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/is-a-33-acr-18-amr-automated-warehouse-worth-the-investment/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/is-a-fully-automated-asrs-warehouse-worth-the-investment-roi-cost-long-term-benefits/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/manual-chemical-warehouse-vs-automated-asrs-which-one-is-more-cost-efficient/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/manual-packaging-vs-automated-cartoning-systems-which-saves-more-money/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/manual-picking-vs-goods-to-person-asrs-which-warehouse-model-is-more-profitable/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/manual-vs-automated-aluminum-extrusion-line-which-one-is-more-efficient-and-profitable/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/manual-vs-automated-tomato-processing-line-which-production-system-delivers-better-roi/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/medical-device-coating-technology-improving-biocompatibility-and-drug-delivery-performance/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/mini-load-asrs-vs-shuttle-system-which-solution-fits-high-sku-warehouses-better/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/optical-film-coating-explained-the-technology-behind-lcd-oled-and-flexible-displays/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/paper-cup-machine-cost-guide-investment-roi-and-factory-planning/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/paper-cup-manufacturing-process-explained-from-paper-roll-to-finished-cup/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/pharmaceutical-warehouse-automation-with-asrs-ensuring-99-9-inventory-accuracy-and-full-traceability/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/roi-analysis-of-an-automated-motor-assembly-line-labor-savings-quality-improvement-and-payback-period/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/roll-to-roll-coating-technology-the-foundation-of-high-speed-industrial-manufacturing/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/smart-aluminum-factory-how-iot-and-automation-improve-extrusion-production-efficiency/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/smart-food-factory-how-iot-and-automation-improve-tomato-processing-efficiency/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/smart-logistics-system-design-how-ai-and-asrs-integration-create-zero-delay-warehouse-operations/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/smart-warehouse-case-study-how-129-000-storage-locations-transform-supply-chain-efficiency/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/stacker-crane-vs-forklift-which-is-safer-for-chemical-drum-handling/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/tomato-paste-juice-sauce-and-canned-food-production-lines-which-processing-system-fits-your-factory/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/tomato-processing-plant-cost-guide-2026-how-much-does-a-fully-automated-production-line-cost/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/top-20-equipment-required-for-a-complete-lithium-battery-production-line-ev-battery-factory-equipment-guide/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/top-5-warehouse-problems-solved-by-ctu-goods-to-person-automation/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/uv-sterilization-in-paper-cup-production-why-hygiene-matters-in-food-packaging/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/vision-inspection-systems-in-paper-cup-manufacturing-how-defect-detection-improves-product-quality/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/vision-inspection-vs-manual-quality-control-which-one-delivers-better-results-for-motor-assembly/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/warehouse-automation-architecture-explained-how-wms-wcs-amr-rgv-and-asrs-work-together/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/warehouse-automation-case-study-how-a-mega-asrs-system-reduced-labor-and-increased-efficiency-by-65/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/warehouse-automation-for-chemical-industry-roi-cost-safety-analysis/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/what-is-a-mega-asrs-warehouse-system-structure-cost-real-project-breakdown-50-000-storage-locations-explained/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/what-is-reel-tray-packaging-automation-in-electronics-manufacturing/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/what-is-the-difference-between-acr-amr-and-asrs-systems-in-modern-warehouses/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/what-machines-are-needed-in-an-aluminum-extrusion-production-line-complete-equipment-breakdown/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/what-machines-are-required-in-a-tomato-paste-production-line-complete-equipment-breakdown/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/what-should-you-consider-before-investing-in-an-automated-packaging-line/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/why-stacker-crane-asrs-is-the-best-solution-for-hazardous-material-storage/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/why-vacuum-packaging-is-critical-for-electronics-manufacturing/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/blog/why-vacuum-seal-failure-happens-in-reel-and-tray-packaging-and-how-to-prevent-it-in-high-precision-electronics-manufacturing-lines/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -380,55 +752,103 @@
   </url>
   <url>
     <loc>https://13asrs.com/case-studies.html</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://13asrs.com/case/4-aisle-mini-load-asrs-warehouse-high-sku-automated-storage-and-goods-to-person-picking-solution/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/case/536-bins-hour-mega-warehouse-automation-case-33-acr-18-amr-intelligent-asrs-system/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://13asrs.com/case/aluminum-profile-extrusion-production-line-case-study-fully-automated-smart-manufacturing-system-for-industrial-aluminum-processing/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/case/can-108-amrs-46-acrs-replace-manual-picking-high-density-asrs-automation-case-study/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/case/complete-asrs-workflow-case-study-amr-rgv-stacker-crane-integrated-warehouse-automation-system/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/case/complete-cartoning-case-packing-line-for-pharmaceutical-beauty-health-daily-care-industries/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/case/complete-ev-battery-production-line-turnkey-lithium-battery-smart-factory-automation-solution/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/case/fully-automated-motor-assembly-line-complete-industrial-case-study/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/case/fully-automatic-paper-cup-production-line-intelligent-cup-forming-inspection-sterilization-and-packaging-system/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/case/fully-automatic-reel-tray-vacuum-packaging-line-with-mes-integration-and-smart-traceability-system/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/case/goods-to-person-ctu-warehouse-replace-manual-picking-completely/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/case/heavy-duty-asrs-for-chemical-drums-how-stacker-cranes-handle-extreme-loads/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/case/industrial-coating-machine-applications-case-study-medical-devices-electronics-lithium-batteries-packaging-textile-semiconductor-manufacturing/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/case/mega-asrs-warehouse-case-study-12-000-system-with-50-000-storage-locations-1-000-tasks-hour/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://13asrs.com/case/tomato-paste-canned-tomato-production-line-fully-automated-food-processing-filling-packaging-asrs-system/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
