@@ -12,6 +12,7 @@
     "bake:static-indexes": "node tools/bake-static-indexes.js",
     "generate:post": "node tools/generate-static-post.js",
     "audit:internal-links": "node tools/audit-blog-case-internal-links.js",
+    "import:internal-links": "node tools/import-reviewed-internal-links.js",
     "studio:posts": "node tools/static-post-studio.js"
   },
   "devDependencies": {

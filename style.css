@@ -2664,6 +2664,20 @@ footer .container,
     margin-bottom: 10px;
 }
 
+.blog-content .contextual-internal-link,
+.static-detail-list .contextual-internal-link {
+    color: #0066cc;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+}
+
+.blog-content .contextual-internal-link:hover,
+.static-detail-list .contextual-internal-link:hover {
+    color: #004c99;
+}
+
 .blog-cta {
     margin-top: 44px;
     padding: 28px;

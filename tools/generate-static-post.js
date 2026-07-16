@@ -5,6 +5,7 @@ const path = require('path');
 
 const DEFAULT_INPUT = path.join('content', 'static-posts', 'static-post.json');
 const DEFAULT_OUT_DIR = '.';
+const DEFAULT_INTERNAL_LINKS = path.join('content', 'static-posts', 'internal-links.json');
 const STATIC_POST_DIRS = {
   blog: 'blog',
   case: 'case',
@@ -14,6 +15,7 @@ function parseArgs(argv) {
   const options = {
     input: DEFAULT_INPUT,
     outDir: DEFAULT_OUT_DIR,
+    internalLinks: DEFAULT_INTERNAL_LINKS,
     force: false,
   };
 
@@ -22,6 +24,8 @@ function parseArgs(argv) {
       options.input = arg.slice('--input='.length);
     } else if (arg.startsWith('--out-dir=')) {
       options.outDir = arg.slice('--out-dir='.length);
+    } else if (arg.startsWith('--internal-links=')) {
+      options.internalLinks = arg.slice('--internal-links='.length);
     } else if (arg === '--force') {
       options.force = true;
     } else if (arg === '--help' || arg === '-h') {
@@ -32,6 +36,7 @@ Usage:
   npm run generate:post
   npm run generate:post -- --input=content/static-posts/static-post.json
   npm run generate:post -- --input=content/static-posts --force
+  npm run generate:post -- --internal-links=content/static-posts/internal-links.json
 
 Input can be one JSON file, a JSON array, or a directory of JSON files.
 Each post needs fileName, title, contentHtml, and contentType ("blog" or "case").
@@ -56,6 +61,110 @@ function escapeHtml(value) {
 
 function stripHtml(value) {
   return String(value || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function readInternalLinks(inputPath) {
+  const absolute = path.resolve(inputPath);
+  if (!fs.existsSync(absolute)) return [];
+
+  const payload = JSON.parse(fs.readFileSync(absolute, 'utf8').replace(/^\uFEFF/, ''));
+  const links = Array.isArray(payload) ? payload : payload.links;
+  if (!Array.isArray(links)) throw new Error(`${inputPath}: links must be an array.`);
+
+  return links.map((link, index) => {
+    const normalized = {
+      sourceSlug: String(link.sourceSlug || '').trim(),
+      section: String(link.section || '').trim().toLowerCase(),
+      anchor: String(link.anchor || '').trim(),
+      target: String(link.target || '').trim(),
+      targetTitle: String(link.targetTitle || '').trim(),
+    };
+    if (!normalized.sourceSlug || !normalized.section || !normalized.anchor || !normalized.target) {
+      throw new Error(`${inputPath}: invalid link at index ${index}.`);
+    }
+    return normalized;
+  });
+}
+
+function findPhraseIndex(text, phrase) {
+  const source = String(text || '');
+  const needle = String(phrase || '');
+  const lowerSource = source.toLocaleLowerCase('en-US');
+  const lowerNeedle = needle.toLocaleLowerCase('en-US');
+  let fromIndex = 0;
+
+  while (fromIndex < lowerSource.length) {
+    const index = lowerSource.indexOf(lowerNeedle, fromIndex);
+    if (index === -1) return -1;
+    const before = index > 0 ? lowerSource[index - 1] : '';
+    const afterIndex = index + lowerNeedle.length;
+    const after = afterIndex < lowerSource.length ? lowerSource[afterIndex] : '';
+    if ((!before || !/[a-z0-9]/i.test(before)) && (!after || !/[a-z0-9]/i.test(after))) return index;
+    fromIndex = index + 1;
+  }
+  return -1;
+}
+
+function linkFirstTextOccurrence(html, anchor, target) {
+  const escapedAnchor = escapeHtml(anchor);
+  const tokens = String(html || '').split(/(<[^>]+>)/g);
+  let anchorDepth = 0;
+
+  for (let index = 0; index < tokens.length; index += 1) {
+    const token = tokens[index];
+    if (token.startsWith('<')) {
+      if (/^<a\b/i.test(token)) anchorDepth += 1;
+      if (/^<\/a\b/i.test(token)) anchorDepth = Math.max(0, anchorDepth - 1);
+      continue;
+    }
+    if (anchorDepth) continue;
+
+    const phraseIndex = findPhraseIndex(token, escapedAnchor);
+    if (phraseIndex === -1) continue;
+    const matchedText = token.slice(phraseIndex, phraseIndex + escapedAnchor.length);
+    const linkHtml = `<a class="contextual-internal-link" data-internal-link="case" href="${escapeHtml(target)}">${matchedText}</a>`;
+    tokens[index] = token.slice(0, phraseIndex) + linkHtml + token.slice(phraseIndex + escapedAnchor.length);
+    return { html: tokens.join(''), linked: true };
+  }
+
+  return { html: String(html || ''), linked: false };
+}
+
+function applyApprovedInternalLinks(sections, post, internalLinks) {
+  const postLinks = internalLinks.filter(link => link.sourceSlug === post.urlSlug);
+  if (!postLinks.length) return { sections, applied: 0, unresolved: [] };
+
+  const updatedSections = sections.map(section => ({ ...section }));
+  const unresolved = [];
+  let applied = 0;
+
+  for (const link of postLinks) {
+    const primaryCandidates = link.section === 'body'
+      ? updatedSections.filter(section => section.source === 'body')
+      : updatedSections.filter(section => section.id === link.section);
+    const fallbackCandidates = link.section === 'body'
+      ? []
+      : updatedSections.filter(section => section.source === 'body');
+    let linked = false;
+    let usedFallback = false;
+
+    for (const [candidateIndex, candidates] of [primaryCandidates, fallbackCandidates].entries()) {
+      for (const section of candidates) {
+        const result = linkFirstTextOccurrence(section.html, link.anchor, link.target);
+        if (!result.linked) continue;
+        section.html = result.html;
+        linked = true;
+        usedFallback = candidateIndex === 1;
+        applied += 1;
+        break;
+      }
+      if (linked) break;
+    }
+    if (usedFallback) console.warn(`Internal link moved to body: ${post.urlSlug} | ${link.anchor}`);
+    if (!linked) unresolved.push(link);
+  }
+
+  return { sections: updatedSections, applied, unresolved };
 }
 
 function splitConfiguredList(value) {
@@ -474,7 +583,7 @@ function resolveRelatedItems(items, contentType, relatedLookup, siteHref) {
   });
 }
 
-function renderStaticPost(post, relatedLookup) {
+function renderStaticPost(post, relatedLookup, internalLinks) {
   const prefix = getRelativePrefix(post.outputPath);
   const siteHref = href => prefixSitePath(href, prefix);
   const isCase = post.contentType === 'case';
@@ -494,19 +603,26 @@ function renderStaticPost(post, relatedLookup) {
   ].filter(([, value]) => value);
   const projectGalleryHtml = renderProjectGallery(post.projectImages, prefix);
   const seoKeywords = splitLines(post.seoKeywords || post.keywords);
-  const articleSections = [
-    { id: 'summary', title: 'Summary', html: renderOptionalSection('Summary', post.summary, 'summary') },
-    { id: 'technology', title: 'Technology', html: renderListSection('Technology', post.technology, 'technology') },
-    { id: 'challenge', title: 'Challenge', html: renderOptionalSection('Challenge', post.challenge, 'challenge') },
-    { id: 'solution', title: 'Solution', html: renderOptionalSection('Solution', post.solutionDetail || post.solutionText, 'solution') },
-    { id: 'workflow-layout', title: 'Workflow & Layout', html: renderOptionalSection('Workflow & Layout', post.layoutWorkflow, 'workflow-layout', projectGalleryHtml) },
-    { id: 'results-roi', title: 'Results & ROI', html: renderListSection('Results & ROI', post.results, 'results-roi') },
-    { id: 'equipment-list', title: 'Equipment List', html: renderListSection('Equipment List', post.equipmentList, 'equipment-list') },
-    ...renderOrderedBodySections(post.contentHtml, prefix),
-    { id: 'seo-title', title: 'SEO Title', html: renderOptionalSection('SEO Title', post.seoTitle, 'seo-title') },
-    { id: 'seo-description', title: 'SEO Description', html: renderOptionalSection('SEO Description', post.seoDescription, 'seo-description') },
-    { id: 'seo-keywords', title: 'SEO Keywords', html: renderListSection('SEO Keywords', seoKeywords, 'seo-keywords') },
+  let articleSections = [
+    { id: 'summary', source: 'summary', title: 'Summary', html: renderOptionalSection('Summary', post.summary, 'summary') },
+    { id: 'technology', source: 'technology', title: 'Technology', html: renderListSection('Technology', post.technology, 'technology') },
+    { id: 'challenge', source: 'challenge', title: 'Challenge', html: renderOptionalSection('Challenge', post.challenge, 'challenge') },
+    { id: 'solution', source: 'solution', title: 'Solution', html: renderOptionalSection('Solution', post.solutionDetail || post.solutionText, 'solution') },
+    { id: 'workflow-layout', source: 'workflow-layout', title: 'Workflow & Layout', html: renderOptionalSection('Workflow & Layout', post.layoutWorkflow, 'workflow-layout', projectGalleryHtml) },
+    { id: 'results-roi', source: 'results-roi', title: 'Results & ROI', html: renderListSection('Results & ROI', post.results, 'results-roi') },
+    { id: 'equipment-list', source: 'equipment-list', title: 'Equipment List', html: renderListSection('Equipment List', post.equipmentList, 'equipment-list') },
+    ...renderOrderedBodySections(post.contentHtml, prefix).map(section => ({ ...section, source: 'body' })),
+    { id: 'seo-title', source: 'seo-title', title: 'SEO Title', html: renderOptionalSection('SEO Title', post.seoTitle, 'seo-title') },
+    { id: 'seo-description', source: 'seo-description', title: 'SEO Description', html: renderOptionalSection('SEO Description', post.seoDescription, 'seo-description') },
+    { id: 'seo-keywords', source: 'seo-keywords', title: 'SEO Keywords', html: renderListSection('SEO Keywords', seoKeywords, 'seo-keywords') },
   ].filter(section => section.html);
+  const linkResult = applyApprovedInternalLinks(articleSections, post, internalLinks);
+  articleSections = linkResult.sections;
+  if (linkResult.unresolved.length) {
+    for (const link of linkResult.unresolved) {
+      console.warn(`Internal link not applied: ${post.urlSlug} | ${link.section} | ${link.anchor}`);
+    }
+  }
   const pageToc = articleSections.map(({ id, title }) => ({ id, text: title }));
   const relatedProjectDefaults = [
     { title: 'ASRS Project', href: siteHref('case-studies.html?solution=asrs#caseGrid') },
@@ -695,6 +811,7 @@ function main() {
   const { posts, skipped } = readPosts(options.input);
   if (!posts.length) throw new Error('No static posts found.');
   const relatedLookup = buildRelatedLookup(posts);
+  const internalLinks = readInternalLinks(options.internalLinks);
 
   const outDir = path.resolve(options.outDir);
   fs.mkdirSync(outDir, { recursive: true });
@@ -705,7 +822,7 @@ function main() {
       throw new Error(`${post.outputPath} already exists. Use --force to overwrite it.`);
     }
     fs.mkdirSync(path.dirname(outPath), { recursive: true });
-    fs.writeFileSync(outPath, renderStaticPost(post, relatedLookup), 'utf8');
+    fs.writeFileSync(outPath, renderStaticPost(post, relatedLookup, internalLinks), 'utf8');
     console.log(`Generated ${post.outputPath}`);
   }
   if (skipped) console.log(`Skipped ${skipped} item(s) without fileName.`);

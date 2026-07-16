@@ -1,0 +1,1166 @@
+{
+  "version": 1,
+  "sourceReport": "reports/blog-case-internal-link-review.csv",
+  "links": [
+    {
+      "sourceSlug": "5-common-packaging-problems-pharmaceutical-companies-face-and-how-automation-solves-them",
+      "sourceTitle": "5 Common Packaging Problems Pharmaceutical Companies Face and How Automation Solves Them",
+      "section": "summary",
+      "anchor": "packaging automation",
+      "target": "/case/complete-cartoning-case-packing-line-for-pharmaceutical-beauty-health-daily-care-industries/",
+      "targetTitle": "Complete Cartoning & Case Packing Line for Pharmaceutical, Beauty, Health & Daily Care Industries"
+    },
+    {
+      "sourceSlug": "5-key-steps-to-successfully-implement-an-automated-motor-assembly-line-in-your-factory",
+      "sourceTitle": "5 Key Steps to Successfully Implement an Automated Motor Assembly Line in Your Factory",
+      "section": "summary",
+      "anchor": "automated motor assembly line",
+      "target": "/case/fully-automated-motor-assembly-line-complete-industrial-case-study/",
+      "targetTitle": "Fully Automated Motor Assembly Line – Complete Industrial Case Study"
+    },
+    {
+      "sourceSlug": "5-major-warehouse-problems-that-asrs-automation-solves-in-large-logistics-centers",
+      "sourceTitle": "5 Major Warehouse Problems That ASRS Automation Solves in Large Logistics Centers",
+      "section": "summary",
+      "anchor": "ASRS automation",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "5-warehouse-bottlenecks-that-an-integrated-asrs-system-can-eliminate",
+      "sourceTitle": "5 Warehouse Bottlenecks That an Integrated ASRS System Can Eliminate",
+      "section": "results-roi",
+      "anchor": "integrated ASRS system",
+      "target": "/case/complete-asrs-workflow-case-study-amr-rgv-stacker-crane-integrated-warehouse-automation-system/",
+      "targetTitle": "Complete ASRS Workflow Case Study | AMR + RGV + Stacker Crane Integrated Warehouse Automation System"
+    },
+    {
+      "sourceSlug": "acr-vs-amr-vs-stacker-crane-which-warehouse-automation-system-is-best",
+      "sourceTitle": "ACR vs AMR vs Stacker Crane: Which Warehouse Automation System Is Best?",
+      "section": "body",
+      "anchor": "33 ACR + 18 AMR",
+      "target": "/case/536-bins-hour-mega-warehouse-automation-case-33-acr-18-amr-intelligent-asrs-system/",
+      "targetTitle": "536 Bins/Hour Mega Warehouse Automation Case | 33 ACR + 18 AMR Intelligent ASRS System"
+    },
+    {
+      "sourceSlug": "acr-vs-amr-vs-stacker-crane-which-warehouse-automation-system-is-best",
+      "sourceTitle": "ACR vs AMR vs Stacker Crane: Which Warehouse Automation System Is Best?",
+      "section": "challenge",
+      "anchor": "warehouse automation system",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "aluminum-extrusion-line-upgrade-guide-how-to-modernize-old-production-lines-without-full-replacement",
+      "sourceTitle": "Aluminum Extrusion Line Upgrade Guide: How to Modernize Old Production Lines Without Full Replacement",
+      "section": "body",
+      "anchor": "aluminum extrusion line",
+      "target": "/case/aluminum-profile-extrusion-production-line-case-study-fully-automated-smart-manufacturing-system-for-industrial-aluminum-processing/",
+      "targetTitle": "Aluminum Profile Extrusion Production Line Case Study | Fully Automated Smart Manufacturing System for Industrial Aluminum Processing"
+    },
+    {
+      "sourceSlug": "amr-fleet-management-system-how-108-robots-are-coordinated-in-real-time",
+      "sourceTitle": "AMR Fleet Management System: How 108 Robots Are Coordinated in Real-Time",
+      "section": "summary",
+      "anchor": "AMR fleet management system",
+      "target": "/case/can-108-amrs-46-acrs-replace-manual-picking-high-density-asrs-automation-case-study/",
+      "targetTitle": "Can 108 AMRs + 46 ACRs Replace Manual Picking? High-Density ASRS Automation Case Study"
+    },
+    {
+      "sourceSlug": "amr-vs-acr-in-asrs-systems-which-robot-type-improves-warehouse-efficiency-more",
+      "sourceTitle": "AMR vs ACR in ASRS Systems: Which Robot Type Improves Warehouse Efficiency More?",
+      "section": "summary",
+      "anchor": "ASRS warehouse systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "amr-vs-rgv-vs-stacker-crane-what-does-each-robot-actually-do-in-an-automated-warehouse",
+      "sourceTitle": "AMR vs RGV vs Stacker Crane: What Does Each Robot Actually Do in an Automated Warehouse?",
+      "section": "summary",
+      "anchor": "ASRS systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "asrs-vs-traditional-warehouse-systems-cost-roi-and-performance-comparison-for-industrial-buyers",
+      "sourceTitle": "ASRS vs Traditional Warehouse Systems: Cost, ROI, and Performance Comparison for Industrial Buyers",
+      "section": "summary",
+      "anchor": "Automated Storage and Retrieval Systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "asrs-warehouse-cost-breakdown-how-much-does-a-108-amr-46-acr-system-really-cost",
+      "sourceTitle": "ASRS Warehouse Cost Breakdown: How Much Does a 108 AMR + 46 ACR System Really Cost?",
+      "section": "body",
+      "anchor": "ASRS warehouse systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "asrs-warehouse-cost-breakdown-how-much-does-a-108-amr-46-acr-system-really-cost",
+      "sourceTitle": "ASRS Warehouse Cost Breakdown: How Much Does a 108 AMR + 46 ACR System Really Cost?",
+      "section": "summary",
+      "anchor": "108 AMRs",
+      "target": "/case/can-108-amrs-46-acrs-replace-manual-picking-high-density-asrs-automation-case-study/",
+      "targetTitle": "Can 108 AMRs + 46 ACRs Replace Manual Picking? High-Density ASRS Automation Case Study"
+    },
+    {
+      "sourceSlug": "asrs-warehouse-design-guide-2026-how-ai-scheduling-systems-improve-1-000-operations-per-hour-efficiency",
+      "sourceTitle": "ASRS Warehouse Design Guide 2026: How AI Scheduling Systems Improve 1,000+ Operations Per Hour Efficiency",
+      "section": "summary",
+      "anchor": "ASRS warehouse design",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "asrs-warehouse-roi-analysis-why-automation-pays-back-faster-than-traditional-warehousing",
+      "sourceTitle": "ASRS Warehouse ROI Analysis: Why Automation Pays Back Faster Than Traditional Warehousing",
+      "section": "summary",
+      "anchor": "warehouse automation systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "battery-manufacturing-automation-manual-production-vs-smart-battery-factory-which-model-creates-better-roi",
+      "sourceTitle": "Battery Manufacturing Automation: Manual Production vs Smart Battery Factory | Which Model Creates Better ROI?",
+      "section": "results-roi",
+      "anchor": "Battery Manufacturing Automation",
+      "target": "/case/complete-ev-battery-production-line-turnkey-lithium-battery-smart-factory-automation-solution/",
+      "targetTitle": "Complete EV Battery Production Line | Turnkey Lithium Battery Smart Factory Automation Solution"
+    },
+    {
+      "sourceSlug": "best-asrs-warehouse-solution-for-e-commerce-and-high-sku-distribution-centers",
+      "sourceTitle": "Best ASRS Warehouse Solution for E-commerce and High SKU Distribution Centers",
+      "section": "body",
+      "anchor": "33 ACR + 18 AMR",
+      "target": "/case/536-bins-hour-mega-warehouse-automation-case-33-acr-18-amr-intelligent-asrs-system/",
+      "targetTitle": "536 Bins/Hour Mega Warehouse Automation Case | 33 ACR + 18 AMR Intelligent ASRS System"
+    },
+    {
+      "sourceSlug": "best-asrs-warehouse-solution-for-e-commerce-and-high-sku-distribution-centers",
+      "sourceTitle": "Best ASRS Warehouse Solution for E-commerce and High SKU Distribution Centers",
+      "section": "technology",
+      "anchor": "ASRS systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "best-packaging-automation-solutions-for-beauty-and-cosmetic-manufacturers",
+      "sourceTitle": "Best Packaging Automation Solutions for Beauty and Cosmetic Manufacturers",
+      "section": "summary",
+      "anchor": "packaging automation",
+      "target": "/case/complete-cartoning-case-packing-line-for-pharmaceutical-beauty-health-daily-care-industries/",
+      "targetTitle": "Complete Cartoning & Case Packing Line for Pharmaceutical, Beauty, Health & Daily Care Industries"
+    },
+    {
+      "sourceSlug": "best-warehouse-automation-solution-for-manufacturing-amr-rgv-asrs-integration",
+      "sourceTitle": "Best Warehouse Automation Solution for Manufacturing: AMR, RGV & ASRS Integration",
+      "section": "summary",
+      "anchor": "warehouse automation system",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "can-an-automatic-cartoning-line-reduce-labor-costs-by-50",
+      "sourceTitle": "Can an Automatic Cartoning Line Reduce Labor Costs by 50%?",
+      "section": "summary",
+      "anchor": "automatic cartoning line",
+      "target": "/case/complete-cartoning-case-packing-line-for-pharmaceutical-beauty-health-daily-care-industries/",
+      "targetTitle": "Complete Cartoning & Case Packing Line for Pharmaceutical, Beauty, Health & Daily Care Industries"
+    },
+    {
+      "sourceSlug": "can-asrs-reduce-labor-risk-in-chemical-warehouses-by-70",
+      "sourceTitle": "Can ASRS Reduce Labor Risk in Chemical Warehouses by 70%?",
+      "section": "summary",
+      "anchor": "Automated Storage and Retrieval Systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "can-asrs-reduce-labor-risk-in-chemical-warehouses-by-70",
+      "sourceTitle": "Can ASRS Reduce Labor Risk in Chemical Warehouses by 70%?",
+      "section": "summary",
+      "anchor": "Chemical warehouses",
+      "target": "/case/heavy-duty-asrs-for-chemical-drums-how-stacker-cranes-handle-extreme-loads/",
+      "targetTitle": "Heavy-Duty ASRS for Chemical Drums: How Stacker Cranes Handle Extreme Loads"
+    },
+    {
+      "sourceSlug": "can-ctu-systems-replace-100-manual-picking-in-modern-warehouses",
+      "sourceTitle": "Can CTU Systems Replace 100% Manual Picking in Modern Warehouses?",
+      "section": "technology",
+      "anchor": "Goods-to-person picking stations",
+      "target": "/case/4-aisle-mini-load-asrs-warehouse-high-sku-automated-storage-and-goods-to-person-picking-solution/",
+      "targetTitle": "4-Aisle Mini Load ASRS Warehouse | High SKU Automated Storage and Goods-to-Person Picking Solution"
+    },
+    {
+      "sourceSlug": "can-ctu-systems-replace-100-manual-picking-in-modern-warehouses",
+      "sourceTitle": "Can CTU Systems Replace 100% Manual Picking in Modern Warehouses?",
+      "section": "technology",
+      "anchor": "warehouse automation system",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "chemical-drum-warehouse-automation-full-workflow-explained-step-by-step",
+      "sourceTitle": "Chemical Drum Warehouse Automation: Full Workflow Explained Step by Step",
+      "section": "summary",
+      "anchor": "stacker crane ASRS system",
+      "target": "/case/heavy-duty-asrs-for-chemical-drums-how-stacker-cranes-handle-extreme-loads/",
+      "targetTitle": "Heavy-Duty ASRS for Chemical Drums: How Stacker Cranes Handle Extreme Loads"
+    },
+    {
+      "sourceSlug": "choosing-the-right-coating-machine-slot-die-vs-gravure-vs-comma-coating-systems",
+      "sourceTitle": "Choosing the Right Coating Machine: Slot Die vs Gravure vs Comma Coating Systems",
+      "section": "summary",
+      "anchor": "coating machine",
+      "target": "/case/industrial-coating-machine-applications-case-study-medical-devices-electronics-lithium-batteries-packaging-textile-semiconductor-manufacturing/",
+      "targetTitle": "Industrial Coating Machine Applications Case Study | Medical Devices, Electronics, Lithium Batteries, Packaging, Textile & Semiconductor Manufacturing"
+    },
+    {
+      "sourceSlug": "choosing-the-right-paper-cup-production-line-speed-automation-level-and-packaging-requirements",
+      "sourceTitle": "Choosing the Right Paper Cup Production Line: Speed, Automation Level and Packaging Requirements",
+      "section": "summary",
+      "anchor": "paper cup production line",
+      "target": "/case/fully-automatic-paper-cup-production-line-intelligent-cup-forming-inspection-sterilization-and-packaging-system/",
+      "targetTitle": "Fully Automatic Paper Cup Production Line | Intelligent Cup Forming, Inspection, Sterilization and Packaging System"
+    },
+    {
+      "sourceSlug": "common-coating-defects-and-how-to-prevent-them-in-industrial-production",
+      "sourceTitle": "Common Coating Defects and How to Prevent Them in Industrial Production",
+      "section": "equipment-list",
+      "anchor": "Coating Machine",
+      "target": "/case/industrial-coating-machine-applications-case-study-medical-devices-electronics-lithium-batteries-packaging-textile-semiconductor-manufacturing/",
+      "targetTitle": "Industrial Coating Machine Applications Case Study | Medical Devices, Electronics, Lithium Batteries, Packaging, Textile & Semiconductor Manufacturing"
+    },
+    {
+      "sourceSlug": "complete-asrs-workflow-explained-step-by-step-from-production-to-automated-storage",
+      "sourceTitle": "Complete ASRS Workflow Explained Step by Step: From Production to Automated Storage",
+      "section": "summary",
+      "anchor": "complete ASRS workflow",
+      "target": "/case/complete-asrs-workflow-case-study-amr-rgv-stacker-crane-integrated-warehouse-automation-system/",
+      "targetTitle": "Complete ASRS Workflow Case Study | AMR + RGV + Stacker Crane Integrated Warehouse Automation System"
+    },
+    {
+      "sourceSlug": "complete-cartoning-and-case-packing-workflow-explained-step-by-step",
+      "sourceTitle": "Complete Cartoning and Case Packing Workflow Explained Step by Step",
+      "section": "summary",
+      "anchor": "complete cartoning and case packing line",
+      "target": "/case/complete-cartoning-case-packing-line-for-pharmaceutical-beauty-health-daily-care-industries/",
+      "targetTitle": "Complete Cartoning & Case Packing Line for Pharmaceutical, Beauty, Health & Daily Care Industries"
+    },
+    {
+      "sourceSlug": "ctu-goods-to-person-roi-analysis-is-it-worth-the-investment-in-2026",
+      "sourceTitle": "CTU Goods-to-Person ROI Analysis: Is It Worth the Investment in 2026?",
+      "section": "equipment-list",
+      "anchor": "Goods-to-person picking stations",
+      "target": "/case/4-aisle-mini-load-asrs-warehouse-high-sku-automated-storage-and-goods-to-person-picking-solution/",
+      "targetTitle": "4-Aisle Mini Load ASRS Warehouse | High SKU Automated Storage and Goods-to-Person Picking Solution"
+    },
+    {
+      "sourceSlug": "ctu-goods-to-person-roi-analysis-is-it-worth-the-investment-in-2026",
+      "sourceTitle": "CTU Goods-to-Person ROI Analysis: Is It Worth the Investment in 2026?",
+      "section": "technology",
+      "anchor": "CTU Goods-to-Person system",
+      "target": "/case/goods-to-person-ctu-warehouse-replace-manual-picking-completely/",
+      "targetTitle": "Goods-to-Person CTU Warehouse: Replace Manual Picking Completely?"
+    },
+    {
+      "sourceSlug": "ctu-vs-amr-vs-asrs-which-goods-to-person-system-is-best-for-warehouses",
+      "sourceTitle": "CTU vs AMR vs ASRS: Which Goods-to-Person System Is Best for Warehouses?",
+      "section": "equipment-list",
+      "anchor": "CTU System",
+      "target": "/case/goods-to-person-ctu-warehouse-replace-manual-picking-completely/",
+      "targetTitle": "Goods-to-Person CTU Warehouse: Replace Manual Picking Completely?"
+    },
+    {
+      "sourceSlug": "ctu-warehouse-design-guide-how-to-build-a-high-density-goods-to-person-system",
+      "sourceTitle": "CTU Warehouse Design Guide: How to Build a High-Density Goods-to-Person System？",
+      "section": "technology",
+      "anchor": "CTU warehouse system",
+      "target": "/case/goods-to-person-ctu-warehouse-replace-manual-picking-completely/",
+      "targetTitle": "Goods-to-Person CTU Warehouse: Replace Manual Picking Completely?"
+    },
+    {
+      "sourceSlug": "ctu-warehouse-design-guide-how-to-build-a-high-density-goods-to-person-system",
+      "sourceTitle": "CTU Warehouse Design Guide: How to Build a High-Density Goods-to-Person System？",
+      "section": "technology",
+      "anchor": "Goods-to-Person picking stations",
+      "target": "/case/4-aisle-mini-load-asrs-warehouse-high-sku-automated-storage-and-goods-to-person-picking-solution/",
+      "targetTitle": "4-Aisle Mini Load ASRS Warehouse | High SKU Automated Storage and Goods-to-Person Picking Solution"
+    },
+    {
+      "sourceSlug": "ctu-warehouse-workflow-explained-from-storage-to-picking-to-dispatch",
+      "sourceTitle": "CTU Warehouse Workflow Explained: From Storage to Picking to Dispatch",
+      "section": "technology",
+      "anchor": "CTU warehouse",
+      "target": "/case/goods-to-person-ctu-warehouse-replace-manual-picking-completely/",
+      "targetTitle": "Goods-to-Person CTU Warehouse: Replace Manual Picking Completely?"
+    },
+    {
+      "sourceSlug": "ctu-warehouse-workflow-explained-from-storage-to-picking-to-dispatch",
+      "sourceTitle": "CTU Warehouse Workflow Explained: From Storage to Picking to Dispatch",
+      "section": "technology",
+      "anchor": "Goods-to-person picking stations",
+      "target": "/case/4-aisle-mini-load-asrs-warehouse-high-sku-automated-storage-and-goods-to-person-picking-solution/",
+      "targetTitle": "4-Aisle Mini Load ASRS Warehouse | High SKU Automated Storage and Goods-to-Person Picking Solution"
+    },
+    {
+      "sourceSlug": "e-commerce-fulfillment-automation-how-asrs-systems-enable-fast-order-processing-and-high-volume-warehousing",
+      "sourceTitle": "E-commerce Fulfillment Automation: How ASRS Systems Enable Fast Order Processing and High-Volume Warehousing",
+      "section": "summary",
+      "anchor": "Automated Storage and Retrieval Systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "end-to-end-layout-of-a-fully-automatic-electronics-packaging-factory-reel-tray-system-for-semiconductor-and-electronics-manufacturing",
+      "sourceTitle": "End-to-End Layout of a Fully Automatic Electronics Packaging Factory (Reel & Tray System for Semiconductor and Electronics Manufacturing)",
+      "section": "summary",
+      "anchor": "Reel and Tray packaging",
+      "target": "/case/fully-automatic-reel-tray-vacuum-packaging-line-with-mes-integration-and-smart-traceability-system/",
+      "targetTitle": "Fully Automatic Reel & Tray Vacuum Packaging Line | MES Integrated Aluminum Bag Packing System with Labeling & Traceability"
+    },
+    {
+      "sourceSlug": "energy-saving-in-aluminum-production-how-modern-extrusion-lines-reduce-power-consumption-by-30",
+      "sourceTitle": "Energy Saving in Aluminum Production: How Modern Extrusion Lines Reduce Power Consumption by 30%",
+      "section": "solution",
+      "anchor": "Modern extrusion lines",
+      "target": "/case/aluminum-profile-extrusion-production-line-case-study-fully-automated-smart-manufacturing-system-for-industrial-aluminum-processing/",
+      "targetTitle": "Aluminum Profile Extrusion Production Line Case Study | Fully Automated Smart Manufacturing System for Industrial Aluminum Processing"
+    },
+    {
+      "sourceSlug": "food-beverage-cold-storage-automation-how-asrs-systems-handle-perishable-goods-efficiently",
+      "sourceTitle": "Food & Beverage Cold Storage Automation: How ASRS Systems Handle Perishable Goods Efficiently",
+      "section": "summary",
+      "anchor": "Automated Storage and Retrieval Systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "from-electric-motors-to-automotive-electronics-how-automated-assembly-lines-are-transforming-manufacturing",
+      "sourceTitle": "From Electric Motors to Automotive Electronics: How Automated Assembly Lines Are Transforming Manufacturing",
+      "section": "summary",
+      "anchor": "motor assembly line",
+      "target": "/case/fully-automated-motor-assembly-line-complete-industrial-case-study/",
+      "targetTitle": "Fully Automated Motor Assembly Line – Complete Industrial Case Study"
+    },
+    {
+      "sourceSlug": "future-of-tray-and-reel-packaging-automation-mes-ai-and-fully-unmanned-packaging-lines-in-semiconductor-electronics-manufacturing",
+      "sourceTitle": "Future of Tray and Reel Packaging Automation: MES, AI and Fully Unmanned Packaging Lines in Semiconductor & Electronics Manufacturing",
+      "section": "body",
+      "anchor": "packaging automation",
+      "target": "/case/complete-cartoning-case-packing-line-for-pharmaceutical-beauty-health-daily-care-industries/",
+      "targetTitle": "Complete Cartoning & Case Packing Line for Pharmaceutical, Beauty, Health & Daily Care Industries"
+    },
+    {
+      "sourceSlug": "future-of-tray-and-reel-packaging-automation-mes-ai-and-fully-unmanned-packaging-lines-in-semiconductor-electronics-manufacturing",
+      "sourceTitle": "Future of Tray and Reel Packaging Automation: MES, AI and Fully Unmanned Packaging Lines in Semiconductor & Electronics Manufacturing",
+      "section": "equipment-list",
+      "anchor": "Reel & Tray packaging line",
+      "target": "/case/fully-automatic-reel-tray-vacuum-packaging-line-with-mes-integration-and-smart-traceability-system/",
+      "targetTitle": "Fully Automatic Reel & Tray Vacuum Packaging Line | MES Integrated Aluminum Bag Packing System with Labeling & Traceability"
+    },
+    {
+      "sourceSlug": "goods-to-person-system-explained-why-manual-picking-is-no-longer-competitive",
+      "sourceTitle": "Goods-to-Person System Explained: Why Manual Picking Is No Longer Competitive",
+      "section": "equipment-list",
+      "anchor": "Goods-to-Person picking stations",
+      "target": "/case/4-aisle-mini-load-asrs-warehouse-high-sku-automated-storage-and-goods-to-person-picking-solution/",
+      "targetTitle": "4-Aisle Mini Load ASRS Warehouse | High SKU Automated Storage and Goods-to-Person Picking Solution"
+    },
+    {
+      "sourceSlug": "goods-to-person-system-explained-why-manual-picking-is-no-longer-competitive",
+      "sourceTitle": "Goods-to-Person System Explained: Why Manual Picking Is No Longer Competitive",
+      "section": "solution",
+      "anchor": "Goods-to-Person systems",
+      "target": "/case/goods-to-person-ctu-warehouse-replace-manual-picking-completely/",
+      "targetTitle": "Goods-to-Person CTU Warehouse: Replace Manual Picking Completely?"
+    },
+    {
+      "sourceSlug": "heavy-load-asrs-system-how-to-handle-1-ton-chemical-drums-safely",
+      "sourceTitle": "Heavy Load ASRS System: How to Handle 1 Ton Chemical Drums Safely",
+      "section": "body",
+      "anchor": "stacker crane ASRS system",
+      "target": "/case/heavy-duty-asrs-for-chemical-drums-how-stacker-cranes-handle-extreme-loads/",
+      "targetTitle": "Heavy-Duty ASRS for Chemical Drums: How Stacker Cranes Handle Extreme Loads"
+    },
+    {
+      "sourceSlug": "heavy-load-asrs-system-how-to-handle-1-ton-chemical-drums-safely",
+      "sourceTitle": "Heavy Load ASRS System: How to Handle 1 Ton Chemical Drums Safely",
+      "section": "summary",
+      "anchor": "ASRS systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "high-density-asrs-storage-system-explained-how-to-store-45-000-skus-in-one-intelligent-warehouse",
+      "sourceTitle": "High-Density ASRS Storage System Explained: How to Store 45,000+ SKUs in One Intelligent Warehouse",
+      "section": "solution",
+      "anchor": "automated storage systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "high-density-warehouse-design-how-8-6m-racking-systems-double-storage-capacity",
+      "sourceTitle": "High-Density Warehouse Design: How 8.6m Racking Systems Double Storage Capacity",
+      "section": "body",
+      "anchor": "ASRS warehouse design",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "how-536-bins-hour-warehouse-automation-improves-fulfillment-efficiency-by-300",
+      "sourceTitle": "How 536 Bins/Hour Warehouse Automation Improves Fulfillment Efficiency by 300%",
+      "section": "solution",
+      "anchor": "ASRS automation",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "how-536-bins-hour-warehouse-automation-improves-fulfillment-efficiency-by-300",
+      "sourceTitle": "How 536 Bins/Hour Warehouse Automation Improves Fulfillment Efficiency by 300%",
+      "section": "summary",
+      "anchor": "33 ACR + 18 AMR",
+      "target": "/case/536-bins-hour-mega-warehouse-automation-case-33-acr-18-amr-intelligent-asrs-system/",
+      "targetTitle": "536 Bins/Hour Mega Warehouse Automation Case | 33 ACR + 18 AMR Intelligent ASRS System"
+    },
+    {
+      "sourceSlug": "how-a-129-000-storage-location-asrs-warehouse-is-designed-layout-engineering-explained",
+      "sourceTitle": "How a 129,000 Storage Location ASRS Warehouse Is Designed: Layout & Engineering Explained",
+      "section": "summary",
+      "anchor": "129,000 storage location ASRS warehouse",
+      "target": "/case/mega-asrs-warehouse-case-study-12-000-system-with-50-000-storage-locations-1-000-tasks-hour/",
+      "targetTitle": "Mega ASRS Warehouse Case Study | 12,000㎡ System with 50,000 Storage Locations & 1,000 Tasks/Hour"
+    },
+    {
+      "sourceSlug": "how-a-33-acr-18-amr-warehouse-system-works-step-by-step",
+      "sourceTitle": "How a 33 ACR + 18 AMR Warehouse System Works Step by Step",
+      "section": "summary",
+      "anchor": "33 ACR + 18 AMR",
+      "target": "/case/536-bins-hour-mega-warehouse-automation-case-33-acr-18-amr-intelligent-asrs-system/",
+      "targetTitle": "536 Bins/Hour Mega Warehouse Automation Case | 33 ACR + 18 AMR Intelligent ASRS System"
+    },
+    {
+      "sourceSlug": "how-a-33-acr-18-amr-warehouse-system-works-step-by-step",
+      "sourceTitle": "How a 33 ACR + 18 AMR Warehouse System Works Step by Step",
+      "section": "summary",
+      "anchor": "ASRS warehouse system",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "how-a-fully-automated-motor-assembly-line-increased-throughput-by-200-a-smart-factory-case-study",
+      "sourceTitle": "How a Fully Automated Motor Assembly Line Increased Throughput by 200% – A Smart Factory Case Study",
+      "section": "summary",
+      "anchor": "fully automated motor assembly line",
+      "target": "/case/fully-automated-motor-assembly-line-complete-industrial-case-study/",
+      "targetTitle": "Fully Automated Motor Assembly Line – Complete Industrial Case Study"
+    },
+    {
+      "sourceSlug": "how-aluminum-extrusion-technology-improves-product-strength-and-precision-engineering-explained",
+      "sourceTitle": "How Aluminum Extrusion Technology Improves Product Strength and Precision? (Engineering Explained)",
+      "section": "summary",
+      "anchor": "aluminum extrusion technology",
+      "target": "/case/aluminum-profile-extrusion-production-line-case-study-fully-automated-smart-manufacturing-system-for-industrial-aluminum-processing/",
+      "targetTitle": "Aluminum Profile Extrusion Production Line Case Study | Fully Automated Smart Manufacturing System for Industrial Aluminum Processing"
+    },
+    {
+      "sourceSlug": "how-aseptic-filling-systems-improve-food-safety-and-shelf-life-in-tomato-processing",
+      "sourceTitle": "How Aseptic Filling Systems Improve Food Safety and Shelf Life in Tomato Processing",
+      "section": "summary",
+      "anchor": "aseptic filling systems",
+      "target": "/case/tomato-paste-canned-tomato-production-line-fully-automated-food-processing-filling-packaging-asrs-system/",
+      "targetTitle": "Tomato Paste & Canned Tomato Production Line | Fully Automated Food Processing, Filling, Packaging & ASRS System"
+    },
+    {
+      "sourceSlug": "how-asrs-automated-warehouses-improve-food-factory-logistics-and-inventory-management",
+      "sourceTitle": "How ASRS Automated Warehouses Improve Food Factory Logistics and Inventory Management",
+      "section": "summary",
+      "anchor": "Automated Storage and Retrieval Systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "how-asrs-warehouse-systems-improve-manufacturing-efficiency-in-automotive-and-electronics-factories",
+      "sourceTitle": "How ASRS Warehouse Systems Improve Manufacturing Efficiency in Automotive and Electronics Factories",
+      "section": "summary",
+      "anchor": "Automated Storage and Retrieval Systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "how-automated-packaging-and-palletizing-systems-reduce-labor-in-food-manufacturing",
+      "sourceTitle": "How Automated Packaging and Palletizing Systems Reduce Labor in Food Manufacturing",
+      "section": "technology",
+      "anchor": "packaging automation",
+      "target": "/case/complete-cartoning-case-packing-line-for-pharmaceutical-beauty-health-daily-care-industries/",
+      "targetTitle": "Complete Cartoning & Case Packing Line for Pharmaceutical, Beauty, Health & Daily Care Industries"
+    },
+    {
+      "sourceSlug": "how-coating-machines-power-modern-lithium-battery-manufacturing-from-electrode-coating-to-separator-coating",
+      "sourceTitle": "How Coating Machines Power Modern Lithium Battery Manufacturing: From Electrode Coating to Separator Coating",
+      "section": "summary",
+      "anchor": "lithium battery manufacturing",
+      "target": "/case/industrial-coating-machine-applications-case-study-medical-devices-electronics-lithium-batteries-packaging-textile-semiconductor-manufacturing/",
+      "targetTitle": "Industrial Coating Machine Applications Case Study | Medical Devices, Electronics, Lithium Batteries, Packaging, Textile & Semiconductor Manufacturing"
+    },
+    {
+      "sourceSlug": "how-does-a-12-000-automated-warehouse-handle-50-000-storage-locations-full-asrs-system-explained",
+      "sourceTitle": "How Does a 12,000㎡ Automated Warehouse Handle 50,000 Storage Locations? Full ASRS System Explained",
+      "section": "solution",
+      "anchor": "ASRS warehouse system",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "how-does-a-12-000-automated-warehouse-handle-50-000-storage-locations-full-asrs-system-explained",
+      "sourceTitle": "How Does a 12,000㎡ Automated Warehouse Handle 50,000 Storage Locations? Full ASRS System Explained",
+      "section": "summary",
+      "anchor": "50,000 storage locations",
+      "target": "/case/mega-asrs-warehouse-case-study-12-000-system-with-50-000-storage-locations-1-000-tasks-hour/",
+      "targetTitle": "Mega ASRS Warehouse Case Study | 12,000㎡ System with 50,000 Storage Locations & 1,000 Tasks/Hour"
+    },
+    {
+      "sourceSlug": "how-does-a-tomato-paste-production-line-work-complete-industrial-process-from-fresh-tomato-to-finished-product",
+      "sourceTitle": "How Does a Tomato Paste Production Line Work? Complete Industrial Process from Fresh Tomato to Finished Product",
+      "section": "solution",
+      "anchor": "tomato paste production line",
+      "target": "/case/tomato-paste-canned-tomato-production-line-fully-automated-food-processing-filling-packaging-asrs-system/",
+      "targetTitle": "Tomato Paste & Canned Tomato Production Line | Fully Automated Food Processing, Filling, Packaging & ASRS System"
+    },
+    {
+      "sourceSlug": "how-fast-can-a-complete-cartoning-and-case-packing-line-improve-production-efficiency",
+      "sourceTitle": "How Fast Can a Complete Cartoning and Case Packing Line Improve Production Efficiency?",
+      "section": "summary",
+      "anchor": "complete cartoning and case packing line",
+      "target": "/case/complete-cartoning-case-packing-line-for-pharmaceutical-beauty-health-daily-care-industries/",
+      "targetTitle": "Complete Cartoning & Case Packing Line for Pharmaceutical, Beauty, Health & Daily Care Industries"
+    },
+    {
+      "sourceSlug": "how-fast-is-a-ctu-system-throughput-speed-order-fulfillment-analysis",
+      "sourceTitle": "How Fast Is a CTU System? Throughput, Speed & Order Fulfillment Analysis？",
+      "section": "body",
+      "anchor": "Goods-to-Person systems",
+      "target": "/case/goods-to-person-ctu-warehouse-replace-manual-picking-completely/",
+      "targetTitle": "Goods-to-Person CTU Warehouse: Replace Manual Picking Completely?"
+    },
+    {
+      "sourceSlug": "how-fully-automatic-paper-cup-production-lines-improve-manufacturing-efficiency",
+      "sourceTitle": "How Fully Automatic Paper Cup Production Lines Improve Manufacturing Efficiency",
+      "section": "technology",
+      "anchor": "paper cup manufacturing",
+      "target": "/case/fully-automatic-paper-cup-production-line-intelligent-cup-forming-inspection-sterilization-and-packaging-system/",
+      "targetTitle": "Fully Automatic Paper Cup Production Line | Intelligent Cup Forming, Inspection, Sterilization and Packaging System"
+    },
+    {
+      "sourceSlug": "how-goods-to-person-systems-increase-picking-efficiency-by-300-in-e-commerce-warehouses",
+      "sourceTitle": "How Goods-to-Person Systems Increase Picking Efficiency by 300% in E-commerce Warehouses?",
+      "section": "solution",
+      "anchor": "Goods-to-Person systems",
+      "target": "/case/goods-to-person-ctu-warehouse-replace-manual-picking-completely/",
+      "targetTitle": "Goods-to-Person CTU Warehouse: Replace Manual Picking Completely?"
+    },
+    {
+      "sourceSlug": "how-integrated-asrs-systems-increase-warehouse-throughput-by-over-300",
+      "sourceTitle": "How Integrated ASRS Systems Increase Warehouse Throughput by Over 300%",
+      "section": "technology",
+      "anchor": "integrated ASRS system",
+      "target": "/case/complete-asrs-workflow-case-study-amr-rgv-stacker-crane-integrated-warehouse-automation-system/",
+      "targetTitle": "Complete ASRS Workflow Case Study | AMR + RGV + Stacker Crane Integrated Warehouse Automation System"
+    },
+    {
+      "sourceSlug": "how-mes-controls-labeling-and-traceability-in-reel-tray-packaging-systems",
+      "sourceTitle": "How MES Controls Labeling and Traceability in Reel & Tray Packaging Systems？",
+      "section": "summary",
+      "anchor": "Reel & Tray packaging",
+      "target": "/case/fully-automatic-reel-tray-vacuum-packaging-line-with-mes-integration-and-smart-traceability-system/",
+      "targetTitle": "Fully Automatic Reel & Tray Vacuum Packaging Line | MES Integrated Aluminum Bag Packing System with Labeling & Traceability"
+    },
+    {
+      "sourceSlug": "how-mes-controls-labeling-and-traceability-in-reel-tray-packaging-systems",
+      "sourceTitle": "How MES Controls Labeling and Traceability in Reel & Tray Packaging Systems？",
+      "section": "summary",
+      "anchor": "packaging automation",
+      "target": "/case/complete-cartoning-case-packing-line-for-pharmaceutical-beauty-health-daily-care-industries/",
+      "targetTitle": "Complete Cartoning & Case Packing Line for Pharmaceutical, Beauty, Health & Daily Care Industries"
+    },
+    {
+      "sourceSlug": "how-much-does-a-33-acr-18-amr-automated-warehouse-cost-in-2026",
+      "sourceTitle": "How Much Does a 33 ACR + 18 AMR Automated Warehouse Cost in 2026?",
+      "section": "summary",
+      "anchor": "warehouse automation systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "how-much-does-a-33-acr-18-amr-automated-warehouse-cost-in-2026",
+      "sourceTitle": "How Much Does a 33 ACR + 18 AMR Automated Warehouse Cost in 2026?",
+      "section": "workflow-layout",
+      "anchor": "33 ACR + 18 AMR",
+      "target": "/case/536-bins-hour-mega-warehouse-automation-case-33-acr-18-amr-intelligent-asrs-system/",
+      "targetTitle": "536 Bins/Hour Mega Warehouse Automation Case | 33 ACR + 18 AMR Intelligent ASRS System"
+    },
+    {
+      "sourceSlug": "how-much-does-a-chemical-drum-asrs-warehouse-cost",
+      "sourceTitle": "How Much Does a Chemical Drum ASRS Warehouse Cost ?",
+      "section": "summary",
+      "anchor": "chemical drum ASRS warehouse",
+      "target": "/case/heavy-duty-asrs-for-chemical-drums-how-stacker-cranes-handle-extreme-loads/",
+      "targetTitle": "Heavy-Duty ASRS for Chemical Drums: How Stacker Cranes Handle Extreme Loads"
+    },
+    {
+      "sourceSlug": "how-much-does-a-chemical-drum-asrs-warehouse-cost",
+      "sourceTitle": "How Much Does a Chemical Drum ASRS Warehouse Cost ?",
+      "section": "summary",
+      "anchor": "ASRS systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "how-much-does-a-complete-asrs-warehouse-system-cost",
+      "sourceTitle": "How Much Does a Complete ASRS Warehouse System Cost ?",
+      "section": "summary",
+      "anchor": "ASRS warehouse system",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "how-much-does-a-complete-cartoning-and-case-packing-line-cost-in-2026",
+      "sourceTitle": "How Much Does a Complete Cartoning and Case Packing Line Cost in 2026?",
+      "section": "summary",
+      "anchor": "complete cartoning and case packing line",
+      "target": "/case/complete-cartoning-case-packing-line-for-pharmaceutical-beauty-health-daily-care-industries/",
+      "targetTitle": "Complete Cartoning & Case Packing Line for Pharmaceutical, Beauty, Health & Daily Care Industries"
+    },
+    {
+      "sourceSlug": "how-much-does-a-complete-ev-battery-production-line-cost-battery-factory-investment-guide",
+      "sourceTitle": "How Much Does a Complete EV Battery Production Line Cost? | Battery Factory Investment Guide",
+      "section": "summary",
+      "anchor": "complete lithium battery production line",
+      "target": "/case/complete-ev-battery-production-line-turnkey-lithium-battery-smart-factory-automation-solution/",
+      "targetTitle": "Complete EV Battery Production Line | Turnkey Lithium Battery Smart Factory Automation Solution"
+    },
+    {
+      "sourceSlug": "how-much-does-a-ctu-goods-to-person-warehouse-cost-in-2026",
+      "sourceTitle": "How Much Does a CTU Goods-to-Person Warehouse Cost in 2026?",
+      "section": "body",
+      "anchor": "High SKU warehouses",
+      "target": "/case/4-aisle-mini-load-asrs-warehouse-high-sku-automated-storage-and-goods-to-person-picking-solution/",
+      "targetTitle": "4-Aisle Mini Load ASRS Warehouse | High SKU Automated Storage and Goods-to-Person Picking Solution"
+    },
+    {
+      "sourceSlug": "how-much-does-a-ctu-goods-to-person-warehouse-cost-in-2026",
+      "sourceTitle": "How Much Does a CTU Goods-to-Person Warehouse Cost in 2026?",
+      "section": "technology",
+      "anchor": "CTU Goods-to-Person warehouse",
+      "target": "/case/goods-to-person-ctu-warehouse-replace-manual-picking-completely/",
+      "targetTitle": "Goods-to-Person CTU Warehouse: Replace Manual Picking Completely?"
+    },
+    {
+      "sourceSlug": "how-much-does-a-fully-automatic-reel-tray-packaging-line-cost-semiconductor-electronics-vacuum-packaging-system-pricing-guide",
+      "sourceTitle": "How Much Does a Fully Automatic Reel & Tray Packaging Line Cost? | Semiconductor & Electronics Vacuum Packaging System Pricing Guide?",
+      "section": "summary",
+      "anchor": "Reel & Tray packaging line",
+      "target": "/case/fully-automatic-reel-tray-vacuum-packaging-line-with-mes-integration-and-smart-traceability-system/",
+      "targetTitle": "Fully Automatic Reel & Tray Vacuum Packaging Line | MES Integrated Aluminum Bag Packing System with Labeling & Traceability"
+    },
+    {
+      "sourceSlug": "how-much-does-a-mini-load-asrs-warehouse-cost-investment-guide-for-high-sku-warehouses",
+      "sourceTitle": "How Much Does a Mini Load ASRS Warehouse Cost? | Investment Guide for High SKU Warehouses",
+      "section": "summary",
+      "anchor": "mini load ASRS warehouse",
+      "target": "/case/4-aisle-mini-load-asrs-warehouse-high-sku-automated-storage-and-goods-to-person-picking-solution/",
+      "targetTitle": "4-Aisle Mini Load ASRS Warehouse | High SKU Automated Storage and Goods-to-Person Picking Solution"
+    },
+    {
+      "sourceSlug": "how-to-design-a-200-reel-hour-high-speed-electronics-packaging-line",
+      "sourceTitle": "How to Design a 200 Reel/Hour High-Speed Electronics Packaging Line？",
+      "section": "body",
+      "anchor": "Reel & Tray packaging line",
+      "target": "/case/fully-automatic-reel-tray-vacuum-packaging-line-with-mes-integration-and-smart-traceability-system/",
+      "targetTitle": "Fully Automatic Reel & Tray Vacuum Packaging Line | MES Integrated Aluminum Bag Packing System with Labeling & Traceability"
+    },
+    {
+      "sourceSlug": "how-to-design-a-complete-asrs-warehouse-workflow-with-amr-rgv-stacker-cranes",
+      "sourceTitle": "How to Design a Complete ASRS Warehouse Workflow with AMR, RGV & Stacker Cranes",
+      "section": "results-roi",
+      "anchor": "ASRS systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "how-to-design-a-complete-packaging-line-for-pharmaceutical-products",
+      "sourceTitle": "How to Design a Complete Packaging Line for Pharmaceutical Products",
+      "section": "summary",
+      "anchor": "pharmaceutical packaging line",
+      "target": "/case/complete-cartoning-case-packing-line-for-pharmaceutical-beauty-health-daily-care-industries/",
+      "targetTitle": "Complete Cartoning & Case Packing Line for Pharmaceutical, Beauty, Health & Daily Care Industries"
+    },
+    {
+      "sourceSlug": "how-to-design-a-high-efficiency-aluminum-profile-extrusion-factory-layout-industry-guide-2026",
+      "sourceTitle": "How to Design a High-Efficiency Aluminum Profile Extrusion Factory Layout? (Industry Guide 2026)",
+      "section": "summary",
+      "anchor": "aluminum extrusion factory layout",
+      "target": "/case/aluminum-profile-extrusion-production-line-case-study-fully-automated-smart-manufacturing-system-for-industrial-aluminum-processing/",
+      "targetTitle": "Aluminum Profile Extrusion Production Line Case Study | Fully Automated Smart Manufacturing System for Industrial Aluminum Processing"
+    },
+    {
+      "sourceSlug": "how-to-design-a-high-throughput-asrs-warehouse-with-acr-and-amr-robots",
+      "sourceTitle": "How to Design a High-Throughput ASRS Warehouse with ACR and AMR Robots",
+      "section": "technology",
+      "anchor": "ASRS warehouse design",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "how-to-design-a-safe-chemical-storage-warehouse-with-stacker-crane-asrs-system",
+      "sourceTitle": "How to Design a Safe Chemical Storage Warehouse with Stacker Crane ASRS System",
+      "section": "technology",
+      "anchor": "stacker crane ASRS system",
+      "target": "/case/heavy-duty-asrs-for-chemical-drums-how-stacker-cranes-handle-extreme-loads/",
+      "targetTitle": "Heavy-Duty ASRS for Chemical Drums: How Stacker Cranes Handle Extreme Loads"
+    },
+    {
+      "sourceSlug": "how-to-design-a-safe-chemical-storage-warehouse-with-stacker-crane-asrs-system",
+      "sourceTitle": "How to Design a Safe Chemical Storage Warehouse with Stacker Crane ASRS System",
+      "section": "technology",
+      "anchor": "ASRS warehouse design",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "how-to-design-an-automated-warehouse-for-thousands-of-skus",
+      "sourceTitle": "How to Design an Automated Warehouse for Thousands of SKUs?",
+      "section": "technology",
+      "anchor": "Mini Load ASRS",
+      "target": "/case/4-aisle-mini-load-asrs-warehouse-high-sku-automated-storage-and-goods-to-person-picking-solution/",
+      "targetTitle": "4-Aisle Mini Load ASRS Warehouse | High SKU Automated Storage and Goods-to-Person Picking Solution"
+    },
+    {
+      "sourceSlug": "how-to-plan-a-lithium-battery-factory-from-zero-complete-battery-factory-layout-guide",
+      "sourceTitle": "How to Plan a Lithium Battery Factory From Zero? | Complete Battery Factory Layout Guide",
+      "section": "summary",
+      "anchor": "lithium battery manufacturing",
+      "target": "/case/industrial-coating-machine-applications-case-study-medical-devices-electronics-lithium-batteries-packaging-textile-semiconductor-manufacturing/",
+      "targetTitle": "Industrial Coating Machine Applications Case Study | Medical Devices, Electronics, Lithium Batteries, Packaging, Textile & Semiconductor Manufacturing"
+    },
+    {
+      "sourceSlug": "how-to-plan-a-lithium-battery-factory-from-zero-complete-battery-factory-layout-guide",
+      "sourceTitle": "How to Plan a Lithium Battery Factory From Zero? | Complete Battery Factory Layout Guide",
+      "section": "workflow-layout",
+      "anchor": "Battery Factory Layout",
+      "target": "/case/complete-ev-battery-production-line-turnkey-lithium-battery-smart-factory-automation-solution/",
+      "targetTitle": "Complete EV Battery Production Line | Turnkey Lithium Battery Smart Factory Automation Solution"
+    },
+    {
+      "sourceSlug": "how-wms-mes-integration-powers-real-time-smart-warehouse-operations",
+      "sourceTitle": "How WMS + MES Integration Powers Real-Time Smart Warehouse Operations",
+      "section": "solution",
+      "anchor": "ASRS systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "industry-4-0-in-motor-manufacturing-how-smart-assembly-lines-are-shaping-the-future-of-production",
+      "sourceTitle": "Industry 4.0 in Motor Manufacturing: How Smart Assembly Lines Are Shaping the Future of Production",
+      "section": "summary",
+      "anchor": "smart assembly lines",
+      "target": "/case/fully-automated-motor-assembly-line-complete-industrial-case-study/",
+      "targetTitle": "Fully Automated Motor Assembly Line – Complete Industrial Case Study"
+    },
+    {
+      "sourceSlug": "is-a-33-acr-18-amr-automated-warehouse-worth-the-investment",
+      "sourceTitle": "Is a 33 ACR + 18 AMR Automated Warehouse Worth the Investment?",
+      "section": "summary",
+      "anchor": "33 ACR + 18 AMR",
+      "target": "/case/536-bins-hour-mega-warehouse-automation-case-33-acr-18-amr-intelligent-asrs-system/",
+      "targetTitle": "536 Bins/Hour Mega Warehouse Automation Case | 33 ACR + 18 AMR Intelligent ASRS System"
+    },
+    {
+      "sourceSlug": "is-a-33-acr-18-amr-automated-warehouse-worth-the-investment",
+      "sourceTitle": "Is a 33 ACR + 18 AMR Automated Warehouse Worth the Investment?",
+      "section": "technology",
+      "anchor": "ASRS warehouse system",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "is-a-fully-automated-asrs-warehouse-worth-the-investment-roi-cost-long-term-benefits",
+      "sourceTitle": "Is a Fully Automated ASRS Warehouse Worth the Investment? ROI, Cost & Long-Term Benefits",
+      "section": "body",
+      "anchor": "fully automated ASRS warehouse",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "manual-chemical-warehouse-vs-automated-asrs-which-one-is-more-cost-efficient",
+      "sourceTitle": "Manual Chemical Warehouse vs Automated ASRS: Which One Is More Cost Efficient?",
+      "section": "equipment-list",
+      "anchor": "Stacker crane ASRS system",
+      "target": "/case/heavy-duty-asrs-for-chemical-drums-how-stacker-cranes-handle-extreme-loads/",
+      "targetTitle": "Heavy-Duty ASRS for Chemical Drums: How Stacker Cranes Handle Extreme Loads"
+    },
+    {
+      "sourceSlug": "manual-chemical-warehouse-vs-automated-asrs-which-one-is-more-cost-efficient",
+      "sourceTitle": "Manual Chemical Warehouse vs Automated ASRS: Which One Is More Cost Efficient?",
+      "section": "summary",
+      "anchor": "Automated Storage and Retrieval Systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "manual-packaging-vs-automated-cartoning-systems-which-saves-more-money",
+      "sourceTitle": "Manual Packaging vs Automated Cartoning Systems: Which Saves More Money?",
+      "section": "summary",
+      "anchor": "automated cartoning systems",
+      "target": "/case/complete-cartoning-case-packing-line-for-pharmaceutical-beauty-health-daily-care-industries/",
+      "targetTitle": "Complete Cartoning & Case Packing Line for Pharmaceutical, Beauty, Health & Daily Care Industries"
+    },
+    {
+      "sourceSlug": "manual-picking-vs-goods-to-person-asrs-which-warehouse-model-is-more-profitable",
+      "sourceTitle": "Manual Picking vs Goods-to-Person ASRS | Which Warehouse Model Is More Profitable?",
+      "section": "body",
+      "anchor": "High SKU warehouses",
+      "target": "/case/4-aisle-mini-load-asrs-warehouse-high-sku-automated-storage-and-goods-to-person-picking-solution/",
+      "targetTitle": "4-Aisle Mini Load ASRS Warehouse | High SKU Automated Storage and Goods-to-Person Picking Solution"
+    },
+    {
+      "sourceSlug": "manual-vs-automated-aluminum-extrusion-line-which-one-is-more-efficient-and-profitable",
+      "sourceTitle": "Manual vs Automated Aluminum Extrusion Line: Which One Is More Efficient and Profitable?",
+      "section": "technology",
+      "anchor": "automated extrusion line",
+      "target": "/case/aluminum-profile-extrusion-production-line-case-study-fully-automated-smart-manufacturing-system-for-industrial-aluminum-processing/",
+      "targetTitle": "Aluminum Profile Extrusion Production Line Case Study | Fully Automated Smart Manufacturing System for Industrial Aluminum Processing"
+    },
+    {
+      "sourceSlug": "manual-vs-automated-tomato-processing-line-which-production-system-delivers-better-roi",
+      "sourceTitle": "Manual vs Automated Tomato Processing Line: Which Production System Delivers Better ROI?",
+      "section": "summary",
+      "anchor": "automated tomato processing",
+      "target": "/case/tomato-paste-canned-tomato-production-line-fully-automated-food-processing-filling-packaging-asrs-system/",
+      "targetTitle": "Tomato Paste & Canned Tomato Production Line | Fully Automated Food Processing, Filling, Packaging & ASRS System"
+    },
+    {
+      "sourceSlug": "medical-device-coating-technology-improving-biocompatibility-and-drug-delivery-performance",
+      "sourceTitle": "Medical Device Coating Technology: Improving Biocompatibility and Drug Delivery Performance",
+      "section": "summary",
+      "anchor": "Medical device coating",
+      "target": "/case/industrial-coating-machine-applications-case-study-medical-devices-electronics-lithium-batteries-packaging-textile-semiconductor-manufacturing/",
+      "targetTitle": "Industrial Coating Machine Applications Case Study | Medical Devices, Electronics, Lithium Batteries, Packaging, Textile & Semiconductor Manufacturing"
+    },
+    {
+      "sourceSlug": "mini-load-asrs-vs-shuttle-system-which-solution-fits-high-sku-warehouses-better",
+      "sourceTitle": "Mini Load ASRS vs Shuttle System | Which Solution Fits High SKU Warehouses Better?",
+      "section": "summary",
+      "anchor": "Mini Load ASRS",
+      "target": "/case/4-aisle-mini-load-asrs-warehouse-high-sku-automated-storage-and-goods-to-person-picking-solution/",
+      "targetTitle": "4-Aisle Mini Load ASRS Warehouse | High SKU Automated Storage and Goods-to-Person Picking Solution"
+    },
+    {
+      "sourceSlug": "optical-film-coating-explained-the-technology-behind-lcd-oled-and-flexible-displays",
+      "sourceTitle": "Optical Film Coating Explained: The Technology Behind LCD, OLED and Flexible Displays",
+      "section": "summary",
+      "anchor": "optical film coating",
+      "target": "/case/industrial-coating-machine-applications-case-study-medical-devices-electronics-lithium-batteries-packaging-textile-semiconductor-manufacturing/",
+      "targetTitle": "Industrial Coating Machine Applications Case Study | Medical Devices, Electronics, Lithium Batteries, Packaging, Textile & Semiconductor Manufacturing"
+    },
+    {
+      "sourceSlug": "paper-cup-machine-cost-guide-investment-roi-and-factory-planning",
+      "sourceTitle": "Paper Cup Machine Cost Guide: Investment, ROI and Factory Planning",
+      "section": "summary",
+      "anchor": "fully automatic paper cup production line",
+      "target": "/case/fully-automatic-paper-cup-production-line-intelligent-cup-forming-inspection-sterilization-and-packaging-system/",
+      "targetTitle": "Fully Automatic Paper Cup Production Line | Intelligent Cup Forming, Inspection, Sterilization and Packaging System"
+    },
+    {
+      "sourceSlug": "paper-cup-manufacturing-process-explained-from-paper-roll-to-finished-cup",
+      "sourceTitle": "Paper Cup Manufacturing Process Explained: From Paper Roll to Finished Cup",
+      "section": "summary",
+      "anchor": "paper cup manufacturing",
+      "target": "/case/fully-automatic-paper-cup-production-line-intelligent-cup-forming-inspection-sterilization-and-packaging-system/",
+      "targetTitle": "Fully Automatic Paper Cup Production Line | Intelligent Cup Forming, Inspection, Sterilization and Packaging System"
+    },
+    {
+      "sourceSlug": "pharmaceutical-warehouse-automation-with-asrs-ensuring-99-9-inventory-accuracy-and-full-traceability",
+      "sourceTitle": "Pharmaceutical Warehouse Automation with ASRS: Ensuring 99.9% Inventory Accuracy and Full Traceability",
+      "section": "summary",
+      "anchor": "Automated Storage and Retrieval Systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "roi-analysis-of-an-automated-motor-assembly-line-labor-savings-quality-improvement-and-payback-period",
+      "sourceTitle": "ROI Analysis of an Automated Motor Assembly Line: Labor Savings, Quality Improvement, and Payback Period",
+      "section": "technology",
+      "anchor": "motor assembly line",
+      "target": "/case/fully-automated-motor-assembly-line-complete-industrial-case-study/",
+      "targetTitle": "Fully Automated Motor Assembly Line – Complete Industrial Case Study"
+    },
+    {
+      "sourceSlug": "roll-to-roll-coating-technology-the-foundation-of-high-speed-industrial-manufacturing",
+      "sourceTitle": "Roll-to-Roll Coating Technology: The Foundation of High-Speed Industrial Manufacturing",
+      "section": "solution",
+      "anchor": "Roll-to-Roll coating technology",
+      "target": "/case/industrial-coating-machine-applications-case-study-medical-devices-electronics-lithium-batteries-packaging-textile-semiconductor-manufacturing/",
+      "targetTitle": "Industrial Coating Machine Applications Case Study | Medical Devices, Electronics, Lithium Batteries, Packaging, Textile & Semiconductor Manufacturing"
+    },
+    {
+      "sourceSlug": "smart-aluminum-factory-how-iot-and-automation-improve-extrusion-production-efficiency",
+      "sourceTitle": "Smart Aluminum Factory: How IoT and Automation Improve Extrusion Production Efficiency",
+      "section": "technology",
+      "anchor": "aluminum extrusion production line",
+      "target": "/case/aluminum-profile-extrusion-production-line-case-study-fully-automated-smart-manufacturing-system-for-industrial-aluminum-processing/",
+      "targetTitle": "Aluminum Profile Extrusion Production Line Case Study | Fully Automated Smart Manufacturing System for Industrial Aluminum Processing"
+    },
+    {
+      "sourceSlug": "smart-food-factory-how-iot-and-automation-improve-tomato-processing-efficiency",
+      "sourceTitle": "Smart Food Factory: How IoT and Automation Improve Tomato Processing Efficiency",
+      "section": "technology",
+      "anchor": "Automated tomato processing",
+      "target": "/case/tomato-paste-canned-tomato-production-line-fully-automated-food-processing-filling-packaging-asrs-system/",
+      "targetTitle": "Tomato Paste & Canned Tomato Production Line | Fully Automated Food Processing, Filling, Packaging & ASRS System"
+    },
+    {
+      "sourceSlug": "smart-logistics-system-design-how-ai-and-asrs-integration-create-zero-delay-warehouse-operations",
+      "sourceTitle": "Smart Logistics System Design: How AI and ASRS Integration Create Zero-Delay Warehouse Operations",
+      "section": "summary",
+      "anchor": "ASRS automation",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "smart-warehouse-case-study-how-129-000-storage-locations-transform-supply-chain-efficiency",
+      "sourceTitle": "Smart Warehouse Case Study: How 129,000 Storage Locations Transform Supply Chain Efficiency",
+      "section": "solution",
+      "anchor": "Goods-to-person picking stations",
+      "target": "/case/4-aisle-mini-load-asrs-warehouse-high-sku-automated-storage-and-goods-to-person-picking-solution/",
+      "targetTitle": "4-Aisle Mini Load ASRS Warehouse | High SKU Automated Storage and Goods-to-Person Picking Solution"
+    },
+    {
+      "sourceSlug": "smart-warehouse-case-study-how-129-000-storage-locations-transform-supply-chain-efficiency",
+      "sourceTitle": "Smart Warehouse Case Study: How 129,000 Storage Locations Transform Supply Chain Efficiency",
+      "section": "summary",
+      "anchor": "129,000 storage locations",
+      "target": "/case/mega-asrs-warehouse-case-study-12-000-system-with-50-000-storage-locations-1-000-tasks-hour/",
+      "targetTitle": "Mega ASRS Warehouse Case Study | 12,000㎡ System with 50,000 Storage Locations & 1,000 Tasks/Hour"
+    },
+    {
+      "sourceSlug": "stacker-crane-vs-forklift-which-is-safer-for-chemical-drum-handling",
+      "sourceTitle": "Stacker Crane vs Forklift: Which Is Safer for Chemical Drum Handling?",
+      "section": "technology",
+      "anchor": "Stacker Crane ASRS System",
+      "target": "/case/heavy-duty-asrs-for-chemical-drums-how-stacker-cranes-handle-extreme-loads/",
+      "targetTitle": "Heavy-Duty ASRS for Chemical Drums: How Stacker Cranes Handle Extreme Loads"
+    },
+    {
+      "sourceSlug": "tomato-paste-juice-sauce-and-canned-food-production-lines-which-processing-system-fits-your-factory",
+      "sourceTitle": "Tomato Paste, Juice, Sauce, and Canned Food Production Lines: Which Processing System Fits Your Factory?",
+      "section": "body",
+      "anchor": "tomato processing systems",
+      "target": "/case/tomato-paste-canned-tomato-production-line-fully-automated-food-processing-filling-packaging-asrs-system/",
+      "targetTitle": "Tomato Paste & Canned Tomato Production Line | Fully Automated Food Processing, Filling, Packaging & ASRS System"
+    },
+    {
+      "sourceSlug": "tomato-processing-plant-cost-guide-2026-how-much-does-a-fully-automated-production-line-cost",
+      "sourceTitle": "Tomato Processing Plant Cost Guide 2026: How Much Does a Fully Automated Production Line Cost?",
+      "section": "summary",
+      "anchor": "automated tomato processing",
+      "target": "/case/tomato-paste-canned-tomato-production-line-fully-automated-food-processing-filling-packaging-asrs-system/",
+      "targetTitle": "Tomato Paste & Canned Tomato Production Line | Fully Automated Food Processing, Filling, Packaging & ASRS System"
+    },
+    {
+      "sourceSlug": "top-20-equipment-required-for-a-complete-lithium-battery-production-line-ev-battery-factory-equipment-guide",
+      "sourceTitle": "Top 20 Equipment Required for a Complete Lithium Battery Production Line | EV Battery Factory Equipment Guide",
+      "section": "body",
+      "anchor": "lithium battery manufacturing",
+      "target": "/case/industrial-coating-machine-applications-case-study-medical-devices-electronics-lithium-batteries-packaging-textile-semiconductor-manufacturing/",
+      "targetTitle": "Industrial Coating Machine Applications Case Study | Medical Devices, Electronics, Lithium Batteries, Packaging, Textile & Semiconductor Manufacturing"
+    },
+    {
+      "sourceSlug": "top-20-equipment-required-for-a-complete-lithium-battery-production-line-ev-battery-factory-equipment-guide",
+      "sourceTitle": "Top 20 Equipment Required for a Complete Lithium Battery Production Line | EV Battery Factory Equipment Guide",
+      "section": "summary",
+      "anchor": "complete lithium battery production line",
+      "target": "/case/complete-ev-battery-production-line-turnkey-lithium-battery-smart-factory-automation-solution/",
+      "targetTitle": "Complete EV Battery Production Line | Turnkey Lithium Battery Smart Factory Automation Solution"
+    },
+    {
+      "sourceSlug": "top-5-warehouse-problems-solved-by-ctu-goods-to-person-automation",
+      "sourceTitle": "Top 5 Warehouse Problems Solved by CTU Goods-to-Person Automation",
+      "section": "equipment-list",
+      "anchor": "Goods-to-person picking stations",
+      "target": "/case/4-aisle-mini-load-asrs-warehouse-high-sku-automated-storage-and-goods-to-person-picking-solution/",
+      "targetTitle": "4-Aisle Mini Load ASRS Warehouse | High SKU Automated Storage and Goods-to-Person Picking Solution"
+    },
+    {
+      "sourceSlug": "top-5-warehouse-problems-solved-by-ctu-goods-to-person-automation",
+      "sourceTitle": "Top 5 Warehouse Problems Solved by CTU Goods-to-Person Automation",
+      "section": "technology",
+      "anchor": "CTU Goods-to-Person system",
+      "target": "/case/goods-to-person-ctu-warehouse-replace-manual-picking-completely/",
+      "targetTitle": "Goods-to-Person CTU Warehouse: Replace Manual Picking Completely?"
+    },
+    {
+      "sourceSlug": "uv-sterilization-in-paper-cup-production-why-hygiene-matters-in-food-packaging",
+      "sourceTitle": "UV Sterilization in Paper Cup Production: Why Hygiene Matters in Food Packaging",
+      "section": "body",
+      "anchor": "paper cup production line",
+      "target": "/case/fully-automatic-paper-cup-production-line-intelligent-cup-forming-inspection-sterilization-and-packaging-system/",
+      "targetTitle": "Fully Automatic Paper Cup Production Line | Intelligent Cup Forming, Inspection, Sterilization and Packaging System"
+    },
+    {
+      "sourceSlug": "vision-inspection-systems-in-paper-cup-manufacturing-how-defect-detection-improves-product-quality",
+      "sourceTitle": "Vision Inspection Systems in Paper Cup Manufacturing: How Defect Detection Improves Product Quality",
+      "section": "body",
+      "anchor": "paper cup production line",
+      "target": "/case/fully-automatic-paper-cup-production-line-intelligent-cup-forming-inspection-sterilization-and-packaging-system/",
+      "targetTitle": "Fully Automatic Paper Cup Production Line | Intelligent Cup Forming, Inspection, Sterilization and Packaging System"
+    },
+    {
+      "sourceSlug": "vision-inspection-vs-manual-quality-control-which-one-delivers-better-results-for-motor-assembly",
+      "sourceTitle": "Vision Inspection vs Manual Quality Control: Which One Delivers Better Results for Motor Assembly?",
+      "section": "summary",
+      "anchor": "motor assembly",
+      "target": "/case/fully-automated-motor-assembly-line-complete-industrial-case-study/",
+      "targetTitle": "Fully Automated Motor Assembly Line – Complete Industrial Case Study"
+    },
+    {
+      "sourceSlug": "warehouse-automation-architecture-explained-how-wms-wcs-amr-rgv-and-asrs-work-together",
+      "sourceTitle": "Warehouse Automation Architecture Explained: How WMS, WCS, AMR, RGV and ASRS Work Together",
+      "section": "summary",
+      "anchor": "ASRS systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "warehouse-automation-case-study-how-a-mega-asrs-system-reduced-labor-and-increased-efficiency-by-65",
+      "sourceTitle": "Warehouse Automation Case Study: How a Mega ASRS System Reduced Labor and Increased Efficiency by 65%",
+      "section": "summary",
+      "anchor": "warehouse automation system",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "warehouse-automation-for-chemical-industry-roi-cost-safety-analysis",
+      "sourceTitle": "Warehouse Automation for Chemical Industry: ROI, Cost & Safety Analysis",
+      "section": "summary",
+      "anchor": "warehouse automation systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "warehouse-automation-for-chemical-industry-roi-cost-safety-analysis",
+      "sourceTitle": "Warehouse Automation for Chemical Industry: ROI, Cost & Safety Analysis",
+      "section": "technology",
+      "anchor": "stacker crane ASRS system",
+      "target": "/case/heavy-duty-asrs-for-chemical-drums-how-stacker-cranes-handle-extreme-loads/",
+      "targetTitle": "Heavy-Duty ASRS for Chemical Drums: How Stacker Cranes Handle Extreme Loads"
+    },
+    {
+      "sourceSlug": "what-is-a-mega-asrs-warehouse-system-structure-cost-real-project-breakdown-50-000-storage-locations-explained",
+      "sourceTitle": "What Is a Mega ASRS Warehouse? System Structure, Cost & Real Project Breakdown (50,000 Storage Locations Explained)",
+      "section": "summary",
+      "anchor": "Mega ASRS warehouse",
+      "target": "/case/mega-asrs-warehouse-case-study-12-000-system-with-50-000-storage-locations-1-000-tasks-hour/",
+      "targetTitle": "Mega ASRS Warehouse Case Study | 12,000㎡ System with 50,000 Storage Locations & 1,000 Tasks/Hour"
+    },
+    {
+      "sourceSlug": "what-is-reel-tray-packaging-automation-in-electronics-manufacturing",
+      "sourceTitle": "What Is Reel & Tray Packaging Automation in Electronics Manufacturing?",
+      "section": "summary",
+      "anchor": "Reel & Tray packaging",
+      "target": "/case/fully-automatic-reel-tray-vacuum-packaging-line-with-mes-integration-and-smart-traceability-system/",
+      "targetTitle": "Fully Automatic Reel & Tray Vacuum Packaging Line | MES Integrated Aluminum Bag Packing System with Labeling & Traceability"
+    },
+    {
+      "sourceSlug": "what-is-reel-tray-packaging-automation-in-electronics-manufacturing",
+      "sourceTitle": "What Is Reel & Tray Packaging Automation in Electronics Manufacturing?",
+      "section": "summary",
+      "anchor": "packaging automation",
+      "target": "/case/complete-cartoning-case-packing-line-for-pharmaceutical-beauty-health-daily-care-industries/",
+      "targetTitle": "Complete Cartoning & Case Packing Line for Pharmaceutical, Beauty, Health & Daily Care Industries"
+    },
+    {
+      "sourceSlug": "what-is-the-difference-between-acr-amr-and-asrs-systems-in-modern-warehouses",
+      "sourceTitle": "What Is the Difference Between ACR, AMR, and ASRS Systems in Modern Warehouses?",
+      "section": "body",
+      "anchor": "33 ACR + 18 AMR",
+      "target": "/case/536-bins-hour-mega-warehouse-automation-case-33-acr-18-amr-intelligent-asrs-system/",
+      "targetTitle": "536 Bins/Hour Mega Warehouse Automation Case | 33 ACR + 18 AMR Intelligent ASRS System"
+    },
+    {
+      "sourceSlug": "what-is-the-difference-between-acr-amr-and-asrs-systems-in-modern-warehouses",
+      "sourceTitle": "What Is the Difference Between ACR, AMR, and ASRS Systems in Modern Warehouses?",
+      "section": "summary",
+      "anchor": "warehouse automation systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "what-machines-are-needed-in-an-aluminum-extrusion-production-line-complete-equipment-breakdown",
+      "sourceTitle": "What Machines Are Needed in an Aluminum Extrusion Production Line? Complete Equipment Breakdown",
+      "section": "summary",
+      "anchor": "aluminum extrusion production line",
+      "target": "/case/aluminum-profile-extrusion-production-line-case-study-fully-automated-smart-manufacturing-system-for-industrial-aluminum-processing/",
+      "targetTitle": "Aluminum Profile Extrusion Production Line Case Study | Fully Automated Smart Manufacturing System for Industrial Aluminum Processing"
+    },
+    {
+      "sourceSlug": "what-machines-are-required-in-a-tomato-paste-production-line-complete-equipment-breakdown",
+      "sourceTitle": "What Machines Are Required in a Tomato Paste Production Line? Complete Equipment Breakdown",
+      "section": "summary",
+      "anchor": "tomato paste production line",
+      "target": "/case/tomato-paste-canned-tomato-production-line-fully-automated-food-processing-filling-packaging-asrs-system/",
+      "targetTitle": "Tomato Paste & Canned Tomato Production Line | Fully Automated Food Processing, Filling, Packaging & ASRS System"
+    },
+    {
+      "sourceSlug": "what-should-you-consider-before-investing-in-an-automated-packaging-line",
+      "sourceTitle": "What Should You Consider Before Investing in an Automated Packaging Line",
+      "section": "summary",
+      "anchor": "automated packaging line",
+      "target": "/case/complete-cartoning-case-packing-line-for-pharmaceutical-beauty-health-daily-care-industries/",
+      "targetTitle": "Complete Cartoning & Case Packing Line for Pharmaceutical, Beauty, Health & Daily Care Industries"
+    },
+    {
+      "sourceSlug": "why-stacker-crane-asrs-is-the-best-solution-for-hazardous-material-storage",
+      "sourceTitle": "Why Stacker Crane ASRS Is the Best Solution for Hazardous Material Storage",
+      "section": "solution",
+      "anchor": "ASRS systems",
+      "target": "/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/",
+      "targetTitle": "ASRS Warehouse Industry Applications Case Study | How Manufacturing, E-commerce, Pharma & Food Industries Benefit from Automated Storage Systems"
+    },
+    {
+      "sourceSlug": "why-stacker-crane-asrs-is-the-best-solution-for-hazardous-material-storage",
+      "sourceTitle": "Why Stacker Crane ASRS Is the Best Solution for Hazardous Material Storage",
+      "section": "technology",
+      "anchor": "stacker crane ASRS system",
+      "target": "/case/heavy-duty-asrs-for-chemical-drums-how-stacker-cranes-handle-extreme-loads/",
+      "targetTitle": "Heavy-Duty ASRS for Chemical Drums: How Stacker Cranes Handle Extreme Loads"
+    },
+    {
+      "sourceSlug": "why-vacuum-packaging-is-critical-for-electronics-manufacturing",
+      "sourceTitle": "Why Vacuum Packaging Is Critical for Electronics Manufacturing？",
+      "section": "body",
+      "anchor": "Reel & Tray packaging",
+      "target": "/case/fully-automatic-reel-tray-vacuum-packaging-line-with-mes-integration-and-smart-traceability-system/",
+      "targetTitle": "Fully Automatic Reel & Tray Vacuum Packaging Line | MES Integrated Aluminum Bag Packing System with Labeling & Traceability"
+    },
+    {
+      "sourceSlug": "why-vacuum-packaging-is-critical-for-electronics-manufacturing",
+      "sourceTitle": "Why Vacuum Packaging Is Critical for Electronics Manufacturing？",
+      "section": "solution",
+      "anchor": "automated packaging line",
+      "target": "/case/complete-cartoning-case-packing-line-for-pharmaceutical-beauty-health-daily-care-industries/",
+      "targetTitle": "Complete Cartoning & Case Packing Line for Pharmaceutical, Beauty, Health & Daily Care Industries"
+    },
+    {
+      "sourceSlug": "why-vacuum-seal-failure-happens-in-reel-and-tray-packaging-and-how-to-prevent-it-in-high-precision-electronics-manufacturing-lines",
+      "sourceTitle": "Why Vacuum Seal Failure Happens in Reel and Tray Packaging and How to Prevent It in High-Precision Electronics Manufacturing Lines？",
+      "section": "summary",
+      "anchor": "Reel and Tray packaging",
+      "target": "/case/fully-automatic-reel-tray-vacuum-packaging-line-with-mes-integration-and-smart-traceability-system/",
+      "targetTitle": "Fully Automatic Reel & Tray Vacuum Packaging Line | MES Integrated Aluminum Bag Packing System with Labeling & Traceability"
+    }
+  ]
+}
