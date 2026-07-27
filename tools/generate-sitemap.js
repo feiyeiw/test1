@@ -53,7 +53,56 @@ function getPublicPath(filePath) {
   return `/${relative}`;
 }
 
-function getLastMod(filePath) {
+function normalizeDate(value) {
+  const text = String(value || '').trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) return '';
+  const date = new Date(`${text}T00:00:00Z`);
+  return Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== text ? '' : text;
+}
+
+function readExistingLastMods() {
+  const lastMods = new Map();
+  if (!fs.existsSync(OUTPUT)) return lastMods;
+
+  const xml = fs.readFileSync(OUTPUT, 'utf8');
+  const urlPattern = /<url>\s*<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/gi;
+  for (const match of xml.matchAll(urlPattern)) {
+    try {
+      const url = new URL(match[1].replace(/&amp;/g, '&'));
+      const lastmod = normalizeDate(match[2]);
+      if (url.origin === SITE_ORIGIN && lastmod) lastMods.set(url.pathname, lastmod);
+    } catch {
+      // Ignore malformed entries and regenerate them from the page.
+    }
+  }
+  return lastMods;
+}
+
+function getPublishedDate(filePath) {
+  if (path.extname(filePath).toLowerCase() !== '.html') return '';
+
+  const html = fs.readFileSync(filePath, 'utf8');
+  const patterns = [
+    /<meta[^>]+property=["']article:published_time["'][^>]+content=["'](\d{4}-\d{2}-\d{2})/i,
+    /<meta[^>]+content=["'](\d{4}-\d{2}-\d{2})[^"']*["'][^>]+property=["']article:published_time["']/i,
+    /["']datePublished["']\s*:\s*["'](\d{4}-\d{2}-\d{2})/i,
+    /<span>\s*Published\s*<\/span>\s*<strong>\s*(\d{4}-\d{2}-\d{2})\s*<\/strong>/i,
+  ];
+  for (const pattern of patterns) {
+    const match = html.match(pattern);
+    const date = normalizeDate(match && match[1]);
+    if (date) return date;
+  }
+  return '';
+}
+
+function getLastMod(filePath, publicPath, existingLastMods) {
+  const existing = existingLastMods.get(publicPath);
+  if (existing) return existing;
+
+  const published = getPublishedDate(filePath);
+  if (published) return published;
+
   return fs.statSync(filePath).mtime.toISOString().slice(0, 10);
 }
 
@@ -117,6 +166,7 @@ function walk(dir, files = []) {
 
 function generateSitemap() {
   const urlsByPath = new Map();
+  const existingLastMods = readExistingLastMods();
 
   for (const filePath of walk(ROOT)) {
     const publicPath = getCanonicalPath(filePath);
@@ -124,7 +174,7 @@ function generateSitemap() {
     if (!publicPath.endsWith('/') && !publicPath.endsWith('.html')) continue;
 
     const existing = urlsByPath.get(publicPath);
-    const lastmod = getLastMod(filePath);
+    const lastmod = getLastMod(filePath, publicPath, existingLastMods);
     if (!existing || lastmod > existing.lastmod) {
       urlsByPath.set(publicPath, { publicPath, lastmod });
     }
