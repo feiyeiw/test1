@@ -182,7 +182,6 @@ function getCurrentPageKey() {
         'services': 'services',
         'solutions': 'solutions',
         'insights': 'insights',
-        'blog-detail': 'blog_detail',
         'case-studies': 'case_studies',
         'case-ecommerce': 'case_ecommerce',
         'case-pharma': 'case_pharma',

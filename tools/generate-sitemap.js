@@ -26,7 +26,6 @@ const DISALLOWED_PATHS = new Set([
   '/404.html',
   '/admin.html',
   '/login.html',
-  '/blog-detail.html',
 ]);
 
 const ROOT_PRIORITY = {

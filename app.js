@@ -67,7 +67,9 @@ async function loadBlogsOnHome() {
         latestBlogs.forEach(blog => {
             console.log('Rendering blog:', blog.id, blog.title);
             const blogLink = document.createElement('a');
-            blogLink.href = `blog-detail.html?id=${encodeURIComponent(blog.id)}`;
+            const outputPath = String(blog.outputPath || '').replace(/index\.html$/i, '');
+            const slug = String(blog.urlSlug || blog.slug || '').trim();
+            blogLink.href = outputPath || (slug ? `/blog/${encodeURIComponent(slug)}/` : 'blog.html');
             blogLink.className = 'service-item blog-link';
             blogLink.style.display = 'block';
             blogLink.style.textDecoration = 'none';
@@ -228,8 +230,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     await runPageSpecificScripts();
-
-    if (typeof initBlogPages === 'function' && !window.blogPageHydratedFromModules) await initBlogPages();
 
     translatePage();
 

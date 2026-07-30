@@ -11,7 +11,7 @@
 - **解决方案** (`solutions.html`): 行业解决方案展示
 - **关于我们** (`about.html`): 公司介绍、价值观和团队信息
 - **博客** (`blog.html`): 技术文章和行业见解
-- **博客详情** (`blog-detail.html`): 单篇博客文章详情页面
+- **博客与案例详情** (`blog/<slug>/`、`case/<slug>/`): 独立静态详情页面
 - **联系我们** (`contact.html`): 联系方式表单
 - **登录** (`login.html`): 管理员登录页面
 - **管理后台** (`admin.html`): 博客内容管理系统
@@ -71,7 +71,8 @@
 │   ├── about.html          # 关于页面
 │   ├── solutions.html      # 解决方案页面
 │   ├── blog.html           # 博客列表页面
-│   ├── blog-detail.html    # 博客详情页面
+│   ├── blog/               # 博客静态详情页面
+│   ├── case/               # 案例静态详情页面
 │   ├── contact.html        # 联系页面
 │   ├── login.html          # 登录页面
 │   └── admin.html          # 管理后台页面

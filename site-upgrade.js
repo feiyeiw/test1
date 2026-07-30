@@ -140,7 +140,14 @@ const HOME_FALLBACK_CASES = [
 ];
 
 function getCaseLink(caseItem) {
-    return caseItem.href || `blog-detail.html?id=${encodeURIComponent(caseItem.id)}`;
+    const href = String(caseItem.href || '').trim();
+    if (href && !/^\/?blog-detail(?:\.html)?(?:[?#]|$)/i.test(href)) return href;
+
+    const outputPath = String(caseItem.outputPath || '').replace(/index\.html$/i, '');
+    if (outputPath) return outputPath;
+
+    const slug = String(caseItem.urlSlug || caseItem.slug || '').trim();
+    return slug ? `/case/${encodeURIComponent(slug)}/` : 'case-studies.html';
 }
 
 function getFallbackCaseCover(index = 0) {
@@ -703,7 +710,7 @@ async function hydrateCaseLibrary() {
         const cases = blogs.filter(blog => blog.industry && blog.solution);
         if (cases.length) {
             caseGrid.innerHTML = cases.map(blog => {
-                const href = `blog-detail.html?id=${encodeURIComponent(blog.id)}`;
+                const href = getCaseLink(blog);
                 const image = getBlogCover(blog);
                 return `
                     <article class="blog-index-card case-card-filter" data-industry="${escapeHtml(blog.industry)}" data-solution="${escapeHtml(blog.solution)}">
@@ -794,10 +801,6 @@ function hydrateContactForm() {
 
 async function hydrateDynamicModules(page) {
     if (document.getElementById('latestBlogGrid')) await renderLatestCases('latestBlogGrid', 6);
-    if (page === 'blog' && typeof initBlogPages === 'function') {
-        await initBlogPages();
-        window.blogPageHydratedFromModules = true;
-    }
     await hydrateCaseLibrary();
     hydrateContactForm();
     if (typeof applyRuntimeTranslations === 'function') applyRuntimeTranslations();

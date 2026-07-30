@@ -66,7 +66,10 @@ function getCaseCover(item) {
 function getCaseLink(item) {
   if (item.outputPath) return item.outputPath.replace(/index\.html$/i, '');
   if (item.urlSlug) return `case/${item.urlSlug}/`;
-  return item.href || `blog-detail.html?id=${encodeURIComponent(item.id)}`;
+  const href = String(item.href || '').trim();
+  return href && !/^\/?blog-detail(?:\.html)?(?:[?#]|$)/i.test(href)
+    ? href
+    : 'case-studies.html';
 }
 
 function listValues(value) {
