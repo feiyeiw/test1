@@ -838,10 +838,10 @@ window.initAdminPage = async function() {
                     title: '',
                     text: '',
                     items: [
-                        cardItem('case-chemical', 'Shuttle ASRS Warehouse', 'Challenge: Manual pallet handling and limited storage density.\nSolution: 18m Shuttle ASRS with WMS integration.', 'case-ecommerce.html', 'solutions-asrs-technology.webp', 'Chemical & Petrochemical'),
-                        cardItem('case-pharma', 'Stacker Crane ASRS for Pharmaceutical Storage', 'Challenge: Controlled storage, batch visibility, and reliable handling.\nSolution: Stacker crane ASRS with WMS traceability.', 'case-pharma.html', 'system-crane.webp', 'Pharmaceutical & Biotech'),
-                        cardItem('case-miniload', 'Miniload Automation for E-commerce Fulfillment', 'Challenge: High SKU mix, peak order waves, and labor-intensive picking.\nSolution: Dense miniload automation for small-item fulfillment.', 'case-miniload.html', 'system-shuttle.webp', 'E-commerce Fulfillment'),
-                        cardItem('case-agv', 'AGV Logistics for Smart Factory Material Flow', 'Challenge: Manual line feeding and disconnected production logistics.\nSolution: AGV routes connecting storage, production, and assembly flow.', 'case-automotive.html', 'system-agv.webp', 'Manufacturing / Industrial'),
+                        cardItem('case-chemical', 'Shuttle ASRS Warehouse', 'Challenge: Manual pallet handling and limited storage density.\nSolution: 18m Shuttle ASRS with WMS integration.', 'case-studies.html', 'solutions-asrs-technology.webp', 'Chemical & Petrochemical'),
+                        cardItem('case-pharma', 'Stacker Crane ASRS for Pharmaceutical Storage', 'Challenge: Controlled storage, batch visibility, and reliable handling.\nSolution: Stacker crane ASRS with WMS traceability.', 'case-studies.html', 'system-crane.webp', 'Pharmaceutical & Biotech'),
+                        cardItem('case-miniload', 'Miniload Automation for E-commerce Fulfillment', 'Challenge: High SKU mix, peak order waves, and labor-intensive picking.\nSolution: Dense miniload automation for small-item fulfillment.', 'case-studies.html', 'system-shuttle.webp', 'E-commerce Fulfillment'),
+                        cardItem('case-agv', 'AGV Logistics for Smart Factory Material Flow', 'Challenge: Manual line feeding and disconnected production logistics.\nSolution: AGV routes connecting storage, production, and assembly flow.', 'case-studies.html', 'system-agv.webp', 'Manufacturing / Industrial'),
                     ],
                 },
                 {

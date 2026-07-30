@@ -13,24 +13,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://13asrs.com/asrs-cost.html</loc>
-    <lastmod>2026-07-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://13asrs.com/asrs-design.html</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://13asrs.com/asrs-landing.html</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://13asrs.com/blog.html</loc>
     <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
@@ -87,6 +69,12 @@
   <url>
     <loc>https://13asrs.com/blog/amr-vs-rgv-vs-stacker-crane-what-does-each-robot-actually-do-in-an-automated-warehouse/</loc>
     <lastmod>2026-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/aseptic-filling-vs-traditional-filling-which-technology-is-better-for-beverage-production/</loc>
+    <lastmod>2026-06-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -351,6 +339,12 @@
   <url>
     <loc>https://13asrs.com/blog/how-automated-packaging-and-palletizing-systems-reduce-labor-in-food-manufacturing/</loc>
     <lastmod>2026-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/blog/how-beverage-factories-reduce-production-cost-through-automation/</loc>
+    <lastmod>2026-07-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -727,6 +721,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://13asrs.com/blog/turnkey-beverage-factory-project-from-concept-design-to-production-delivery/</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://13asrs.com/blog/uv-sterilization-in-paper-cup-production-why-hygiene-matters-in-food-packaging/</loc>
     <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -821,30 +821,6 @@
     <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://13asrs.com/case-automotive.html</loc>
-    <lastmod>2026-06-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://13asrs.com/case-ecommerce.html</loc>
-    <lastmod>2026-06-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://13asrs.com/case-miniload.html</loc>
-    <lastmod>2026-06-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://13asrs.com/case-pharma.html</loc>
-    <lastmod>2026-06-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://13asrs.com/case-studies.html</loc>

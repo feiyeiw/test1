@@ -145,9 +145,9 @@ async function loadBlogDetail() {
         const relatedProjectItems = splitConfiguredList(blog.relatedProjects);
         if (blog.relatedCase) relatedProjectItems.unshift(blog.relatedCase);
         renderRelatedCards('relatedCaseStudies', relatedProjectItems, [
-            { title: 'ASRS Project', href: 'case-ecommerce.html' },
-            { title: 'AGV Project', href: 'case-automotive.html' },
-            { title: 'Smart Factory Project', href: 'case-studies.html' }
+            { title: 'ASRS Case Studies', href: 'case-studies.html' },
+            { title: 'Warehouse Automation Projects', href: 'case-studies.html' },
+            { title: 'Smart Factory Projects', href: 'case-studies.html' }
         ]);
         renderRelatedCards('relatedSolutions', splitConfiguredList(blog.relatedSolutions), [
             { title: 'ASRS Warehouse Solution', href: 'solutions.html#asrs' },

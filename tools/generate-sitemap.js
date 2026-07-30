@@ -23,6 +23,7 @@ const SKIP_DIRS = new Set([
 ]);
 
 const DISALLOWED_PATHS = new Set([
+  '/404.html',
   '/admin.html',
   '/login.html',
   '/blog-detail.html',
@@ -36,9 +37,6 @@ const ROOT_PRIORITY = {
   '/case-studies.html': '0.9',
   '/blog.html': '0.9',
   '/contact.html': '0.9',
-  '/asrs-cost.html': '0.8',
-  '/asrs-design.html': '0.8',
-  '/asrs-landing.html': '0.8',
   '/about.html': '0.7',
 };
 

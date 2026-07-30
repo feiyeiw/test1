@@ -54,11 +54,7 @@ function isPlaceholderBlog(blog) {
 
 function setActiveNavigation() {
     const current = window.location.pathname.split('/').pop() || 'index.html';
-    const aliases = {
-        'insights.html': 'blog.html',
-        'services.html': 'solutions.html'
-    };
-    const activeTarget = aliases[current] || current;
+    const activeTarget = current;
     document.querySelectorAll('nav a[href]').forEach(link => {
         const href = link.getAttribute('href');
         if (href === activeTarget) {
@@ -75,7 +71,7 @@ function upgradeFooter() {
             <div class="footer-content">
                 <div class="footer-logo"><img src="/logo.jpg?v=20260710" alt="13ASRS" onerror="this.replaceWith(document.createTextNode('13ASRS'))"></div>
                 <div class="footer-columns">
-                    <div><h3>Solutions</h3><a href="/solutions.html#asrs">Warehouse Automation</a><a href="/asrs-cost.html">ASRS Cost Guide</a><a href="/asrs-design.html">ASRS Design Guide</a><a href="/solutions.html#factory">Smart Factory Automation</a><a href="/solutions.html#machinery">Industrial Manufacturing</a></div>
+                    <div><h3>Solutions</h3><a href="/solutions.html#asrs">Warehouse Automation</a><a href="/solutions.html#asrs">ASRS Solutions</a><a href="/solutions.html#factory">Smart Factory Automation</a><a href="/solutions.html#machinery">Industrial Manufacturing</a></div>
                     <div><h3>Industries</h3><a href="/industries.html">Warehousing</a><a href="/industries.html#manufacturing">Manufacturing</a><a href="/industries.html#food">Food & Beverage</a><a href="/industries.html#packaging">Packaging</a><a href="/industries.html#automotive">Automotive</a><a href="/industries.html#electronics">Electronics</a></div>
                     <div><h3>Resources</h3><a href="/case-studies.html">Case Studies</a><a href="/blog.html">Knowledge Center</a><a href="/blog.html">Blog</a><a href="https://www.youtube.com/channel/UCg4UaJdHvit-Ny9QNRPD7Mw" target="_blank" rel="noopener">YouTube Channel</a></div>
                     <div><h3>Contact</h3><span>Website: 13asrs.com</span><span>Email: pjm@13asrs.com</span><span>Location: China</span></div>
@@ -94,7 +90,7 @@ const HOME_FALLBACK_CASES = [
         solutionLabel: 'ASRS / Automated Storage & Retrieval Systems',
         summary: '18m shuttle ASRS with WMS integration improves storage density, throughput, and material handling safety.',
         coverImage: 'solutions-asrs-technology.webp',
-        href: 'case-ecommerce.html',
+        href: 'case-studies.html',
     },
     {
         id: 'fallback-pharma-asrs',
@@ -103,7 +99,7 @@ const HOME_FALLBACK_CASES = [
         solutionLabel: 'ASRS / Automated Storage & Retrieval Systems',
         summary: 'Crane ASRS supports controlled storage, batch visibility, traceability, and reliable 24/7 handling.',
         coverImage: 'system-crane.webp',
-        href: 'case-pharma.html',
+        href: 'case-studies.html',
     },
     {
         id: 'fallback-ecommerce-miniload',
@@ -112,7 +108,7 @@ const HOME_FALLBACK_CASES = [
         solutionLabel: 'ASRS / Automated Storage & Retrieval Systems',
         summary: 'Dense miniload automation helps handle high SKU mix, order waves, and labor-intensive picking.',
         coverImage: 'system-shuttle.webp',
-        href: 'case-miniload.html',
+        href: 'case-studies.html',
     },
     {
         id: 'fallback-manufacturing-agv',
@@ -121,7 +117,7 @@ const HOME_FALLBACK_CASES = [
         solutionLabel: 'Conveyor Systems / Automated Transport',
         summary: 'AGV routes connect storage, production, and assembly flow to reduce manual line feeding.',
         coverImage: 'system-agv.webp',
-        href: 'case-automotive.html',
+        href: 'case-studies.html',
     },
     {
         id: 'fallback-packaging-line',

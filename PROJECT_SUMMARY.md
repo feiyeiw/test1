@@ -7,10 +7,10 @@
 
 ### 1. 网站页面
 - **首页** (`index.html`): 展示公司产品、服务和最新见解
-- **服务** (`services.html`): 详细服务项目介绍
+- **解决方案** (`solutions.html`): 服务与行业解决方案介绍
 - **解决方案** (`solutions.html`): 行业解决方案展示
 - **关于我们** (`about.html`): 公司介绍、价值观和团队信息
-- **见解/博客** (`insights.html`): 技术文章和行业见解
+- **博客** (`blog.html`): 技术文章和行业见解
 - **博客详情** (`blog-detail.html`): 单篇博客文章详情页面
 - **联系我们** (`contact.html`): 联系方式表单
 - **登录** (`login.html`): 管理员登录页面
@@ -69,9 +69,8 @@
 ├── 页面文件/
 │   ├── index.html          # 主页
 │   ├── about.html          # 关于页面
-│   ├── services.html       # 服务页面
 │   ├── solutions.html      # 解决方案页面
-│   ├── insights.html       # 博客列表页面
+│   ├── blog.html           # 博客列表页面
 │   ├── blog-detail.html    # 博客详情页面
 │   ├── contact.html        # 联系页面
 │   ├── login.html          # 登录页面

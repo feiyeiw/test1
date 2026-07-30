@@ -114,10 +114,7 @@ async function updatePageContent() {
     const heroDesc = document.querySelector('.hero p');
 
     if (heroTitle && heroDesc) {
-        if ((pageName === 'services' || pageName === 'services.html') && content.pages.services) {
-            heroTitle.textContent = content.pages.services.title;
-            heroDesc.textContent = content.pages.services.description;
-        } else if ((pageName === 'solutions' || pageName === 'solutions.html') && content.pages.solutions) {
+        if ((pageName === 'solutions' || pageName === 'solutions.html') && content.pages.solutions) {
             heroTitle.textContent = content.pages.solutions.title;
             heroDesc.textContent = content.pages.solutions.description;
         } else if ((pageName === 'about' || pageName === 'about.html') && content.pages.about) {
@@ -131,8 +128,7 @@ async function runPageSpecificScripts() {
     const pathname = window.location.pathname;
     if (pathname.endsWith('index.html') || pathname === '/') {
         await updateMainPage();
-    } else if (pathname.includes('services') ||
-               pathname.includes('solutions') ||
+    } else if (pathname.includes('solutions') ||
                pathname.includes('about')) {
         await updatePageContent();
     }
