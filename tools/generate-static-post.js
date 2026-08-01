@@ -578,6 +578,10 @@ function resolveRelatedItems(items, contentType, relatedLookup, siteHref) {
     if (!looksLikeHref(href)) {
       const match = findLookupItem(relatedLookup, contentType, href) || findLookupItem(relatedLookup, contentType, title);
       if (match) return { title, href: siteHref(match.href) };
+
+      const fallbackHref = contentType === 'case' ? 'case-studies.html' : 'blog.html';
+      console.warn(`Related item has no valid URL, using ${fallbackHref}: ${title} | ${href}`);
+      return { title, href: siteHref(fallbackHref) };
     }
     return { ...item, href: siteHref(href || '#') };
   });

@@ -298,8 +298,12 @@ function parseRelated(value) {
     .map(line => line.trim())
     .filter(Boolean)
     .map(line => {
-      const [title, href] = line.split('|').map(part => part.trim());
-      return href ? { title, href } : title;
+      const separatorIndex = line.lastIndexOf('|');
+      if (separatorIndex === -1) return line;
+
+      const title = line.slice(0, separatorIndex).trim();
+      const href = line.slice(separatorIndex + 1).trim();
+      return title && href ? { title, href } : line;
     });
 }
 
