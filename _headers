@@ -1,3 +1,15 @@
 /hero-home-automation*.webp
   Content-Type: image/png
   Cache-Control: no-cache
+
+/admin
+  X-Robots-Tag: noindex, nofollow
+
+/admin.html
+  X-Robots-Tag: noindex, nofollow
+
+/login
+  X-Robots-Tag: noindex, nofollow
+
+/login.html
+  X-Robots-Tag: noindex, nofollow

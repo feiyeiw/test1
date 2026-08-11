@@ -12,6 +12,9 @@ const SHOULD_OPEN_BROWSER = process.env.STATIC_POST_STUDIO_OPEN !== '0';
 const GIT_CHECK_TIMEOUT_MS = 45_000;
 const GIT_LOGIN_TIMEOUT_MS = 180_000;
 const MAX_REQUEST_BODY_BYTES = 80 * 1024 * 1024;
+const SEO_TITLE_MAX_LENGTH = 65;
+const SEO_DESCRIPTION_MAX_LENGTH = 160;
+const TRAILING_CONNECTOR_PATTERN = /\s+(?:a|an|and|are|as|at|by|for|from|how|in|is|of|on|or|the|this|to|with|why)$/i;
 
 const INDUSTRIES = [
   ['', 'Select industry', 'Select industry'],
@@ -114,6 +117,31 @@ function escapeHtml(value) {
     '"': '&quot;',
     "'": '&#39;',
   }[char]));
+}
+
+function truncateSeoField(value, maxLength) {
+  const text = String(value || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  if (text.length <= maxLength) return text;
+  const ellipsis = '...';
+  const contentLimit = Math.max(1, maxLength - ellipsis.length);
+  const candidate = text.slice(0, contentLimit + 1);
+  const lastSpace = candidate.lastIndexOf(' ');
+  let shortened = (lastSpace >= Math.floor(contentLimit * 0.7)
+    ? candidate.slice(0, lastSpace)
+    : candidate.slice(0, contentLimit))
+    .replace(/[,:;|\-]+$/g, '')
+    .trim();
+  while (TRAILING_CONNECTOR_PATTERN.test(shortened)) {
+    shortened = shortened.replace(TRAILING_CONNECTOR_PATTERN, '').trim();
+  }
+  return `${shortened}${ellipsis}`;
+}
+
+function normalizeSeoDescriptionField(value) {
+  const description = truncateSeoField(value, SEO_DESCRIPTION_MAX_LENGTH);
+  if (!description || /(?:\.\.\.|[.!?])$/.test(description)) return description;
+  if (description.length < SEO_DESCRIPTION_MAX_LENGTH) return `${description}.`;
+  return `${description.slice(0, SEO_DESCRIPTION_MAX_LENGTH - 3).trimEnd()}...`;
 }
 
 function send(res, status, body, headers = {}) {
@@ -267,8 +295,8 @@ function cleanPostPayload(input) {
     youtubeUrl: String(input.youtubeUrl || '').trim(),
     author: String(input.author || '13ASRS').trim(),
     date: String(input.date || new Date().toISOString().slice(0, 10)).trim(),
-    seoTitle: String(input.seoTitle || title).trim(),
-    seoDescription: String(input.seoDescription || input.summary || '').trim(),
+    seoTitle: truncateSeoField(input.seoTitle || title, SEO_TITLE_MAX_LENGTH),
+    seoDescription: normalizeSeoDescriptionField(input.seoDescription || input.summary || ''),
     keywords: parseSimpleList(input.keywords),
     technology: parseSimpleList(input.technology),
     projectImages: parseSimpleList(input.projectImages),
@@ -973,8 +1001,8 @@ function renderApp() {
           <label><span data-i18n="bodyProcess">???? / ???</span><textarea id="bodyProcess" data-template-field="process"></textarea></label>
           <label><span data-i18n="bodyValue">???? / ??</span><textarea id="bodyValue" data-template-field="value"></textarea></label>
           <label><span data-i18n="bodyConclusion">?? / ??</span><textarea id="bodyConclusion" data-template-field="conclusion"></textarea></label>
-          <label><span data-i18n="seoTitle">SEO 鏍囬</span><input name="seoTitle"></label>
-          <label><span data-i18n="seoDescription">SEO 鎻忚堪</span><input name="seoDescription"></label>
+          <label><span data-i18n="seoTitle">SEO 鏍囬</span><input name="seoTitle" maxlength="65"></label>
+          <label><span data-i18n="seoDescription">SEO 鎻忚堪</span><input name="seoDescription" maxlength="160"></label>
           <label><span data-i18n="keywords">SEO 鍏抽敭璇</span>
             <textarea name="keywords" placeholder="Chemical Warehouse Automation&#10;ASRS Malaysia" data-i18n-placeholder="keywordsPlaceholder"></textarea>
           </label>

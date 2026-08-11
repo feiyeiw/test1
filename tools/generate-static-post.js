@@ -10,6 +10,19 @@ const STATIC_POST_DIRS = {
   blog: 'blog',
   case: 'case',
 };
+const SITE_ORIGIN = 'https://13asrs.com';
+const SEO_TITLE_MAX_LENGTH = 65;
+const SEO_DESCRIPTION_MAX_LENGTH = 160;
+const TRAILING_CONNECTOR_PATTERN = /\s+(?:a|an|and|are|as|at|by|for|from|how|in|is|of|on|or|the|this|to|with|why)$/i;
+const CLEAN_ROOT_PATHS = Object.freeze({
+  'index.html': '/',
+  'solutions.html': '/solutions',
+  'industries.html': '/industries',
+  'case-studies.html': '/case-studies',
+  'blog.html': '/blog',
+  'about.html': '/about',
+  'contact.html': '/contact',
+});
 
 function parseArgs(argv) {
   const options = {
@@ -61,6 +74,41 @@ function escapeHtml(value) {
 
 function stripHtml(value) {
   return String(value || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function truncateSeoText(value, maxLength) {
+  const text = stripHtml(value);
+  if (text.length <= maxLength) return text;
+
+  const ellipsis = '...';
+  const contentLimit = Math.max(1, maxLength - ellipsis.length);
+  const candidate = text.slice(0, contentLimit + 1);
+  const lastSpace = candidate.lastIndexOf(' ');
+  let shortened = lastSpace >= Math.floor(contentLimit * 0.7)
+    ? candidate.slice(0, lastSpace)
+    : candidate.slice(0, contentLimit);
+  shortened = shortened.replace(/[,:;|\-]+$/g, '').trim();
+  while (TRAILING_CONNECTOR_PATTERN.test(shortened)) {
+    shortened = shortened.replace(TRAILING_CONNECTOR_PATTERN, '').trim();
+  }
+  return `${shortened}${ellipsis}`;
+}
+
+function normalizeSeoTitle(value) {
+  const title = stripHtml(value);
+  const brandSuffix = ' | 13ASRS';
+  if (title.length <= SEO_TITLE_MAX_LENGTH) return title;
+  if (title.endsWith(brandSuffix)) {
+    return `${truncateSeoText(title.slice(0, -brandSuffix.length), SEO_TITLE_MAX_LENGTH - brandSuffix.length)}${brandSuffix}`;
+  }
+  return truncateSeoText(title, SEO_TITLE_MAX_LENGTH);
+}
+
+function normalizeSeoDescription(value) {
+  const description = truncateSeoText(value, SEO_DESCRIPTION_MAX_LENGTH);
+  if (!description || /(?:\.\.\.|[.!?])$/.test(description)) return description;
+  if (description.length < SEO_DESCRIPTION_MAX_LENGTH) return `${description}.`;
+  return `${description.slice(0, SEO_DESCRIPTION_MAX_LENGTH - 3).trimEnd()}...`;
 }
 
 function readInternalLinks(inputPath) {
@@ -241,6 +289,23 @@ function prefixSitePath(value, prefix) {
   const raw = String(value || '');
   if (!raw || isExternalUrl(raw) || raw.startsWith('/') || raw.startsWith('../')) return raw;
   return `${prefix}${raw.replace(/^\.\//, '')}`;
+}
+
+function toCleanSiteHref(value) {
+  const raw = String(value || '').trim();
+  if (!raw || isExternalUrl(raw)) return raw;
+
+  const suffixIndex = raw.search(/[?#]/);
+  const pathname = suffixIndex === -1 ? raw : raw.slice(0, suffixIndex);
+  const suffix = suffixIndex === -1 ? '' : raw.slice(suffixIndex);
+  if (!pathname) return raw;
+
+  const normalized = pathname
+    .replace(/\\/g, '/')
+    .replace(/^(?:(?:\.\.\/)|(?:\.\/))+/, '')
+    .replace(/^\/+/, '');
+  const cleanRootPath = CLEAN_ROOT_PATHS[normalized];
+  return `${cleanRootPath || `/${normalized}`}${suffix}`;
 }
 
 function prefixHtmlRefs(html, prefix) {
@@ -542,8 +607,8 @@ function normalizePost(rawPost) {
   post.projectImages = splitLines(post.projectImages);
   post.keywords = splitLines(post.keywords);
   post.category = post.category || post.blogCategory || post.functionLabel || post.solutionLabel || (post.contentType === 'case' ? 'Case Study' : 'Blog');
-  post.seoTitle = post.seoTitle || `${post.title || '13ASRS Article'} | 13ASRS`;
-  post.seoDescription = post.seoDescription || post.summary || post.plainText.slice(0, 160);
+  post.seoTitle = normalizeSeoTitle(post.seoTitle || `${post.title || '13ASRS Article'} | 13ASRS`);
+  post.seoDescription = normalizeSeoDescription(post.seoDescription || post.summary || post.plainText);
 
   if (!post.title) throw new Error(`${post.fileName}: title is required.`);
   if (!post.contentHtml) throw new Error(`${post.fileName}: contentHtml is required.`);
@@ -587,9 +652,73 @@ function resolveRelatedItems(items, contentType, relatedLookup, siteHref) {
   });
 }
 
+function getAbsoluteAssetUrl(value) {
+  const raw = String(value || '').trim();
+  if (!raw || /^(?:data|blob):/i.test(raw)) return '';
+  try {
+    if (/^https?:\/\//i.test(raw)) return new URL(raw).href;
+    const pathname = raw.replace(/\\/g, '/').replace(/^(?:(?:\.\.\/)|(?:\.\/))+/, '');
+    return new URL(pathname.startsWith('/') ? pathname : `/${pathname}`, SITE_ORIGIN).href;
+  } catch {
+    return '';
+  }
+}
+
+function renderStructuredData(post, canonicalUrl, cover, keywords, category) {
+  const isCase = post.contentType === 'case';
+  const imageUrl = getAbsoluteAssetUrl(cover);
+  const article = {
+    '@type': isCase ? 'Article' : 'BlogPosting',
+    '@id': `${canonicalUrl}#article`,
+    headline: post.title,
+    description: post.seoDescription,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl,
+    },
+    datePublished: post.date,
+    dateModified: post.date,
+    author: {
+      '@type': post.author === '13ASRS' ? 'Organization' : 'Person',
+      name: post.author,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: '13ASRS',
+      url: SITE_ORIGIN,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${SITE_ORIGIN}/logo.jpg`,
+      },
+    },
+    articleSection: category,
+  };
+  if (imageUrl) article.image = imageUrl;
+  if (keywords.length) article.keywords = keywords.join(', ');
+
+  const collectionUrl = `${SITE_ORIGIN}${isCase ? '/case-studies' : '/blog'}`;
+  const graph = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      article,
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${canonicalUrl}#breadcrumb`,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_ORIGIN}/` },
+          { '@type': 'ListItem', position: 2, name: isCase ? 'Case Studies' : 'Blog', item: collectionUrl },
+          { '@type': 'ListItem', position: 3, name: post.title, item: canonicalUrl },
+        ],
+      },
+    ],
+  };
+
+  return `<script type="application/ld+json">${JSON.stringify(graph).replace(/</g, '\\u003c')}</script>`;
+}
+
 function renderStaticPost(post, relatedLookup, internalLinks) {
   const prefix = getRelativePrefix(post.outputPath);
-  const siteHref = href => prefixSitePath(href, prefix);
+  const siteHref = toCleanSiteHref;
   const isCase = post.contentType === 'case';
   const backHref = siteHref(isCase ? 'case-studies.html' : 'blog.html');
   const backLabel = isCase ? 'Back to Case Studies' : 'Back to Blog';
@@ -607,6 +736,8 @@ function renderStaticPost(post, relatedLookup, internalLinks) {
   ].filter(([, value]) => value);
   const projectGalleryHtml = renderProjectGallery(post.projectImages, prefix);
   const seoKeywords = splitLines(post.seoKeywords || post.keywords);
+  const canonicalUrl = `${SITE_ORIGIN}/${getPublicUrlPath(post.outputPath)}`;
+  const structuredDataHtml = renderStructuredData(post, canonicalUrl, cover, seoKeywords, category);
   let articleSections = [
     { id: 'summary', source: 'summary', title: 'Summary', html: renderOptionalSection('Summary', post.summary, 'summary') },
     { id: 'technology', source: 'technology', title: 'Technology', html: renderListSection('Technology', post.technology, 'technology') },
@@ -616,9 +747,6 @@ function renderStaticPost(post, relatedLookup, internalLinks) {
     { id: 'results-roi', source: 'results-roi', title: 'Results & ROI', html: renderListSection('Results & ROI', post.results, 'results-roi') },
     { id: 'equipment-list', source: 'equipment-list', title: 'Equipment List', html: renderListSection('Equipment List', post.equipmentList, 'equipment-list') },
     ...renderOrderedBodySections(post.contentHtml, prefix).map(section => ({ ...section, source: 'body' })),
-    { id: 'seo-title', source: 'seo-title', title: 'SEO Title', html: renderOptionalSection('SEO Title', post.seoTitle, 'seo-title') },
-    { id: 'seo-description', source: 'seo-description', title: 'SEO Description', html: renderOptionalSection('SEO Description', post.seoDescription, 'seo-description') },
-    { id: 'seo-keywords', source: 'seo-keywords', title: 'SEO Keywords', html: renderListSection('SEO Keywords', seoKeywords, 'seo-keywords') },
   ].filter(section => section.html);
   const linkResult = applyApprovedInternalLinks(articleSections, post, internalLinks);
   articleSections = linkResult.sections;
@@ -656,7 +784,15 @@ function renderStaticPost(post, relatedLookup, internalLinks) {
     <title>${escapeHtml(post.seoTitle)}</title>
     <meta name="description" content="${escapeHtml(post.seoDescription)}">
     ${seoKeywords.length ? `<meta name="keywords" content="${escapeHtml(seoKeywords.join(', '))}">` : ''}
-    <link rel="canonical" href="https://13asrs.com/${escapeHtml(getPublicUrlPath(post.outputPath))}">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="${escapeHtml(post.seoTitle)}">
+    <meta property="og:description" content="${escapeHtml(post.seoDescription)}">
+    <meta property="og:url" content="${escapeHtml(canonicalUrl)}">
+    ${getAbsoluteAssetUrl(cover) ? `<meta property="og:image" content="${escapeHtml(getAbsoluteAssetUrl(cover))}">` : ''}
+    <meta property="article:published_time" content="${escapeHtml(post.date)}">
+    <meta name="twitter:card" content="${getAbsoluteAssetUrl(cover) ? 'summary_large_image' : 'summary'}">
+    <link rel="canonical" href="${escapeHtml(canonicalUrl)}">
+    ${structuredDataHtml}
     <link rel="stylesheet" href="${escapeHtml(siteHref('style.css'))}">
 </head>
 <body class="static-post-page ${isCase ? 'static-case-page' : 'static-blog-page'}">

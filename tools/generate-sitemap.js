@@ -30,13 +30,12 @@ const DISALLOWED_PATHS = new Set([
 
 const ROOT_PRIORITY = {
   '/': '1.0',
-  '/index.html': '1.0',
-  '/solutions.html': '0.9',
-  '/industries.html': '0.9',
-  '/case-studies.html': '0.9',
-  '/blog.html': '0.9',
-  '/contact.html': '0.9',
-  '/about.html': '0.7',
+  '/solutions': '0.9',
+  '/industries': '0.9',
+  '/case-studies': '0.9',
+  '/blog': '0.9',
+  '/contact': '0.9',
+  '/about': '0.7',
 };
 
 function toPosixPath(value) {
@@ -104,7 +103,7 @@ function getLastMod(filePath, publicPath, existingLastMods) {
 }
 
 function getChangeFreq(publicPath) {
-  if (publicPath === '/' || publicPath === '/blog.html' || publicPath === '/case-studies.html') {
+  if (publicPath === '/' || publicPath === '/blog' || publicPath === '/case-studies') {
     return 'weekly';
   }
   if (publicPath.startsWith('/blog/') || publicPath.startsWith('/case/')) {
@@ -168,7 +167,7 @@ function generateSitemap() {
   for (const filePath of walk(ROOT)) {
     const publicPath = getCanonicalPath(filePath);
     if (!publicPath || DISALLOWED_PATHS.has(publicPath)) continue;
-    if (!publicPath.endsWith('/') && !publicPath.endsWith('.html')) continue;
+    if (!publicPath.startsWith('/')) continue;
 
     const existing = urlsByPath.get(publicPath);
     const lastmod = getLastMod(filePath, publicPath, existingLastMods);
