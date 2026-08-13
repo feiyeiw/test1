@@ -224,9 +224,9 @@ function renderPageModule(module, page) {
       : text;
     const caseLinks = `
                     <div class="case-link-stack">
-                        <a class="text-link" href="case-studies.html?solution=asrs#caseGrid">ASRS cases</a>
-                        <a class="text-link" href="case-studies.html?industry=manufacturing-industrial#caseGrid">Manufacturing cases</a>
-                        <a class="text-link" href="case-studies.html?industry=packaging-printing#caseGrid">Packaging cases</a>
+                        <a class="text-link" href="/case-studies?solution=asrs#caseGrid">ASRS cases</a>
+                        <a class="text-link" href="/case-studies?industry=manufacturing-industrial#caseGrid">Manufacturing cases</a>
+                        <a class="text-link" href="/case-studies?industry=packaging-printing#caseGrid">Packaging cases</a>
                     </div>`;
     return `
         <section class="${latestSectionClass}">

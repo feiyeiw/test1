@@ -71,9 +71,9 @@ function upgradeFooter() {
             <div class="footer-content">
                 <div class="footer-logo"><img src="/logo.jpg?v=20260710" alt="13ASRS" onerror="this.replaceWith(document.createTextNode('13ASRS'))"></div>
                 <div class="footer-columns">
-                    <div><h3>Solutions</h3><a href="/solutions.html#asrs">Warehouse Automation</a><a href="/solutions.html#asrs">ASRS Solutions</a><a href="/solutions.html#factory">Smart Factory Automation</a><a href="/solutions.html#machinery">Industrial Manufacturing</a></div>
-                    <div><h3>Industries</h3><a href="/industries.html">Warehousing</a><a href="/industries.html#manufacturing">Manufacturing</a><a href="/industries.html#food">Food & Beverage</a><a href="/industries.html#packaging">Packaging</a><a href="/industries.html#automotive">Automotive</a><a href="/industries.html#electronics">Electronics</a></div>
-                    <div><h3>Resources</h3><a href="/case-studies.html">Case Studies</a><a href="/blog.html">Knowledge Center</a><a href="/blog.html">Blog</a><a href="https://www.youtube.com/channel/UCg4UaJdHvit-Ny9QNRPD7Mw" target="_blank" rel="noopener">YouTube Channel</a></div>
+                    <div><h3>Solutions</h3><a href="/solutions#asrs">Warehouse Automation</a><a href="/solutions#asrs">ASRS Solutions</a><a href="/solutions#factory">Smart Factory Automation</a><a href="/solutions#machinery">Industrial Manufacturing</a></div>
+                    <div><h3>Industries</h3><a href="/industries">Warehousing</a><a href="/industries#manufacturing">Manufacturing</a><a href="/industries#food">Food & Beverage</a><a href="/industries#packaging">Packaging</a><a href="/industries#automotive">Automotive</a><a href="/industries#electronics">Electronics</a></div>
+                    <div><h3>Resources</h3><a href="/case-studies">Case Studies</a><a href="/blog">Knowledge Center</a><a href="/blog">Blog</a><a href="https://www.youtube.com/channel/UCg4UaJdHvit-Ny9QNRPD7Mw" target="_blank" rel="noopener">YouTube Channel</a></div>
                     <div><h3>Contact</h3><span>Website: 13asrs.com</span><span>Email: pjm@13asrs.com</span><span>Location: China</span></div>
                 </div>
             </div>
@@ -90,7 +90,7 @@ const HOME_FALLBACK_CASES = [
         solutionLabel: 'ASRS / Automated Storage & Retrieval Systems',
         summary: '18m shuttle ASRS with WMS integration improves storage density, throughput, and material handling safety.',
         coverImage: 'solutions-asrs-technology.webp',
-        href: 'case-studies.html',
+        href: '/case-studies',
     },
     {
         id: 'fallback-pharma-asrs',
@@ -99,7 +99,7 @@ const HOME_FALLBACK_CASES = [
         solutionLabel: 'ASRS / Automated Storage & Retrieval Systems',
         summary: 'Crane ASRS supports controlled storage, batch visibility, traceability, and reliable 24/7 handling.',
         coverImage: 'system-crane.webp',
-        href: 'case-studies.html',
+        href: '/case-studies',
     },
     {
         id: 'fallback-ecommerce-miniload',
@@ -108,7 +108,7 @@ const HOME_FALLBACK_CASES = [
         solutionLabel: 'ASRS / Automated Storage & Retrieval Systems',
         summary: 'Dense miniload automation helps handle high SKU mix, order waves, and labor-intensive picking.',
         coverImage: 'system-shuttle.webp',
-        href: 'case-studies.html',
+        href: '/case-studies',
     },
     {
         id: 'fallback-manufacturing-agv',
@@ -117,7 +117,7 @@ const HOME_FALLBACK_CASES = [
         solutionLabel: 'Conveyor Systems / Automated Transport',
         summary: 'AGV routes connect storage, production, and assembly flow to reduce manual line feeding.',
         coverImage: 'system-agv.webp',
-        href: 'case-studies.html',
+        href: '/case-studies',
     },
     {
         id: 'fallback-packaging-line',
@@ -126,7 +126,7 @@ const HOME_FALLBACK_CASES = [
         solutionLabel: 'Packaging Automation',
         summary: 'Browse packaging, filling, labeling, cartoning, printing, and production line automation references.',
         coverImage: 'solutions-production-line.webp',
-        href: 'case-studies.html?industry=packaging-printing&solution=packaging-automation#caseGrid',
+        href: '/case-studies?industry=packaging-printing&solution=packaging-automation#caseGrid',
     },
     {
         id: 'fallback-cold-storage',
@@ -135,7 +135,7 @@ const HOME_FALLBACK_CASES = [
         solutionLabel: 'Cold Storage / Low-Temperature Automation',
         summary: 'Explore low-temperature automation references for cold chain storage and frozen food operations.',
         coverImage: 'hero-case-studies-automation.webp',
-        href: 'case-studies.html?industry=cold-chain-frozen-food&solution=cold-storage-automation#caseGrid',
+        href: '/case-studies?industry=cold-chain-frozen-food&solution=cold-storage-automation#caseGrid',
     },
 ];
 
@@ -147,7 +147,7 @@ function getCaseLink(caseItem) {
     if (outputPath) return outputPath;
 
     const slug = String(caseItem.urlSlug || caseItem.slug || '').trim();
-    return slug ? `/case/${encodeURIComponent(slug)}/` : 'case-studies.html';
+    return slug ? `/case/${encodeURIComponent(slug)}/` : '/case-studies';
 }
 
 function getFallbackCaseCover(index = 0) {
@@ -181,7 +181,7 @@ function renderLatestCaseSlider(caseItems) {
     return `
         <div class="latest-case-slider" data-latest-case-slider>
             <div class="latest-case-controls">
-                <a class="text-link" href="case-studies.html">Browse all case studies</a>
+                <a class="text-link" href="/case-studies">Browse all case studies</a>
             </div>
             <div class="latest-case-frame">
                 <button class="slider-btn slider-btn-prev" type="button" data-slider-prev aria-label="Previous case">&lsaquo;</button>
@@ -281,50 +281,50 @@ function renderModuleHeader(eyebrow, title, text) {
 }
 
 const HOME_CASE_LINKS = {
-    'home-core-asrs': 'case-studies.html?solution=asrs#caseGrid',
-    'home-core-factory': 'case-studies.html?industry=manufacturing-industrial&solution=conveyor-transport#caseGrid',
-    'home-core-machinery': 'case-studies.html?industry=manufacturing-industrial#caseGrid',
-    'home-case-chemical': 'case-studies.html?industry=chemical-petrochemical&solution=asrs#caseGrid',
-    'home-case-pharma': 'case-studies.html?industry=pharmaceutical-biotech&solution=asrs#caseGrid',
-    'home-case-agv': 'case-studies.html?industry=manufacturing-industrial&solution=conveyor-transport#caseGrid',
+    'home-core-asrs': '/case-studies?solution=asrs#caseGrid',
+    'home-core-factory': '/case-studies?industry=manufacturing-industrial&solution=conveyor-transport#caseGrid',
+    'home-core-machinery': '/case-studies?industry=manufacturing-industrial#caseGrid',
+    'home-case-chemical': '/case-studies?industry=chemical-petrochemical&solution=asrs#caseGrid',
+    'home-case-pharma': '/case-studies?industry=pharmaceutical-biotech&solution=asrs#caseGrid',
+    'home-case-agv': '/case-studies?industry=manufacturing-industrial&solution=conveyor-transport#caseGrid',
 };
 
 const SOLUTIONS_CASE_LINKS = {
-    'solutions-factory-production': 'case-studies.html?solution=production-line#caseGrid',
-    'solutions-factory-robotic': 'case-studies.html?solution=robotics-integration#caseGrid',
-    'solutions-factory-flow': 'case-studies.html?solution=conveyor-transport#caseGrid',
-    'solutions-factory-upgrade': 'case-studies.html?solution=smart-factory#caseGrid',
-    'solutions-machinery-printing': 'case-studies.html?industry=packaging-printing&solution=printing-inkjet-flexo-ci#caseGrid',
-    'solutions-machinery-filling': 'case-studies.html?industry=packaging-printing&solution=film-blowing-extrusion#caseGrid',
-    'solutions-machinery-laser': 'case-studies.html?solution=laser-industrial-machining#caseGrid',
+    'solutions-factory-production': '/case-studies?solution=production-line#caseGrid',
+    'solutions-factory-robotic': '/case-studies?solution=robotics-integration#caseGrid',
+    'solutions-factory-flow': '/case-studies?solution=conveyor-transport#caseGrid',
+    'solutions-factory-upgrade': '/case-studies?solution=smart-factory#caseGrid',
+    'solutions-machinery-printing': '/case-studies?industry=packaging-printing&solution=printing-inkjet-flexo-ci#caseGrid',
+    'solutions-machinery-filling': '/case-studies?industry=packaging-printing&solution=film-blowing-extrusion#caseGrid',
+    'solutions-machinery-laser': '/case-studies?solution=laser-industrial-machining#caseGrid',
 };
 
 const INDUSTRIES_CASE_LINKS = {
-    'industries-proof-1': 'case-studies.html#caseGrid',
-    'industries-proof-2': 'case-studies.html#caseGrid',
-    'industries-proof-3': 'case-studies.html?solution=asrs#caseGrid',
-    'industries-proof-4': 'case-studies.html?solution=smart-factory#caseGrid',
-    'industries-proof-5': 'case-studies.html?industry=manufacturing-industrial#caseGrid',
-    'industry-chemical': 'case-studies.html?industry=chemical-petrochemical#caseGrid',
-    'industry-food': 'case-studies.html?industry=food-beverage#caseGrid',
-    'industry-packaging': 'case-studies.html?industry=packaging-printing#caseGrid',
-    'industry-cold': 'case-studies.html?industry=cold-chain-frozen-food#caseGrid',
-    'industry-pharma': 'case-studies.html?industry=pharmaceutical-biotech#caseGrid',
-    'industry-printing': 'case-studies.html?industry=packaging-printing&solution=printing-inkjet-flexo-ci#caseGrid',
-    'industry-manufacturing': 'case-studies.html?industry=manufacturing-industrial#caseGrid',
-    'industry-logistics': 'case-studies.html?industry=logistics-distribution#caseGrid',
-    'industry-electronics': 'case-studies.html?industry=electronics-semiconductors#caseGrid',
-    'industry-automotive': 'case-studies.html?industry=automotive-transportation#caseGrid',
-    'industry-building-materials': 'case-studies.html?solution=material-pallet-handling#caseGrid',
-    'tech-asrs': 'case-studies.html?solution=asrs#caseGrid',
-    'tech-shuttle': 'case-studies.html?solution=asrs#caseGrid',
-    'tech-stacker': 'case-studies.html?solution=asrs#caseGrid',
-    'tech-agv': 'case-studies.html?solution=conveyor-transport#caseGrid',
-    'tech-smart-factory': 'case-studies.html?solution=smart-factory#caseGrid',
-    'tech-printing': 'case-studies.html?industry=packaging-printing#caseGrid',
-    'tech-filling': 'case-studies.html?solution=filling-bottling#caseGrid',
-    'tech-film': 'case-studies.html?solution=film-blowing-extrusion#caseGrid',
-    'tech-laser': 'case-studies.html?solution=laser-industrial-machining#caseGrid',
+    'industries-proof-1': '/case-studies#caseGrid',
+    'industries-proof-2': '/case-studies#caseGrid',
+    'industries-proof-3': '/case-studies?solution=asrs#caseGrid',
+    'industries-proof-4': '/case-studies?solution=smart-factory#caseGrid',
+    'industries-proof-5': '/case-studies?industry=manufacturing-industrial#caseGrid',
+    'industry-chemical': '/case-studies?industry=chemical-petrochemical#caseGrid',
+    'industry-food': '/case-studies?industry=food-beverage#caseGrid',
+    'industry-packaging': '/case-studies?industry=packaging-printing#caseGrid',
+    'industry-cold': '/case-studies?industry=cold-chain-frozen-food#caseGrid',
+    'industry-pharma': '/case-studies?industry=pharmaceutical-biotech#caseGrid',
+    'industry-printing': '/case-studies?industry=packaging-printing&solution=printing-inkjet-flexo-ci#caseGrid',
+    'industry-manufacturing': '/case-studies?industry=manufacturing-industrial#caseGrid',
+    'industry-logistics': '/case-studies?industry=logistics-distribution#caseGrid',
+    'industry-electronics': '/case-studies?industry=electronics-semiconductors#caseGrid',
+    'industry-automotive': '/case-studies?industry=automotive-transportation#caseGrid',
+    'industry-building-materials': '/case-studies?solution=material-pallet-handling#caseGrid',
+    'tech-asrs': '/case-studies?solution=asrs#caseGrid',
+    'tech-shuttle': '/case-studies?solution=asrs#caseGrid',
+    'tech-stacker': '/case-studies?solution=asrs#caseGrid',
+    'tech-agv': '/case-studies?solution=conveyor-transport#caseGrid',
+    'tech-smart-factory': '/case-studies?solution=smart-factory#caseGrid',
+    'tech-printing': '/case-studies?industry=packaging-printing#caseGrid',
+    'tech-filling': '/case-studies?solution=filling-bottling#caseGrid',
+    'tech-film': '/case-studies?solution=film-blowing-extrusion#caseGrid',
+    'tech-laser': '/case-studies?solution=laser-industrial-machining#caseGrid',
 };
 
 function getModuleItemHref(item = {}) {
@@ -551,9 +551,9 @@ function renderPageModule(module) {
                 : text;
             const caseLinks = `
                 <div class="case-link-stack">
-                    <a class="text-link" href="case-studies.html?solution=asrs#caseGrid">ASRS cases</a>
-                    <a class="text-link" href="case-studies.html?industry=manufacturing-industrial#caseGrid">Manufacturing cases</a>
-                    <a class="text-link" href="case-studies.html?industry=packaging-printing#caseGrid">Packaging cases</a>
+                    <a class="text-link" href="/case-studies?solution=asrs#caseGrid">ASRS cases</a>
+                    <a class="text-link" href="/case-studies?industry=manufacturing-industrial#caseGrid">Manufacturing cases</a>
+                    <a class="text-link" href="/case-studies?industry=packaging-printing#caseGrid">Packaging cases</a>
                 </div>
             `;
             return `

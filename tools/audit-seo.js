@@ -16,6 +16,13 @@ const ROOT_PAGES = new Map([
 ]);
 const ROOT_FILES_BY_PATH = new Map([...ROOT_PAGES].map(([file, publicPath]) => [publicPath, file]));
 const TRAILING_CONNECTOR_PATTERN = /\b(?:a|an|and|are|as|at|by|for|from|how|in|is|of|on|or|the|this|to|with|why)\.\.\.$/i;
+const LINK_SOURCE_FILES = [
+  'site-upgrade.js',
+  'tools/bake-case-studies.js',
+  'tools/bake-page-modules.js',
+  'tools/bake-static-indexes.js',
+  'tools/generate-static-post.js',
+];
 
 function getDetailPages(directory) {
   const root = path.join(ROOT, directory);
@@ -228,6 +235,13 @@ function main() {
   for (const file of ['admin.html', 'login.html']) {
     const html = fs.readFileSync(path.join(ROOT, file), 'utf8');
     if (!/name=["']robots["'][^>]+content=["'][^"']*noindex/i.test(html)) errors.push(`${file}: missing noindex`);
+  }
+
+  for (const file of LINK_SOURCE_FILES) {
+    const source = fs.readFileSync(path.join(ROOT, file), 'utf8');
+    for (const href of getInternalHtmlLinks(source)) {
+      errors.push(`${file}: redirecting generated internal link ${href}`);
+    }
   }
 
   if (errors.length) {

@@ -202,7 +202,7 @@ function renderLatestCaseSlider(items) {
   return `
         <div class="latest-case-slider" data-latest-case-slider>
             <div class="latest-case-controls">
-                <a class="text-link" href="case-studies.html">Browse all case studies</a>
+                <a class="text-link" href="/case-studies">Browse all case studies</a>
             </div>
             <div class="latest-case-frame">
                 <button class="slider-btn slider-btn-prev" type="button" data-slider-prev aria-label="Previous case">&lsaquo;</button>
