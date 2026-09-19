@@ -252,11 +252,13 @@ function updateHtmlFiles(distDir, fileMap) {
       // Replace all references to hashed files
       for (const [originalName, hashedName] of Object.entries(fileMap)) {
         // Create regex to match references to original file name
-        // This matches src="originalName", src="../originalName", href="originalName", url("originalName") etc.
+        // Match root-relative, current-directory, and parent-directory asset references.
         const escapedName = escapeRegExp(originalName);
-        // Match patterns like: href="file", src="file", url("file"), url('file')
-        const regex = new RegExp(`(["'\\(])\\s*((?:\\.\\./)*)${escapedName}\\s*(["'\\s>])`, 'g');
-        const newContent = content.replace(regex, `$1$2${hashedName}$3`);
+        const regex = new RegExp(
+          `(["'\\(])\\s*((?:/|\\./|(?:\\.\\./)+)?)${escapedName}(?=[?#"'\\s>])`,
+          'g'
+        );
+        const newContent = content.replace(regex, `$1$2${hashedName}`);
 
         if (newContent !== content) {
           content = newContent;
@@ -323,6 +325,30 @@ function injectSiteIcons(distDir) {
   }
 }
 
+function verifyStaticPostAssets(distDir) {
+  const files = getFilesRecursive(distDir, ['.html']);
+  const missing = [];
+
+  for (const filePath of files) {
+    const relativePath = path.relative(distDir, filePath).replace(/\\/g, '/');
+    if (!/^(blog|case)\//.test(relativePath)) continue;
+
+    const content = fs.readFileSync(filePath, 'utf8');
+    for (const match of content.matchAll(/\b(?:href|src)=["'](\/[^"'?#]+\.(?:css|js))(?:[?#][^"']*)?["']/gi)) {
+      const assetPath = path.join(distDir, match[1].replace(/^\/+/, ''));
+      if (!fs.existsSync(assetPath)) {
+        missing.push(`${relativePath}: ${match[1]}`);
+      }
+    }
+  }
+
+  if (missing.length) {
+    throw new Error(`Static post assets are missing:\n${missing.join('\n')}`);
+  }
+
+  console.log('Verified CSS/JS assets for all static blog and case pages');
+}
+
 (async function main() {
   // Keep robots/sitemap/RSS aligned with newly generated static blog and case pages.
   generateSitemap();
@@ -338,6 +364,7 @@ function injectSiteIcons(distDir) {
   normalizeStaticPostLogoReferences(distDir);
   injectSiteIcons(distDir);
   injectRssDiscovery(distDir);
+  verifyStaticPostAssets(distDir);
 
   console.log('Build completed successfully!');
   console.log(`Files in ${distDir}:`, fs.readdirSync(distDir));
