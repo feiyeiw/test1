@@ -172,8 +172,10 @@ const RUNTIME_TRANSLATIONS = {
 };
 
 function getCurrentPageKey() {
-    const path = window.location.pathname;
-    const filename = path.substring(path.lastIndexOf('/') + 1) || 'index.html';
+    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    if (pathSegments.length > 1) return null;
+
+    const filename = (pathSegments[0] || 'index.html').toLowerCase();
     const pageName = filename.replace(/\.html$/, '') || 'index';
 
     const htmlToJsonKey = {
@@ -195,44 +197,64 @@ function getCurrentPageKey() {
     return htmlToJsonKey[pageName] || null;
 }
 
-async function loadTranslationFile(filename) {
-    if (TRANSLATION_CACHE[filename]) {
-        return TRANSLATION_CACHE[filename];
+async function loadTranslationFile(filename, { optional = false } = {}) {
+    if (!/^translations-[a-z0-9-]+\.json$/i.test(filename)) {
+        if (optional) console.warn('Ignoring invalid optional translation file name:', filename);
+        else console.error('Invalid translation file name:', filename);
+        return null;
     }
+
+    const url = new URL(filename, `${window.location.origin}/`).href;
+    if (Object.prototype.hasOwnProperty.call(TRANSLATION_CACHE, url)) {
+        return TRANSLATION_CACHE[url];
+    }
+
     try {
-        const res = await fetch(filename);
+        const res = await fetch(url);
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
-        TRANSLATION_CACHE[filename] = data;
+        TRANSLATION_CACHE[url] = data;
         return data;
     } catch (e) {
-        console.error('Failed to load ' + filename + ':', e);
+        TRANSLATION_CACHE[url] = null;
+        if (optional) {
+            console.warn('Optional translation file unavailable; original English text remains visible:', filename, e);
+        } else {
+            console.error('Failed to load ' + filename + ':', e);
+        }
         return null;
     }
 }
 
 async function loadTranslations() {
     try {
+        translations = {};
         const commonData = await loadTranslationFile('translations-common.json');
-        if (!commonData) {
-            console.error('Failed to load common translations');
+        if (!commonData || typeof commonData !== 'object' || Array.isArray(commonData)) {
             return;
         }
 
-        translations = {};
         for (const lang of Object.keys(commonData)) {
             translations[lang] = { common: commonData[lang] };
         }
 
         const pageKey = getCurrentPageKey();
-        if (pageKey) {
-            const pageFile = 'translations-' + pageKey.replace(/_/g, '-') + '.json';
-            const pageData = await loadTranslationFile(pageFile);
-            if (pageData) {
-                for (const lang of Object.keys(pageData)) {
-                    if (!translations[lang]) translations[lang] = {};
-                    translations[lang][pageKey] = pageData[lang];
-                }
+        if (!pageKey) return;
+
+        const manifest = await loadTranslationFile('translations-manifest.json', { optional: true });
+        if (!manifest || typeof manifest !== 'object' || Array.isArray(manifest)) return;
+
+        const manifestKey = pageKey.replace(/_/g, '-');
+        const pageFileBase = manifest[manifestKey];
+        if (typeof pageFileBase !== 'string' || !/^translations-[a-z0-9-]+$/i.test(pageFileBase)) {
+            return;
+        }
+
+        const pageData = await loadTranslationFile(`${pageFileBase}.json`, { optional: true });
+        if (pageData && typeof pageData === 'object' && !Array.isArray(pageData)) {
+            for (const lang of Object.keys(pageData)) {
+                if (!translations[lang]) translations[lang] = {};
+                translations[lang][pageKey] = pageData[lang];
             }
         }
     } catch (e) {

@@ -13,6 +13,7 @@ const ROOT_PAGES = new Map([
   ['blog.html', '/blog'],
   ['about.html', '/about'],
   ['contact.html', '/contact'],
+  ['asrs-cost.html', '/asrs-cost'],
 ]);
 const ROOT_FILES_BY_PATH = new Map([...ROOT_PAGES].map(([file, publicPath]) => [publicPath, file]));
 const TRAILING_CONNECTOR_PATTERN = /\b(?:a|an|and|are|as|at|by|for|from|how|in|is|of|on|or|the|this|to|with|why)\.\.\.$/i;

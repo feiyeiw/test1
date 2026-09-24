@@ -36,6 +36,45 @@ function escapeHtml(value) {
     }[char]));
 }
 
+function normalizeLegacyCaseStudiesHref(value) {
+    if (typeof value !== 'string') return value;
+    const normalized = value.replace(/^(?:\/)?case-studies\.html(?=$|[?#])/i, '/case-studies');
+    if (!/^\/case-studies(?=$|[?#])/i.test(normalized)) return normalized;
+
+    const hashIndex = normalized.indexOf('#');
+    const beforeHash = hashIndex === -1 ? normalized : normalized.slice(0, hashIndex);
+    const fragment = hashIndex === -1 ? '' : normalized.slice(hashIndex);
+    const queryIndex = beforeHash.indexOf('?');
+    if (queryIndex === -1) return normalized;
+
+    const searchParams = new URLSearchParams(beforeHash.slice(queryIndex + 1));
+    const solutionValues = searchParams.getAll('solution');
+    if (!solutionValues.length || !solutionValues.every(value => value === 'production-line')) {
+        return normalized;
+    }
+
+    searchParams.delete('solution');
+    const query = searchParams.toString();
+    return `/case-studies${query ? `?${query}` : ''}${fragment}`;
+}
+
+function normalizePageModuleLinks(value) {
+    if (Array.isArray(value)) {
+        return value.map(normalizePageModuleLinks);
+    }
+    if (!value || typeof value !== 'object') {
+        return value;
+    }
+
+    const normalized = {};
+    for (const [key, nestedValue] of Object.entries(value)) {
+        normalized[key] = key === 'href' || key === 'ctaHref'
+            ? normalizeLegacyCaseStudiesHref(nestedValue)
+            : normalizePageModuleLinks(nestedValue);
+    }
+    return normalized;
+}
+
 function getBlogCover(blog) {
     if (blog.coverImage) return blog.coverImage;
     const imgMatch = (blog.content || '').match(/<img[^>]+src=["']([^"']+)["'][^>]*>/i);
@@ -290,7 +329,7 @@ const HOME_CASE_LINKS = {
 };
 
 const SOLUTIONS_CASE_LINKS = {
-    'solutions-factory-production': '/case-studies?solution=production-line#caseGrid',
+    'solutions-factory-production': '/case-studies#caseGrid',
     'solutions-factory-robotic': '/case-studies?solution=robotics-integration#caseGrid',
     'solutions-factory-flow': '/case-studies?solution=conveyor-transport#caseGrid',
     'solutions-factory-upgrade': '/case-studies?solution=smart-factory#caseGrid',
@@ -820,7 +859,8 @@ async function renderPageModules() {
         }
 
         const pageData = await pageApi.getPublicPage(page);
-        const modules = Array.isArray(pageData.modules) ? pageData.modules : [];
+        const rawModules = Array.isArray(pageData.modules) ? pageData.modules : [];
+        const modules = normalizePageModuleLinks(rawModules);
         if (!modules.length) return;
 
         const pageHeroModule = modules.find(module => module.variant === 'page-hero');

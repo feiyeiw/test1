@@ -42,7 +42,7 @@ const PAGE_MODULE_SNAPSHOT = {
             "id": "home-core-asrs",
             "title": "ASRS & Smart Warehouse Solutions",
             "text": "Shuttle ASRS, stacker crane, miniload, cold storage, conveyors, WMS/WES, and AGV logistics.",
-            "href": "case-studies.html?solution=asrs#caseGrid",
+            "href": "/case-studies?solution=asrs#caseGrid",
             "image": "",
             "alt": ""
           },
@@ -50,7 +50,7 @@ const PAGE_MODULE_SNAPSHOT = {
             "id": "home-core-factory",
             "title": "Smart Factory Automation",
             "text": "Automated production lines, robotic automation, intelligent material handling, factory upgrades, and multi-machine systems.",
-            "href": "case-studies.html?industry=manufacturing-industrial&solution=conveyor-transport#caseGrid",
+            "href": "/case-studies?industry=manufacturing-industrial&solution=conveyor-transport#caseGrid",
             "image": "",
             "alt": ""
           },
@@ -58,7 +58,7 @@ const PAGE_MODULE_SNAPSHOT = {
             "id": "home-core-machinery",
             "title": "Industrial Machinery Solutions",
             "text": "Printing, packaging, filling, film blowing, bag making, laser equipment, and supporting manufacturing systems.",
-            "href": "case-studies.html?industry=manufacturing-industrial#caseGrid",
+            "href": "/case-studies?industry=manufacturing-industrial#caseGrid",
             "image": "",
             "alt": ""
           }
@@ -84,7 +84,7 @@ const PAGE_MODULE_SNAPSHOT = {
             "id": "home-case-chemical",
             "title": "Shuttle ASRS Warehouse for Chemical Industry",
             "text": "Height: 18m\nCapacity: +300%\nThroughput: +60%\nLabor: Reduced",
-            "href": "case-studies.html?industry=chemical-petrochemical&solution=asrs#caseGrid",
+            "href": "/case-studies?industry=chemical-petrochemical&solution=asrs#caseGrid",
             "image": "",
             "alt": ""
           },
@@ -92,7 +92,7 @@ const PAGE_MODULE_SNAPSHOT = {
             "id": "home-case-pharma",
             "title": "Stacker Crane ASRS for Pharmaceutical Storage",
             "text": "System: Crane ASRS\nTraceability: WMS\nQuality: Controlled\nOperation: 24/7",
-            "href": "case-studies.html?industry=pharmaceutical-biotech&solution=asrs#caseGrid",
+            "href": "/case-studies?industry=pharmaceutical-biotech&solution=asrs#caseGrid",
             "image": "",
             "alt": ""
           },
@@ -100,7 +100,7 @@ const PAGE_MODULE_SNAPSHOT = {
             "id": "home-case-agv",
             "title": "AGV Logistics for Smart Factory Material Flow",
             "text": "AGV: Multi-route\nLine Feed: Automated\nSafety: Improved\nHandling: Reduced",
-            "href": "case-studies.html?industry=manufacturing-industrial&solution=conveyor-transport#caseGrid",
+            "href": "/case-studies?industry=manufacturing-industrial&solution=conveyor-transport#caseGrid",
             "image": "",
             "alt": ""
           }
@@ -178,7 +178,7 @@ const PAGE_MODULE_SNAPSHOT = {
         "image": "",
         "youtubeUrl": "",
         "ctaText": "Browse all case studies",
-        "ctaHref": "case-studies.html",
+        "ctaHref": "/case-studies",
         "items": []
       },
       {
@@ -371,7 +371,7 @@ const PAGE_MODULE_SNAPSHOT = {
             "id": "solutions-factory-production",
             "title": "Production Line Automation",
             "text": "Improve production efficiency and process consistency through integrated manufacturing systems.",
-            "href": "case-studies.html?solution=production-line#caseGrid",
+            "href": "/case-studies#caseGrid",
             "image": "solutions-production-line.webp",
             "alt": "Production line automation"
           },
@@ -379,7 +379,7 @@ const PAGE_MODULE_SNAPSHOT = {
             "id": "solutions-factory-robotic",
             "title": "Robotic Handling & Automation",
             "text": "Reduce repetitive labor and increase operational stability.",
-            "href": "case-studies.html?solution=robotics-integration#caseGrid",
+            "href": "/case-studies?solution=robotics-integration#caseGrid",
             "image": "solutions-robotic-handling.webp",
             "alt": "Robotic handling and automation"
           },
@@ -387,7 +387,7 @@ const PAGE_MODULE_SNAPSHOT = {
             "id": "solutions-factory-flow",
             "title": "Material Flow & Logistics",
             "text": "Connect production processes through intelligent transportation and line-feeding systems.",
-            "href": "case-studies.html?solution=conveyor-transport#caseGrid",
+            "href": "/case-studies?solution=conveyor-transport#caseGrid",
             "image": "solutions-material-flow.webp",
             "alt": "Material flow and logistics automation"
           },
@@ -395,7 +395,7 @@ const PAGE_MODULE_SNAPSHOT = {
             "id": "solutions-factory-upgrade",
             "title": "Factory Upgrade Programs",
             "text": "Implement automation step by step without disrupting existing operations.",
-            "href": "case-studies.html?solution=smart-factory#caseGrid",
+            "href": "/case-studies?solution=smart-factory#caseGrid",
             "image": "solutions-factory-upgrade.webp",
             "alt": "Factory upgrade automation program"
           }
@@ -447,7 +447,7 @@ const PAGE_MODULE_SNAPSHOT = {
             "id": "solutions-machinery-printing",
             "title": "Printing & Packaging Systems",
             "text": "Printing, converting, packaging, and bag-making technologies for flexible packaging and industrial production.",
-            "href": "case-studies.html?industry=packaging-printing&solution=printing-inkjet-flexo-ci#caseGrid",
+            "href": "/case-studies?industry=packaging-printing&solution=printing-inkjet-flexo-ci#caseGrid",
             "image": "",
             "alt": ""
           },
@@ -455,7 +455,7 @@ const PAGE_MODULE_SNAPSHOT = {
             "id": "solutions-machinery-filling",
             "title": "Filling & Film Blowing Systems",
             "text": "Filling lines, film extrusion equipment, and integrated packaging production solutions.",
-            "href": "case-studies.html?industry=packaging-printing&solution=film-blowing-extrusion#caseGrid",
+            "href": "/case-studies?industry=packaging-printing&solution=film-blowing-extrusion#caseGrid",
             "image": "",
             "alt": ""
           },
@@ -463,7 +463,7 @@ const PAGE_MODULE_SNAPSHOT = {
             "id": "solutions-machinery-laser",
             "title": "Laser Processing & Industrial Equipment",
             "text": "Laser cutting, laser processing, and advanced manufacturing equipment for industrial applications.",
-            "href": "case-studies.html?solution=laser-industrial-machining#caseGrid",
+            "href": "/case-studies?solution=laser-industrial-machining#caseGrid",
             "image": "",
             "alt": ""
           }

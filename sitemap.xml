@@ -13,6 +13,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://13asrs.com/asrs-cost</loc>
+    <lastmod>2026-09-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://13asrs.com/blog</loc>
     <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
@@ -493,6 +499,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://13asrs.com/blog/how-to-build-an-automated-cold-storage-warehouse-shuttle-asrs-cold-warehouse-project-guide/</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://13asrs.com/blog/how-to-build-an-automated-high-frequency-transformer-factory-for-high-volume-production/</loc>
     <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -901,6 +913,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://13asrs.com/case/cold-storage-asrs-upgrade-case-study-7-000-pallet-positions-at-25-c-automated-warehouse/</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://13asrs.com/case/complete-asrs-workflow-case-study-amr-rgv-stacker-crane-integrated-warehouse-automation-system/</loc>
     <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -951,6 +969,12 @@
   <url>
     <loc>https://13asrs.com/case/high-frequency-transformer-automated-production-line-multi-axis-smart-manufacturing-solution/</loc>
     <lastmod>2026-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://13asrs.com/case/how-does-a-42-stacker-crane-asrs-warehouse-work-large-scale-automated-storage-and-retrieva/</loc>
+    <lastmod>2026-05-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

@@ -13,6 +13,41 @@ const STATIC_POST_DIRS = {
 const SITE_ORIGIN = 'https://13asrs.com';
 const SEO_TITLE_MAX_LENGTH = 65;
 const SEO_DESCRIPTION_MAX_LENGTH = 160;
+const EDITORIAL_BODY_HEADINGS = new Set([
+  'focus keywords',
+  'recommended tags',
+  'internal link opportunities',
+]);
+const NAMED_HTML_ENTITIES = Object.freeze({
+  amp: '&',
+  apos: "'",
+  gt: '>',
+  lt: '<',
+  quot: '"',
+  nbsp: '\u00a0',
+  eacute: 'é',
+  egrave: 'è',
+  aacute: 'á',
+  agrave: 'à',
+  ouml: 'ö',
+  auml: 'ä',
+  uuml: 'ü',
+  ntilde: 'ñ',
+  ccedil: 'ç',
+  ndash: '–',
+  mdash: '—',
+  lsquo: '‘',
+  rsquo: '’',
+  ldquo: '“',
+  rdquo: '”',
+  hellip: '…',
+  bull: '•',
+  middot: '·',
+  copy: '©',
+  reg: '®',
+  trade: '™',
+});
+const TAXONOMY_BODY_HEADINGS = new Set(['categories', 'tags']);
 const TRAILING_CONNECTOR_PATTERN = /\s+(?:a|an|and|are|as|at|by|for|from|how|in|is|of|on|or|the|this|to|with|why)$/i;
 const CLEAN_ROOT_PATHS = Object.freeze({
   'index.html': '/',
@@ -72,8 +107,60 @@ function escapeHtml(value) {
   }[char]));
 }
 
+function escapeHtmlPreservingEntities(value) {
+  return String(value || '').replace(/&(?!(?:#(?:x[0-9a-f]+|\d+)|[a-z][a-z0-9]+);)|[<>"']/gi, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[char]));
+}
+
 function stripHtml(value) {
   return String(value || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function decodeHtmlEntities(value) {
+  return String(value || '').replace(/&(#x[0-9a-f]+|#\d+|[a-z][a-z0-9]+);/gi, (match, entity) => {
+    if (entity[0] === '#') {
+      const isHex = entity[1].toLowerCase() === 'x';
+      const codePoint = parseInt(entity.slice(isHex ? 2 : 1), isHex ? 16 : 10);
+      return codePoint <= 0x10ffff ? String.fromCodePoint(codePoint) : match;
+    }
+
+    const decoded = NAMED_HTML_ENTITIES[entity.toLowerCase()];
+    if (!decoded) return match;
+    return entity[0] !== entity[0].toLowerCase() ? decoded.toLocaleUpperCase('en-US') : decoded;
+  });
+}
+
+function listItems(html) {
+  const code = String(html || '').match(/<code[^>]*>([\s\S]*?)<\/code>/i);
+  const body = (code ? code[1] : String(html || ''))
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(?:li|p|div|h[1-6])>/gi, '\n')
+    .replace(/<[^>]+>/g, ' ');
+  return body.split(/\r?\n/)
+    .map(value => value.replace(/\s+/g, ' ').trim())
+    .filter(Boolean);
+}
+
+function sanitizePublishedBody(contentHtml) {
+  return String(contentHtml || '')
+    .replace(/<h2\b[^>]*>([\s\S]*?)<\/h2>([\s\S]*?)(?=<h2\b|$)/gi, (section, heading, body) => {
+      const headingText = decodeHtmlEntities(stripHtml(heading)).replace(/\s+/g, ' ').trim();
+      const title = headingText.toLocaleLowerCase('en-US');
+      if (EDITORIAL_BODY_HEADINGS.has(title)) return '';
+      if (!title && !stripHtml(body)) return '';
+      if (TAXONOMY_BODY_HEADINGS.has(title)) {
+        const items = listItems(body);
+        return `<h2>${escapeHtml(headingText)}</h2><ul>${items.map(item => `<li>${escapeHtmlPreservingEntities(item)}</li>`).join('')}</ul>`;
+      }
+      return section;
+    })
+    .replace(/<\/?h1\b/gi, match => match.replace(/h1/i, 'h2'))
+    .trim();
 }
 
 function truncateSeoText(value, maxLength) {
@@ -601,8 +688,11 @@ function normalizePost(rawPost) {
   post.fileName = normalizeFileName(post.fileName);
   post.urlSlug = normalizeSlug(post.urlSlug, post.fileName);
   post.outputPath = getOutputRelativePath(post);
-  post.contentHtml = String(post.contentHtml || post.content || '').trim();
-  post.plainText = post.plainText || stripHtml(post.contentHtml);
+  const originalContentHtml = String(post.contentHtml || post.content || '').trim();
+  post.contentHtml = sanitizePublishedBody(originalContentHtml);
+  post.plainText = originalContentHtml === post.contentHtml
+    ? (post.plainText || stripHtml(post.contentHtml))
+    : stripHtml(post.contentHtml);
   post.technology = splitLines(post.technology);
   post.projectImages = splitLines(post.projectImages);
   post.keywords = splitLines(post.keywords);

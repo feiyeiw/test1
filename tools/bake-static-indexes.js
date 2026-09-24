@@ -54,7 +54,7 @@ function getOutputPath(item) {
 }
 
 function getHref(item) {
-  return item.outputPath.replace(/index\.html$/i, '');
+  return `/${item.outputPath.replace(/index\.html$/i, '')}`;
 }
 
 function enrichPost(item, draftPath) {
@@ -165,14 +165,14 @@ function renderCaseCard(item) {
   const resultText = listValues(item.results || item.result || item.metrics)[0] || '';
   const action = item.youtubeUrl || item.videoUrl || item.projectVideo ? 'View case and video' : 'View complete case';
   return `
-                    <article class="blog-index-card case-card-filter" data-case-id="${escapeHtml(item.id)}" data-function="${escapeHtml(item.functionCategory || item.function || item.solution || '')}" data-industry="${escapeHtml(item.industry || '')}" data-application="${escapeHtml(item.application || '')}" data-technology="${escapeHtml(technologyText)}">
+                    <article class="blog-index-card case-card-filter" data-case-id="${escapeHtml(item.id)}" data-function="${escapeHtml(item.functionCategory || item.function || '')}" data-industry="${escapeHtml(item.industry || '')}" data-solution="${escapeHtml(item.solution || '')}" data-application="${escapeHtml(item.application || '')}" data-technology="${escapeHtml(technologyText)}">
                         ${renderMedia('blog-index-media', item)}
                         <div class="blog-index-body">
                             <div class="blog-card-meta"><span>${escapeHtml(item.countryLabel || item.country || 'Project')}</span><span>${escapeHtml(item.industryLabel || item.industry || 'Industry')}</span></div>
                             <h3><a href="${href}">${title}</a></h3>
                             <p>${escapeHtml(excerpt(item))}</p>
                             <div class="blog-card-meta"><span>${escapeHtml(item.functionLabel || item.functionCategory || item.category || 'Automation Function')}</span><span>${escapeHtml(technologyText || 'Technology')}</span></div>
-                            ${resultText ? `<p><strong>${escapeHtml(resultText)}</strong></p>` : ''}
+${resultText ? `                            <p><strong>${escapeHtml(resultText)}</strong></p>` : ''}
                             <a class="text-link" href="${href}">${action}</a>
                         </div>
                     </article>`;
@@ -251,10 +251,11 @@ function main() {
   const posts = readGeneratedPosts();
   const blogs = posts.filter(item => item.contentType !== 'case');
   const cases = posts.filter(item => item.contentType === 'case');
+  const skipHome = process.argv.includes('--skip-home');
   bakeBlogPage(blogs);
   bakeCasePage(cases);
-  bakeHomeLatestCases(cases);
-  console.log(`Baked ${blogs.length} local blog pages and ${cases.length} local case pages into indexes.`);
+  if (!skipHome) bakeHomeLatestCases(cases);
+  console.log(`Baked ${blogs.length} local blog pages and ${cases.length} local case pages into indexes${skipHome ? ' (homepage left untouched)' : ''}.`);
 }
 
 main();

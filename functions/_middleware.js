@@ -13,7 +13,7 @@ const LEGACY_PAGE_TARGETS = new Map([
     ['services.html', '/solutions'],
     ['insights.html', '/blog'],
     ['asrs-landing.html', '/solutions'],
-    ['asrs-cost.html', '/blog/how-much-does-a-complete-asrs-warehouse-system-cost/'],
+    ['asrs-cost.html', '/asrs-cost'],
     ['asrs-design.html', '/blog/asrs-warehouse-design-guide-2026-how-ai-scheduling-systems-improve-1-000-operations-per-hour-efficiency/'],
     ['case-automotive.html', '/case/fully-automated-motor-assembly-line-complete-industrial-case-study/'],
     ['case-ecommerce.html', '/case/4-aisle-mini-load-asrs-warehouse-high-sku-automated-storage-and-goods-to-person-picking-solution/'],
@@ -21,10 +21,32 @@ const LEGACY_PAGE_TARGETS = new Map([
     ['case-pharma.html', '/case/asrs-warehouse-industry-applications-case-study-how-manufacturing-e-commerce-pharma-food-industries-benefit-from-automated-storage-systems/'],
 ]);
 
-function getLegacyRoute(pathname) {
+const LEGACY_BLOG_DETAIL_TARGETS = new Map([
+    ['1780748944138-9969945d-3a42-4cac-a742-f5ecf7d5e663', '/blog/how-to-build-an-automated-cold-storage-warehouse-shuttle-asrs-cold-warehouse-project-guide/'],
+    ['1780980827480-3a6029a1-6d64-445d-9e4e-0a37fe6bc0de', '/case/how-does-a-42-stacker-crane-asrs-warehouse-work-large-scale-automated-storage-and-retrieva/'],
+    ['1780981364211-727b393d-6e6d-442d-b9c5-d7daac6b8224', '/case/cold-storage-asrs-upgrade-case-study-7-000-pallet-positions-at-25-c-automated-warehouse/'],
+    ['1780988234958-85965296-5cfc-4fe2-9911-e3033ade26ba', '/case/tomato-paste-canned-tomato-production-line-fully-automated-food-processing-filling-packaging-asrs-system/'],
+]);
+
+function getLegacyRoute(pathname, searchParams = new URLSearchParams()) {
     const normalizedPath = pathname.replace(/\/{2,}/g, '/');
+    const solutionValues = searchParams.getAll('solution');
+
+    if (/^\/case-studies(?:\.html)?\/?$/i.test(normalizedPath) &&
+        solutionValues.length > 0 &&
+        solutionValues.every(value => value === 'production-line')) {
+        const targetParams = new URLSearchParams(searchParams);
+        targetParams.delete('solution');
+        const query = targetParams.toString();
+        return { status: 301, target: `/case-studies${query ? `?${query}` : ''}` };
+    }
 
     if (/^\/blog-detail(?:\.html)?\/?$/i.test(normalizedPath)) {
+        const legacyIds = searchParams.getAll('id');
+        const redirectTarget = legacyIds.length === 1
+            ? LEGACY_BLOG_DETAIL_TARGETS.get(legacyIds[0])
+            : null;
+        if (redirectTarget) return { status: 301, target: redirectTarget };
         return { status: 410 };
     }
 
@@ -35,6 +57,10 @@ function getLegacyRoute(pathname) {
     if (/^\/cases\//i.test(normalizedPath) ||
         /^\/archive\/legacy-static-pages\/(?:blog|cases)\//i.test(normalizedPath)) {
         return { status: 410 };
+    }
+
+    if (/^\/asrs-cost\.html\/?$/i.test(normalizedPath)) {
+        return { status: 301, target: LEGACY_PAGE_TARGETS.get('asrs-cost.html') };
     }
 
     if (!/^\/(?:blog|case)\//i.test(normalizedPath) || !/\.html\/?$/i.test(normalizedPath)) {
@@ -79,7 +105,7 @@ export async function onRequest(context) {
 
     if (request.method === 'GET' || request.method === 'HEAD') {
         const url = new URL(request.url);
-        const legacyRoute = getLegacyRoute(url.pathname);
+        const legacyRoute = getLegacyRoute(url.pathname, url.searchParams);
 
         if (legacyRoute?.target) {
             return Response.redirect(new URL(legacyRoute.target, url.origin).toString(), legacyRoute.status);
